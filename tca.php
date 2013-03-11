@@ -28,7 +28,7 @@ $TCA['tx_contexts_contexts'] = array(
 				'eval' => 'alphanum,nospace,unique',
 			)
 		),
-		'default_rules' => array(
+		'default_settings' => array(
 		    'config' => array(
 		        'type' => 'passthrough'
 		    )

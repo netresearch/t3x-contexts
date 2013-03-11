@@ -21,7 +21,7 @@ abstract class Tx_Contexts_Context_Abstract
 	 */
 	protected $alias;
 
-	private $rules = array();
+	private $settings = array();
 
 	public function __construct($row)
 	{
@@ -31,11 +31,11 @@ abstract class Tx_Contexts_Context_Abstract
 	    $this->alias = $row['alias'];
 	}
 
-	final public function getRule($table, $uid, $field = Tx_Contexts_Api_Configuration::DEFAULT_FIELD)
+	final public function getSetting($table, $uid, $field = Tx_Contexts_Api_Configuration::DEFAULT_FIELD)
 	{
-	    $ruleKey = $table.'-'.$field.'-'.$uid;
-	    if (array_key_exists($ruleKey, $this->rules)) {
-	        return $this->rules[$ruleKey];
+	    $settingKey = $table.'-'.$field.'-'.$uid;
+	    if (array_key_exists($settingKey, $this->settings)) {
+	        return $this->settings[$settingKey];
 	    }
 
     	/* @var $db t3lib_db */
@@ -43,20 +43,20 @@ abstract class Tx_Contexts_Context_Abstract
 
 	    $where = 'context_uid = '.$this->uid;
 	    $where .= " AND foreign_table = '$table' AND foreign_field = '$field' AND foreign_uid = '$uid'";
-        $row = $db->exec_SELECTgetSingleRow('*', 'tx_contexts_rules', $where);
+        $row = $db->exec_SELECTgetSingleRow('*', 'tx_contexts_settings', $where);
 
         if ($row) {
-            $rule = new Tx_Contexts_Context_Rule($this, $row);
+            $setting = new Tx_Contexts_Context_Setting($this, $row);
         } else {
-            $rule = null;
+            $setting = null;
         }
 
-        return $this->rules[$ruleKey] = $rule;
+        return $this->settings[$settingKey] = $setting;
 	}
 
-	final public function hasRule($table, $uid, $field = Tx_Contexts_Api_Configuration::DEFAULT_FIELD)
+	final public function hasSetting($table, $uid, $field = Tx_Contexts_Api_Configuration::DEFAULT_FIELD)
 	{
-	    return $this->getRule($table, $uid, $field) ? true : false;
+	    return $this->getSetting($table, $uid, $field) ? true : false;
 	}
 
 	abstract public function match();

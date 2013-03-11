@@ -1,10 +1,10 @@
 <?php
 class Tx_Contexts_Service_Tcemain
 {
-    protected $currentRules;
+    protected $currentSettings;
 
 	/**
-	 * Extract the context rules from the field array and set them in currentContextRules
+	 * Extract the context settings from the field array and set them in currentContextSettings
 	 * This function is called my TYPO each time a record is saved in the backend
 	 *
 	 * @param array $incomingFieldArray
@@ -21,22 +21,22 @@ class Tx_Contexts_Service_Tcemain
 		}
 
 		if ($table == 'tx_contexts_contexts' &&
-		    isset($incomingFieldArray['default_rules']) &&
-		    is_array($incomingFieldArray['default_rules'])
+		    isset($incomingFieldArray['default_settings']) &&
+		    is_array($incomingFieldArray['default_settings'])
 		) {
-		    $this->currentRules = $incomingFieldArray['default_rules'];
-			unset($incomingFieldArray['default_rules']);
+		    $this->currentSettings = $incomingFieldArray['default_settings'];
+			unset($incomingFieldArray['default_settings']);
 			return;
 		}
 		
-		if (isset($incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_RULES_FIELD])) {
-		    $this->currentRules = $incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_RULES_FIELD];
-		    unset($incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_RULES_FIELD]);
+		if (isset($incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_FIELD])) {
+		    $this->currentSettings = $incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_FIELD];
+		    unset($incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_FIELD]);
 		}
 	}
 
 	/**
-	 * Finally save the rules
+	 * Finally save the settings
 	 *
 	 * @param string $status
 	 * @param string $table
@@ -46,77 +46,77 @@ class Tx_Contexts_Service_Tcemain
 	 */
 	function processDatamap_afterDatabaseOperations($status, $table, $id, $fieldArray, $reference)
 	{
-	    if (is_array($this->currentRules)) {
+	    if (is_array($this->currentSettings)) {
 	        if (!t3lib_div::testInt($id)) {
 	            $id = $reference->substNEWwithIDs[$id];
 	        }
 	        if ($table == 'tx_contexts_contexts') {
-    	        $this->saveDefaultRules($id, $this->currentRules);
+    	        $this->saveDefaultSettings($id, $this->currentSettings);
 	        } else {
-    	        $this->saveRecordRules($table, $id, $this->currentRules);
+    	        $this->saveRecordSettings($table, $id, $this->currentSettings);
 	        }
 	    
-		    unset($this->currentRules);
+		    unset($this->currentSettings);
 	    }
 	}
 	
-	protected function saveRecordRules($table, $uid, $rulesAndFields)
+	protected function saveRecordSettings($table, $uid, $settingsAndFields)
 	{
 	    $db = Tx_Contexts_Api_Model::getDb();
-	    foreach ($rulesAndFields as $contextId => $rules) {
-	        foreach ($rules as $field => $rule) {
+	    foreach ($settingsAndFields as $contextId => $settings) {
+	        foreach ($settings as $field => $setting) {
                 $row = $db->exec_SELECTgetSingleRow(
                     'uid',
-                    'tx_contexts_rules',
+                    'tx_contexts_settings',
                     "context_uid = $contextId AND ".
                     "foreign_table = '$table' AND ".
                     "foreign_field = '$field' AND ".
                     "foreign_uid = $uid"
                 );
-	            if ($rule === '0' || $rule === '1') {
+	            if ($setting === '0' || $setting === '1') {
 	                if ($row) {
-	                    $db->exec_UPDATEquery('tx_contexts_rules', 'uid='.$row['uid'], array('enabled' => $rule));
+	                    $db->exec_UPDATEquery('tx_contexts_settings', 'uid='.$row['uid'], array('enabled' => $setting));
 	                } else {
-	                    $db->exec_INSERTquery('tx_contexts_rules', array(
+	                    $db->exec_INSERTquery('tx_contexts_settings', array(
 	                        'context_uid' => $contextId,
 	                        'foreign_table' => $table,
 	                        'foreign_field' => $field,
 	                        'foreign_uid' => $uid,
-	                    	'enabled' => $rule
+	                    	'enabled' => $setting
 	                    ));
 	                }
 	            } elseif ($row) {
-	                $db->exec_DELETEquery('tx_contexts_rules', 'uid='.$row['uid']);
+	                $db->exec_DELETEquery('tx_contexts_settings', 'uid='.$row['uid']);
 	            }
 	        }
 	    }
 	}
 	
-	protected function saveDefaultRules($contextId, $rules)
+	protected function saveDefaultSettings($contextId, $settings)
 	{
-	    $rules = Tx_Contexts_Api_Model::getDb()->exec_SELECTgetRows(
+	    $existingSettings = Tx_Contexts_Api_Model::getDb()->exec_SELECTgetRows(
 	    	'*',
-	    	'tx_contexts_rules',
+	    	'tx_contexts_settings',
 	    	"context_uid = '$contextId' AND foreign_uid = 0"
 	    );
 
-		foreach ($rules as $table => $fields) {
-		    $fieldRules = array();
-		    foreach ($rules as $rule) {
-		        if ($rule['foreign_table'] == $table) {
-		            $fieldRules[$rule['foreign_field']] = $rule['uid'];
+		foreach ($settings as $table => $fields) {
+		    $fieldSettings = array();
+		    foreach ($existingSettings as $setting) {
+		        if ($setting['foreign_table'] == $table) {
+		            $fieldSettings[$setting['foreign_field']] = $setting['uid'];
 		        }
 		    }
 		    foreach ($fields as $field => $enabled) {
-		        if (array_key_exists($field, $fieldRules)) {
+		        if (array_key_exists($field, $fieldSettings)) {
 		            Tx_Contexts_Api_Model::getDb()->exec_UPDATEquery(
-		            	'tx_contexts_rules',
-		            	'uid='.$fieldRules[$field],
+		            	'tx_contexts_settings',
+		            	'uid='.$fieldSettings[$field],
 		                array('enabled' => (int) $enabled)
 		            );
 		        } else {
 		            Tx_Contexts_Api_Model::getDb()->exec_INSERTquery(
-		            	'tx_contexts_rules',
+		            	'tx_contexts_settings',
 		                array(
 		                    'context_uid' => $contextId,
 		                    'foreign_table' => $table,

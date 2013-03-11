@@ -17,9 +17,9 @@ CREATE TABLE tx_contexts_contexts (
 ) ENGINE=InnoDB;
 
 #
-# Table structure for table 'tx_contexts_rules'
+# Table structure for table 'tx_contexts_settings'
 #
-CREATE TABLE tx_contexts_rules (
+CREATE TABLE tx_contexts_settings (
 	uid int(11) NOT NULL auto_increment,
 	pid int(11) DEFAULT '0' NOT NULL,
 	tstamp int(11) DEFAULT '0' NOT NULL,

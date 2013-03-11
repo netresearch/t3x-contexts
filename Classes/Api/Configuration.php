@@ -3,7 +3,7 @@ class Tx_Contexts_Api_Configuration
 {
     const LANG_FILE = 'EXT:contexts/Resources/Private/Language/locallang_db.xml';
 
-    const RECORD_RULES_FIELD = 'tx_contexts_rules';
+    const RECORD_SETTINGS_FIELD = 'tx_contexts_settings';
 
     const DEFAULT_FIELD = 'tx_contexts_visibility';
     
@@ -37,44 +37,44 @@ class Tx_Contexts_Api_Configuration
             }
         }
 
-        if (!array_key_exists(self::RECORD_RULES_FIELD, $TCA[$table]['columns'])) {
-            $recordRulesConf = array(
+        if (!array_key_exists(self::RECORD_SETTINGS_FIELD, $TCA[$table]['columns'])) {
+            $recordSettingsConf = array(
         		"exclude" => 1,
         		"label" => 'Huhu',
         		"config" => array (
         			"type" => "user",
         			"size" => "30",
-        			"userFunc" => 'Tx_Contexts_Service_Tca->renderRecordRulesField',
+        			"userFunc" => 'Tx_Contexts_Service_Tca->renderRecordSettingsField',
                     'fields' => $fields
         		)
             );
-            t3lib_extMgm::addTCAcolumns($table, array(self::RECORD_RULES_FIELD => $recordRulesConf), 1);
-            t3lib_extMgm::addToAllTCAtypes($table, '--div--;LLL:'.self::LANG_FILE.':tabname,'.self::RECORD_RULES_FIELD.';;;;1-1-1');
+            t3lib_extMgm::addTCAcolumns($table, array(self::RECORD_SETTINGS_FIELD => $recordSettingsConf), 1);
+            t3lib_extMgm::addToAllTCAtypes($table, '--div--;LLL:'.self::LANG_FILE.':tabname,'.self::RECORD_SETTINGS_FIELD.';;;;1-1-1');
         } else {
-            $TCA[$table]['columns'][self::RECORD_RULES_FIELD]['config']['fields'] = array_merge(
-                $TCA[$table]['columns'][self::RECORD_RULES_FIELD]['config']['fields'],
+            $TCA[$table]['columns'][self::RECORD_SETTINGS_FIELD]['config']['fields'] = array_merge(
+                $TCA[$table]['columns'][self::RECORD_SETTINGS_FIELD]['config']['fields'],
                 $fields
             );
         }
 
-        $defaultRulesField = 'default_rules_'.$table;
-        if (!array_key_exists($defaultRulesField, $TCA['tx_contexts_contexts']['columns'])) {
-            $defaultRulesConf = array(
+        $defaultSettingsField = 'default_settings_'.$table;
+        if (!array_key_exists($defaultSettingsField, $TCA['tx_contexts_contexts']['columns'])) {
+            $defaultSettingsConf = array(
         		"exclude" => 1,
                 'label' => $TCA[$table]['ctrl']['title'],
                 'config' => array(
                     'type' => 'user',
                     'size' => 30,
-                    'userFunc' => 'Tx_Contexts_Service_Tca->renderDefaultRulesField',
+                    'userFunc' => 'Tx_Contexts_Service_Tca->renderDefaultSettingsField',
                     'table' => $table,
                     'fields' => $fields
                 )
             );
-            t3lib_extMgm::addTCAcolumns('tx_contexts_contexts', array($defaultRulesField => $defaultRulesConf), 1);
-            t3lib_extMgm::addToAllTCAtypes('tx_contexts_contexts', $defaultRulesField);
+            t3lib_extMgm::addTCAcolumns('tx_contexts_contexts', array($defaultSettingsField => $defaultSettingsConf), 1);
+            t3lib_extMgm::addToAllTCAtypes('tx_contexts_contexts', $defaultSettingsField);
         } else {
-            $TCA['tx_contexts_contexts']['columns'][$defaultRulesField]['config']['fields'] = array_merge(
-                $TCA['tx_contexts_contexts']['columns'][$defaultRulesField]['config']['fields'],
+            $TCA['tx_contexts_contexts']['columns'][$defaultSettingsField]['config']['fields'] = array_merge(
+                $TCA['tx_contexts_contexts']['columns'][$defaultSettingsField]['config']['fields'],
                 $fields
             );
         }

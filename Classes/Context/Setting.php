@@ -1,5 +1,5 @@
 <?php
-final class Tx_Contexts_Context_Rule
+final class Tx_Contexts_Context_Setting
 {
     /**
      * @var Tx_Contexts_Context_Abstract
@@ -7,32 +7,32 @@ final class Tx_Contexts_Context_Rule
     protected $context;
 
 	/**
-	 * The uid of the rule record
+	 * The uid of the setting record
 	 * @var int
 	 */
 	protected $uid;
 
 	/**
-	 * The name of table the rule is for
+	 * The name of table the setting is for
 	 * @var string
 	 */
 	protected $foreignTable;
 
 	/**
-	 * The name of the field the rule is for
+	 * The name of the field the setting is for
 	 * @var string
 	 */
 	protected $foreignField;
 
 	/**
-	 * The uid of the record the rule is for
-	 * (0 for default rule)
+	 * The uid of the record the setting is for
+	 * (0 for default setting)
 	 * @var int
 	 */
 	protected $foreignUid;
 
 	/**
-	 * Whether the record is enabled by this rule
+	 * Whether the record is enabled by this setting
 	 * @var boolean
 	 */
 	protected $enabled;
@@ -47,7 +47,7 @@ final class Tx_Contexts_Context_Rule
 	    $this->enabled = $row['enabled'] ? true : false;
 	}
 
-	public function isDefaultRule()
+	public function isDefaultSetting()
 	{
 	    return !$this->uid;
 	}

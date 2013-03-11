@@ -11,7 +11,7 @@ return array(
 	'tx_contexts_context_abstract' => $extensionClassesPath . 'Context/Abstract.php',
 	'tx_contexts_context_default' => $extensionClassesPath . 'Context/Default.php',
 	'tx_contexts_context_factory' => $extensionClassesPath . 'Context/Factory.php',
-	'tx_contexts_context_rule' => $extensionClassesPath . 'Context/Rule.php',
+	'tx_contexts_context_setting' => $extensionClassesPath . 'Context/Setting.php',
 	'tx_contexts_service_tca' => $extensionClassesPath . 'Service/Tca.php',
 	'tx_contexts_service_tcemain' => $extensionClassesPath . 'Service/Tcemain.php',
 	'tx_contexts_exception' => $extensionClassesPath . 'Exception.php',

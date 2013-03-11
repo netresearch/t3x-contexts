@@ -8,7 +8,7 @@ class Tx_Contexts_Service_Tca
      * @param t3lib_TCEforms $fobj
      * @return string
      */
-    public function renderRecordRulesField($PA, $fobj)
+    public function renderRecordSettingsField($PA, $fobj)
     {
         global $TCA;
         $table = $PA['table'];
@@ -25,12 +25,12 @@ class Tx_Contexts_Service_Tca
 	    $fields = $PA['fieldConf']['config']['fields'];
 
 	    $content =
-	    '<table class="tx_contexts_table_rules">'.
+	    '<table class="tx_contexts_table_settings">'.
 	    '<tr><th class="tx_contexts_context">'.
 	    $fobj->sL('LLL:'.Tx_Contexts_Api_Configuration::LANG_FILE.':tx_contexts_context').
 	    '</th>';
 	    foreach ($fields as $field => $config) {
-	        $content .= '<th class="tx_contexts_rule">'.$fobj->sL($config['label']).'</th>';
+	        $content .= '<th class="tx_contexts_setting">'.$fobj->sL($config['label']).'</th>';
 	    }
 	    $content .= '</tr>';
 	    
@@ -41,13 +41,13 @@ class Tx_Contexts_Service_Tca
 	        $content .= '<tr><td class="tx_contexts_context">'.$context->getTitle().'</td>';
 	        
 	        foreach ($fields as $field => $config) {
-	            $rule = $uid ? $context->getRule($table, $uid, $field) : null;
+	            $setting = $uid ? $context->getSetting($table, $uid, $field) : null;
 	            $content .=
-	            '<td class="tx_contexts_rule">'.
+	            '<td class="tx_contexts_setting">'.
 	            '<select name="'.$namePre.'['.$context->getUid().']['.$field.']">'.
 	            '<option value="">n/a</option>'.
-	            '<option value="1"'.($rule && $rule->getEnabled() ? ' selected="selected"' : '').'>Yes</option>'.
-	            '<option value="0"'.($rule && !$rule->getEnabled() ? ' selected="selected"' : '').'>No</option>'.
+	            '<option value="1"'.($setting && $setting->getEnabled() ? ' selected="selected"' : '').'>Yes</option>'.
+	            '<option value="0"'.($setting && !$setting->getEnabled() ? ' selected="selected"' : '').'>No</option>'.
 	            '</select></td>';
 	        }
 	        
@@ -66,7 +66,7 @@ class Tx_Contexts_Service_Tca
      * @param t3lib_TCEforms $fobj
      * @return string
      */
-    public function renderDefaultRulesField($PA, $fobj)
+    public function renderDefaultSettingsField($PA, $fobj)
     {
         global $TCA;
         $table = $PA['fieldConf']['config']['table'];
@@ -74,7 +74,7 @@ class Tx_Contexts_Service_Tca
 
         $content = '';
 
-        $namePre = str_replace('[default_rules_', '[default_rules][', $PA['itemFormElName']);
+        $namePre = str_replace('[default_settings_', '[default_settings][', $PA['itemFormElName']);
 
         /* @var $context Tx_Contexts_Context_Abstract */
         $uid = (int) $PA['row']['uid'];
@@ -87,8 +87,8 @@ class Tx_Contexts_Service_Tca
             $content .= '<input class="checkbox" type="checkbox" name="'.$name.'" ';
             if (
                 !$context ||
-                !$context->hasRule($table, 0, $field) ||
-                $context->getRule($table, 0, $field)->getEnabled()
+                !$context->hasSetting($table, 0, $field) ||
+                $context->getSetting($table, 0, $field)->getEnabled()
             ) {
                 $content .= 'checked="checked" ';
             }
