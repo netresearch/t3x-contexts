@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'contexts'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tabname">Contexts</label>
+			<label index="tx_contexts_contexts.general">General</label>
+			<label index="tx_contexts_contexts">Contexts</label>
+			<label index="tx_contexts_context">Context</label>
+			<label index="tx_contexts_contexts.title">Title</label>
+			<label index="tx_contexts_contexts.alias">Alias</label>
+			<label index="tx_contexts_visibility">Visibility</label>
+			<label index="tx_contexts_contexts.defaults">Defaults</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="tabname">Kontexte</label>
+			<label index="tx_contexts_contexts.general">Allgemein</label>
+			<label index="tx_contexts_contexts">Kontexte</label>
+			<label index="tx_contexts_context">Kontext</label>
+			<label index="tx_contexts_contexts.title">Titel</label>
+			<label index="tx_contexts_contexts.alias">Alias</label>
+			<label index="tx_contexts_visibility">Sichtbarkeit</label>
+			<label index="tx_contexts_contexts.defaults">Standardwerte</label>
+		</languageKey>
+	</data>
+</T3locallang>
