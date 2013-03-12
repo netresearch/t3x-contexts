@@ -6,7 +6,7 @@ class Tx_Contexts_Api_Configuration
     const RECORD_SETTINGS_FIELD = 'tx_contexts_settings';
 
     const DEFAULT_FIELD = 'tx_contexts_visibility';
-    
+
     protected static $enableFields = array();
 
     public static function addToTca($table, $fields = null, $addDefaultField = true)
@@ -21,13 +21,13 @@ class Tx_Contexts_Api_Configuration
             	'enableField' => true
             )
         );
-        
+
         if (!is_array($fields)) {
             $fields = $defaultField;
         } elseif ($addDefaultField && !array_key_exists(self::DEFAULT_FIELD, $fields)) {
             $fields = array_merge($defaultField, $fields);
         }
-        
+
         foreach ($fields as $field => $config) {
             if (array_key_exists('enableField', $config) && $config['enableField']) {
                 if (!array_key_exists($table, self::$enableFields)) {
@@ -79,7 +79,7 @@ class Tx_Contexts_Api_Configuration
             );
         }
     }
-    
+
     /**
      * @return array
      */

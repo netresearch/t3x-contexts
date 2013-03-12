@@ -28,7 +28,7 @@ class Tx_Contexts_Service_Tcemain
 			unset($incomingFieldArray['default_settings']);
 			return;
 		}
-		
+
 		if (isset($incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_FIELD])) {
 		    $this->currentSettings = $incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_FIELD];
 		    unset($incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_FIELD]);
@@ -55,11 +55,11 @@ class Tx_Contexts_Service_Tcemain
 	        } else {
     	        $this->saveRecordSettings($table, $id, $this->currentSettings);
 	        }
-	    
+
 		    unset($this->currentSettings);
 	    }
 	}
-	
+
 	protected function saveRecordSettings($table, $uid, $settingsAndFields)
 	{
 	    $db = Tx_Contexts_Api_Model::getDb();
@@ -91,7 +91,7 @@ class Tx_Contexts_Service_Tcemain
 	        }
 	    }
 	}
-	
+
 	protected function saveDefaultSettings($contextId, $settings)
 	{
 	    $existingSettings = Tx_Contexts_Api_Model::getDb()->exec_SELECTgetRows(
