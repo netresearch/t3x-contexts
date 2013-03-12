@@ -86,6 +86,7 @@ class Tx_Contexts_Service_Tcemain
                 $this->saveDefaultSettings($id, $this->currentSettings);
             } else {
                 $this->saveRecordSettings($table, $id, $this->currentSettings);
+                $this->saveEnableField($table, $id, $this->currentSettings);
             }
 
             unset($this->currentSettings);
@@ -131,6 +132,42 @@ class Tx_Contexts_Service_Tcemain
                     $db->exec_DELETEquery('tx_contexts_settings', 'uid=' . $row['uid']);
                 }
             }
+        }
+    }
+
+    /**
+     * Saves the visibility settings (enableFields) to the enableFields
+     * columns on the table to allow quicker queries in enableField
+     * hook.
+     *
+     * @param string $table
+     * @param int $uid
+     * @param array $settingsAndFields
+     * @return void
+     * @see Tx_Contexts_Service_Tsfe::enableFields()
+     */
+    protected function saveEnableField($table, $uid, $settingsAndFields)
+    {
+        $values = array();
+        $enableField = Tx_Contexts_Api_Configuration::ENABLE_FIELD;
+        foreach ($settingsAndFields as $contextId => $settings) {
+            if (array_key_exists($enableField, $settings)) {
+                if ($settings[$enableField] === '0') {
+                    $column = Tx_Contexts_Api_Configuration::ENABLE_COLUMN_DISABLE;
+                } elseif ($settings[$enableField] === '1') {
+                    $column = Tx_Contexts_Api_Configuration::ENABLE_COLUMN_ENABLE;
+                } else {
+                    continue;
+                }
+                if (!array_key_exists($column, $values)) {
+                    $values[$column] = $contextId;
+                } else {
+                    $values[$column] .= ',' . $contextId;
+                }
+            }
+        }
+        if (count($values)) {
+            Tx_Contexts_Api_Model::getDb()->exec_UPDATEquery($table, 'uid=' . $uid, $values);
         }
     }
 
