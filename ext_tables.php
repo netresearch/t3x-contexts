@@ -27,6 +27,9 @@ Tx_Contexts_Api_Configuration::registerContextType(
     'FILE:EXT:contexts/Configuration/flexform/ContextType/Domain.xml'
 );
 
-Tx_Contexts_Api_Configuration::addToTca('pages');
-Tx_Contexts_Api_Configuration::addToTca('tt_content');
+
+Tx_Contexts_Api_Configuration::addToTca($_EXTKEY, 'pages', array(
+	'menu_visibility' => 'LLL:'.Tx_Contexts_Api_Configuration::LANG_FILE.':tx_contexts_menu_visibility'
+));
+Tx_Contexts_Api_Configuration::addToTca($_EXTKEY, 'tt_content');
 ?>

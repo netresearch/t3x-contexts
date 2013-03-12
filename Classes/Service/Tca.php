@@ -1,90 +1,118 @@
 <?php
+/***************************************************************
+*  Copyright notice
+*
+*  (c) 2013 Netresearch GmbH & Co. KG <typo3-2013@netresearch.de>
+*  All rights reserved
+*
+*  This script is part of the TYPO3 project. The TYPO3 project is
+*  free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  The GNU General Public License can be found at
+*  http://www.gnu.org/copyleft/gpl.html.
+*
+*  This script is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  This copyright notice MUST APPEAR in all copies of the script!
+***************************************************************/
+
+/**
+ * USER functions to render the defaults and record settings fields
+ * 
+ * @author Christian Opitz <christian.opitz@netresearch.de>
+ */
 class Tx_Contexts_Service_Tca
 {
     /**
-     * Render the context visibility field for a certain table
+     * Render the context settings field for a certain table
      *
-     * @param array $PA
+     * @param array $params
      * @param t3lib_TCEforms $fobj
      * @return string
      */
-    public function renderRecordSettingsField($PA, $fobj)
+    public function renderRecordSettingsField($params, $fobj)
     {
         global $TCA;
-        $table = $PA['table'];
+        $table = $params['table'];
 
         $fobj->addStyleSheet(
-        	'tx_contexts_bestyles',
-            t3lib_extMgm::extRelPath('contexts').'Resources/Public/StyleSheet/be.css'
+            'tx_contexts_bestyles',
+            t3lib_extMgm::extRelPath('contexts') . 'Resources/Public/StyleSheet/be.css'
         );
 
         $contexts = Tx_Contexts_Api_Model::getContexts();
         
-	    $namePre = str_replace('['.$PA['field'].'_', '['.$PA['field'].'][', $PA['itemFormElName']);
+        $namePre = str_replace('[' . $params['field'] . '_', '[' . $params['field'] . '][', $params['itemFormElName']);
 
-	    $fields = $PA['fieldConf']['config']['fields'];
+        $fields = $params['fieldConf']['config']['fields'];
 
-	    $content =
-	    '<table class="tx_contexts_table_settings">'.
-	    '<tr><th class="tx_contexts_context">'.
-	    $fobj->sL('LLL:'.Tx_Contexts_Api_Configuration::LANG_FILE.':tx_contexts_context').
-	    '</th>';
-	    foreach ($fields as $field => $config) {
-	        $content .= '<th class="tx_contexts_setting">'.$fobj->sL($config['label']).'</th>';
-	    }
-	    $content .= '</tr>';
-	    
-	    $uid = (int) $PA['row']['uid'];
-	    
-	    foreach ($contexts as $context) {
-	        /* @var $context Tx_Contexts_Context_Abstract */
-	        $content .= '<tr><td class="tx_contexts_context">'.$context->getTitle().'</td>';
-	        
-	        foreach ($fields as $field => $config) {
-	            $setting = $uid ? $context->getSetting($table, $uid, $field) : null;
-	            $content .=
-	            '<td class="tx_contexts_setting">'.
-	            '<select name="'.$namePre.'['.$context->getUid().']['.$field.']">'.
-	            '<option value="">n/a</option>'.
-	            '<option value="1"'.($setting && $setting->getEnabled() ? ' selected="selected"' : '').'>Yes</option>'.
-	            '<option value="0"'.($setting && !$setting->getEnabled() ? ' selected="selected"' : '').'>No</option>'.
-	            '</select></td>';
-	        }
-	        
-	        $content .= '</tr>';
-	    }
-	    $content .= '</table>';
+        $content =
+        '<table class="tx_contexts_table_settings">' . 
+        '<tr><th class="tx_contexts_context">' . 
+        $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_context') . 
+        '</th>';
+        foreach ($fields as $field => $label) {
+            $content .= '<th class="tx_contexts_setting">' . $fobj->sL($label) . '</th>';
+        }
+        $content .= '</tr>';
+        
+        $uid = (int) $params['row']['uid'];
+        
+        foreach ($contexts as $context) {
+            /* @var $context Tx_Contexts_Context_Abstract */
+            $content .= '<tr><td class="tx_contexts_context">' . $context->getTitle() . '</td>';
+            
+            foreach ($fields as $field => $config) {
+                $setting = $uid ? $context->getSetting($table, $uid, $field) : null;
+                $content .=
+                '<td class="tx_contexts_setting">' . 
+                '<select name="' . $namePre . '[' . $context->getUid() . '][' . $field . ']">' . 
+                '<option value="">n/a</option>' . 
+                '<option value="1"' . ($setting && $setting->getEnabled() ? ' selected="selected"' : '') . '>Yes</option>' . 
+                '<option value="0"' . ($setting && !$setting->getEnabled() ? ' selected="selected"' : '') . '>No</option>' . 
+                '</select></td>';
+            }
+            
+            $content .= '</tr>';
+        }
+        $content .= '</table>';
 
         return $content;
     }
 
     /**
-     * Render a checkbox for the default visibility of records in
+     * Render a checkbox for the default settings of records in
      * this table
      *
-     * @param array $PA
+     * @param array $params
      * @param t3lib_TCEforms $fobj
      * @return string
      */
-    public function renderDefaultSettingsField($PA, $fobj)
+    public function renderDefaultSettingsField($params, $fobj)
     {
         global $TCA;
-        $table = $PA['fieldConf']['config']['table'];
+        $table = $params['fieldConf']['config']['table'];
         t3lib_div::loadTCA($table);
 
         $content = '';
 
-        $namePre = str_replace('[default_settings_', '[default_settings][', $PA['itemFormElName']);
+        $namePre = str_replace('[default_settings_', '[default_settings][', $params['itemFormElName']);
 
         /* @var $context Tx_Contexts_Context_Abstract */
-        $uid = (int) $PA['row']['uid'];
+        $uid = (int) $params['row']['uid'];
         $context = $uid ? Tx_Contexts_Api_Model::getContext($uid) : null;
 
-        foreach ($PA['fieldConf']['config']['fields'] as $field => $config) {
-            $id = $PA['itemFormElID'].'-'.$field;
-            $name = $namePre.'['.$field.']';
-            $content .= '<input type="hidden" name="'.$name.'" value="0"/>';
-            $content .= '<input class="checkbox" type="checkbox" name="'.$name.'" ';
+        foreach ($params['fieldConf']['config']['fields'] as $field => $label) {
+            $id = $params['itemFormElID'] . '-' . $field;
+            $name = $namePre . '[' . $field . ']';
+            $content .= '<input type="hidden" name="' . $name . '" value="0"/>';
+            $content .= '<input class="checkbox" type="checkbox" name="' . $name . '" ';
             if (
                 !$context ||
                 !$context->hasSetting($table, 0, $field) ||
@@ -92,9 +120,9 @@ class Tx_Contexts_Service_Tca
             ) {
                 $content .= 'checked="checked" ';
             }
-            $content .= 'value="1" id="'.$id.'" /> ';
-            $content .= '<label for="'.$id.'">';
-            $content .= $fobj->sL($TCA[$table]['columns'][$field]['label']);
+            $content .= 'value="1" id="' . $id . '" /> ';
+            $content .= '<label for="' . $id . '">';
+            $content .= $fobj->sL($label);
             $content .= '</label><br/>';
         }
 
@@ -102,3 +130,4 @@ class Tx_Contexts_Service_Tca
     }
 
 }
+?>

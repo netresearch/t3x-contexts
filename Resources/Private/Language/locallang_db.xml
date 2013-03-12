@@ -15,8 +15,9 @@
 			<label index="tx_contexts_contexts.type">Type</label>
 			<label index="tx_contexts_contexts.type.select_type">Select a type</label>
 			<label index="tx_contexts_contexts.type_conf">Configuration</label>
-			<label index="tx_contexts_visibility">Visibility</label>
 			<label index="tx_contexts_contexts.defaults">Defaults</label>
+			<label index="tx_contexts_visibility">Visible</label>
+			<label index="tx_contexts_menu_visibility">Visible in Menus</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="tabname">Kontexte</label>
@@ -25,7 +26,8 @@
 			<label index="tx_contexts_context">Kontext</label>
 			<label index="tx_contexts_contexts.title">Titel</label>
 			<label index="tx_contexts_contexts.alias">Alias</label>
-			<label index="tx_contexts_visibility">Sichtbarkeit</label>
+			<label index="tx_contexts_visibility">Sichtbar</label>
+			<label index="tx_contexts_menu_visibility">Sichtbar in Menüs</label>
 			<label index="tx_contexts_contexts.defaults">Standardwerte</label>
 		</languageKey>
 	</data>
