@@ -11,7 +11,8 @@ CREATE TABLE tx_contexts_contexts (
 	type tinytext,
 	title tinytext,
 	alias tinytext,
-	
+	type_conf mediumtext,
+
 	PRIMARY KEY (uid),
 	KEY parent (pid)
 ) ENGINE=InnoDB;
@@ -30,7 +31,7 @@ CREATE TABLE tx_contexts_settings (
 	foreign_uid int(11) DEFAULT '0' NOT NULL,
 	foreign_field tinytext,
 	enabled tinyint(4) DEFAULT '0' NOT NULL,
-	
+
 	PRIMARY KEY (uid),
 	KEY parent (pid)
 ) ENGINE=InnoDB;
