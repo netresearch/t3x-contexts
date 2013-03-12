@@ -41,7 +41,7 @@ class Tx_Contexts_Api_Model
             }
         }
 
-	    $where = t3lib_div::testInt($uidOrAlias) ? 'uid = '.$uidOrAlias : "alias = '$uidOrAlias'";
+	    $where = is_numeric($uidOrAlias) ? 'uid = '.$uidOrAlias : "alias = '$uidOrAlias'";
 	    $row = self::getDb()->exec_SELECTgetSingleRow('*', 'tx_contexts_contexts', $where.' AND deleted=0');
 
 	    if ($row) {

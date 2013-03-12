@@ -47,7 +47,7 @@ class Tx_Contexts_Service_Tcemain
 	function processDatamap_afterDatabaseOperations($status, $table, $id, $fieldArray, $reference)
 	{
 	    if (is_array($this->currentSettings)) {
-	        if (!t3lib_div::testInt($id)) {
+	        if (!is_numeric($id)) {
 	            $id = $reference->substNEWwithIDs[$id];
 	        }
 	        if ($table == 'tx_contexts_contexts') {
