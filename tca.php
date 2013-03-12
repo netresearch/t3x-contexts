@@ -30,7 +30,7 @@ $TCA['tx_contexts_contexts'] = array(
 			)
 		),
 		'type' => array(
-			'exclude' => 1,
+			'exclude' => 0,
 			'label' => $lf . ':tx_contexts_contexts.type',
 			'config' => array(
 				'type' => 'select',
@@ -42,8 +42,8 @@ $TCA['tx_contexts_contexts'] = array(
 			)
 		),
 		'type_conf' => array(
-			'exclude' => 1,
-            //'displayCond' => 'FIELD:type:REQ:true',
+			'exclude' => 0,
+			'displayCond' => 'FIELD:type:REQ:true',
 			'label' => $lf . ':tx_contexts_contexts.type_conf',
 			'config' => array(
 				'type' => 'flex',
