@@ -88,9 +88,31 @@ class Tx_Contexts_Api_Configuration
         return self::$enableFields;
     }
 
-    public static function registerContextType($type, $class)
-    {
-        $GLOBALS['EXTCONF']['tx_contexts']['contextTypes'][$type] = $class;
+    /**
+     * Registers a context type with the context extension.
+     * Makes it available in the context type dropdown
+     * in the context record editor in the backend.
+     *
+     * @return void
+     */
+    public static function registerContextType(
+        $key, $title, $class, $flexFile
+    ) {
+        global $TCA;
+
+        $GLOBALS['EXTCONF']['tx_contexts']['contextTypes'][$key] = array(
+            'title'     => $title,
+            'class'    => $class,
+            'flexFile' => $flexFile
+        );
+
+		t3lib_div::loadTCA('tx_contexts_contexts');
+        if (isset($TCA['tx_contexts_contexts']['columns']['type'])) {
+            $TCA['tx_contexts_contexts']['columns']['type']['config']
+                ['items'][] = array($title, $key);
+            $TCA['tx_contexts_contexts']['columns']['type_conf']['config']
+                ['ds'][$key] = $flexFile;
+        }
     }
 
     public static function getContextTypes()

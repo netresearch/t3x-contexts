@@ -14,14 +14,18 @@ $TCA['tx_contexts_contexts'] = array(
 		'adminOnly' => 1,
 		'rootLevel' => 1,
 		'dividers2tabs' => 1,
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'tca.php',
 		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY) . 'icon_tx_contexts_contexts.gif',
 	),
 );
+require_once t3lib_extMgm::extPath($_EXTKEY) . 'tca.php';
 
-require_once t3lib_extMgm::extPath($_EXTKEY).'Classes/Api/Configuration.php';
+Tx_Contexts_Api_Configuration::registerContextType(
+    'domain',
+    'Domain',
+    'Tx_Contexts_Context_Type_Domain',
+    'FILE:EXT:contexts/Configuration/flexform/ContextType/Domain.xml'
+);
 
-Tx_Contexts_Api_Configuration::registerContextType('default', 'Tx_Contexts_Context_Default');
 Tx_Contexts_Api_Configuration::addToTca('pages');
 Tx_Contexts_Api_Configuration::addToTca('tt_content');
 ?>

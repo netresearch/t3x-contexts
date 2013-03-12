@@ -99,6 +99,9 @@ class Tx_Contexts_Service_Tcemain
 	    	'tx_contexts_settings',
 	    	"context_uid = '$contextId' AND foreign_uid = 0"
 	    );
+        if ($existingSettings === null) {
+            $existingSettings = array();
+        }
 
 		foreach ($settings as $table => $fields) {
 		    $fieldSettings = array();

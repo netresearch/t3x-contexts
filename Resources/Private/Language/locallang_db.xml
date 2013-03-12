@@ -12,6 +12,9 @@
 			<label index="tx_contexts_context">Context</label>
 			<label index="tx_contexts_contexts.title">Title</label>
 			<label index="tx_contexts_contexts.alias">Alias</label>
+			<label index="tx_contexts_contexts.type">Type</label>
+			<label index="tx_contexts_contexts.type.select_type">Select a type</label>
+			<label index="tx_contexts_contexts.type_conf">Configuration</label>
 			<label index="tx_contexts_visibility">Visibility</label>
 			<label index="tx_contexts_contexts.defaults">Defaults</label>
 		</languageKey>
