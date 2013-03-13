@@ -52,6 +52,8 @@ abstract class Tx_Contexts_Context_Abstract
     /**
      * @var array
      */
+    protected $conf;
+
     private $settings = array();
 
     /**
@@ -67,7 +69,7 @@ abstract class Tx_Contexts_Context_Abstract
         $this->type = $row['type'];
         $this->title = $row['title'];
         $this->alias = $row['alias'];
-        $this->init();
+        $this->conf = $row['type_conf'];
     }
 
     /**
