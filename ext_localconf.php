@@ -8,5 +8,8 @@ $TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns']
 $TYPO3_CONF_VARS['SC_OPTIONS']['tslib/class.tslib_fe.php']['checkAlternativeIdMethods-PostProc']['contexts'] = 'EXT:contexts/Classes/Service/Tsfe.php:&Tx_Contexts_Service_Tsfe->checkAlternativeIdMethodsPostProc';
 $TYPO3_CONF_VARS['SC_OPTIONS']['typo3/mod/tools/em/index.php']['checkDBupdates']['contexts'] = 'EXT:contexts/Classes/Service/Install.php:Tx_Contexts_Service_Install';
 
-require_once t3lib_extMgm::extPath($_EXTKEY) . 'ext_contexts.php';
+if (TYPO3_MODE != 'BE') {
+    //we load that file in ext_tables.php for the backend
+    require_once t3lib_extMgm::extPath($_EXTKEY) . 'ext_contexts.php';
+}
 ?>
