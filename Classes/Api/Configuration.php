@@ -246,5 +246,14 @@ class Tx_Contexts_Api_Configuration
     {
         return self::$enableFieldsExtensions;
     }
+
+    /**
+     * @return t3lib_db
+     */
+    public static function getDb()
+    {
+        return $GLOBALS['TYPO3_DB'];
+    }
+
 }
 ?>

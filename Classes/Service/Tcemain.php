@@ -105,7 +105,7 @@ class Tx_Contexts_Service_Tcemain
      */
     protected function saveRecordSettings($table, $uid, $settingsAndFields)
     {
-        $db = Tx_Contexts_Api_Model::getDb();
+        $db = Tx_Contexts_Api_Configuration::getDb();
         foreach ($settingsAndFields as $contextId => $settings) {
             foreach ($settings as $field => $setting) {
                 $row = $db->exec_SELECTgetSingleRow(
@@ -167,7 +167,7 @@ class Tx_Contexts_Service_Tcemain
             }
         }
         if (count($values)) {
-            Tx_Contexts_Api_Model::getDb()->exec_UPDATEquery($table, 'uid=' . $uid, $values);
+            Tx_Contexts_Api_Configuration::getDb()->exec_UPDATEquery($table, 'uid=' . $uid, $values);
         }
     }
 
@@ -181,7 +181,7 @@ class Tx_Contexts_Service_Tcemain
      */
     protected function saveDefaultSettings($contextId, $settings)
     {
-        $existingSettings = (array) Tx_Contexts_Api_Model::getDb()->exec_SELECTgetRows(
+        $existingSettings = (array) Tx_Contexts_Api_Configuration::getDb()->exec_SELECTgetRows(
             '*',
             'tx_contexts_settings',
             "context_uid = '$contextId' AND foreign_uid = 0"
@@ -196,13 +196,13 @@ class Tx_Contexts_Service_Tcemain
             }
             foreach ($fields as $field => $enabled) {
                 if (array_key_exists($field, $fieldSettings)) {
-                    Tx_Contexts_Api_Model::getDb()->exec_UPDATEquery(
+                    Tx_Contexts_Api_Configuration::getDb()->exec_UPDATEquery(
                         'tx_contexts_settings',
                         'uid=' . $fieldSettings[$field],
                         array('enabled' => (int) $enabled)
                     );
                 } else {
-                    Tx_Contexts_Api_Model::getDb()->exec_INSERTquery(
+                    Tx_Contexts_Api_Configuration::getDb()->exec_INSERTquery(
                         'tx_contexts_settings',
                         array(
                             'context_uid' => $contextId,
