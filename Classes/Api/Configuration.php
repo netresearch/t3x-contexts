@@ -213,7 +213,7 @@ class Tx_Contexts_Api_Configuration
         global $TCA;
 
         $GLOBALS['EXTCONF']['tx_contexts']['contextTypes'][$key] = array(
-            'title'     => $title,
+            'title'    => $title,
             'class'    => $class,
             'flexFile' => $flexFile
         );
