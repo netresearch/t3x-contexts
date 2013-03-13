@@ -19,13 +19,7 @@ $TCA['tx_contexts_contexts'] = array(
     ),
 );
 require_once t3lib_extMgm::extPath($_EXTKEY) . 'tca.php';
-
-Tx_Contexts_Api_Configuration::registerContextType(
-    'domain',
-    'Domain',
-    'Tx_Contexts_Context_Type_Domain',
-    'FILE:EXT:contexts/Configuration/flexform/ContextType/Domain.xml'
-);
+require_once t3lib_extMgm::extPath($_EXTKEY) . 'ext_contexts.php';
 
 
 Tx_Contexts_Api_Configuration::addToTca($_EXTKEY, 'pages', array(
