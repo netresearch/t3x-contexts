@@ -8,12 +8,13 @@ class Tx_Contexts_Service_Page
      */
     public function enableFields($params, $ref)
     {
+        return;
         $sql = '';
         $table = $params['table'];
         $enableFields = Tx_Contexts_Api_Configuration::getEnableFields();
         if (array_key_exists($table, $enableFields)) {
             $contextIds = array();
-            foreach (Tx_Contexts_Api_Model::getCurrentContexts() as $context) {
+            foreach (Tx_Contexts_Api_Model::get() as $context) {
             	/* @var $context Tx_Contexts_Context_Abstract */
                 $contextIds[] = $context->getUid();
             }

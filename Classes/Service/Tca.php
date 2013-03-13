@@ -24,7 +24,7 @@
 
 /**
  * USER functions to render the defaults and record settings fields
- * 
+ *
  * @author Christian Opitz <christian.opitz@netresearch.de>
  */
 class Tx_Contexts_Service_Tca
@@ -46,39 +46,40 @@ class Tx_Contexts_Service_Tca
             t3lib_extMgm::extRelPath('contexts') . 'Resources/Public/StyleSheet/be.css'
         );
 
-        $contexts = Tx_Contexts_Api_Model::getContexts();
-        
+        $contexts = new Tx_Contexts_Context_Container();
+        $contexts->initAll();
+
         $namePre = str_replace('[' . $params['field'] . '_', '[' . $params['field'] . '][', $params['itemFormElName']);
 
         $fields = $params['fieldConf']['config']['fields'];
 
         $content =
-        '<table class="tx_contexts_table_settings">' . 
-        '<tr><th class="tx_contexts_context">' . 
-        $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_context') . 
+        '<table class="tx_contexts_table_settings">' .
+        '<tr><th class="tx_contexts_context">' .
+        $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_context') .
         '</th>';
         foreach ($fields as $field => $label) {
             $content .= '<th class="tx_contexts_setting">' . $fobj->sL($label) . '</th>';
         }
         $content .= '</tr>';
-        
+
         $uid = (int) $params['row']['uid'];
-        
+
         foreach ($contexts as $context) {
             /* @var $context Tx_Contexts_Context_Abstract */
             $content .= '<tr><td class="tx_contexts_context">' . $context->getTitle() . '</td>';
-            
+
             foreach ($fields as $field => $config) {
                 $setting = $uid ? $context->getSetting($table, $uid, $field) : null;
                 $content .=
-                '<td class="tx_contexts_setting">' . 
-                '<select name="' . $namePre . '[' . $context->getUid() . '][' . $field . ']">' . 
-                '<option value="">n/a</option>' . 
-                '<option value="1"' . ($setting && $setting->getEnabled() ? ' selected="selected"' : '') . '>Yes</option>' . 
-                '<option value="0"' . ($setting && !$setting->getEnabled() ? ' selected="selected"' : '') . '>No</option>' . 
+                '<td class="tx_contexts_setting">' .
+                '<select name="' . $namePre . '[' . $context->getUid() . '][' . $field . ']">' .
+                '<option value="">n/a</option>' .
+                '<option value="1"' . ($setting && $setting->getEnabled() ? ' selected="selected"' : '') . '>Yes</option>' .
+                '<option value="0"' . ($setting && !$setting->getEnabled() ? ' selected="selected"' : '') . '>No</option>' .
                 '</select></td>';
             }
-            
+
             $content .= '</tr>';
         }
         $content .= '</table>';
@@ -106,7 +107,9 @@ class Tx_Contexts_Service_Tca
 
         /* @var $context Tx_Contexts_Context_Abstract */
         $uid = (int) $params['row']['uid'];
-        $context = $uid ? Tx_Contexts_Api_Model::getContext($uid) : null;
+        $context = $uid
+            ? Tx_Contexts_Context_Container::get()->initAll()->find($uid)
+            : null;
 
         foreach ($params['fieldConf']['config']['fields'] as $field => $label) {
             $id = $params['itemFormElID'] . '-' . $field;

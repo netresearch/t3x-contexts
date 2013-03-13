@@ -32,16 +32,21 @@ class Tx_Contexts_Context_Factory
     /**
      * Find the right class for the context type and instantiate it
      *
-     * @param array $row
-     * @throws Tx_Contexts_Exception
+     * @param array $arRow Database context row
+     *
      * @return Tx_Contexts_Context_Abstract|null
+     * @throws Tx_Contexts_Exception
      */
-    public static function makeContextInstance($row)
+    public static function createFromDb($arRow)
     {
         $classMap = Tx_Contexts_Api_Configuration::getContextTypes();
-        $type = $row['type'];
+        $type     = $arRow['type'];
+
         if (!$type || !array_key_exists($type, $classMap)) {
-            t3lib_div::devLog('No class found for context type "' . $type . '"', 'tx_contexts', 2);
+            t3lib_div::devLog(
+                'No class found for context type "' . $type . '"',
+                'tx_contexts', 2
+            );
             $type = 'default';
         }
 
@@ -53,25 +58,14 @@ class Tx_Contexts_Context_Factory
             return null;
         }
 
-        if (strpos($class, ':') !== FALSE) {
-            list($file, $class) = t3lib_div::revExplode(':', $class, 2);
-            if ($class[0] == '&') {
-                throw new Tx_Contexts_Exception(
-                    'Persistence feature is not supported (remove & from ' . $class . ')'
-                );
-            }
-            $requireFile = t3lib_div::getFileAbsFileName($file);
-            if ($requireFile) {
-                t3lib_div::requireOnce($requireFile);
-            }
-        }
-
-        $instance = t3lib_div::makeInstance($class, $row);
+        $instance = t3lib_div::makeInstance($class, $arRow);
         if ($instance instanceof t3lib_Singleton) {
             throw new Tx_Contexts_Exception($class . ' may not be singleton');
         }
         if (!$instance instanceof Tx_Contexts_Context_Abstract) {
-            throw new Tx_Contexts_Exception($class . ' must extend Tx_Contexts_Context_Abstract');
+            throw new Tx_Contexts_Exception(
+                $class . ' must extend Tx_Contexts_Context_Abstract'
+            );
         }
         return $instance;
     }

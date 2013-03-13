@@ -2,23 +2,14 @@
 class Tx_Contexts_Service_Tsfe
 {
     /**
-     * @param array $params
-     * @param tslib_fe $ref
+     * Initialize the frontend user - contexts are initialized here.
+     *
+     * @param tslib_fe $pObj Calling object
+     *
+     * @return void
      */
-    public function checkAlternativeIdMethodsPostProc($params, $ref)
+    public function initFEuser($pObj)
     {
-        $this->determineContexts();
-    }
-    
-    public function determineContexts()
-    {
-        $currentContexts = Tx_Contexts_Api_Model::getCurrentContexts();
-        $allContexts = Tx_Contexts_Api_Model::getContexts();
-        foreach ($allContexts as $context) {
-            /* @var $context Tx_Contexts_Context_Abstract */
-            if ($context->match()) {
-                $currentContexts->append($context);
-            }
-        }
+        Tx_Contexts_Context_Container::get()->initMatching();
     }
 }

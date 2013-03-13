@@ -57,29 +57,49 @@ abstract class Tx_Contexts_Context_Abstract
     private $settings = array();
 
     /**
-     * Constructor - set the values (override init() to something
-     * on __construct)
+     * Constructor - set the values from database row
      *
-     * @param array $row
-     * @return void
+     * @param array $arRow Database context row
      */
-    final public function __construct($row)
+    public function __construct($arRow)
     {
-        $this->uid = (int) $row['uid'];
-        $this->type = $row['type'];
-        $this->title = $row['title'];
-        $this->alias = $row['alias'];
-        $this->conf = $row['type_conf'];
+        $this->uid   = (int) $arRow['uid'];
+        $this->type  = $arRow['type'];
+        $this->title = $arRow['title'];
+        $this->alias = $arRow['alias'];
+        if ($arRow['type_conf'] != '') {
+            $this->conf  = \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array(
+                $arRow['type_conf']
+            );
+        }
     }
 
     /**
-     * Override this instead of __construct
+     * Get a configuration value
      *
-     * @return void
+     * @param string $fieldName Name of the field
+	 * @param string $sheet     Sheet pointer, eg. "sDEF
+	 * @param string $lang      Language pointer, eg. "lDEF
+	 * @param string $value     Value pointer, eg. "vDEF
+     *
+	 * @return string The content
      */
-    protected function init()
-    {
+    protected function getConfValue(
+        $fieldName, $default = null,
+        $sheet = 'sDEF', $lang = 'lDEF', $value = 'vDEF'
+    ) {
+        if (!isset($this->conf['data'][$sheet][$lang])) {
+            return $default;
+        }
+
+        $ldata = $this->conf['data'][$sheet][$lang];
+        if (!isset($ldata[$fieldName][$value])) {
+            return $default;
+        }
+
+        return $ldata[$fieldName][$value];
     }
+
 
     /**
      * Query a setting record and retrieve the value object
@@ -90,8 +110,9 @@ abstract class Tx_Contexts_Context_Abstract
      * @param string $field
      * @return Tx_Contexts_Context_Setting|null
      */
-    final public function getSetting($table, $uid, $field = Tx_Contexts_Api_Configuration::DEFAULT_FIELD)
-    {
+    final public function getSetting(
+        $table, $uid, $field = Tx_Contexts_Api_Configuration::DEFAULT_FIELD
+    ) {
         $settingKey = $table . '-' . $field . '-' . $uid;
         if (array_key_exists($settingKey, $this->settings)) {
             return $this->settings[$settingKey];
@@ -121,22 +142,21 @@ abstract class Tx_Contexts_Context_Abstract
      * @param string $field
      * @return boolean
      */
-    final public function hasSetting($table, $uid, $field = Tx_Contexts_Api_Configuration::DEFAULT_FIELD)
-    {
+    final public function hasSetting(
+        $table, $uid, $field = Tx_Contexts_Api_Configuration::DEFAULT_FIELD
+    ) {
         return $this->getSetting($table, $uid, $field) ? true : false;
     }
 
     /**
-     * This function gets called when the current contexts are
-     * determined. Returns
-     * * true, when your context matches,
-     * * false, when your context doesn't match
-     * * null, when your context is not ready to decide that yet
-     *   (eg. to let other contexts match first)
+     * This function gets called when the current contexts are determined.
      *
-     * @return boolean|null
+     * @param array $arDependencies Array of context objects that are
+     *                              dependencies of this context
+     *
+     * @return boolean True when your context matches, false if not
      */
-    abstract public function match();
+    abstract public function match($arDependencies);
 
     /**
      * Get the uid of this context
@@ -176,6 +196,17 @@ abstract class Tx_Contexts_Context_Abstract
     public function getAlias()
     {
         return $this->alias;
+    }
+
+    /**
+     * Return all context UIDs this context depends on.
+     *
+     * @return array Array of context uids this context depends on.
+     *               Key is the UID, value is "true"
+     */
+    public function getDependencies()
+    {
+        return array();
     }
 }
 ?>

@@ -219,6 +219,7 @@ class Tx_Contexts_Api_Configuration
         );
 
         t3lib_div::loadTCA('tx_contexts_contexts');
+
         if (isset($TCA['tx_contexts_contexts']['columns']['type'])) {
             $TCA['tx_contexts_contexts']['columns']['type']['config']
                 ['items'][] = array($title, $key);
