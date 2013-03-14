@@ -52,6 +52,11 @@ class Tx_Contexts_Api_Configuration
     const ENABLE_FIELD = 'tx_contexts_visibility';
 
     /**
+     * Name of the "visible in menu" field
+     */
+    const MENU_FIELD = 'menu_visibility';
+
+    /**
      * The name of the enableField column with a comma separated
      * list of contexts for which a record is ENABLED
      * (to enable faster queries with enableFields)
@@ -70,6 +75,9 @@ class Tx_Contexts_Api_Configuration
      * @var string
      */
     const ENABLE_COLUMN_DISABLE = 'tx_contexts_disable';
+
+    const COLUMN_MENU_ENABLE = 'tx_contexts_nav_enable';
+    const COLUMN_MENU_DISABLE = 'tx_contexts_nav_disable';
 
     /**
      * Array containing tables and extensions which added the

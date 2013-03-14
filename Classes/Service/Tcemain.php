@@ -164,23 +164,57 @@ class Tx_Contexts_Service_Tcemain
     {
         $values = array();
         $enableField = Tx_Contexts_Api_Configuration::ENABLE_FIELD;
+        $menuField   = Tx_Contexts_Api_Configuration::MENU_FIELD;
+
+        $first = reset($settingsAndFields);
+        if (array_key_exists($enableField, $first)) {
+            $values[Tx_Contexts_Api_Configuration::ENABLE_COLUMN_ENABLE] = '';
+            $values[Tx_Contexts_Api_Configuration::ENABLE_COLUMN_DISABLE] = '';
+        }
+        if (array_key_exists($menuField, $first)) {
+            $values[Tx_Contexts_Api_Configuration::COLUMN_MENU_ENABLE] = '';
+            $values[Tx_Contexts_Api_Configuration::COLUMN_MENU_DISABLE] = '';
+        }
+
         foreach ($settingsAndFields as $contextId => $settings) {
             if (array_key_exists($enableField, $settings)) {
+                $column = '';
                 if ($settings[$enableField] === '0') {
                     $column = Tx_Contexts_Api_Configuration::ENABLE_COLUMN_DISABLE;
                 } elseif ($settings[$enableField] === '1') {
                     $column = Tx_Contexts_Api_Configuration::ENABLE_COLUMN_ENABLE;
-                } else {
-                    continue;
                 }
-                if (!array_key_exists($column, $values)) {
-                    $values[$column] = $contextId;
-                } else {
-                    $values[$column] .= ',' . $contextId;
+                if ($column) {
+                    if (!array_key_exists($column, $values)) {
+                        $values[$column] = $contextId;
+                    } else {
+                        $values[$column] .= ',' . $contextId;
+                    }
+                }
+            }
+
+            if (array_key_exists($menuField, $settings)) {
+                $column = '';
+                if ($settings[$menuField] === '0') {
+                    $column = Tx_Contexts_Api_Configuration
+                        ::COLUMN_MENU_DISABLE;
+                } elseif ($settings[$menuField] === '1') {
+                    $column = Tx_Contexts_Api_Configuration
+                        ::COLUMN_MENU_ENABLE;
+                }
+                if ($column) {
+                    if (!array_key_exists($column, $values)) {
+                        $values[$column] = $contextId;
+                    } else {
+                        $values[$column] .= ',' . $contextId;
+                    }
                 }
             }
         }
         if (count($values)) {
+            foreach ($values as $colname => &$val) {
+                $val = trim($val, ',');
+            }
             Tx_Contexts_Api_Configuration::getDb()->exec_UPDATEquery(
                 $table, 'uid=' . $uid, $values
             );

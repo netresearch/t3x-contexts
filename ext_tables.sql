@@ -39,6 +39,8 @@ CREATE TABLE tx_contexts_settings (
 CREATE TABLE pages (
        tx_contexts_enable tinytext NOT NULL,
        tx_contexts_disable tinytext NOT NULL
+       tx_contexts_nav_enable tinytext NOT NULL,
+       tx_contexts_nav_disable tinytext NOT NULL
 );
 
 CREATE TABLE tt_content (
