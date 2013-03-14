@@ -37,23 +37,26 @@ class Tx_Contexts_Service_Tcemain
      * currentSettings. This function is called by TYPO each time a record
      * is saved in the backend.
      *
-     * @param array $incomingFieldArray
-     * @param string $table
-     * @param string $id
+     * @param array         &$incomingFieldArray
+     * @param string        $table
+     * @param string        $id
      * @param t3lib_TCEmain $reference
+     *
      * @return void
      */
-    function processDatamap_preProcessFieldArray(&$incomingFieldArray, $table, $id, &$reference) {
+    public function processDatamap_preProcessFieldArray(
+        &$incomingFieldArray, $table, $id, &$reference
+    ) {
         $data = $incomingFieldArray;
 
         if (!is_array($incomingFieldArray)) {
-                // some strange DB situation
+            // some strange DB situation
             return;
         }
 
-        if ($table == 'tx_contexts_contexts' &&
-            isset($incomingFieldArray['default_settings']) &&
-            is_array($incomingFieldArray['default_settings'])
+        if ($table == 'tx_contexts_contexts'
+            && isset($incomingFieldArray['default_settings'])
+            && is_array($incomingFieldArray['default_settings'])
         ) {
             $this->currentSettings = $incomingFieldArray['default_settings'];
             unset($incomingFieldArray['default_settings']);
@@ -69,15 +72,17 @@ class Tx_Contexts_Service_Tcemain
     /**
      * Finally save the settings
      *
-     * @param string $status
-     * @param string $table
-     * @param string $id
-     * @param array $fieldArray
+     * @param string        $status
+     * @param string        $table
+     * @param string        $id
+     * @param array         $fieldArray
      * @param t3lib_TCEmain $reference
+     *
      * @return void
      */
-    function processDatamap_afterDatabaseOperations($status, $table, $id, $fieldArray, $reference)
-    {
+    public function processDatamap_afterDatabaseOperations(
+        $status, $table, $id, $fieldArray, $reference
+    ) {
         if (is_array($this->currentSettings)) {
             if (!is_numeric($id)) {
                 $id = $reference->substNEWwithIDs[$id];
@@ -99,8 +104,9 @@ class Tx_Contexts_Service_Tcemain
      * blank (n/a) eventually existing records will be deleted.
      *
      * @param string $table
-     * @param int $uid
-     * @param array $settingsAndFields
+     * @param int    $uid
+     * @param array  $settingsAndFields
+     *
      * @return void
      */
     protected function saveRecordSettings($table, $uid, $settingsAndFields)
@@ -141,9 +147,17 @@ class Tx_Contexts_Service_Tcemain
      * hook.
      *
      * @param string $table
-     * @param int $uid
-     * @param array $settingsAndFields
+     * @param int    $uid
+     * @param array  $settingsAndFields Array of settings.
+     *                                  Key is the context UID.
+     *                                  Value is an array of setting names
+     *                                  and their value, e.g.
+     *                                  tx_contexts_visibility => '',
+     *                                  menu_visibility => '0'
+     *                                  '' = undecided, 1 - on, 0 - off
+     *
      * @return void
+     *
      * @see Tx_Contexts_Service_Tsfe::enableFields()
      */
     protected function saveEnableField($table, $uid, $settingsAndFields)
@@ -167,7 +181,9 @@ class Tx_Contexts_Service_Tcemain
             }
         }
         if (count($values)) {
-            Tx_Contexts_Api_Configuration::getDb()->exec_UPDATEquery($table, 'uid=' . $uid, $values);
+            Tx_Contexts_Api_Configuration::getDb()->exec_UPDATEquery(
+                $table, 'uid=' . $uid, $values
+            );
         }
     }
 
