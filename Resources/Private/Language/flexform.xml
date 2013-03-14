@@ -7,6 +7,8 @@
   <data type="array">
     <languageKey index="default" type="array">
       <label index="domain.field_domains">Domains, one per line</label>
+      <label index="getparam.field_name">GET parameter name</label>
+      <label index="getparam.field_values">parameter values, one per line</label>
     </languageKey>
   </data>
 </T3locallang>
