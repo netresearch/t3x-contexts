@@ -35,3 +35,13 @@ CREATE TABLE tx_contexts_settings (
 	PRIMARY KEY (uid),
 	KEY parent (pid)
 ) ENGINE=InnoDB;
+
+CREATE TABLE pages (
+       tx_contexts_enable tinytext,
+       tx_contexts_disable tinytext,
+);
+
+CREATE TABLE tt_content (
+       tx_contexts_enable tinytext,
+       tx_contexts_disable tinytext,
+);
