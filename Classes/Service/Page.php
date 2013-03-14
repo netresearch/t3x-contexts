@@ -31,6 +31,7 @@
  * @license http://opensource.org/licenses/gpl-license GPLv2 or later
  */
 class Tx_Contexts_Service_Page
+    implements t3lib_pageSelect_getPageHook
 {
     /**
      * Add context filtering to an SQL query
@@ -48,7 +49,35 @@ class Tx_Contexts_Service_Page
      */
     public function enableFields($params, $ref)
     {
-        $table = $params['table'];
+        return $this->getFilterSql($params['table']);
+    }
+
+    /**
+     * Add page access restrictions through context settings.
+     *
+     * @return void
+     */
+	public function getPage_preProcess(
+        &$uid, &$disableGroupAccessCheck, t3lib_pageSelect $pObj
+    ) {
+        static $done = false;
+        if ($done) {
+            return;
+        }
+        $pObj->where_groupAccess .= $this->getFilterSql('pages');
+        $done = true;
+    }
+
+    /**
+     * Generates a SQL WHERE statement that filters out records
+     * that may not be accessed with the current context settings
+     *
+     * @param string $table Database table name
+     *
+     * @return string SQL filter string beginning with " AND "
+     */
+    protected function getFilterSql($table)
+    {
         $enableFields = Tx_Contexts_Api_Configuration
             ::getEnableFieldsExtensions();
         if (!array_key_exists($table, $enableFields)) {

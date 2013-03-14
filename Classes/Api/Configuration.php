@@ -75,9 +75,17 @@ class Tx_Contexts_Api_Configuration
      * Array containing tables and extensions which added the
      * enableField to those tables (keys are tables, values
      * are arrays of extension keys)
+     *
+     * We need the pages table already in here because TCA has not
+     * been loaded when the first page access check is being made.
+     *
      * @var array
      */
-    protected static $enableFieldsExtensions = array();
+    protected static $enableFieldsExtensions = array(
+        'pages' => array(
+            'contexts'
+        )
+    );
 
     /**
      * Add context settings to a specific table. $fields can be
