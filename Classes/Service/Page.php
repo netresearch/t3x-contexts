@@ -65,8 +65,7 @@ class Tx_Contexts_Service_Page
         }
 
         $enableChecks = array(
-            "tx_contexts_enable = ''",
-            "tx_contexts_enable IS NULL"
+            "tx_contexts_enable = ''"
         );
         $disableChecks = array();
 
@@ -82,7 +81,6 @@ class Tx_Contexts_Service_Page
         $sql = ' AND (' . implode(' OR ', $enableChecks) . ')';
         $sql .= ' AND ('
             . "tx_contexts_disable = ''"
-            . ' OR tx_contexts_disable IS NULL'
             . ' OR (' . implode(' AND ', $disableChecks) . ')'
             . ')';
 

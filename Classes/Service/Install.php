@@ -26,7 +26,7 @@
  * Hooks for tx_em_Install: Append the necessary field definitions for
  * the enableFields-columns (tx_contexts_enable, tx_contexts_disable)
  * to the tables they were registered for
- * 
+ *
  * @author Christian Opitz <christian.opitz@netresearch.de>
  */
 class Tx_Contexts_Service_Install implements tx_em_Index_CheckDatabaseUpdatesHook
@@ -47,7 +47,7 @@ class Tx_Contexts_Service_Install implements tx_em_Index_CheckDatabaseUpdatesHoo
     public function appendTableDefinitions($extKey, array $extInfo, $fileContent, t3lib_install $instObj, t3lib_install_Sql $instSqlObj, tx_em_Install $parent)
     {
         global $TCA;
-        
+
         $enableFieldsExtensions = Tx_Contexts_Api_Configuration::getEnableFieldsExtensions();
         $tables = array();
         foreach ($enableFieldsExtensions as $table => $extensions) {
@@ -55,15 +55,15 @@ class Tx_Contexts_Service_Install implements tx_em_Index_CheckDatabaseUpdatesHoo
                 $tables[] = $table;
             }
         }
-        
+
         $sql = '';
         foreach ($tables as $table) {
             $sql .= "\nCREATE TABLE $table (\n";
-            $sql .= Tx_Contexts_Api_Configuration::ENABLE_COLUMN_ENABLE . " tinytext,\n";
-            $sql .= Tx_Contexts_Api_Configuration::ENABLE_COLUMN_DISABLE . " tinytext\n";
+            $sql .= Tx_Contexts_Api_Configuration::ENABLE_COLUMN_ENABLE . " tinytext NOT NULL,\n";
+            $sql .= Tx_Contexts_Api_Configuration::ENABLE_COLUMN_DISABLE . " tinytext NOT NULL\n";
             $sql .= ');';
         }
-        
+
         return $sql;
     }
 
