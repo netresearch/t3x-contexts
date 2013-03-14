@@ -115,5 +115,57 @@ class Tx_Contexts_Service_Page
 
         return $sql;
     }
+
+    /**
+     * Add an additional parameter to cHash so that caches are specific
+     * to the current context combination.
+     *
+     * We modify the 'pA' array since it contains the parameters that get used
+     * to build the hash.
+     *
+     * Used by TYPO3 versions < 4.7
+     *
+     * @param array &$params Array of parameters: addQueryParams, params, pA
+     * @param null  $ref     Empty reference object
+     *
+     * @return void
+     *
+     * @usedby t3lib_div::cHashParams()
+     */
+    public function cHashParams(&$params, $ref)
+    {
+        $params['pA']['tx_contexts-contexts'] = $this->getHashString();
+    }
+
+    /**
+     * Modify the cache hash in TYPO3 version >= 4.7
+     *
+     * @param array &$params Array of parameters: hashParameters,
+     *                       createLockHashBase
+     * @param null  $ref     Reference object
+     *
+     * @return void
+     */
+    public function createHashBase(&$params, $ref)
+    {
+        $params['hashParameters']['tx_contexts-contexts']
+            = $this->getHashString();
+    }
+
+    /**
+     * Creates a string that can be used to identify the current
+     * context combination.
+     * Used for cache hash modification.
+     *
+     * @return string Hash modificator
+     */
+    protected function getHashString()
+    {
+        $keys = array_keys(
+            Tx_Contexts_Context_Container::get()->getArrayCopy()
+        );
+        sort($keys, SORT_NUMERIC);
+        return implode(',', $keys);
+    }
 }
 ?>

@@ -5,12 +5,22 @@ if (!defined('TYPO3_MODE')) {
 
 $TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['contexts'] = 'EXT:contexts/Classes/Service/Tcemain.php:Tx_Contexts_Service_Tcemain';
 
+//override enableFields
 $TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns']['contexts']
     = 'EXT:contexts/Classes/Service/Page.php:'
     . '&Tx_Contexts_Service_Page->enableFields';
+//override page access control
 $TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_page.php']['getPage'][]
     = 'EXT:contexts/Classes/Service/Page.php:'
     . '&Tx_Contexts_Service_Page';
+//override page hash generation, TYPO3 version < 4.7
+$TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_div.php']['cHashParamsHook'][]
+    = 'EXT:contexts/Classes/Service/Page.php:'
+    . '&Tx_Contexts_Service_Page->cHashParams';
+//override page hash generation, TYPO3 version >= 4.7
+$TYPO3_CONF_VARS['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][]
+    = 'EXT:contexts/Classes/Service/Page.php:'
+    . '&Tx_Contexts_Service_Page->createHashBase';
 
 $TYPO3_CONF_VARS['SC_OPTIONS']['tslib/class.tslib_fe.php']['initFEuser']['contexts']
     = 'EXT:contexts/Classes/Service/Tsfe.php:'
