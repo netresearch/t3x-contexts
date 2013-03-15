@@ -7,7 +7,7 @@
  <ROOT>
    <type>array</type>
    <el>
-     <field_values>
+     <field_ip>
        <TCEforms>
          <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xml:ip.field_ip</label>
          <config>
@@ -17,7 +17,7 @@
            <eval>trim</eval>
          </config>
        </TCEforms>
-     </field_values>
+     </field_ip>
    </el>
  </ROOT>
 </T3DataStructure>
