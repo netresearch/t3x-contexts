@@ -53,11 +53,10 @@ class Tx_Contexts_Service_Tca
 
         $fields = $params['fieldConf']['config']['fields'];
 
-        $content =
-        '<table class="tx_contexts_table_settings">' .
-        '<tr><th class="tx_contexts_context">' .
-        $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_context') .
-        '</th>';
+        $content = '<table class="tx_contexts_table_settings">'
+            . '<tr><th class="tx_contexts_context">'
+            . $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_context')
+            . '</th>';
         foreach ($fields as $field => $label) {
             $content .= '<th class="tx_contexts_setting">' . $fobj->sL($label) . '</th>';
         }
@@ -67,7 +66,9 @@ class Tx_Contexts_Service_Tca
 
         foreach ($contexts as $context) {
             /* @var $context Tx_Contexts_Context_Abstract */
-            $content .= '<tr><td class="tx_contexts_context">' . $context->getTitle() . '</td>';
+            $content .= '<tr><td class="tx_contexts_context">'
+                . $this->getRecordPreview($context, $uid)
+                . '</td>';
 
             foreach ($fields as $field => $config) {
                 $setting = $uid ? $context->getSetting($table, $uid, $field) : null;
@@ -86,6 +87,60 @@ class Tx_Contexts_Service_Tca
 
         return $content;
     }
+
+    protected function getRecordPreview($context, $this_uid)
+    {
+        $row = array(
+            'uid'   => $context->getUid(),
+            'pid'   => 0,
+            'type'  => $context->getType(),
+            'alias' => $context->getAlias()
+        );
+
+
+        $this_table = 'tx_contexts_contexts';
+        return '<span class="nobr">'
+            . $this->getClickMenu(
+                t3lib_iconWorks::getSpriteIconForRecord(
+                    $this_table,
+                    $row,
+                    array(
+                        'style' => 'vertical-align:top',
+                        'title' => htmlspecialchars(
+                            $context->getTitle()
+                            . ' [UID: ' . $row['uid'] . ']')
+                    )
+                ),
+                $this_table,
+                $this_uid
+            )
+            . '&nbsp;'
+            . htmlspecialchars($context->getTitle())
+            . ' <span class="typo3-dimmed"><em>[' . $row['uid'] . ']</em></span>'
+            . '</span>';
+    }
+
+	/**
+	 * Wraps the icon of a relation item (database record or file) in a link
+     * opening the context menu for the item.
+	 *
+     * Copied from class.t3lib_befunc.php
+     *
+	 * @param string  $str   The icon HTML to wrap
+	 * @param string  $table Table name (eg. "pages" or "tt_content") OR the absolute path to the file
+	 * @param integer $uid   The uid of the record OR if file, just blank value.
+     *
+	 * @return string HTML
+	 */
+	protected function getClickMenu($str, $table, $uid = '')
+    {
+        $onClick = $GLOBALS['SOBE']->doc->wrapClickMenuOnIcon(
+            $str, $table, $uid, 1, '', 'info,edit,view', TRUE
+        );
+        return '<a href="#" onclick="' . htmlspecialchars($onClick) . '">'
+            . $str . '</a>';
+	}
+
 
     /**
      * Render a checkbox for the default settings of records in
