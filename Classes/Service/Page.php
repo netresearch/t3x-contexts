@@ -110,11 +110,11 @@ class Tx_Contexts_Service_Page
         }
 
         $sql = ' AND (' . implode(' OR ', $enableChecks) . ')';
-        $sql .= ' AND (' . "tx_contexts_disable = ''";
         if (count($disableChecks)) {
-            $sql .= ' OR (' . implode(' AND ', $disableChecks) . ')';
+            $sql .= ' AND (' . "tx_contexts_disable = ''"
+                . ' OR (' . implode(' AND ', $disableChecks) . ')'
+                . ')';
         }
-        $sql .= ')';
 
         return $sql;
     }
