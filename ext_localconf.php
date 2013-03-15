@@ -3,7 +3,10 @@ if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
 
-$TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['contexts'] = 'EXT:contexts/Classes/Service/Tcemain.php:Tx_Contexts_Service_Tcemain';
+//hook into record saving
+$TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['contexts']
+    = 'EXT:contexts/Classes/Service/Tcemain.php:'
+    . 'Tx_Contexts_Service_Tcemain';
 
 //override enableFields
 $TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns']['contexts']
@@ -13,6 +16,11 @@ $TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns']
 $TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_page.php']['getPage'][]
     = 'EXT:contexts/Classes/Service/Page.php:'
     . '&Tx_Contexts_Service_Page';
+//override page menu visibility
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/tslib/class.tslib_menu.php']['filterMenuPages'][]
+    = 'EXT:contexts/Classes/Service/Page.php:'
+    . '&Tx_Contexts_Service_Page';
+
 //override page hash generation, TYPO3 version < 4.7
 $TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_div.php']['cHashParamsHook'][]
     = 'EXT:contexts/Classes/Service/Page.php:'

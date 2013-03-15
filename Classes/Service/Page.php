@@ -31,7 +31,7 @@
  * @license http://opensource.org/licenses/gpl-license GPLv2 or later
  */
 class Tx_Contexts_Service_Page
-    implements t3lib_pageSelect_getPageHook
+    implements t3lib_pageSelect_getPageHook, tslib_menu_filterMenuPagesHook
 {
     /**
      * Add context filtering to an SQL query
@@ -166,6 +166,46 @@ class Tx_Contexts_Service_Page
         );
         sort($keys, SORT_NUMERIC);
         return implode(',', $keys);
+    }
+
+    /**
+     * Checks if a page is OK to include in the final menu item array.
+     *
+     * @param array $data Array of menu items
+     * @param array $banUidArray Array of page uids which are to be excluded
+     * @param boolean $spacer If set, then the page is a spacer.
+     * @param \TYPO3\CMS\Frontend\ContentObject\Menu\AbstractMenuContentObject $obj The menu object
+     * @return boolean Returns TRUE if the page can be safely included.
+     */
+    public function processFilter(
+        array &$data, array $banUidArray, $spacer, $obj
+    ) {
+        if ($data['tx_contexts_nav_enable'] == ''
+            && $data['tx_contexts_nav_disable'] == ''
+        ) {
+            return true;
+        }
+
+        $contexts = Tx_Contexts_Context_Container::get();
+        if ($data['tx_contexts_nav_disable'] != '') {
+            $arDisabledFor = explode(',', $data['tx_contexts_nav_disable']);
+            foreach ($arDisabledFor as $id) {
+                if (array_key_exists($id, $contexts)) {
+                    return false;
+                }
+            }
+            if ($data['tx_contexts_nav_enable'] == '') {
+                return true;
+            }
+        }
+
+        $arEnabledFor = explode(',', $data['tx_contexts_nav_enable']);
+        foreach ($arEnabledFor as $id) {
+            if (array_key_exists($id, $contexts)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 ?>
