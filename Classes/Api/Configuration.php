@@ -91,25 +91,72 @@ class Tx_Contexts_Api_Configuration
      * fields on $table on installation/update of your extension in EM.
      * (@see Tx_Contexts_Service_Install::appendTableDefinitions())
      *
-     * @param string $extKey
-     * @param string $table
-     * @param array|null $fields
-     * @param boolean $addEnableField
+     * @param string     $extKey         Extension key that ena the table
+     * @param string     $table          Table to add settings to
+     * @param array|null $fields         Array of fields to register.
+     *                                   Key is the field name, value its title
+     * @param boolean    $addEnableField If an "enableField" is added that is
+     *                                   used to hide/show elements
      * @return void
      */
-    public static function addToTca($extKey, $table, $fields = null, $addEnableField = true)
-    {
+    public static function enableContextsForTable(
+        $extKey, $table, $fields = null, $addEnableField = true
+    ) {
+        self::addToEnableFieldsExtensions(
+            $extKey, $table, $fields, $addEnableField
+        );
+        self::addToTca($extKey, $table, $fields, $addEnableField);
+    }
+
+    /**
+     * Adds the table to the "enable fields extensions" array that
+     * is used during frontend rendering
+     *
+     * @param string     $extKey         Extension key that ena the table
+     * @param string     $table          Table to add settings to
+     * @param array|null $fields         Array of fields to register.
+     *                                   Key is the field name, value its title
+     * @param boolean    $addEnableField If an "enableField" is added that is
+     *                                   used to hide/show elements
+     *
+     * @return void
+     */
+    protected static function addToEnableFieldsExtensions(
+        $extKey, $table, $fields = null, $addEnableField = true
+    ) {
+        if ($addEnableField) {
+            if (!array_key_exists($table, self::$enableFieldsExtensions)) {
+                self::$enableFieldsExtensions[$table] = array();
+            }
+            self::$enableFieldsExtensions[$table][] = $extKey;
+        }
+    }
+
+    /**
+     * Add field information to the TCA.
+     *
+     * @param string     $extKey         Extension key that ena the table
+     * @param string     $table          Table to add settings to
+     * @param array|null $fields         Array of fields to register.
+     *                                   Key is the field name, value its title
+     * @param boolean    $addEnableField If an "enableField" is added that is
+     *                                   used to hide/show elements
+     *
+     * @return void
+     */
+    protected static function addToTca(
+        $extKey, $table, $fields = null, $addEnableField = true
+    ) {
         global $TCA;
         t3lib_div::loadTCA($table);
+        if (!isset($TCA[$table])) {
+            return;
+        }
         t3lib_div::loadTCA('tx_contexts_contexts');
 
         if ($addEnableField) {
             $TCA[$table]['ctrl']['enablecolumns']['tx_contexts_visibility']
                 = 'tx_contexts_visibility';
-            if (!array_key_exists($table, self::$enableFieldsExtensions)) {
-                self::$enableFieldsExtensions[$table] = array();
-            }
-            self::$enableFieldsExtensions[$table][] = $extKey;
         }
 
         $defaultEnableField = array(

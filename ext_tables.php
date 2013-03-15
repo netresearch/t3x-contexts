@@ -23,10 +23,4 @@ if (TYPO3_MODE == 'BE') {
     //all other modes did load it already
     require_once t3lib_extMgm::extPath($_EXTKEY) . 'ext_contexts.php';
 }
-
-
-Tx_Contexts_Api_Configuration::addToTca($_EXTKEY, 'pages', array(
-	'menu_visibility' => 'LLL:'.Tx_Contexts_Api_Configuration::LANG_FILE.':tx_contexts_menu_visibility'
-));
-Tx_Contexts_Api_Configuration::addToTca($_EXTKEY, 'tt_content');
 ?>
