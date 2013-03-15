@@ -53,7 +53,7 @@ class Tx_Contexts_Service_Tca
 
         $fields = $params['fieldConf']['config']['fields'];
 
-        $content = '<table class="tx_contexts_table_settings">'
+        $content = '<br/><table class="tx_contexts_table_settings">'
             . '<tr><th class="tx_contexts_context">'
             . $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_context')
             . '</th>';
@@ -97,12 +97,10 @@ class Tx_Contexts_Service_Tca
             'alias' => $context->getAlias()
         );
 
-
-        $this_table = 'tx_contexts_contexts';
         return '<span class="nobr">'
             . $this->getClickMenu(
                 t3lib_iconWorks::getSpriteIconForRecord(
-                    $this_table,
+                    'tx_contexts_contexts',
                     $row,
                     array(
                         'style' => 'vertical-align:top',
@@ -111,8 +109,8 @@ class Tx_Contexts_Service_Tca
                             . ' [UID: ' . $row['uid'] . ']')
                     )
                 ),
-                $this_table,
-                $this_uid
+                'tx_contexts_contexts',
+                $row['uid']
             )
             . '&nbsp;'
             . htmlspecialchars($context->getTitle())
@@ -135,7 +133,7 @@ class Tx_Contexts_Service_Tca
 	protected function getClickMenu($str, $table, $uid = '')
     {
         $onClick = $GLOBALS['SOBE']->doc->wrapClickMenuOnIcon(
-            $str, $table, $uid, 1, '', 'info,edit,view', TRUE
+            $str, $table, $uid, 1, '', '+info,edit,view', TRUE
         );
         return '<a href="#" onclick="' . htmlspecialchars($onClick) . '">'
             . $str . '</a>';
