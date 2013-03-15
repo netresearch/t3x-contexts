@@ -55,7 +55,7 @@ class Tx_Contexts_Service_Tca
 
         $content = '<br/><table class="tx_contexts_table_settings">'
             . '<tr><th class="tx_contexts_context">'
-            . $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_context')
+            . $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_contexts')
             . '</th>';
         foreach ($fields as $field => $label) {
             $content .= '<th class="tx_contexts_setting">' . $fobj->sL($label) . '</th>';
@@ -133,7 +133,7 @@ class Tx_Contexts_Service_Tca
 	protected function getClickMenu($str, $table, $uid = '')
     {
         $onClick = $GLOBALS['SOBE']->doc->wrapClickMenuOnIcon(
-            $str, $table, $uid, 1, '', '+info,edit,view', TRUE
+            $str, $table, $uid, 1, '', '+info,edit,view,new', TRUE
         );
         return '<a href="#" onclick="' . htmlspecialchars($onClick) . '">'
             . $str . '</a>';
