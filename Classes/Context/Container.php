@@ -49,8 +49,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
     /**
      * Make the given contexts active (available in this container)
      *
-     * @param array $arContexts Array of context objects
-     *
+     * @param array $arContexts Array of context objects     *
      * @return Tx_Contexts_Context_Container
      */
     protected function setActive($arContexts)
@@ -90,8 +89,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
     /**
      * Matches all context objects. Resolves dependencies.
      *
-     * @param array $arContexts Array of available context objects
-     *
+     * @param array $arContexts Array of available context objects     *
      * @return array Array of matched Tx_Contexts_Context_Abstract objects,
      *               key is their uid
      */
@@ -105,23 +103,29 @@ class Tx_Contexts_Context_Container extends ArrayObject
             foreach (array_keys($arContexts) as $uid) {
                 $context = $arContexts[$uid];
 
-                //resolve dependencies
+                // resolve dependencies
                 $arDeps = $context->getDependencies();
                 $unresolvedDeps = count($arDeps);
                 foreach ($arDeps as $depUid => $dummy) {
                     if (isset($matched[$depUid])) {
-                        $arDeps[$depUid] = $matched[$depUid];
+                        $arDeps[$depUid] = (object) array(
+                            'context' => $matched[$depUid],
+                            'matched' => true
+                        );
                         $unresolvedDeps--;
-                    } else if (isset($notMatched[$depUid])) {
-                        $arDeps[$depUid] = $notMatched[$depUid];
+                    } elseif (isset($notMatched[$depUid])) {
+                        $arDeps[$depUid] = (object) array(
+                            'context' => $notMatched[$depUid],
+                            'matched' => false
+                        );
                         $unresolvedDeps--;
                     }
-                    //FIXME: what happens when dependency context is not
+                    // FIXME: what happens when dependency context is not
                     // available at all (e.g. deleted)?
                 }
                 if ($unresolvedDeps > 0) {
-                    //not all dependencies available yet, so skip this
-                    //one for now
+                    // not all dependencies available yet, so skip this
+                    // one for now
                     continue;
                 }
 
@@ -140,8 +144,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
     /**
      * Find context by uid or alias
      *
-     * @param int|string $uidOrAlias
-     *
+     * @param int|string $uidOrAlias     *
      * @return Tx_Contexts_Context_Abstract
      */
     public function find($uidOrAlias)
