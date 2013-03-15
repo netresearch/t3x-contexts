@@ -68,7 +68,7 @@ abstract class Tx_Contexts_Context_Abstract
         $this->title = $arRow['title'];
         $this->alias = $arRow['alias'];
         if ($arRow['type_conf'] != '') {
-            $this->conf  = \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array(
+            $this->conf  = t3lib_div::xml2array(
                 $arRow['type_conf']
             );
         }
