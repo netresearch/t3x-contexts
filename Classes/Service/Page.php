@@ -22,6 +22,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+require_once PATH_tslib . 'interfaces/interface.tslib_menu_filterMenuPagesHook.php';
+
 /**
  * Hook into enableFields() to hide pages and elements that are
  * may not be shown for the current contexts.
@@ -178,7 +180,7 @@ class Tx_Contexts_Service_Page
      * @return boolean Returns TRUE if the page can be safely included.
      */
     public function processFilter(
-        array &$data, array $banUidArray, $spacer, $obj
+        array &$data, array $banUidArray, $spacer, tslib_menu $obj
     ) {
         if ($data['tx_contexts_nav_enable'] == ''
             && $data['tx_contexts_nav_disable'] == ''
