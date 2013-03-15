@@ -19,7 +19,14 @@ class Tx_Contexts_Context_Type_Ip extends Tx_Contexts_Context_Abstract
        return false;
       
     }
-    
+    /**
+     * Check if the remote ip in range
+     * switch IPv4 and IPv6
+     * 
+     * @param string $strIp   remote ip number
+     * @param string $arRange defined range
+     * @return boolean
+     */
     protected function isIpInRange($strIp, $arRange)
     {
         
