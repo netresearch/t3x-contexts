@@ -19,4 +19,10 @@ Tx_Contexts_Api_Configuration::registerContextType(
     'Tx_Contexts_Context_Type_GetParam',
     'FILE:EXT:contexts/Configuration/flexform/ContextType/GetParam.xml'
 );
+Tx_Contexts_Api_Configuration::registerContextType(
+    'ip',
+    'IP',
+    'Tx_Contexts_Context_Type_Ip',
+    'FILE:EXT:contexts/Configuration/flexform/ContextType/Ip.xml'
+);
 ?>
