@@ -168,21 +168,21 @@ class Tx_Contexts_Service_Tcemain
 
         $first = reset($settingsAndFields);
         if (array_key_exists($enableField, $first)) {
-            $values[Tx_Contexts_Api_Configuration::ENABLE_COLUMN_ENABLE] = '';
-            $values[Tx_Contexts_Api_Configuration::ENABLE_COLUMN_DISABLE] = '';
+            $values['tx_contexts_enable'] = '';
+            $values['tx_contexts_disable'] = '';
         }
         if (array_key_exists($menuField, $first)) {
-            $values[Tx_Contexts_Api_Configuration::COLUMN_MENU_ENABLE] = '';
-            $values[Tx_Contexts_Api_Configuration::COLUMN_MENU_DISABLE] = '';
+            $values['tx_contexts_nav_enable'] = '';
+            $values['tx_contexts_nav_disable'] = '';
         }
 
         foreach ($settingsAndFields as $contextId => $settings) {
             if (array_key_exists($enableField, $settings)) {
                 $column = '';
                 if ($settings[$enableField] === '0') {
-                    $column = Tx_Contexts_Api_Configuration::ENABLE_COLUMN_DISABLE;
+                    $column = 'tx_contexts_disable';
                 } elseif ($settings[$enableField] === '1') {
-                    $column = Tx_Contexts_Api_Configuration::ENABLE_COLUMN_ENABLE;
+                    $column = 'tx_contexts_enable';
                 }
                 if ($column) {
                     if (!array_key_exists($column, $values)) {
@@ -196,11 +196,9 @@ class Tx_Contexts_Service_Tcemain
             if (array_key_exists($menuField, $settings)) {
                 $column = '';
                 if ($settings[$menuField] === '0') {
-                    $column = Tx_Contexts_Api_Configuration
-                        ::COLUMN_MENU_DISABLE;
+                    $column = 'tx_contexts_nav_disable';
                 } elseif ($settings[$menuField] === '1') {
-                    $column = Tx_Contexts_Api_Configuration
-                        ::COLUMN_MENU_ENABLE;
+                    $column = 'tx_contexts_nav_enable';
                 }
                 if ($column) {
                     if (!array_key_exists($column, $values)) {

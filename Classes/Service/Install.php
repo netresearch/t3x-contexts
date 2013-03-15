@@ -59,8 +59,8 @@ class Tx_Contexts_Service_Install implements tx_em_Index_CheckDatabaseUpdatesHoo
         $sql = '';
         foreach ($tables as $table) {
             $sql .= "\nCREATE TABLE $table (\n";
-            $sql .= Tx_Contexts_Api_Configuration::ENABLE_COLUMN_ENABLE . " tinytext NOT NULL,\n";
-            $sql .= Tx_Contexts_Api_Configuration::ENABLE_COLUMN_DISABLE . " tinytext NOT NULL\n";
+            $sql .= "tx_contexts_enable tinytext NOT NULL,\n";
+            $sql .= "tx_contexts_disable tinytext NOT NULL\n";
             $sql .= ');';
         }
 

@@ -44,42 +44,6 @@ class Tx_Contexts_Api_Configuration
     const RECORD_SETTINGS_FIELD = 'tx_contexts_settings';
 
     /**
-     * The name of the enableField setting - used as identifier
-     * in $TCA[$table]['ctrl']['enablecolumns'] and as setting
-     * field name
-     * @var string
-     */
-    const ENABLE_FIELD = 'tx_contexts_visibility';
-
-    /**
-     * Name of the "visible in menu" field
-     */
-    const MENU_FIELD = 'menu_visibility';
-
-    /**
-     * The name of the enableField column with a comma separated
-     * list of contexts for which a record is ENABLED
-     * (to enable faster queries with enableFields)
-     * @see Tx_Contexts_Service_Page::enableFields()
-     * @see Tx_Contexts_Service_Tcemain::saveRecordSettings()
-     * @var string
-     */
-    const ENABLE_COLUMN_ENABLE = 'tx_contexts_enable';
-
-    /**
-     * The name of the enableField column with a comma separated
-     * list of contexts for which a record is DISABLED
-     * (to enable faster queries with enableFields)
-     * @see Tx_Contexts_Service_Page::enableFields()
-     * @see Tx_Contexts_Service_Tcemain::saveRecordSettings()
-     * @var string
-     */
-    const ENABLE_COLUMN_DISABLE = 'tx_contexts_disable';
-
-    const COLUMN_MENU_ENABLE = 'tx_contexts_nav_enable';
-    const COLUMN_MENU_DISABLE = 'tx_contexts_nav_disable';
-
-    /**
      * Array containing tables and extensions which added the
      * enableField to those tables (keys are tables, values
      * are arrays of extension keys)
@@ -140,7 +104,8 @@ class Tx_Contexts_Api_Configuration
         t3lib_div::loadTCA('tx_contexts_contexts');
 
         if ($addEnableField) {
-            $TCA[$table]['ctrl']['enablecolumns'][self::ENABLE_FIELD] = self::ENABLE_FIELD;
+            $TCA[$table]['ctrl']['enablecolumns']['tx_contexts_visibility']
+                = 'tx_contexts_visibility';
             if (!array_key_exists($table, self::$enableFieldsExtensions)) {
                 self::$enableFieldsExtensions[$table] = array();
             }
@@ -148,7 +113,8 @@ class Tx_Contexts_Api_Configuration
         }
 
         $defaultEnableField = array(
-            self::ENABLE_FIELD => 'LLL:' . self::LANG_FILE . ':' . self::ENABLE_FIELD,
+            'tx_contexts_visibility'
+                => 'LLL:' . self::LANG_FILE . ':tx_contexts_visibility'
         );
 
         if (!is_array($fields)) {
