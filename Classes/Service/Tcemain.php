@@ -163,8 +163,8 @@ class Tx_Contexts_Service_Tcemain
     protected function saveEnableField($table, $uid, $settingsAndFields)
     {
         $values = array();
-        $enableField = Tx_Contexts_Api_Configuration::ENABLE_FIELD;
-        $menuField   = Tx_Contexts_Api_Configuration::MENU_FIELD;
+        $enableField = 'tx_contexts_visibility';
+        $menuField   = 'menu_visibility';
 
         $first = reset($settingsAndFields);
         if (array_key_exists($enableField, $first)) {

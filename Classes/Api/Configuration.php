@@ -82,7 +82,7 @@ class Tx_Contexts_Api_Configuration
      *
      * <code title="Override the visibility (enableFields) setting label">
      * Tx_Contexts_Api_Configuration::addToTca($_EXTKEY, 'some_table', array(
-     *     Tx_Contexts_Api_Configuration::ENABLE_FIELD => 'LLL:langfile:my_label'
+     *     'tx_contexts_visibility' => 'LLL:langfile:my_label'
      * ));
      * </code>
      *
@@ -143,14 +143,14 @@ class Tx_Contexts_Api_Configuration
             );
         }
 
-        if ($addEnableField && !array_key_exists(self::ENABLE_COLUMN_ENABLE, $TCA[$table]['columns'])) {
+        if ($addEnableField && !array_key_exists('tx_contexts_enable', $TCA[$table]['columns'])) {
             $enableColumns = array(
-                self::ENABLE_COLUMN_ENABLE => $conf = array(
+                'tx_contexts_enable' => $conf = array(
                     'config' => array(
                         'type' => 'passthrough'
                     )
                 ),
-                self::ENABLE_COLUMN_DISABLE => $conf
+                'tx_contexts_disable' => $conf
             );
             t3lib_extMgm::addTCAcolumns($table, $enableColumns, true);
         }
