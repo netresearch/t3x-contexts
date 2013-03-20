@@ -45,8 +45,7 @@ class Tx_Contexts_Service_Page
      *                                 - ignore_array - enable field names which
      *                                                  should not be used
      *                                 - ctrl         - TCA table control data
-     * @param t3lib_pageSelect $ref    Object that calls the hook
-     *
+     * @param t3lib_pageSelect $ref    Object that calls the hook     *
      * @return string SQL command part that gets added to the query
      */
     public function enableFields($params, $ref)
@@ -57,9 +56,14 @@ class Tx_Contexts_Service_Page
     /**
      * Add page access restrictions through context settings.
      *
+     * @param integer          &$uid                     The page ID
+     * @param boolean          &$disableGroupAccessCheck If set, the check for
+     *                                                   group access is disabled.
+     *                                                   VERY rarely used
+     * @param t3lib_pageSelect $pObj                     t3lib_pageSelect object
      * @return void
      */
-	public function getPage_preProcess(
+    public function getPage_preProcess(
         &$uid, &$disableGroupAccessCheck, t3lib_pageSelect $pObj
     ) {
         static $done = false;
@@ -75,45 +79,45 @@ class Tx_Contexts_Service_Page
      * that may not be accessed with the current context settings
      *
      * @param string $table Database table name
-     *
      * @return string SQL filter string beginning with " AND "
      */
-    protected function getFilterSql($table)
-    {
-        $enableFields = Tx_Contexts_Api_Configuration
-            ::getEnableFieldsExtensions();
-        if (!array_key_exists($table, $enableFields)) {
-            return '';
-        }
-        if (!in_array('contexts', $enableFields[$table])) {
-            return '';
-        }
+    protected function getFilterSql($table) {
+        global $TCA;
+        $sql = '';
 
-        $arContextIds = array();
-        foreach (Tx_Contexts_Context_Container::get() as $context) {
-            /* @var $context Tx_Contexts_Context_Abstract */
-            $arContextIds[] = $context->getUid();
-        }
+        foreach (Tx_Contexts_Api_Configuration::getTcaCtrlEnablecolumns($table) as $field) {
+            $enableFields = Tx_Contexts_Api_Configuration::getFlatFields($table, $field);
+            if (!$enableFields) {
+                t3lib_div::devLog(
+                    'Missing flat fields for enable field "' . $field . '"',
+                    'tx_contexts',
+                    2,
+                    array('table' => $table)
+                );
+                continue;
+            }
 
-        $enableChecks = array(
-            "tx_contexts_enable = ''"
-        );
-        $disableChecks = array();
-
-        foreach ($arContextIds as $id) {
-            $enableChecks[] = $GLOBALS['TYPO3_DB']->listQuery(
-                'tx_contexts_enable', $id, $table
+            $enableChecks = array(
+                $enableFields[1] . " = ''"
             );
-            $disableChecks[] = 'NOT ' . $GLOBALS['TYPO3_DB']->listQuery(
-                'tx_contexts_disable', $id, $table
-            );
-        }
+            $disableChecks = array();
 
-        $sql = ' AND (' . implode(' OR ', $enableChecks) . ')';
-        if (count($disableChecks)) {
-            $sql .= ' AND (' . "tx_contexts_disable = ''"
-                . ' OR (' . implode(' AND ', $disableChecks) . ')'
-                . ')';
+            foreach (Tx_Contexts_Context_Container::get() as $context) {
+                /* @var $context Tx_Contexts_Context_Abstract */
+                $enableChecks[] = $GLOBALS['TYPO3_DB']->listQuery(
+                    $enableFields[1], $context->getUid(), $table
+                );
+                $disableChecks[] = 'NOT ' . $GLOBALS['TYPO3_DB']->listQuery(
+                    $enableFields[0], $context->getUid(), $table
+                );
+            }
+
+            $sql = ' AND (' . implode(' OR ', $enableChecks) . ')';
+            if (count($disableChecks)) {
+                $sql .= ' AND (' . $enableFields[0] . " = ''" .
+                ' OR (' . implode(' AND ', $disableChecks) . ')' .
+                ')';
+            }
         }
 
         return $sql;
@@ -130,9 +134,7 @@ class Tx_Contexts_Service_Page
      *
      * @param array &$params Array of parameters: addQueryParams, params, pA
      * @param null  $ref     Empty reference object
-     *
      * @return void
-     *
      * @usedby t3lib_div::cHashParams()
      */
     public function cHashParams(&$params, $ref)
@@ -146,7 +148,6 @@ class Tx_Contexts_Service_Page
      * @param array &$params Array of parameters: hashParameters,
      *                       createLockHashBase
      * @param null  $ref     Reference object
-     *
      * @return void
      */
     public function createHashBase(&$params, $ref)
@@ -174,7 +175,7 @@ class Tx_Contexts_Service_Page
     /**
      * Checks if a page is OK to include in the final menu item array.
      *
-     * @param array $data Array of menu items
+     * @param array &$data Array of menu items
      * @param array $banUidArray Array of page uids which are to be excluded
      * @param boolean $spacer If set, then the page is a spacer.
      * @param \TYPO3\CMS\Frontend\ContentObject\Menu\AbstractMenuContentObject $obj The menu object
@@ -183,32 +184,9 @@ class Tx_Contexts_Service_Page
     public function processFilter(
         array &$data, array $banUidArray, $spacer, tslib_menu $obj
     ) {
-        if ($data['tx_contexts_nav_enable'] == ''
-            && $data['tx_contexts_nav_disable'] == ''
-        ) {
-            return true;
-        }
-
-        $contexts = Tx_Contexts_Context_Container::get();
-        if ($data['tx_contexts_nav_disable'] != '') {
-            $arDisabledFor = explode(',', $data['tx_contexts_nav_disable']);
-            foreach ($arDisabledFor as $id) {
-                if (array_key_exists($id, $contexts)) {
-                    return false;
-                }
-            }
-            if ($data['tx_contexts_nav_enable'] == '') {
-                return true;
-            }
-        }
-
-        $arEnabledFor = explode(',', $data['tx_contexts_nav_enable']);
-        foreach ($arEnabledFor as $id) {
-            if (array_key_exists($id, $contexts)) {
-                return true;
-            }
-        }
-        return false;
+        return
+        Tx_Contexts_Api_Record::isEnabled('pages', $data) &&
+        Tx_Contexts_Api_Record::isSettingEnabled('pages', 'tx_contexts_nav', $data);
     }
 }
 ?>

@@ -40,8 +40,7 @@ class Tx_Contexts_Service_Tcemain
      * @param array         &$incomingFieldArray
      * @param string        $table
      * @param string        $id
-     * @param t3lib_TCEmain $reference
-     *
+     * @param t3lib_TCEmain &$reference
      * @return void
      */
     public function processDatamap_preProcessFieldArray(
@@ -77,7 +76,6 @@ class Tx_Contexts_Service_Tcemain
      * @param string        $id
      * @param array         $fieldArray
      * @param t3lib_TCEmain $reference
-     *
      * @return void
      */
     public function processDatamap_afterDatabaseOperations(
@@ -91,7 +89,7 @@ class Tx_Contexts_Service_Tcemain
                 $this->saveDefaultSettings($id, $this->currentSettings);
             } else {
                 $this->saveRecordSettings($table, $id, $this->currentSettings);
-                $this->saveEnableField($table, $id, $this->currentSettings);
+                $this->saveFlatSettings($table, $id, $this->currentSettings);
             }
 
             unset($this->currentSettings);
@@ -106,7 +104,6 @@ class Tx_Contexts_Service_Tcemain
      * @param string $table
      * @param int    $uid
      * @param array  $settingsAndFields
-     *
      * @return void
      */
     protected function saveRecordSettings($table, $uid, $settingsAndFields)
@@ -155,63 +152,27 @@ class Tx_Contexts_Service_Tcemain
      *                                  tx_contexts_visibility => '',
      *                                  menu_visibility => '0'
      *                                  '' = undecided, 1 - on, 0 - off
-     *
      * @return void
-     *
      * @see Tx_Contexts_Service_Tsfe::enableFields()
      */
-    protected function saveEnableField($table, $uid, $settingsAndFields)
+    protected function saveFlatSettings($table, $uid, $settingsAndFields)
     {
         $values = array();
-        $enableField = 'tx_contexts_visibility';
-        $menuField   = 'menu_visibility';
 
-        $first = reset($settingsAndFields);
-        if (array_key_exists($enableField, $first)) {
-            $values['tx_contexts_enable'] = '';
-            $values['tx_contexts_disable'] = '';
-        }
-        if (array_key_exists($menuField, $first)) {
-            $values['tx_contexts_nav_enable'] = '';
-            $values['tx_contexts_nav_disable'] = '';
-        }
-
-        foreach ($settingsAndFields as $contextId => $settings) {
-            if (array_key_exists($enableField, $settings)) {
-                $column = '';
-                if ($settings[$enableField] === '0') {
-                    $column = 'tx_contexts_disable';
-                } elseif ($settings[$enableField] === '1') {
-                    $column = 'tx_contexts_enable';
-                }
-                if ($column) {
-                    if (!array_key_exists($column, $values)) {
-                        $values[$column] = $contextId;
-                    } else {
-                        $values[$column] .= ',' . $contextId;
-                    }
-                }
-            }
-
-            if (array_key_exists($menuField, $settings)) {
-                $column = '';
-                if ($settings[$menuField] === '0') {
-                    $column = 'tx_contexts_nav_disable';
-                } elseif ($settings[$menuField] === '1') {
-                    $column = 'tx_contexts_nav_enable';
-                }
-                if ($column) {
-                    if (!array_key_exists($column, $values)) {
-                        $values[$column] = $contextId;
-                    } else {
-                        $values[$column] .= ',' . $contextId;
-                    }
+        $flatSettingFields = Tx_Contexts_Api_Configuration::getFlatFields($table);
+        foreach ($flatSettingFields as $setting => $flatFields) {
+            $values[$flatFields[0]] = array();
+            $values[$flatFields[1]] = array();
+            foreach ($settingsAndFields as $contextId => $settings) {
+                if ($settings[$setting] === '0' || $settings[$setting] === '1') {
+                    $values[$flatFields[$settings[$setting]]][] = $contextId;
                 }
             }
         }
+
         if (count($values)) {
             foreach ($values as $colname => &$val) {
-                $val = trim($val, ',');
+                $val = implode(',', $val);
             }
             Tx_Contexts_Api_Configuration::getDb()->exec_UPDATEquery(
                 $table, 'uid=' . $uid, $values

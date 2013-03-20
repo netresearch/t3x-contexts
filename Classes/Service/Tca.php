@@ -53,12 +53,12 @@ class Tx_Contexts_Service_Tca
 
         $fields = $params['fieldConf']['config']['fields'];
 
-        $content = '<br/><table class="tx_contexts_table_settings">'
-            . '<tr><th class="tx_contexts_context">'
-            . $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_contexts')
-            . '</th>';
-        foreach ($fields as $field => $label) {
-            $content .= '<th class="tx_contexts_setting">' . $fobj->sL($label) . '</th>';
+        $content = '<br/><table class="tx_contexts_table_settings">' .
+            '<tr><th class="tx_contexts_context">' .
+            $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_contexts') .
+            '</th>';
+        foreach ($fields as $field => $config) {
+            $content .= '<th class="tx_contexts_setting">' . $fobj->sL($config['label']) . '</th>';
         }
         $content .= '</tr>';
 
@@ -66,12 +66,12 @@ class Tx_Contexts_Service_Tca
 
         foreach ($contexts as $context) {
             /* @var $context Tx_Contexts_Context_Abstract */
-            $content .= '<tr><td class="tx_contexts_context">'
-                . $this->getRecordPreview($context, $uid)
-                . '</td>';
+            $content .= '<tr><td class="tx_contexts_context">' .
+                $this->getRecordPreview($context, $uid) .
+                '</td>';
 
             foreach ($fields as $field => $config) {
-                $setting = $uid ? $context->getSetting($table, $uid, $field) : null;
+                $setting = $uid ? $context->getSetting($table, $field, $uid) : null;
                 $content .=
                 '<td class="tx_contexts_setting">' .
                 '<select name="' . $namePre . '[' . $context->getUid() . '][' . $field . ']">' .
@@ -88,7 +88,14 @@ class Tx_Contexts_Service_Tca
         return $content;
     }
 
-    protected function getRecordPreview($context, $this_uid)
+    /**
+     * Get the standard record view for context records
+     *
+     * @param Tx_Contexts_Context_Abstract $context
+     * @param int $thisUid
+     * @return string
+     */
+    protected function getRecordPreview($context, $thisUid)
     {
         $row = array(
             'uid'   => $context->getUid(),
@@ -97,47 +104,46 @@ class Tx_Contexts_Service_Tca
             'alias' => $context->getAlias()
         );
 
-        return '<span class="nobr">'
-            . $this->getClickMenu(
+        return '<span class="nobr">' .
+            $this->getClickMenu(
                 t3lib_iconWorks::getSpriteIconForRecord(
                     'tx_contexts_contexts',
                     $row,
                     array(
                         'style' => 'vertical-align:top',
                         'title' => htmlspecialchars(
-                            $context->getTitle()
-                            . ' [UID: ' . $row['uid'] . ']')
+                            $context->getTitle() .
+                            ' [UID: ' . $row['uid'] . ']')
                     )
                 ),
                 'tx_contexts_contexts',
                 $row['uid']
-            )
-            . '&nbsp;'
-            . htmlspecialchars($context->getTitle())
-            . ' <span class="typo3-dimmed"><em>[' . $row['uid'] . ']</em></span>'
-            . '</span>';
+            ) .
+            '&nbsp;' .
+            htmlspecialchars($context->getTitle()) .
+            ' <span class="typo3-dimmed"><em>[' . $row['uid'] . ']</em></span>' .
+            '</span>';
     }
 
-	/**
-	 * Wraps the icon of a relation item (database record or file) in a link
+    /**
+     * Wraps the icon of a relation item (database record or file) in a link
      * opening the context menu for the item.
-	 *
+     *
      * Copied from class.t3lib_befunc.php
      *
-	 * @param string  $str   The icon HTML to wrap
-	 * @param string  $table Table name (eg. "pages" or "tt_content") OR the absolute path to the file
-	 * @param integer $uid   The uid of the record OR if file, just blank value.
-     *
-	 * @return string HTML
-	 */
-	protected function getClickMenu($str, $table, $uid = '')
+     * @param string  $str   The icon HTML to wrap
+     * @param string  $table Table name (eg. "pages" or "tt_content") OR the
+     *                       absolute path to the file
+     * @param integer $uid   The uid of the record OR if file, just blank value.
+     * @return string HTML
+     */
+    protected function getClickMenu($str, $table, $uid = '')
     {
         $onClick = $GLOBALS['SOBE']->doc->wrapClickMenuOnIcon(
             $str, $table, $uid, 1, '', '+info,edit,view,new', TRUE
         );
-        return '<a href="#" onclick="' . htmlspecialchars($onClick) . '">'
-            . $str . '</a>';
-	}
+        return '<a href="#" onclick="' . htmlspecialchars($onClick) . '">' . $str . '</a>';
+    }
 
 
     /**
@@ -164,21 +170,21 @@ class Tx_Contexts_Service_Tca
             ? Tx_Contexts_Context_Container::get()->initAll()->find($uid)
             : null;
 
-        foreach ($params['fieldConf']['config']['fields'] as $field => $label) {
+        foreach ($params['fieldConf']['config']['fields'] as $field => $config) {
             $id = $params['itemFormElID'] . '-' . $field;
             $name = $namePre . '[' . $field . ']';
             $content .= '<input type="hidden" name="' . $name . '" value="0"/>';
             $content .= '<input class="checkbox" type="checkbox" name="' . $name . '" ';
             if (
                 !$context ||
-                !$context->hasSetting($table, 0, $field) ||
-                $context->getSetting($table, 0, $field)->getEnabled()
+                !$context->hasSetting($table, $field, 0) ||
+                $context->getSetting($table, $field, 0)->getEnabled()
             ) {
                 $content .= 'checked="checked" ';
             }
             $content .= 'value="1" id="' . $id . '" /> ';
             $content .= '<label for="' . $id . '">';
-            $content .= $fobj->sL($label);
+            $content .= $fobj->sL($config['label']);
             $content .= '</label><br/>';
         }
 

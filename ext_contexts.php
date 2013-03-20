@@ -1,10 +1,10 @@
 <?php
-Tx_Contexts_Api_Configuration::enableContextsForTable(
-    $_EXTKEY, 'pages',
-    array(
-        'menu_visibility' => 'LLL:'.Tx_Contexts_Api_Configuration::LANG_FILE.':tx_contexts_menu_visibility'
+Tx_Contexts_Api_Configuration::enableContextsForTable($_EXTKEY, 'pages', array(
+    'tx_contexts_nav' => array(
+    	'label' => 'LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_menu_visibility',
+        'flatten' => true
     )
-);
+));
 Tx_Contexts_Api_Configuration::enableContextsForTable($_EXTKEY, 'tt_content');
 
 Tx_Contexts_Api_Configuration::registerContextType(

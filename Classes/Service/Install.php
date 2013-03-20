@@ -48,19 +48,19 @@ class Tx_Contexts_Service_Install implements tx_em_Index_CheckDatabaseUpdatesHoo
     {
         global $TCA;
 
-        $enableFieldsExtensions = Tx_Contexts_Api_Configuration::getEnableFieldsExtensions();
-        $tables = array();
-        foreach ($enableFieldsExtensions as $table => $extensions) {
-            if (in_array($extKey, $extensions)) {
-                $tables[] = $table;
-            }
+        $flatTableFields = Tx_Contexts_Api_Configuration::getExtensionFlatFields();
+        if (!array_key_exists($extKey, $flatTableFields)) {
+            return '';
         }
 
         $sql = '';
-        foreach ($tables as $table) {
+        foreach ($flatTableFields[$extKey] as $table => $fields) {
             $sql .= "\nCREATE TABLE $table (\n";
-            $sql .= "tx_contexts_enable tinytext NOT NULL,\n";
-            $sql .= "tx_contexts_disable tinytext NOT NULL\n";
+            foreach ($fields as $field) {
+                $flatFields = Tx_Contexts_Api_Configuration::getFlatFields($table, $field);
+                $sql .= $flatFields[0] . " tinytext NOT NULL,\n";
+                $sql .= $flatFields[1] . " tinytext NOT NULL\n";
+            }
             $sql .= ');';
         }
 

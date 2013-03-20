@@ -60,6 +60,7 @@ abstract class Tx_Contexts_Context_Abstract
      * Constructor - set the values from database row
      *
      * @param array $arRow Database context row
+     * @return void
      */
     public function __construct($arRow)
     {
@@ -78,11 +79,11 @@ abstract class Tx_Contexts_Context_Abstract
      * Get a configuration value
      *
      * @param string $fieldName Name of the field
-	 * @param string $sheet     Sheet pointer, eg. "sDEF
-	 * @param string $lang      Language pointer, eg. "lDEF
-	 * @param string $value     Value pointer, eg. "vDEF
-     *
-	 * @return string The content
+     * @param string $default   The value to use when none was found
+     * @param string $sheet     Sheet pointer, eg. "sDEF
+     * @param string $lang      Language pointer, eg. "lDEF
+     * @param string $value     Value pointer, eg. "vDEF
+     * @return string The content
      */
     protected function getConfValue(
         $fieldName, $default = null,
@@ -106,46 +107,60 @@ abstract class Tx_Contexts_Context_Abstract
      * if one was found
      *
      * @param string $table
-     * @param string $uid
      * @param string $field
+     * @param string $uid
      * @return Tx_Contexts_Context_Setting|null
      */
-    final public function getSetting(
-        $table, $uid, $field = Tx_Contexts_Api_Configuration::DEFAULT_FIELD
-    ) {
-        $settingKey = $table . '-' . $field . '-' . $uid;
-        if (array_key_exists($settingKey, $this->settings)) {
-            return $this->settings[$settingKey];
+    final public function getSetting($table, $field, $uid) {
+        $settings = $this->getSettings($table, $uid);
+        return array_key_exists($field, $settings) ? $settings[$field] : null;
+    }
+
+    /**
+     * Get all settings of one record
+     *
+     * @param string $table
+     * @param int $uid
+     * @return array
+     */
+    final public function getSettings($table, $uid) {
+        $settingsKey = $table . '.' . $uid;
+
+        if (array_key_exists($settingsKey, $this->settings)) {
+            return $this->settings[$settingsKey];
         }
 
-        /* @var $db t3lib_db */
-        $db = $GLOBALS['TYPO3_DB'];
-
+        $uids = array($uid);
+        if ($uid && !array_key_exists($table . '.0', $this->settings)) {
+            $uids[] = 0;
+        }
         $where = 'context_uid = ' . $this->uid;
-        $where .= " AND foreign_table = '$table' AND foreign_field = '$field' AND foreign_uid = '$uid'";
-        $row = $db->exec_SELECTgetSingleRow('*', 'tx_contexts_settings', $where);
+        $where .= " AND foreign_table = '$table'";
+        $where .= " AND foreign_uid IN ('" . implode("','", $uids) . "')";
+        $rows = (array) Tx_Contexts_Api_Configuration::getDb()->exec_SELECTgetRows('*', 'tx_contexts_settings', $where);
 
-        if ($row) {
-            $setting = new Tx_Contexts_Context_Setting($this, $row);
-        } else {
-            $setting = null;
+        foreach ($uids as $uid) {
+            $this->settings[$table . '.' . $uid] = array();
         }
 
-        return $this->settings[$settingKey] = $setting;
+        foreach ($rows as $row) {
+            $this->settings[$table . '.' . $row['foreign_uid']][$row['foreign_field']] =
+                new Tx_Contexts_Context_Setting($this, $row);
+        }
+
+        return $this->settings[$settingsKey];
     }
 
     /**
      * Determines whether a setting exists for this record
      *
      * @param string $table
-     * @param string $uid
      * @param string $field
+     * @param string $uid
      * @return boolean
      */
-    final public function hasSetting(
-        $table, $uid, $field = Tx_Contexts_Api_Configuration::DEFAULT_FIELD
-    ) {
-        return $this->getSetting($table, $uid, $field) ? true : false;
+    final public function hasSetting($table, $field, $uid) {
+        return $this->getSetting($table, $field, $uid) ? true : false;
     }
 
     /**
@@ -153,7 +168,6 @@ abstract class Tx_Contexts_Context_Abstract
      *
      * @param array $arDependencies Array of context objects that are
      *                              dependencies of this context
-     *
      * @return boolean True when your context matches, false if not
      */
     abstract public function match($arDependencies);
