@@ -29,7 +29,7 @@ CREATE TABLE tx_contexts_settings (
 	context_uid int(11) DEFAULT '0' NOT NULL,
 	foreign_table tinytext,
 	foreign_uid int(11) DEFAULT '0' NOT NULL,
-	foreign_field tinytext,
+	name tinytext,
 	enabled tinyint(4) DEFAULT '0' NOT NULL,
 
 	PRIMARY KEY (uid),

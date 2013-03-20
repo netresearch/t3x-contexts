@@ -19,17 +19,17 @@ final class Tx_Contexts_Context_Setting
 	protected $foreignTable;
 
 	/**
-	 * The name of the field the setting is for
-	 * @var string
-	 */
-	protected $foreignField;
-
-	/**
 	 * The uid of the record the setting is for
 	 * (0 for default setting)
 	 * @var int
 	 */
 	protected $foreignUid;
+
+	/**
+	 * The name of the setting
+	 * @var string
+	 */
+	protected $name;
 
 	/**
 	 * Whether the record is enabled by this setting
@@ -42,7 +42,7 @@ final class Tx_Contexts_Context_Setting
 	    $this->context = $context;
 	    $this->uid = (int) $row['uid'];
 	    $this->foreignTable = $row['foreign_table'];
-	    $this->foreignField = $row['foreign_field'];
+	    $this->name = $row['name'];
 	    $this->foreignUid = (int) $row['foreign_uid'];
 	    $this->enabled = $row['enabled'] ? true : false;
 	}
@@ -77,19 +77,19 @@ final class Tx_Contexts_Context_Setting
     }
 
 	/**
-     * @return string
-     */
-    public function getForeignField()
-    {
-        return $this->foreignField;
-    }
-
-	/**
      * @return int
      */
     public function getForeignUid()
     {
         return $this->foreignUid;
+    }
+
+	/**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
 	/**

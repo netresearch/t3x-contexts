@@ -37,188 +37,178 @@ class Tx_Contexts_Api_Configuration
 
     /**
      * The name of the contexts settings column in TCA
-     * (This is a USER field and will be handled by the TCEmain-
+     * (This is a USER column and will be handled by the TCEmain-
      * hooks in Tx_Contexts_Service_Tcemain)
      * @var string
      */
-    const RECORD_SETTINGS_FIELD = 'tx_contexts_settings';
+    const RECORD_SETTINGS_COLUMN = 'tx_contexts_settings';
 
     /**
-     * Array containing tables and extensions which added the
-     * enableField to those tables (keys are tables, values
-     * are arrays of extension keys)
-     *
-     * We need the pages table already in here because TCA has not
-     * been loaded when the first page access check is being made.
+     * Array containing tables, theyr flat settings and the flat column names
      *
      * @var array
      */
-    protected static $flatFields = array();
+    protected static $flatColumns = array();
 
-    protected static $extensionFlatFields = array();
+    protected static $extensionFlatSettings = array();
 
-    protected static $tcaCtrlEnablecolumns = array();
+    protected static $enableSettings = array();
 
     /**
-     * Add context settings to a specific table. $fields can be
+     * Add context settings to a specific table. $settings can be
      * any (boolean) settings, each with the name as key and array
-     * containing the label:
+     * containing the label, if the setting should be flattened and
+     * if it should be used to enable/disable records:
      *
-     * <code title="Adding the visibility (enableFields) setting only">
+     * <code title="Adding the visibility setting only">
      * Tx_Contexts_Api_Configuration::addToTca($_EXTKEY, 'some_table');
      * </code>
      *
-     * <code title="Adding the visibility (enableFields) and another setting">
+     * <code title="Adding the visibility and another setting">
      * Tx_Contexts_Api_Configuration::addToTca($_EXTKEY, 'some_table', array(
-     *     'some_setting' => 'LLL:langfile:some_setting'
+     *     'some_setting' => array(
+     *         'label' => 'LLL:langfile:some_setting',
+     *         // if the setting should also be stored directly into the records
+     *         // 'flatten' => true,
+     *         // if the setting is meant to control access to records
+     *         // 'enables' => true
+     *     )
      * ));
      * </code>
      *
-     * <code title="Adding another setting only">
-     * Tx_Contexts_Api_Configuration::addToTca($_EXTKEY, 'some_table', array(
-     *     'some_setting' => 'LLL:langfile:some_setting'
-     * ), false);
-     * </code>
-     *
-     * <code title="Override the visibility (enableFields) setting label">
-     * Tx_Contexts_Api_Configuration::addToTca($_EXTKEY, 'some_table', array(
-     *     'tx_contexts_visibility' => 'LLL:langfile:my_label'
-     * ));
-     * </code>
-     *
-     * The extKey is necessary as it will be collected when you add the
-     * enableField. A hook for the EM will then add the required
-     * fields on $table on installation/update of your extension in EM.
+     * The extKey is necessary as it will be collected when you add flat
+     * settings. A hook for the EM will then add the required columns on $table
+     * on installation/update of your extension in EM.
      * (@see Tx_Contexts_Service_Install::appendTableDefinitions())
      *
      * @param string     $extKey      Extension key that ena the table
      * @param string     $table       Table to add settings to
-     * @param array|null $fields      Array of fields to register.
-     *                                Key is the field name, value its title
-     * @param boolean    $addDefaults If an "enableField" is added that is
+     * @param array|null $settings    Array of settings to register.
+     *                                Key is the setting name, value its config
+     * @param boolean    $addDefaults If an "enableSetting" is added that is
      *                                used to hide/show elements
      * @return void
      */
     public static function enableContextsForTable(
-        $extKey, $table, $fields = null, $addDefaults = true
+        $extKey, $table, $settings = null, $addDefaults = true
     ) {
-        $defaultFields = array(
+        $defaultSettings = array(
             'tx_contexts' => array(
                 'label' => 'LLL:' . self::LANG_FILE . ':tx_contexts_visibility',
                 'flatten' => true,
-                'enableField' => true
+                'enables' => true
             )
         );
 
-        if (!is_array($fields)) {
-            $fields = $addDefaults ? $defaultFields : array();
+        if (!is_array($settings)) {
+            $settings = $addDefaults ? $defaultSettings : array();
         } elseif ($addDefaults) {
-            $fields = array_merge($defaultFields, $fields);
+            $settings = array_merge($defaultSettings, $settings);
         }
 
-        self::addToTcaCtrlEnablecolumns($table, $fields);
-        self::addToFlatFields($table, $fields);
+        self::addToEnableSettings($table, $settings);
+        self::addToFlatColumns($table, $settings);
 
         if (TYPO3_MODE == 'BE') {
-            self::addToTcaColumns($table, $fields);
-            self::addToExtensionFlatFields($extKey, $table, $fields);
+            self::addToTcaColumns($table, $settings);
+            self::addToExtensionFlatSettings($extKey, $table, $settings);
         }
     }
 
     /**
-     * Determine if a field is a field to flatten
-     * (enableFields currently require to be flattened)
+     * Determine if a setting is a setting to flatten
+     * (enableSettings currently require to be flattened)
      *
      * @param array $config
      * @return boolean
      */
-    protected static function isFlatField($config) {
-        return isset($config['flatten']) || isset($config['enableField']);
+    protected static function isFlatSetting($config) {
+        return isset($config['flatten']) || isset($config['enables']);
     }
 
     /**
-     * Determine which of the fields should be flattened and add them to the
-     * $table's $flatFields
+     * Determine which of the settings should be flattened and add them to the
+     * $table's $flatSettings
      *
      * @param string $table
-     * @param array $fields
+     * @param array  $settings
      * @return void
      */
-    protected static function addToFlatFields($table, $fields) {
-        $flatFields = (array) self::$flatFields[$table];
-        foreach ($fields as $field => $config) {
-            if (self::isFlatField($config)) {
-                $flatFields[$field] = array(
-                    0 => $field . '_disable',
-                    1 => $field . '_enable'
+    protected static function addToFlatColumns($table, $settings) {
+        $flatSettings = (array) self::$flatColumns[$table];
+        foreach ($settings as $setting => $config) {
+            if (self::isFlatSetting($config)) {
+                $flatSettings[$setting] = array(
+                    0 => $setting . '_disable',
+                    1 => $setting . '_enable'
                 );
             }
         }
-        self::$flatFields[$table] = $flatFields;
+        self::$flatColumns[$table] = $flatSettings;
     }
 
     /**
-     * Same as self::addToFlatFields() but also tracks the $extKey (needed to
-     * determine the database fields that need to be created on extension
+     * Same as self::addToFlatSettings() but also tracks the $extKey (needed to
+     * determine the database columns that need to be created on extension
      * installation/update)
      *
      * @param string $extKey
      * @param string $table
-     * @param array $fields
+     * @param array  $settings
      * @return void
      */
-    protected static function addToExtensionFlatFields($extKey, $table, $fields)
+    protected static function addToExtensionFlatSettings($extKey, $table, $settings)
     {
-        $flatFields = array();
-        foreach ($fields as $field => $config) {
-            if (self::isFlatField($config)) {
-                $flatFields[] = $field;
+        $flatSettings = array();
+        foreach ($settings as $setting => $config) {
+            if (self::isFlatSetting($config)) {
+                $flatSettings[] = $setting;
             }
         }
-        if (!array_key_exists($extKey, self::$extensionFlatFields)) {
-            self::$extensionFlatFields[$extKey] = array($table => $flatFields);
-        } elseif (!array_key_exists($table, self::$extensionFlatFields[$extKey])) {
-            self::$extensionFlatFields[$extKey][$table] = $flatFields;
+        if (!array_key_exists($extKey, self::$extensionFlatSettings)) {
+            self::$extensionFlatSettings[$extKey] = array($table => $flatSettings);
+        } elseif (!array_key_exists($table, self::$extensionFlatSettings[$extKey])) {
+            self::$extensionFlatSettings[$extKey][$table] = $flatSettings;
         } else {
-            self::$extensionFlatFields[$extKey][$table] = array_unique(array_merge(
-                self::$extensionFlatFields[$extKey][$table],
-                $fields
+            self::$extensionFlatSettings[$extKey][$table] = array_unique(array_merge(
+                self::$extensionFlatSettings[$extKey][$table],
+                $settings
             ));
         }
     }
 
     /**
-     * Add the settings with enableField set to the TCA enablecolumns - because
-     * this can be overridden when the ext_tables.php are loaded later those
-     * are also set in the internal self::$tcaCtrlEnablecolumns
+     * Add the enableSettings to the TCA enablecolumns - because this can be
+     * overridden when the ext_tables.php are loaded later those are also set
+     * in the internal self::$enableSettings
      * Hence this should be used rather than the TCA by calling
      * Tx_Contexts_Api_Configuration::getTcaCtrlEnablecolumns()
      *
      * @param string $table
-     * @param array $fields
+     * @param array  $settings
      * @return void
      */
-    protected static function addToTcaCtrlEnablecolumns($table, $fields) {
+    protected static function addToEnableSettings($table, $settings) {
         global $TCA;
-        $enableFields = (array) $TCA[$table]['ctrl']['enablecolumns']['tx_contexts'];
-        foreach ($fields as $field => $config) {
-            if (isset($config['enableField']) && !in_array($field, $enableFields)) {
-                $enableFields = $field;
+        $enableSettings = (array) self::$enableSettings[$table];
+        foreach ($settings as $setting => $config) {
+            if (isset($config['enables']) && !in_array($setting, $enableSettings)) {
+                $enableSettings = $setting;
             }
         }
-        $TCA[$table]['ctrl']['enablecolumns']['tx_contexts'] = $enableFields;
-        self::$tcaCtrlEnablecolumns[$table] = $enableFields;
+        $TCA[$table]['ctrl']['enablecolumns']['tx_contexts'] = $enableSettings;
+        self::$enableSettings[$table] = $enableSettings;
     }
 
     /**
-     * Add field information to the TCA.
+     * Add setting columns to the TCA.
      *
-     * @param string     $table          Table to add settings to
-     * @param array|null $fields         Array of fields to register.
-     *                                   Key is the field name, value its title
+     * @param string     $table    Table to add settings to
+     * @param array|null $settings Array of settings to register.
+     *                             Key is the setting name, value its title
      * @return void
      */
-    protected static function addToTcaColumns($table, array $fields) {
+    protected static function addToTcaColumns($table, array $settings) {
         global $TCA;
         t3lib_div::loadTCA($table);
         if (!isset($TCA[$table])) {
@@ -226,7 +216,7 @@ class Tx_Contexts_Api_Configuration
         }
         t3lib_div::loadTCA('tx_contexts_contexts');
 
-        if (!array_key_exists(self::RECORD_SETTINGS_FIELD, $TCA[$table]['columns'])) {
+        if (!array_key_exists(self::RECORD_SETTINGS_COLUMN, $TCA[$table]['columns'])) {
             $recordSettingsConf = array(
                 "exclude" => 1,
                 "label" => '',
@@ -234,20 +224,20 @@ class Tx_Contexts_Api_Configuration
                     "type" => "user",
                     "size" => "30",
                     "userFunc" => 'Tx_Contexts_Service_Tca->renderRecordSettingsField',
-                    'fields' => $fields
+                    'settings' => $settings
                 )
             );
-            t3lib_extMgm::addTCAcolumns($table, array(self::RECORD_SETTINGS_FIELD => $recordSettingsConf), 1);
-            t3lib_extMgm::addToAllTCAtypes($table, '--div--;LLL:' . self::LANG_FILE . ':tabname,' . self::RECORD_SETTINGS_FIELD . ';;;;1-1-1');
+            t3lib_extMgm::addTCAcolumns($table, array(self::RECORD_SETTINGS_COLUMN => $recordSettingsConf), 1);
+            t3lib_extMgm::addToAllTCAtypes($table, '--div--;LLL:' . self::LANG_FILE . ':tabname,' . self::RECORD_SETTINGS_COLUMN . ';;;;1-1-1');
         } else {
-            $TCA[$table]['columns'][self::RECORD_SETTINGS_FIELD]['config']['fields'] = array_merge(
-                $TCA[$table]['columns'][self::RECORD_SETTINGS_FIELD]['config']['fields'],
-                $fields
+            $TCA[$table]['columns'][self::RECORD_SETTINGS_COLUMN]['config']['settings'] = array_merge(
+                $TCA[$table]['columns'][self::RECORD_SETTINGS_COLUMN]['config']['settings'],
+                $settings
             );
         }
 
-        $defaultSettingsField = 'default_settings_' . $table;
-        if (!array_key_exists($defaultSettingsField, $TCA['tx_contexts_contexts']['columns'])) {
+        $defaultSettingsColumn = 'default_settings_' . $table;
+        if (!array_key_exists($defaultSettingsColumn, $TCA['tx_contexts_contexts']['columns'])) {
             $defaultSettingsConf = array(
                 "exclude" => 1,
                 'label' => $TCA[$table]['ctrl']['title'],
@@ -256,15 +246,15 @@ class Tx_Contexts_Api_Configuration
                     'size' => 30,
                     'userFunc' => 'Tx_Contexts_Service_Tca->renderDefaultSettingsField',
                     'table' => $table,
-                    'fields' => $fields
+                    'settings' => $settings
                 )
             );
-            t3lib_extMgm::addTCAcolumns('tx_contexts_contexts', array($defaultSettingsField => $defaultSettingsConf), 1);
-            t3lib_extMgm::addToAllTCAtypes('tx_contexts_contexts', $defaultSettingsField);
+            t3lib_extMgm::addTCAcolumns('tx_contexts_contexts', array($defaultSettingsColumn => $defaultSettingsConf), 1);
+            t3lib_extMgm::addToAllTCAtypes('tx_contexts_contexts', $defaultSettingsColumn);
         } else {
-            $TCA['tx_contexts_contexts']['columns'][$defaultSettingsField]['config']['fields'] = array_merge(
-                $TCA['tx_contexts_contexts']['columns'][$defaultSettingsField]['config']['fields'],
-                $fields
+            $TCA['tx_contexts_contexts']['columns'][$defaultSettingsColumn]['config']['settings'] = array_merge(
+                $TCA['tx_contexts_contexts']['columns'][$defaultSettingsColumn]['config']['settings'],
+                $settings
             );
         }
     }
@@ -311,47 +301,47 @@ class Tx_Contexts_Api_Configuration
     }
 
     /**
-     * Get all settings and theyr flat fields, or just of one table or just
-     * of one table and field
+     * Get the flat columns for the flat settings by table or table and setting.
+     * The flat columns array will contain the disabled column in key 0 and the
+     * enabled column in key 1
      *
      * @param string|null $table
-     * @param string|null $field
-     * @return array $flatFields
+     * @param string|null $setting
+     * @return array
      */
-    public static function getFlatFields($table = null, $field = null) {
+    public static function getFlatColumns($table = null, $setting = null) {
         if ($table) {
-            if (isset(self::$flatFields[$table])) {
-                if ($field) {
-                    return self::$flatFields[$table][$field];
+            if (isset(self::$flatColumns[$table])) {
+                if ($setting) {
+                    return self::$flatColumns[$table][$setting];
                 } else {
-                    return self::$flatFields[$table];
+                    return self::$flatColumns[$table];
                 }
             } else {
                 return null;
             }
         }
-        return self::$flatFields;
+        return self::$flatColumns;
     }
 
     /**
-     * Getter for $extensionFlatFields
+     * Getter for $extensionFlatSettings
      *
-     * @return array $extensionFlatFields
+     * @return array $extensionFlatSettings
      */
-    public static function getExtensionFlatFields() {
-        return self::$extensionFlatFields;
+    public static function getExtensionFlatSettings() {
+        return self::$extensionFlatSettings;
     }
 
     /**
-     * Get the $TCA[$table][ctrl][enablecolumns][tx_contexts] without having to
-     * rely on it
+     * Get the settings names which should control access to records
      *
      * @param string $table
      * @return string $tcaCtrlEnablecolumns
      */
-    public static function getTcaCtrlEnablecolumns($table)
+    public static function getEnableSettings($table)
     {
-        return (array) self::$tcaCtrlEnablecolumns[$table];
+        return (array) self::$enableSettings[$table];
     }
 
     /**

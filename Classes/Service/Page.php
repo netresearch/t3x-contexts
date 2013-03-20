@@ -85,11 +85,11 @@ class Tx_Contexts_Service_Page
         global $TCA;
         $sql = '';
 
-        foreach (Tx_Contexts_Api_Configuration::getTcaCtrlEnablecolumns($table) as $field) {
-            $enableFields = Tx_Contexts_Api_Configuration::getFlatFields($table, $field);
-            if (!$enableFields) {
+        foreach (Tx_Contexts_Api_Configuration::getEnableSettings($table) as $setting) {
+            $flatColumns = Tx_Contexts_Api_Configuration::getFlatColumns($table, $setting);
+            if (!$flatColumns) {
                 t3lib_div::devLog(
-                    'Missing flat fields for enable field "' . $field . '"',
+                    'Missing flat columns for setting "' . $setting . '"',
                     'tx_contexts',
                     2,
                     array('table' => $table)
@@ -98,23 +98,23 @@ class Tx_Contexts_Service_Page
             }
 
             $enableChecks = array(
-                $enableFields[1] . " = ''"
+                $flatColumns[1] . " = ''"
             );
             $disableChecks = array();
 
             foreach (Tx_Contexts_Context_Container::get() as $context) {
                 /* @var $context Tx_Contexts_Context_Abstract */
                 $enableChecks[] = $GLOBALS['TYPO3_DB']->listQuery(
-                    $enableFields[1], $context->getUid(), $table
+                    $flatColumns[1], $context->getUid(), $table
                 );
                 $disableChecks[] = 'NOT ' . $GLOBALS['TYPO3_DB']->listQuery(
-                    $enableFields[0], $context->getUid(), $table
+                    $flatColumns[0], $context->getUid(), $table
                 );
             }
 
             $sql = ' AND (' . implode(' OR ', $enableChecks) . ')';
             if (count($disableChecks)) {
-                $sql .= ' AND (' . $enableFields[0] . " = ''" .
+                $sql .= ' AND (' . $flatColumns[0] . " = ''" .
                 ' OR (' . implode(' AND ', $disableChecks) . ')' .
                 ')';
             }

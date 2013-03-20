@@ -62,9 +62,9 @@ class Tx_Contexts_Service_Tcemain
             return;
         }
 
-        if (isset($incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_FIELD])) {
-            $this->currentSettings = $incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_FIELD];
-            unset($incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_FIELD]);
+        if (isset($incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_COLUMN])) {
+            $this->currentSettings = $incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_COLUMN];
+            unset($incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_COLUMN]);
         }
     }
 
@@ -103,20 +103,20 @@ class Tx_Contexts_Service_Tcemain
      *
      * @param string $table
      * @param int    $uid
-     * @param array  $settingsAndFields
+     * @param array  $contextsAndSettings
      * @return void
      */
-    protected function saveRecordSettings($table, $uid, $settingsAndFields)
+    protected function saveRecordSettings($table, $uid, $contextsAndSettings)
     {
         $db = Tx_Contexts_Api_Configuration::getDb();
-        foreach ($settingsAndFields as $contextId => $settings) {
+        foreach ($contextsAndSettings as $contextId => $settings) {
             foreach ($settings as $field => $setting) {
                 $row = $db->exec_SELECTgetSingleRow(
                     'uid',
                     'tx_contexts_settings',
                     "context_uid = $contextId AND " .
                     "foreign_table = '$table' AND " .
-                    "foreign_field = '$field' AND " .
+                    "name = '$field' AND " .
                     "foreign_uid = $uid"
                 );
                 if ($setting === '0' || $setting === '1') {
@@ -126,7 +126,7 @@ class Tx_Contexts_Service_Tcemain
                         $db->exec_INSERTquery('tx_contexts_settings', array(
                             'context_uid' => $contextId,
                             'foreign_table' => $table,
-                            'foreign_field' => $field,
+                            'name' => $field,
                             'foreign_uid' => $uid,
                             'enabled' => $setting
                         ));
@@ -139,33 +139,34 @@ class Tx_Contexts_Service_Tcemain
     }
 
     /**
-     * Saves the visibility settings (enableFields) to the enableFields
-     * columns on the table to allow quicker queries in enableField
+     * Saves the settings which were configured to be flattened into theyr flat
+     * columns on the table to allow quicker queries in enableField hook and to
+     * save queries for already fetched rows
      * hook.
      *
      * @param string $table
      * @param int    $uid
-     * @param array  $settingsAndFields Array of settings.
-     *                                  Key is the context UID.
-     *                                  Value is an array of setting names
-     *                                  and their value, e.g.
-     *                                  tx_contexts_visibility => '',
-     *                                  menu_visibility => '0'
-     *                                  '' = undecided, 1 - on, 0 - off
+     * @param array  $contextsAndSettings Array of settings.
+     *                                    Key is the context UID.
+     *                                    Value is an array of setting names
+     *                                    and their value, e.g.
+     *                                    tx_contexts_visibility => '',
+     *                                    menu_visibility => '0'
+     *                                    '' = undecided, 1 - on, 0 - off
      * @return void
      * @see Tx_Contexts_Service_Tsfe::enableFields()
      */
-    protected function saveFlatSettings($table, $uid, $settingsAndFields)
+    protected function saveFlatSettings($table, $uid, $contextsAndSettings)
     {
         $values = array();
 
-        $flatSettingFields = Tx_Contexts_Api_Configuration::getFlatFields($table);
-        foreach ($flatSettingFields as $setting => $flatFields) {
-            $values[$flatFields[0]] = array();
-            $values[$flatFields[1]] = array();
-            foreach ($settingsAndFields as $contextId => $settings) {
+        $flatSettingColumns = Tx_Contexts_Api_Configuration::getFlatColumns($table);
+        foreach ($flatSettingColumns as $setting => $flatColumns) {
+            $values[$flatColumns[0]] = array();
+            $values[$flatColumns[1]] = array();
+            foreach ($contextsAndSettings as $contextId => $settings) {
                 if ($settings[$setting] === '0' || $settings[$setting] === '1') {
-                    $values[$flatFields[$settings[$setting]]][] = $contextId;
+                    $values[$flatColumns[$settings[$setting]]][] = $contextId;
                 }
             }
         }
@@ -200,7 +201,7 @@ class Tx_Contexts_Service_Tcemain
             $fieldSettings = array();
             foreach ($existingSettings as $setting) {
                 if ($setting['foreign_table'] == $table) {
-                    $fieldSettings[$setting['foreign_field']] = $setting['uid'];
+                    $fieldSettings[$setting['name']] = $setting['uid'];
                 }
             }
             foreach ($fields as $field => $enabled) {
@@ -216,7 +217,7 @@ class Tx_Contexts_Service_Tcemain
                         array(
                             'context_uid' => $contextId,
                             'foreign_table' => $table,
-                            'foreign_field' => $field,
+                            'name' => $field,
                             'foreign_uid' => 0,
                             'enabled' => (int) $enabled
                         )

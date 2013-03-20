@@ -30,8 +30,8 @@
 class Tx_Contexts_Api_Record {
     /**
      * Determines if the specified record is enabled or disabled by the current
-     * contexts (means that the records is disabled if one of the enableField
-     * settings are disabled for one of the current contexts)
+     * contexts (means that the records is disabled if one of the enableSettings
+     * are disabled for one of the current contexts)
      *
      * @param string    $table
      * @param array|int $row The record array or an uid
@@ -39,12 +39,12 @@ class Tx_Contexts_Api_Record {
      */
     public static function isEnabled($table, $row) {
         global $TCA;
-        $enableFields = Tx_Contexts_Api_Configuration::getTcaCtrlEnablecolumns($table);
-        if (!$enableFields) {
+        $enableSettings = Tx_Contexts_Api_Configuration::getEnableSettings($table);
+        if (!$enableSettings) {
             return true;
         }
-        foreach ($enableFields as $field) {
-            if (!self::isSettingEnabled($table, $field, $row)) {
+        foreach ($enableSettings as $setting) {
+            if (!self::isSettingEnabled($table, $setting, $row)) {
                 return false;
             }
         }
@@ -56,13 +56,13 @@ class Tx_Contexts_Api_Record {
      * (returns false if the setting is disabled for one of the contexts)
      *
      * @param string       $table
-     * @param string       $field
+     * @param string       $setting
      * @param array|string $row
      * @return boolean
      */
-    public static function isSettingEnabled($table, $field, $row) {
+    public static function isSettingEnabled($table, $setting, $row) {
         if (is_array($row)) {
-            $enabledFlat = self::isSettingEnabledFlat($table, $field, $row);
+            $enabledFlat = self::isSettingEnabledFlat($table, $setting, $row);
             if ($enabledFlat !== null) {
                 return $enabledFlat;
             }
@@ -82,8 +82,8 @@ class Tx_Contexts_Api_Record {
 
         foreach (Tx_Contexts_Context_Container::get() as $context) {
             /* @var $context Tx_Contexts_Context_Abstract */
-            $rowSetting = $context->getSetting($table, $field, $uid);
-            $defaultSetting = $context->getSetting($table, $field, 0);
+            $rowSetting = $context->getSetting($table, $setting, $uid);
+            $defaultSetting = $context->getSetting($table, $setting, 0);
             if (
                 $rowSetting && !$rowSetting->getEnabled() ||
                 $defaultSetting && !$defaultSetting->getEnabled()
@@ -96,37 +96,37 @@ class Tx_Contexts_Api_Record {
     }
 
     /**
-     * Tries to get if the setting is enabled by evaluating the flattened fields
+     * Tries to get if the setting is enabled by evaluating the flat columns
      * within the record
      *
      * @param string $table
-     * @param string $field
+     * @param string $setting
      * @param array  $row
      * @return NULL|boolean NULL when table has no flat settings or the record
-     *                      doesn't contain the appropriate flat fields
+     *                      doesn't contain the appropriate flat columns
      *                      boolean otherwise
      */
-    protected static function isSettingEnabledFlat($table, $field, array $row) {
-        $flatFields = Tx_Contexts_Api_Configuration::getFlatFields($table, $field);
-        if (!$flatFields) {
+    protected static function isSettingEnabledFlat($table, $setting, array $row) {
+        $flatColumns = Tx_Contexts_Api_Configuration::getFlatColumns($table, $setting);
+        if (!$flatColumns) {
             return null;
         }
 
         $rowValid = true;
-        $flatFieldContents = array();
-        foreach ($flatFields as $i => $flatField) {
-            if (!array_key_exists($flatField, $row)) {
+        $flatColumnContents = array();
+        foreach ($flatColumns as $i => $flatColumn) {
+            if (!array_key_exists($flatColumn, $row)) {
                 t3lib_div::devLog(
-                    'Missing flat field "' . $flatField . '"',
+                    'Missing flat field "' . $flatColumn . '"',
                     'tx_contexts',
                     2,
                     array('table' => $table, 'row' => $row)
                 );
                 $rowValid = false;
-            } elseif ($row[$flatField] !== '') {
-                $flatFieldContents[$i] =  array_flip(explode(',', $row[$flatField]));
+            } elseif ($row[$flatColumn] !== '') {
+                $flatColumnContents[$i] =  array_flip(explode(',', $row[$flatColumn]));
             } else {
-                $flatFieldContents[$i] = array();
+                $flatColumnContents[$i] = array();
             }
         }
 
@@ -135,7 +135,7 @@ class Tx_Contexts_Api_Record {
         }
 
         foreach (Tx_Contexts_Context_Container::get() as $context) {
-            if (array_key_exists($context->getUid(), $flatFieldContents[0])) {
+            if (array_key_exists($context->getUid(), $flatColumnContents[0])) {
                 return false;
             }
         }

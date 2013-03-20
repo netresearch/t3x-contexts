@@ -107,20 +107,20 @@ abstract class Tx_Contexts_Context_Abstract
      * if one was found
      *
      * @param string $table
-     * @param string $field
+     * @param string $setting
      * @param string $uid
      * @return Tx_Contexts_Context_Setting|null
      */
-    final public function getSetting($table, $field, $uid) {
+    final public function getSetting($table, $setting, $uid) {
         $settings = $this->getSettings($table, $uid);
-        return array_key_exists($field, $settings) ? $settings[$field] : null;
+        return array_key_exists($setting, $settings) ? $settings[$setting] : null;
     }
 
     /**
      * Get all settings of one record
      *
      * @param string $table
-     * @param int $uid
+     * @param int    $uid
      * @return array
      */
     final public function getSettings($table, $uid) {
@@ -144,7 +144,7 @@ abstract class Tx_Contexts_Context_Abstract
         }
 
         foreach ($rows as $row) {
-            $this->settings[$table . '.' . $row['foreign_uid']][$row['foreign_field']] =
+            $this->settings[$table . '.' . $row['foreign_uid']][$row['name']] =
                 new Tx_Contexts_Context_Setting($this, $row);
         }
 
@@ -155,12 +155,12 @@ abstract class Tx_Contexts_Context_Abstract
      * Determines whether a setting exists for this record
      *
      * @param string $table
-     * @param string $field
-     * @param string $uid
+     * @param string $setting
+     * @param int    $uid
      * @return boolean
      */
-    final public function hasSetting($table, $field, $uid) {
-        return $this->getSetting($table, $field, $uid) ? true : false;
+    final public function hasSetting($table, $setting, $uid) {
+        return $this->getSetting($table, $setting, $uid) ? true : false;
     }
 
     /**

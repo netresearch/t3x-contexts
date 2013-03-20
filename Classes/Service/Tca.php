@@ -51,13 +51,13 @@ class Tx_Contexts_Service_Tca
 
         $namePre = str_replace('[' . $params['field'] . '_', '[' . $params['field'] . '][', $params['itemFormElName']);
 
-        $fields = $params['fieldConf']['config']['fields'];
+        $settings = $params['fieldConf']['config']['settings'];
 
         $content = '<br/><table class="tx_contexts_table_settings">' .
             '<tr><th class="tx_contexts_context">' .
             $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_contexts') .
             '</th>';
-        foreach ($fields as $field => $config) {
+        foreach ($settings as $settingName => $config) {
             $content .= '<th class="tx_contexts_setting">' . $fobj->sL($config['label']) . '</th>';
         }
         $content .= '</tr>';
@@ -70,11 +70,11 @@ class Tx_Contexts_Service_Tca
                 $this->getRecordPreview($context, $uid) .
                 '</td>';
 
-            foreach ($fields as $field => $config) {
-                $setting = $uid ? $context->getSetting($table, $field, $uid) : null;
+            foreach ($settings as $settingName => $config) {
+                $setting = $uid ? $context->getSetting($table, $settingName, $uid) : null;
                 $content .=
                 '<td class="tx_contexts_setting">' .
-                '<select name="' . $namePre . '[' . $context->getUid() . '][' . $field . ']">' .
+                '<select name="' . $namePre . '[' . $context->getUid() . '][' . $settingName . ']">' .
                 '<option value="">n/a</option>' .
                 '<option value="1"' . ($setting && $setting->getEnabled() ? ' selected="selected"' : '') . '>Yes</option>' .
                 '<option value="0"' . ($setting && !$setting->getEnabled() ? ' selected="selected"' : '') . '>No</option>' .
@@ -139,10 +139,11 @@ class Tx_Contexts_Service_Tca
      */
     protected function getClickMenu($str, $table, $uid = '')
     {
-        $onClick = $GLOBALS['SOBE']->doc->wrapClickMenuOnIcon(
+        $onClick = htmlspecialchars($GLOBALS['SOBE']->doc->wrapClickMenuOnIcon(
             $str, $table, $uid, 1, '', '+info,edit,view,new', TRUE
-        );
-        return '<a href="#" onclick="' . htmlspecialchars($onClick) . '">' . $str . '</a>';
+        ));
+        return
+        '<a href="#" onclick="' . $onClick . '" onrightclick="' . $onClick . '">' . $str . '</a>';
     }
 
 
@@ -170,15 +171,15 @@ class Tx_Contexts_Service_Tca
             ? Tx_Contexts_Context_Container::get()->initAll()->find($uid)
             : null;
 
-        foreach ($params['fieldConf']['config']['fields'] as $field => $config) {
-            $id = $params['itemFormElID'] . '-' . $field;
-            $name = $namePre . '[' . $field . ']';
+        foreach ($params['fieldConf']['config']['settings'] as $setting => $config) {
+            $id = $params['itemFormElID'] . '-' . $setting;
+            $name = $namePre . '[' . $setting . ']';
             $content .= '<input type="hidden" name="' . $name . '" value="0"/>';
             $content .= '<input class="checkbox" type="checkbox" name="' . $name . '" ';
             if (
                 !$context ||
-                !$context->hasSetting($table, $field, 0) ||
-                $context->getSetting($table, $field, 0)->getEnabled()
+                !$context->hasSetting($table, $setting, 0) ||
+                $context->getSetting($table, $setting, 0)->getEnabled()
             ) {
                 $content .= 'checked="checked" ';
             }

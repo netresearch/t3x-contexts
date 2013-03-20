@@ -24,7 +24,7 @@
 
 /**
  * Hooks for tx_em_Install: Append the necessary field definitions for
- * the enableFields-columns (tx_contexts_enable, tx_contexts_disable)
+ * the enableSettings (tx_contexts_enable, tx_contexts_disable)
  * to the tables they were registered for
  *
  * @author Christian Opitz <christian.opitz@netresearch.de>
@@ -48,18 +48,18 @@ class Tx_Contexts_Service_Install implements tx_em_Index_CheckDatabaseUpdatesHoo
     {
         global $TCA;
 
-        $flatTableFields = Tx_Contexts_Api_Configuration::getExtensionFlatFields();
-        if (!array_key_exists($extKey, $flatTableFields)) {
+        $extensionFlatSettings = Tx_Contexts_Api_Configuration::getExtensionFlatSettings();
+        if (!array_key_exists($extKey, $extensionFlatSettings)) {
             return '';
         }
 
         $sql = '';
-        foreach ($flatTableFields[$extKey] as $table => $fields) {
+        foreach ($extensionFlatSettings[$extKey] as $table => $settings) {
             $sql .= "\nCREATE TABLE $table (\n";
-            foreach ($fields as $field) {
-                $flatFields = Tx_Contexts_Api_Configuration::getFlatFields($table, $field);
-                $sql .= $flatFields[0] . " tinytext NOT NULL,\n";
-                $sql .= $flatFields[1] . " tinytext NOT NULL\n";
+            foreach ($settings as $setting) {
+                $flatColumns = Tx_Contexts_Api_Configuration::getFlatColumns($table, $setting);
+                $sql .= $flatColumns[0] . " tinytext NOT NULL,\n";
+                $sql .= $flatColumns[1] . " tinytext NOT NULL\n";
             }
             $sql .= ');';
         }
