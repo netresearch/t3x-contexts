@@ -25,9 +25,11 @@
 /**
  * Matches on a GET parameter with a certain value
  *
- * @package Contexts
- * @author  Christian Weiske <christian.weiske@netresearch.de>
- * @license http://opensource.org/licenses/gpl-license GPLv2 or later
+ * @package    Contexts
+ * @subpackage Contexts_Type
+ * @author     Christian Weiske <christian.weiske@netresearch.de>
+ * @author     Christian Opitz <christian.opitz@netresearch.de>
+ * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
 class Tx_Contexts_Context_Type_GetParam extends Tx_Contexts_Context_Abstract
 {
@@ -35,27 +37,23 @@ class Tx_Contexts_Context_Type_GetParam extends Tx_Contexts_Context_Abstract
      * Check if the context is active now.
      *
      * @param array $arDependencies Array of dependent context objects
-     *
      * @return boolean True if the context is active, false if not
      */
     public function match($arDependencies)
     {
-        $strParamName = trim($this->getConfValue('field_name'));
-        if (isset($_GET[$strParamName])) {
-            $bMatch = $this->matchParameters($_GET[$strParamName]);
-            $this->storeInSession($bMatch);
-        } else {
-            $bMatch = $this->loadFromSession();
-        }
+        $param = trim($this->getConfValue('field_name'));
+        $value = t3lib_div::_GET($param);
 
-        return $bMatch;
+        // Register param on TSFE service for cache and linkVars management
+        Tx_Contexts_Context_Type_GetParam_TsfeService::register($param, $value);
+
+        return $this->matchParameters($value);
     }
 
     /**
      * Checks if the given value is one of the configured allowed values
      *
      * @param string $value Current parameter value
-     *
      * @return boolean True if the current paramter value is one of the
      *                 configured values
      */
@@ -64,33 +62,6 @@ class Tx_Contexts_Context_Type_GetParam extends Tx_Contexts_Context_Abstract
         $arValues = explode("\n", $this->getConfValue('field_values'));
         $arValues = array_map('trim', $arValues);
         return in_array($value, $arValues, true);
-    }
-
-    /**
-     * Stores the current match setting in the session
-     *
-     * @param boolean $bMatch If the context matches
-     *
-     * @return void
-     */
-    protected function storeInSession($bMatch)
-    {
-        $GLOBALS['TSFE']->fe_user->setKey(
-            'ses', 'contexts-getparam-' . $this->uid, $bMatch
-        );
-        $GLOBALS['TSFE']->storeSessionData();
-    }
-
-    /**
-     * Loads from session if the context matches
-     *
-     * @return boolean True if the context is active, false if not
-     */
-    protected function loadFromSession()
-    {
-        return (bool) $GLOBALS['TSFE']->fe_user->getKey(
-            'ses', 'contexts-getparam-' . $this->uid
-        );
     }
 }
 ?>
