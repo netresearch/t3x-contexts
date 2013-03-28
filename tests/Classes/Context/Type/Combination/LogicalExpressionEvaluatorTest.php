@@ -35,6 +35,8 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
     }
    
     /**
+     * TODO Messge should be "Missing Operator"
+     * 
      * @expectedException Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
      * @expectedExceptionMessage Missing closing parentheses
      */
@@ -43,6 +45,40 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
         
         $strExpression = '(context1';
         $arValues = array('context1' => true);
+        Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
+        
+        
+    }
+    
+    /**
+     * TODO Test not work with scope
+     * 
+     * 
+     * @expectedException Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
+     * @expectedExceptionMessage Can't evaluate more than two items by xor
+     */
+    public function testRunWithExceptionTwoXor()
+    {   
+        
+        $strExpression = 'context1 xor context2 xor context3';
+        $arValues = array('context1' => true, 'context2' => true, 'context3' => true);
+        Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
+        
+        
+    }
+    
+    /**
+     * TODO Test not work with scope
+     * 
+     * 
+     * @expectedException Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
+     * @expectedExceptionMessage Unknown variable "context3"
+     */
+    public function testRunWithExceptionUnknownVariable()
+    {   
+        
+        $strExpression = 'context1 xor context2 xor context3';
+        $arValues = array('context1' => true, 'context2' => true);
         Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
         
         
