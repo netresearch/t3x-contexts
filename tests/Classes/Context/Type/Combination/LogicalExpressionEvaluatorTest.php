@@ -35,7 +35,6 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
     }
    
     /**
-     * TODO Messge should be "Missing Operator"
      * 
      * @expectedException Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
      * @expectedExceptionMessage Missing closing parentheses
@@ -43,7 +42,22 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
     public function testRunWithExceptionMissingClosingParentheses()
     {   
         
-        $strExpression = '(context1';
+        $strExpression = '(context1 ';
+        $arValues = array('context1' => true);
+        Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
+        
+        
+    }
+    
+     /**
+     * 
+     * @expectedException Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
+     * @expectedExceptionMessage Unexpected variable
+     */
+    public function testRunWithExceptionMissingOperator()
+    {   
+        
+        $strExpression = '(context1 context2)';
         $arValues = array('context1' => true);
         Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
         
@@ -51,7 +65,6 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
     }
     
     /**
-     * TODO Test not work with scope
      * 
      * 
      * @expectedException Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
@@ -68,7 +81,6 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
     }
     
     /**
-     * TODO Test not work with scope
      * 
      * 
      * @expectedException Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception

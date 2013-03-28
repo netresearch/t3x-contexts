@@ -338,6 +338,11 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
                 break;
             default:
                 if ($token[0] == self::T_VAR) {
+                    if ($this->tokens && !is_int(end($this->tokens))) {
+                        throw new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception(
+                            'Unexpected variable'
+                        );
+                    }
                     $this->pushToken($token);
                 } else {
                     throw new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception(
