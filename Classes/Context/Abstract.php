@@ -62,16 +62,18 @@ abstract class Tx_Contexts_Context_Abstract
      * @param array $arRow Database context row
      * @return void
      */
-    public function __construct($arRow)
+    public function __construct($arRow = array())
     {
-        $this->uid   = (int) $arRow['uid'];
-        $this->type  = $arRow['type'];
-        $this->title = $arRow['title'];
-        $this->alias = $arRow['alias'];
-        if ($arRow['type_conf'] != '') {
-            $this->conf  = t3lib_div::xml2array(
-                $arRow['type_conf']
-            );
+        if (!empty($arRow)) {
+            $this->uid   = (int) $arRow['uid'];
+            $this->type  = $arRow['type'];
+            $this->title = $arRow['title'];
+            $this->alias = $arRow['alias'];
+            if ($arRow['type_conf'] != '') {
+                $this->conf  = t3lib_div::xml2array(
+                    $arRow['type_conf']
+                );
+            }
         }
     }
 

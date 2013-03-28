@@ -1,7 +1,8 @@
 <?php
 
+require_once __DIR__ . '../../../../../Classes/Context/Abstract.php';
 require_once __DIR__ . '../../../../../Classes/Context/Type/Ip.php';
-//require_once __DIR__ . '../../../../../Classes/Context/Abstract.php';
+//
 
 require_once __DIR__ . '../../../../../../../../t3lib/class.t3lib_div.php';
 
@@ -72,5 +73,4 @@ class Tx_Contexts_Context_Type_IpTest extends PHPUnit_Framework_TestCase
     }
 }
 
-abstract class Tx_Contexts_Context_Abstract{}
 ?>
