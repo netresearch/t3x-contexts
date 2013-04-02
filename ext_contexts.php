@@ -25,4 +25,10 @@ Tx_Contexts_Api_Configuration::registerContextType(
     'Tx_Contexts_Context_Type_Ip',
     'FILE:EXT:contexts/Configuration/flexform/ContextType/Ip.xml'
 );
+Tx_Contexts_Api_Configuration::registerContextType(
+    'combination',
+    'Logical context combination',
+    'Tx_Contexts_Context_Type_Combination',
+    'FILE:EXT:contexts/Configuration/flexform/ContextType/Combination.xml'
+);
 ?>
