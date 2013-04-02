@@ -21,6 +21,25 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
     }
     
     /**
+     * TODO: rebuild must be revised
+     * 
+     * @dataProvider expressionValueProvider
+     */
+    public function testRebuild($expression, $values, $expected)
+    {   
+        $evaluator = new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator();
+        $evaluator->parse($evaluator->tokenize($expression));
+        
+        self::assertSame(
+            $expression,
+            $evaluator->rebuild(),
+            'Rebuild must be revised'
+        );
+        
+        
+    }
+    
+    /**
      * @expectedException Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
      * @expectedExceptionMessage Unexpected end
      */
