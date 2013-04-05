@@ -19,13 +19,12 @@ class Tx_Contexts_Context_Type_IpTest extends PHPUnit_Framework_TestCase
      */
     public function testIsIpInRange($ip, $range, $res)
     {
-       $instance = new Tx_Contexts_Context_Type_Ip();
-       
-       $this->assertSame($res, $this->callProtected($instance, 'isIpInRange', $ip, $range));
-       
+        $instance = new Tx_Contexts_Context_Type_Ip();
+
+        $this->assertSame($res, $this->callProtected($instance, 'isIpInRange', $ip, $range));
     }
-    
-    
+
+
     public static function addressProvider()
     {
         return array(
@@ -33,11 +32,11 @@ class Tx_Contexts_Context_Type_IpTest extends PHPUnit_Framework_TestCase
           array('FE80:FFFF:0:FFFF:129:144:52:38', "FE80::/16", true),
           array('80.76.202.37', '80.76.201.32/27', false),
           array('FE80:FFFF:0:FFFF:129:144:52:38', "FE80::/128", false),
-          array('80.76.201.37', '', false),    
+          array('80.76.201.37', '', false),
           array('80.76.201', '', false),
         );
     }
-    
+
     /**
      * Make a proteced/private method accessible.
      *
@@ -56,7 +55,7 @@ class Tx_Contexts_Context_Type_IpTest extends PHPUnit_Framework_TestCase
 
         return $method;
     }
-    
+
     /**
      * Call a protected method on an object and return the result
      *
