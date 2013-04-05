@@ -32,10 +32,5 @@ Tx_Contexts_Api_Configuration::registerContextType(
     'FILE:EXT:contexts/Configuration/flexform/ContextType/Combination.xml'
 );
 
-Tx_Contexts_Api_Configuration::registerContextType(
-    'usergroup',
-    'Usergroup',
-    'Tx_Contexts_Context_Type_UserGroup',
-    'FILE:EXT:contexts/Configuration/flexform/ContextType/UserGroup.xml'
-);
+
 ?>
