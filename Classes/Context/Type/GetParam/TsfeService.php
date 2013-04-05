@@ -90,13 +90,13 @@ class Tx_Contexts_Context_Type_GetParam_TsfeService
         self::$hooksRegistered = true;
         $conf = &$GLOBALS['TSFE']->TYPO3_CONF_VARS;
         $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'][__CLASS__] =
-        	'&' . __CLASS__ . '->configArrayPostProc';
+            '&' . __CLASS__ . '->configArrayPostProc';
         // override page hash generation, TYPO3 version < 4.7
         $conf['SC_OPTIONS']['t3lib/class.t3lib_div.php']['cHashParamsHook'][__CLASS__] =
-        	'&' . __CLASS__ . '->createHashBase';
+            '&' . __CLASS__ . '->createHashBase';
         // override page hash generation, TYPO3 version >= 4.7
         $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][__CLASS__] =
-        	'&' . __CLASS__ . '->createHashBase';
+            '&' . __CLASS__ . '->createHashBase';
     }
 }
 ?>

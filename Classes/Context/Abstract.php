@@ -170,9 +170,10 @@ abstract class Tx_Contexts_Context_Abstract
      *
      * @param array $arDependencies Array of context objects that are
      *                              dependencies of this context
+     *
      * @return boolean True when your context matches, false if not
      */
-    abstract public function match($arDependencies);
+    abstract public function match(array $arDependencies = array());
 
     /**
      * Get the uid of this context

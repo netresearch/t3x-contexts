@@ -39,7 +39,7 @@ class Tx_Contexts_Context_Type_GetParam extends Tx_Contexts_Context_Abstract
      * @param array $arDependencies Array of dependent context objects
      * @return boolean True if the context is active, false if not
      */
-    public function match($arDependencies)
+    public function match(array $arDependencies = array())
     {
         $param = trim($this->getConfValue('field_name'));
         $value = t3lib_div::_GET($param);

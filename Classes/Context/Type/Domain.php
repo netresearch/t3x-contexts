@@ -5,7 +5,7 @@
  */
 class Tx_Contexts_Context_Type_Domain extends Tx_Contexts_Context_Abstract
 {
-    public function match($arDependencies)
+    public function match(array $arDependencies = array())
     {
         $curHost = $_SERVER['HTTP_HOST'];
         $arDomains = explode("\n", $this->getConfValue('field_domains'));

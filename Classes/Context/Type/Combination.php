@@ -34,8 +34,8 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
     protected $evaluator;
 
     protected $tokens;
-    
-    
+
+
 
     /**
      * Initialize the evaluator, tokenize the expression and create
@@ -54,7 +54,7 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
                 $token[0] === Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::T_VAR
             ) {
                 $context = $this->findInContainer($token);
-                
+
                 if ($context) {
                     $dependencies[$context->getUid()] = true;
                 }
@@ -63,14 +63,14 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
         }
         return $dependencies;
     }
-    
+
     /**
      * Find context by token
      *
      * @param array $arToken     *
-     * 
+     *
      * @return Tx_Contexts_Context_Abstract
-     * 
+     *
      * @see Tx_Contexts_Context_Container::find
      */
     protected function findInContainer($arToken)
@@ -87,7 +87,7 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
      * @param array $arDependencies
      * @return boolean
      */
-    public function match($arDependencies)
+    public function match(array $arDependencies = array())
     {
         $this->evaluator->parse($this->tokens);
         $values = array();

@@ -71,25 +71,26 @@ class Tx_Contexts_Context_Container extends ArrayObject
      */
     protected function loadAvailable()
     {
-	    $arRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+        $arRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
             '*', 'tx_contexts_contexts', 'deleted=0'
         );
 
         $contexts = array();
-	    foreach ($arRows as $arRow) {
+        foreach ($arRows as $arRow) {
             $context = Tx_Contexts_Context_Factory::createFromDb($arRow);
             if ($context !== null) {
                 $contexts[$arRow['uid']] = $context;
             }
-	    }
+        }
 
-	    return $contexts;
+        return $contexts;
     }
 
     /**
      * Matches all context objects. Resolves dependencies.
      *
-     * @param array $arContexts Array of available context objects     *
+     * @param array $arContexts Array of available context objects
+     *
      * @return array Array of matched Tx_Contexts_Context_Abstract objects,
      *               key is their uid
      */
@@ -101,6 +102,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
         $loops = 0;
         do {
             foreach (array_keys($arContexts) as $uid) {
+                /* @var $context Tx_Contexts_Context_Abstract */
                 $context = $arContexts[$uid];
 
                 // resolve dependencies

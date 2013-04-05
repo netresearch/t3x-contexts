@@ -328,13 +328,13 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
                         'Unexpected end'
                     );
                 }
-                
+
                 if ($this->getScope()->parentScope->parentScope) {
                     throw new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception(
                         'Missing closing parentheses'
                     );
                 }
-                
+
                 break;
             default:
                 if ($token[0] == self::T_VAR) {
@@ -422,7 +422,7 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
     {
         // default if no operator isset
         $value = false;
-        
+
         foreach ($this->tokens as $i => $token) {
             if ($token instanceof self) {
                 $value = $token->evaluate($values);
