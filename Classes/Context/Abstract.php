@@ -225,5 +225,54 @@ abstract class Tx_Contexts_Context_Abstract
     {
         return array();
     }
+
+    /**
+     * Loads match() result from session if the context is configured so.
+     * Needs a flexform config option "field_use_session".
+     *
+     * @return array Array with two values:
+     *               0: true: Use the second value as return,
+     *                  false: calculate it
+     *               1: Return value when 0 is true
+     */
+    protected function getMatchFromSession()
+    {
+        $bUseSession = (bool) $this->getConfValue('field_use_session');
+        if (!$bUseSession) {
+            return array(false, null);
+        }
+
+        $res = $GLOBALS['TSFE']->fe_user->getKey(
+            'ses', 'contexts-getparam-' . $this->uid
+        );
+        if ($res === null) {
+            //not set yet
+            return array(false, null);
+        }
+        return array(true, (bool) $res);
+    }
+
+    /**
+     * Stores the current match setting in the session if the type
+     * is configured that way.
+     *
+     * @param boolean $bMatch If the context matches
+     *
+     * @return boolean $bMatch value
+     */
+    protected function storeInSession($bMatch)
+    {
+        $bUseSession = (bool) $this->getConfValue('field_use_session');
+        if (!$bUseSession) {
+            return $bMatch;
+        }
+
+        /* @var $GLOBALS['TSFE'] tslib_feuserauth */
+        $GLOBALS['TSFE']->fe_user->setKey(
+            'ses', 'contexts-getparam-' . $this->uid, $bMatch
+        );
+        $GLOBALS['TSFE']->storeSessionData();
+        return $bMatch;
+    }
 }
 ?>

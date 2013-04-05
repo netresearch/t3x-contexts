@@ -37,6 +37,7 @@ class Tx_Contexts_Context_Type_GetParam extends Tx_Contexts_Context_Abstract
      * Check if the context is active now.
      *
      * @param array $arDependencies Array of dependent context objects
+     *
      * @return boolean True if the context is active, false if not
      */
     public function match(array $arDependencies = array())
@@ -44,16 +45,27 @@ class Tx_Contexts_Context_Type_GetParam extends Tx_Contexts_Context_Abstract
         $param = trim($this->getConfValue('field_name'));
         $value = t3lib_div::_GET($param);
 
+        if ($value === null) {
+            //load from session if no param given
+            list($bUseMatch, $bMatch) = $this->getMatchFromSession();
+            if ($bUseMatch) {
+                return $bMatch;
+            }
+        }
+
         // Register param on TSFE service for cache and linkVars management
         Tx_Contexts_Context_Type_GetParam_TsfeService::register($param, $value);
 
-        return $this->matchParameters($value);
+        return $this->storeInSession(
+            $this->matchParameters($value)
+        );
     }
 
     /**
      * Checks if the given value is one of the configured allowed values
      *
      * @param string $value Current parameter value
+     *
      * @return boolean True if the current paramter value is one of the
      *                 configured values
      */

@@ -29,6 +29,17 @@
          </config>
        </TCEforms>
      </field_values>
+
+     <field_use_session>
+       <TCEforms>
+         <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xml:field_use_session</label>
+         <config>
+           <type>check</type>
+           <default>1</default>
+         </config>
+       </TCEforms>
+     </field_use_session>
+
    </el>
  </ROOT>
 </T3DataStructure>
