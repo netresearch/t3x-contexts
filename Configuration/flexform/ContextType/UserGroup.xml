@@ -11,12 +11,13 @@
 				<TCEforms>
 					<label>LLL:EXT:contexts/Resources/Private/Language/flexform.xml:usergroup.field_usergroup</label>
 					<config>
-						<type>select</type>
+						<type>group</type>
 						<internal_type>db</internal_type>
 						<allowed>fe_groups</allowed>
 						<size>10</size>
 						<maxitems>100</maxitems>
 						<minitems>0</minitems>
+						<multiple>1</multiple>
 						<show_thumbs>1</show_thumbs>
 					</config>
 				</TCEforms>
