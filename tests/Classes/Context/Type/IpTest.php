@@ -80,12 +80,18 @@ class Tx_Contexts_Context_Type_IpTest extends PHPUnit_Framework_TestCase
     public static function addressProvider()
     {
         return array(
-          array('80.76.201.37', '80.76.201.32/27', true),
-          array('FE80:FFFF:0:FFFF:129:144:52:38', "FE80::/16", true),
-          array('80.76.202.37', '80.76.201.32/27', false),
-          array('FE80:FFFF:0:FFFF:129:144:52:38', "FE80::/128", false),
-          array('80.76.201.37', '', false),
-          array('80.76.201', '', false),
+            array('80.76.201.37', '80.76.201.32/27', true),
+            array('FE80:FFFF:0:FFFF:129:144:52:38', "FE80::/16", true),
+            array('80.76.202.37', '80.76.201.32/27', false),
+            array('FE80:FFFF:0:FFFF:129:144:52:38', "FE80::/128", false),
+            array('80.76.201.37', '', false),
+            array('80.76.201', '', false),
+
+            array('80.76.201.37', '80.76.201.*', true),
+            array('80.76.201.37', '80.76.*.*', true),
+            array('80.76.201.37', '80.76.*', true),
+            array('80.76.201.37', '80.76.*.37', true),
+            array('80.76.201.37', '80.76.*.40', false),
         );
     }
 
