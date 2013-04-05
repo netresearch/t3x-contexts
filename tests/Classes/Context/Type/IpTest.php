@@ -21,9 +21,19 @@ class Tx_Contexts_Context_Type_IpTest extends PHPUnit_Framework_TestCase
     {
         $instance = new Tx_Contexts_Context_Type_Ip();
 
-        $this->assertSame($res, $this->callProtected($instance, 'isIpInRange', $ip, $range));
+        $this->assertSame(
+            $res,
+            $this->callProtected(
+                $instance,
+                'isIpInRange',
+                $ip,
+                filter_var(
+                    $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4
+                ) !== false,
+                $range
+            )
+        );
     }
-
 
     public static function addressProvider()
     {
