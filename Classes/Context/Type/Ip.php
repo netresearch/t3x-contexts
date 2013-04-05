@@ -50,19 +50,19 @@ class Tx_Contexts_Context_Type_Ip extends Tx_Contexts_Context_Abstract
             $strCurIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6
         ) !== false;
 
-        if (!$bIpv6 && !$bIpv6) {
+        if (!$bIpv4 && !$bIpv6) {
             //invalid IP
             return false;
         }
 
-        $arIpRange = explode("\n", $this->getConfValue('field_ip'));
+        $arIpRange = explode("\n", trim($this->getConfValue('field_ip')));
 
-        if (count($arIpRange)) {
-            $strRange = implode(',', $arIpRange);
-            return $this->isIpInRange($strCurIp, $bIpv4, $strRange);
+        if (count($arIpRange) == 1 && $arIpRange[0] == '') {
+            return false;
         }
 
-        return false;
+        $strRange = implode(',', $arIpRange);
+        return $this->isIpInRange($strCurIp, $bIpv4, $strRange);
     }
 
     /**

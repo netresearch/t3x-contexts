@@ -14,6 +14,48 @@ if (!class_exists('t3lib_div')
 
 class Tx_Contexts_Context_Type_IpTest extends PHPUnit_Framework_TestCase
 {
+    public function testMatch()
+    {
+        $_SERVER['REMOTE_ADDR'] = '192.168.1.14';
+        $ipm = $this->getMock(
+            'Tx_Contexts_Context_Type_Ip',
+            array('getConfValue')
+        );
+        $ipm->expects($this->any())
+            ->method('getConfValue')
+            ->will($this->returnValue('192.168.1.14'));
+
+        $this->assertTrue($ipm->match());
+    }
+
+    public function testMatchNoConfiguration()
+    {
+        $_SERVER['REMOTE_ADDR'] = '192.168.1.20';
+        $ipm = $this->getMock(
+            'Tx_Contexts_Context_Type_Ip',
+            array('getConfValue')
+        );
+        $ipm->expects($this->any())
+            ->method('getConfValue')
+            ->will($this->returnValue(''));
+
+        $this->assertFalse($ipm->match());
+    }
+
+    public function testMatchInvalidIp()
+    {
+        $_SERVER['REMOTE_ADDR'] = '';
+        $ipm = $this->getMock(
+            'Tx_Contexts_Context_Type_Ip',
+            array('getConfValue')
+        );
+        $ipm->expects($this->any())
+            ->method('getConfValue')
+            ->will($this->returnValue('192.168.1.14'));
+
+        $this->assertFalse($ipm->match());
+    }
+
     /**
      * @dataProvider addressProvider
      */
