@@ -75,7 +75,7 @@ A domain context matches when the domain the user visits is in the
 configured list.
 
 This is helpful if the site is available on several domains, or
-when it is deployed on developmen/stage/live systems - you may choose
+when it is deployed on development/stage/live systems - you may choose
 to show a content element on the development system only.
 
 Domain matching
