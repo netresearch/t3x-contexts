@@ -46,7 +46,7 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
     public function getDependencies()
     {
         $this->evaluator = new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator();
-        $this->tokens = $this->evaluator->tokenize($this->getConfValue('expression'));
+        $this->tokens = $this->evaluator->tokenize($this->getConfValue('field_expression'));
         $dependencies = array();
         foreach ($this->tokens as $token) {
             if (

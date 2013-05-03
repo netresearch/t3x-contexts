@@ -7,7 +7,7 @@
  <ROOT>
    <type>array</type>
    <el>
-     <field_ip>
+     <field_expression>
        <TCEforms>
          <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xml:combination.field_logicalExpression</label>
          <config>
@@ -17,7 +17,7 @@
            <eval>trim</eval>
          </config>
        </TCEforms>
-     </field_ip>
+     </field_expression>
    </el>
  </ROOT>
 </T3DataStructure>
