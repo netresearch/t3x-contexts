@@ -49,9 +49,8 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
         $this->tokens = $this->evaluator->tokenize($this->getConfValue('field_expression'));
         $dependencies = array();
         foreach ($this->tokens as $token) {
-            if (
-                is_array($token) &&
-                $token[0] === Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::T_VAR
+            if (is_array($token)
+                && $token[0] === Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::T_VAR
             ) {
                 $context = $this->findInContainer($token);
 
@@ -67,9 +66,9 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
     /**
      * Find context by token
      *
-     * @param array $arToken     *
+     * @param array $arToken Token array with 0->type and 1->value
      *
-     * @return Tx_Contexts_Context_Abstract
+     * @return Tx_Contexts_Context_Abstract Context object or NULL if not found
      *
      * @see Tx_Contexts_Context_Container::find
      */
