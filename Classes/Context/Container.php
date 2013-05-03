@@ -90,14 +90,14 @@ class Tx_Contexts_Context_Container extends ArrayObject
      * Matches all context objects. Resolves dependencies.
      *
      * @param array $arContexts Array of available context objects
-     *
      * @return array Array of matched Tx_Contexts_Context_Abstract objects,
      *               key is their uid
      */
     protected function match($arContexts)
     {
-        $matched    = array();
-        $notMatched = array();
+        $matched          = array();
+        $notMatched       = array();
+        $arContextsHelper = $arContexts;
 
         $loops = 0;
         do {
@@ -106,7 +106,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
                 $context = $arContexts[$uid];
 
                 // resolve dependencies
-                $arDeps = $context->getDependencies();
+                $arDeps = $context->getDependencies($arContextsHelper);
                 $unresolvedDeps = count($arDeps);
                 foreach ($arDeps as $depUid => $dummy) {
                     if (isset($matched[$depUid])) {

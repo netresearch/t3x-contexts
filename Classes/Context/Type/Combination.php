@@ -41,9 +41,10 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
      * Initialize the evaluator, tokenize the expression and create
      * the depencies from the variable tokens
      *
+     * @param array $arContexts the available contexts
      * @return array
      */
-    public function getDependencies()
+    public function getDependencies($arContexts)
     {
         $this->evaluator = new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator();
         $this->tokens = $this->evaluator->tokenize($this->getConfValue('field_expression'));
@@ -52,7 +53,11 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
             if (is_array($token)
                 && $token[0] === Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::T_VAR
             ) {
-                $context = $this->findInContainer($token);
+                foreach ($arContexts as $dependent) {
+                    if ($dependent->getAlias() == $token[1]) {
+                        $context = $dependent;
+                    }
+                }
 
                 if ($context) {
                     $dependencies[$context->getUid()] = true;
