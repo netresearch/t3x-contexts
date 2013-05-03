@@ -49,16 +49,16 @@ class Tx_Contexts_Context_Type_GetParam extends Tx_Contexts_Context_Abstract
             //load from session if no param given
             list($bUseMatch, $bMatch) = $this->getMatchFromSession();
             if ($bUseMatch) {
-                return $bMatch;
+                return $this->invert($bMatch);
             }
         }
 
         // Register param on TSFE service for cache and linkVars management
         Tx_Contexts_Context_Type_GetParam_TsfeService::register($param, $value);
 
-        return $this->storeInSession(
+        return $this->invert($this->storeInSession(
             $this->matchParameters($value)
-        );
+        ));
     }
 
     /**

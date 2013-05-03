@@ -52,17 +52,17 @@ class Tx_Contexts_Context_Type_Ip extends Tx_Contexts_Context_Abstract
 
         if (!$bIpv4 && !$bIpv6) {
             //invalid IP
-            return false;
+            return $this->invert(false);
         }
 
         $arIpRange = explode("\n", trim($this->getConfValue('field_ip')));
 
         if (count($arIpRange) == 1 && $arIpRange[0] == '') {
-            return false;
+            return $this->invert(false);
         }
 
         $strRange = implode(',', $arIpRange);
-        return $this->isIpInRange($strCurIp, $bIpv4, $strRange);
+        return $this->invert($this->isIpInRange($strCurIp, $bIpv4, $strRange));
     }
 
     /**

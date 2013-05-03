@@ -12,11 +12,11 @@ class Tx_Contexts_Context_Type_Domain extends Tx_Contexts_Context_Abstract
 
         foreach ($arDomains as $domain) {
             if ($this->matchDomain($domain, $curHost)) {
-                return true;
+                return $this->invert(true);
             }
         }
 
-        return false;
+        return $this->invert(false);
     }
 
     protected function matchDomain($domain, $curHost)

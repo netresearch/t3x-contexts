@@ -97,7 +97,7 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
             $values[$dependency->context->getUid()] = $dependency->matched;
         }
         // TODO: Should we try/catch parsing and evaluation?
-        return $this->evaluator->evaluate($values);
+        return $this->invert($this->evaluator->evaluate($values));
     }
 }
 ?>

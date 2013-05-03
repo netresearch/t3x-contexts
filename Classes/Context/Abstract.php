@@ -60,6 +60,13 @@ abstract class Tx_Contexts_Context_Abstract
     private $settings = array();
 
     /**
+     * contains the sheet where the invert configuration can be found
+     *
+     * @var string
+     */
+    protected $invertConfSheet = 'sDEF';
+
+    /**
      * Constructor - set the values from database row
      *
      * @param array $arRow Database context row
@@ -286,6 +293,23 @@ abstract class Tx_Contexts_Context_Abstract
             'ses', 'contexts-getparam-' . $this->uid, $bMatch
         );
         $GLOBALS['TSFE']->storeSessionData();
+        return $bMatch;
+    }
+
+    /**
+     * Inverts the current match setting if inverting is activated.
+     *
+     * @param boolean $bMatch If the context matches
+     * @return boolean
+     */
+    protected function invert($bMatch)
+    {
+        $bInvert = (bool) $this->getConfValue('field_invert', null, $this->invertConfSheet);
+
+        if ($bInvert) {
+            return !$bMatch;
+        }
+
         return $bMatch;
     }
 }
