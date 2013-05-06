@@ -66,22 +66,27 @@ class Tx_Contexts_Service_Tca
 
         foreach ($contexts as $context) {
             /* @var $context Tx_Contexts_Context_Abstract */
-            $content .= '<tr><td class="tx_contexts_context">' .
-                $this->getRecordPreview($context, $uid) .
-                '</td>';
-
+            $contSettings = '';
+            $bHasSetting = false;
             foreach ($settings as $settingName => $config) {
                 $setting = $uid ? $context->getSetting($table, $settingName, $uid) : null;
-                $content .=
-                '<td class="tx_contexts_setting">' .
-                '<select name="' . $namePre . '[' . $context->getUid() . '][' . $settingName . ']">' .
-                '<option value="">n/a</option>' .
-                '<option value="1"' . ($setting && $setting->getEnabled() ? ' selected="selected"' : '') . '>Yes</option>' .
-                '<option value="0"' . ($setting && !$setting->getEnabled() ? ' selected="selected"' : '') . '>No</option>' .
-                '</select></td>';
+                $bHasSetting = $bHasSetting || (bool) $setting;
+                $contSettings .= '<td class="tx_contexts_setting">'
+                    . '<select name="' . $namePre . '[' . $context->getUid() . '][' . $settingName . ']">'
+                    . '<option value="">n/a</option>'
+                    . '<option value="1"' . ($setting && $setting->getEnabled() ? ' selected="selected"' : '') . '>Yes</option>'
+                    . '<option value="0"' . ($setting && !$setting->getEnabled() ? ' selected="selected"' : '') . '>No</option>'
+                    . '</select></td>';
             }
 
-            $content .= '</tr>';
+            $content .= '<tr>'
+                . '<td class="tx_contexts_context">'
+                . '<span class="context-' . ($bHasSetting ? 'active' : 'inactive') . '">'
+                . $this->getRecordPreview($context, $uid)
+                . '</span>'
+                . '</td>'
+                . $contSettings
+                . '</tr>';
         }
         $content .= '</table>';
 

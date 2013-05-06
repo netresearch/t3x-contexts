@@ -6,3 +6,6 @@ table.typo3-TCEforms table.tx_contexts_table_settings th {
     padding: 2px;
     vertical-align: middle;
 }
+.context-active {
+    font-weight: bold;
+}
