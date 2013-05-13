@@ -69,21 +69,6 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
     }
 
     /**
-     * Find context by token
-     *
-     * @param array $arToken Token array with 0->type and 1->value
-     *
-     * @return Tx_Contexts_Context_Abstract Context object or NULL if not found
-     *
-     * @see Tx_Contexts_Context_Container::find
-     */
-    protected function findInContainer($arToken)
-    {
-        $container = Tx_Contexts_Context_Container::get();
-        return $container->find($arToken[1]);
-    }
-
-    /**
      * Create an array with uids and aliases as keys and the
      * matching result as values and let the evaluator evaluate
      * the parsed expression by those values.
