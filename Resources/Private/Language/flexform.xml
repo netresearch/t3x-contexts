@@ -12,7 +12,6 @@
       <label index="getparam.field_values">Parameter values, one per line</label>
       <label index="ip.field_ip">User IP, one per line. * and partial IPs allowed</label>
       <label index="combination.field_logicalExpression">Logical expression combination, (use context alias to combine) </label>
-      <label index="usergroup.field_usergroup">Usergroups</label>
     </languageKey>
   </data>
 </T3locallang>
