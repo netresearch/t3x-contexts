@@ -24,6 +24,8 @@
            <cols>60</cols>
            <rows>5</rows>
            <eval>trim</eval>
+           <form_type>user</form_type>
+           <userFunc>Tx_Contexts_Backend-&gt;textCombinations</userFunc>
          </config>
        </TCEforms>
      </field_expression>
