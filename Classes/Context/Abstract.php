@@ -259,18 +259,30 @@ abstract class Tx_Contexts_Context_Abstract
     protected function getMatchFromSession()
     {
         $bUseSession = (bool) $this->getConfValue('field_use_session');
+
         if (!$bUseSession) {
             return array(false, null);
         }
 
-        $res = $GLOBALS['TSFE']->fe_user->getKey(
-            'ses', 'contexts-getparam-' . $this->uid
-        );
+        $res = $this->getSession();
+
         if ($res === null) {
             //not set yet
             return array(false, null);
         }
         return array(true, (bool) $res);
+    }
+
+    /**
+     * Get the contextsession
+     *
+     * @return mixed boolean match or null
+     */
+    protected function getSession()
+    {
+        return $GLOBALS['TSFE']->fe_user->getKey(
+            'ses', 'contexts-getparam-' . $this->uid
+        );
     }
 
     /**
