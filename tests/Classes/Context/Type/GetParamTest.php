@@ -30,11 +30,10 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
             'Tx_Contexts_Context_Type_GetParam',
             array('getConfValue')
         );
+        $getm->setUseSession(false);
         $retValMap = array(
             array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_use_session', null, 'sDEF', 'lDEF', 'vDEF', false),
             array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', '123'),
-            array('field_invert'     , null, 'sDEF', 'lDEF', 'vDEF', false),
         );
 
         $getm->expects($this->any())
@@ -52,11 +51,10 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
             'Tx_Contexts_Context_Type_GetParam',
             array('getConfValue')
         );
+        $getm->setUseSession(false);
         $retValMap = array(
             array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_use_session', null, 'sDEF', 'lDEF', 'vDEF', false),
             array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', '123'),
-            array('field_invert'     , null, 'sDEF', 'lDEF', 'vDEF', false),
         );
 
         $getm->expects($this->any())
@@ -74,11 +72,10 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
             'Tx_Contexts_Context_Type_GetParam',
             array('getConfValue')
         );
+        $getm->setUseSession(false);
         $retValMap = array(
             array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_use_session', null, 'sDEF', 'lDEF', 'vDEF', false),
             array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', '123'),
-            array('field_invert'     , null, 'sDEF', 'lDEF', 'vDEF', false),
         );
 
         $getm->expects($this->any())
@@ -96,14 +93,13 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
             'Tx_Contexts_Context_Type_GetParam',
             array('getConfValue')
         );
+        $getm->setUseSession(false);
         $retValMap = array(
             array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_use_session', null, 'sDEF', 'lDEF', 'vDEF', false),
             array(
                 'field_values'     , null, 'sDEF', 'lDEF', 'vDEF',
                 "123\n124\n125\n"
             ),
-            array('field_invert'     , null, 'sDEF', 'lDEF', 'vDEF', false),
         );
 
         $getm->expects($this->any())
@@ -121,14 +117,13 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
             'Tx_Contexts_Context_Type_GetParam',
             array('getConfValue')
         );
+        $getm->setUseSession(false);
         $retValMap = array(
             array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_use_session', null, 'sDEF', 'lDEF', 'vDEF', false),
             array(
                 'field_values'     , null, 'sDEF', 'lDEF', 'vDEF',
                 "123\n124\n125\n"
             ),
-            array('field_invert'     , null, 'sDEF', 'lDEF', 'vDEF', false),
         );
 
         $getm->expects($this->any())
@@ -146,11 +141,10 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
             'Tx_Contexts_Context_Type_GetParam',
             array('getConfValue')
         );
+        $getm->setUseSession(false);
         $retValMap = array(
             array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_use_session', null, 'sDEF', 'lDEF', 'vDEF', false),
             array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', ''),
-            array('field_invert'     , null, 'sDEF', 'lDEF', 'vDEF', false),
         );
 
         $getm->expects($this->any())
@@ -168,11 +162,10 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
             'Tx_Contexts_Context_Type_GetParam',
             array('getConfValue')
         );
+        $getm->setUseSession(false);
         $retValMap = array(
             array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_use_session', null, 'sDEF', 'lDEF', 'vDEF', false),
             array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', ''),
-            array('field_invert'     , null, 'sDEF', 'lDEF', 'vDEF', false),
         );
 
         $getm->expects($this->any())
@@ -191,11 +184,10 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
             'Tx_Contexts_Context_Type_GetParam',
             array('getConfValue')
         );
+        $getm->setUseSession(false);
         $retValMap = array(
             array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', ''),
-            array('field_use_session', null, 'sDEF', 'lDEF', 'vDEF', false),
             array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', ''),
-            array('field_invert'     , null, 'sDEF', 'lDEF', 'vDEF', false),
         );
 
         $getm->expects($this->any())

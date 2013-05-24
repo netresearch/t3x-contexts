@@ -25,12 +25,25 @@ class Tx_Contexts_Context_Type_IpTest extends PHPUnit_Framework_TestCase
             ->method('getConfValue')
             ->with($this->equalTo('field_ip'))
             ->will($this->returnValue('192.168.1.14'));
-        $ipm->expects($this->at(1))
-            ->method('getConfValue')
-            ->with($this->equalTo('field_invert'))
-            ->will($this->returnValue(false));
+        $ipm->setInvert(false);
 
         $this->assertTrue($ipm->match());
+    }
+
+    public function testMatchInvert()
+    {
+        $_SERVER['REMOTE_ADDR'] = '192.168.1.14';
+        $ipm = $this->getMock(
+            'Tx_Contexts_Context_Type_Ip',
+            array('getConfValue')
+        );
+        $ipm->expects($this->at(0))
+            ->method('getConfValue')
+            ->with($this->equalTo('field_ip'))
+            ->will($this->returnValue('192.168.1.14'));
+        $ipm->setInvert(true);
+
+        $this->assertFalse($ipm->match());
     }
 
     public function testMatchNoConfiguration()
@@ -54,10 +67,7 @@ class Tx_Contexts_Context_Type_IpTest extends PHPUnit_Framework_TestCase
             'Tx_Contexts_Context_Type_Ip',
             array('getConfValue')
         );
-        $ipm->expects($this->at(0))
-            ->method('getConfValue')
-            ->with($this->equalTo('field_invert'))
-            ->will($this->returnValue(false));
+        $ipm->setInvert(false);
 
         $this->assertFalse($ipm->match());
     }

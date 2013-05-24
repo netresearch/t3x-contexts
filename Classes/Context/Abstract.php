@@ -54,8 +54,22 @@ abstract class Tx_Contexts_Context_Abstract
 
     /**
      * Unix timestamp of last record modification
+     *
+     * @var integer
      */
     protected $tstamp;
+
+    /**
+     * Invert the match result
+     *
+     * @var boolean
+     */
+    protected $invert = false;
+
+    /**
+     * Store match result in user session
+     */
+    protected $use_session = true;
 
     /**
      * @var array
@@ -63,13 +77,6 @@ abstract class Tx_Contexts_Context_Abstract
     protected $conf;
 
     private $settings = array();
-
-    /**
-     * contains the sheet where the invert configuration can be found
-     *
-     * @var string
-     */
-    protected $invertConfSheet = 'sDEF';
 
     /**
      * Constructor - set the values from database row
@@ -81,13 +88,15 @@ abstract class Tx_Contexts_Context_Abstract
     public function __construct($arRow = array())
     {
         if (!empty($arRow)) {
-            $this->uid    = (int) $arRow['uid'];
-            $this->type   = $arRow['type'];
-            $this->title  = $arRow['title'];
-            $this->alias  = $arRow['alias'];
-            $this->tstamp = $arRow['tstamp'];
+            $this->uid         = (int) $arRow['uid'];
+            $this->type        = $arRow['type'];
+            $this->title       = $arRow['title'];
+            $this->alias       = $arRow['alias'];
+            $this->tstamp      = $arRow['tstamp'];
+            $this->invert      = $arRow['invert'];
+            $this->use_session = $arRow['use_session'];
             if ($arRow['type_conf'] != '') {
-                $this->conf  = t3lib_div::xml2array(
+                $this->conf = t3lib_div::xml2array(
                     $arRow['type_conf']
                 );
             }
@@ -255,7 +264,6 @@ abstract class Tx_Contexts_Context_Abstract
 
     /**
      * Loads match() result from session if the context is configured so.
-     * Needs a flexform config option "field_use_session".
      *
      * @return array Array with two values:
      *               0: true: Use the second value as return,
@@ -264,7 +272,7 @@ abstract class Tx_Contexts_Context_Abstract
      */
     protected function getMatchFromSession()
     {
-        $bUseSession = (bool) $this->getConfValue('field_use_session');
+        $bUseSession = (bool) $this->use_session;
 
         if (!$bUseSession) {
 
@@ -302,7 +310,7 @@ abstract class Tx_Contexts_Context_Abstract
      */
     protected function storeInSession($bMatch)
     {
-        $bUseSession = (bool) $this->getConfValue('field_use_session');
+        $bUseSession = (bool) $this->use_session;
         if (!$bUseSession) {
             return $bMatch;
         }
@@ -324,15 +332,23 @@ abstract class Tx_Contexts_Context_Abstract
      */
     protected function invert($bMatch)
     {
-        $bInvert = (bool) $this->getConfValue(
-            'field_invert', null, $this->invertConfSheet
-        );
+        $bInvert = (bool) $this->invert;
 
         if ($bInvert) {
             return !$bMatch;
         }
 
         return $bMatch;
+    }
+
+    public function setInvert($bInvert)
+    {
+        $this->invert = (bool) $bInvert;
+    }
+
+    public function setUseSession($bUseSession)
+    {
+        $this->use_session = (bool) $bUseSession;
     }
 }
 ?>

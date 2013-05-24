@@ -18,7 +18,7 @@ class Tx_Contexts_Context_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testGetMatchFromSession($configRet, $sessionRet, $expected)
     {
-         $stub = $this->getMock(
+        $stub = $this->getMock(
             'test',
             array(
                 'getConfValue',
@@ -26,9 +26,7 @@ class Tx_Contexts_Context_AbstractTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $stub->expects($this->any())
-            ->method('getConfValue')
-            ->will($this->returnValue($configRet));
+        $stub->setUseSession($configRet);
 
         $stub->expects($this->any())
             ->method('getSession')

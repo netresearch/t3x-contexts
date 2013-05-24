@@ -181,5 +181,3 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
 }
 
 ?>
-
-
