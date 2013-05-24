@@ -65,6 +65,10 @@ class Tx_Contexts_Service_Tca
         $uid = (int) $params['row']['uid'];
 
         foreach ($contexts as $context) {
+            if ($context->getDisabled()) {
+                continue;
+            }
+
             /* @var $context Tx_Contexts_Context_Abstract */
             $contSettings = '';
             $bHasSetting = false;

@@ -60,7 +60,11 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
                 }
 
                 if ($context) {
-                    $dependencies[$context->getUid()] = true;
+                    if (!$context->getDisabled()) {
+                        $dependencies[$context->getUid()] = true;
+                    } else {
+                        $dependencies[$context->getUid()] = false;
+                    }
                 }
                 // Missing contexts will be detected later in match method
             }

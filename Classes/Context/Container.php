@@ -105,20 +105,32 @@ class Tx_Contexts_Context_Container extends ArrayObject
                 /* @var $context Tx_Contexts_Context_Abstract */
                 $context = $arContexts[$uid];
 
+                if ($context->getDisabled()) {
+                    continue;
+                }
+
                 // resolve dependencies
                 $arDeps = $context->getDependencies($arContextsHelper);
                 $unresolvedDeps = count($arDeps);
-                foreach ($arDeps as $depUid => $dummy) {
-                    if (isset($matched[$depUid])) {
+                foreach ($arDeps as $depUid => $enabled) {
+                    if ($enabled) {
+                        if (isset($matched[$depUid])) {
+                            $arDeps[$depUid] = (object) array(
+                                'context' => $matched[$depUid],
+                                'matched' => true
+                            );
+                            $unresolvedDeps--;
+                        } elseif (isset($notMatched[$depUid])) {
+                            $arDeps[$depUid] = (object) array(
+                                'context' => $notMatched[$depUid],
+                                'matched' => false
+                            );
+                            $unresolvedDeps--;
+                        }
+                    } else {
                         $arDeps[$depUid] = (object) array(
-                            'context' => $matched[$depUid],
-                            'matched' => true
-                        );
-                        $unresolvedDeps--;
-                    } elseif (isset($notMatched[$depUid])) {
-                        $arDeps[$depUid] = (object) array(
-                            'context' => $notMatched[$depUid],
-                            'matched' => false
+                            'context' => $arContextsHelper[$depUid],
+                            'matched' => 'disabled'
                         );
                         $unresolvedDeps--;
                     }

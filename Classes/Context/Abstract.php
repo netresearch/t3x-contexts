@@ -97,6 +97,12 @@ abstract class Tx_Contexts_Context_Abstract
 
     /**
      * Constructor - set the values from database row.
+     * @var boolean
+     */
+    protected $disabled;
+
+    /**
+     * Constructor - set the values from database row.
      *
      * @param array $arRow Database context row
      *
@@ -112,6 +118,7 @@ abstract class Tx_Contexts_Context_Abstract
             $this->tstamp      = $arRow['tstamp'];
             $this->invert      = $arRow['invert'];
             $this->use_session = $arRow['use_session'];
+            $this->disabled = $arRow['disabled'];
 
             if ($arRow['type_conf'] != '') {
                 $this->conf = t3lib_div::xml2array($arRow['type_conf']);
@@ -282,6 +289,16 @@ abstract class Tx_Contexts_Context_Abstract
     public function getDependencies()
     {
         return array();
+    }
+
+    /**
+     * Get the disabled status of this context
+     *
+     * @return boolean
+     */
+    public function getDisabled()
+    {
+        return $this->disabled;
     }
 
     /**

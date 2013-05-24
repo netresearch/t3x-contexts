@@ -8,7 +8,7 @@ $lf = 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xml';
 $TCA['tx_contexts_contexts'] = array(
     'ctrl' => $TCA['tx_contexts_contexts']['ctrl'],
     'interface' => array(
-        'showRecordFieldList' => 'title,alias,type,invert,use_session'
+        'showRecordFieldList' => 'title,alias,type,invert,use_session,disabled'
     ),
     'feInterface' => $TCA['tx_contexts_contexts']['feInterface'],
     'columns' => array(
@@ -19,6 +19,13 @@ $TCA['tx_contexts_contexts'] = array(
                 'type' => 'input',
                 'size' => '30',
                 'eval' => 'required',
+            )
+        ),
+        'disabled' => array(
+            'exclude' => 0,
+            'label' => $lf . ':tx_contexts_contexts.disable',
+            'config' => array(
+                'type' => 'check',
             )
         ),
         'alias' => array(
@@ -79,8 +86,9 @@ $TCA['tx_contexts_contexts'] = array(
             'showitem'
                 => '--div--;'
                 . $lf
-                . ':tx_contexts_contexts.general,title;;;;'
-                . '2-2-2, alias;;;;3-3-3,type,type_conf,invert,use_session, '
+                . ':tx_contexts_contexts.general,title;;;;2-2-2, '
+                . 'disabled;;;;2-2-2,alias;;;;3-3-3,type,type_conf,invert,'
+                . 'use_session, '
                 . '--div--;'
                 . $lf
                 . ':tx_contexts_contexts.defaults'
