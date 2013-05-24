@@ -300,11 +300,14 @@ abstract class Tx_Contexts_Context_Abstract
      * Inverts the current match setting if inverting is activated.
      *
      * @param boolean $bMatch If the context matches
+     *
      * @return boolean
      */
     protected function invert($bMatch)
     {
-        $bInvert = (bool) $this->getConfValue('field_invert', null, $this->invertConfSheet);
+        $bInvert = (bool) $this->getConfValue(
+            'field_invert', null, $this->invertConfSheet
+        );
 
         if ($bInvert) {
             return !$bMatch;
