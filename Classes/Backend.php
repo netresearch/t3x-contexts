@@ -64,8 +64,12 @@ class Tx_Contexts_Backend
         $strNotFound = implode(', ', $arNotFound);
         $html = <<<HTM
 $text<br />
-{$GLOBALS['LANG']->sL('LLL:EXT:contexts/Resources/Private/Language'
-    .'/flexform.xml:aliasesNotFound')}: $strNotFound
+<div class="typo3-message message-error">
+    <div class="message-body">
+        {$GLOBALS['LANG']->sL('LLL:EXT:contexts/Resources/Private/Language'
+            .'/flexform.xml:aliasesNotFound')}: $strNotFound
+    </div>
+</div>
 HTM;
 
         return $html;
