@@ -98,6 +98,9 @@ Checks if a GET parameter is available and has a certain value.
 Activate "Store result in user session" to keep the context when navigating
 between pages.
 
+When leaving the parameter values field empty, any non-empty parameter value
+will activate the context.
+
 
 IP address
 ----------

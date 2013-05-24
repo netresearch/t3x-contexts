@@ -43,6 +43,12 @@ class Tx_Contexts_Context_Type_GetParam extends Tx_Contexts_Context_Abstract
     public function match(array $arDependencies = array())
     {
         $param = trim($this->getConfValue('field_name'));
+        if ($param === '') {
+            throw new Exception(
+                'Parameter name missing from GET Parameter'
+                . ' context configuration'
+            );
+        }
         $value = t3lib_div::_GET($param);
 
         if ($value === null) {
@@ -72,6 +78,12 @@ class Tx_Contexts_Context_Type_GetParam extends Tx_Contexts_Context_Abstract
     protected function matchParameters($value)
     {
         $arValues = explode("\n", $this->getConfValue('field_values'));
+
+        //empty value list, so we allow any value
+        if (count($arValues) == 1 && $arValues[0] == '') {
+            return $value !== '';
+        }
+
         $arValues = array_map('trim', $arValues);
         return in_array($value, $arValues, true);
     }
