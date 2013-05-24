@@ -261,6 +261,7 @@ abstract class Tx_Contexts_Context_Abstract
         $bUseSession = (bool) $this->getConfValue('field_use_session');
 
         if (!$bUseSession) {
+
             return array(false, null);
         }
 
@@ -281,7 +282,7 @@ abstract class Tx_Contexts_Context_Abstract
     protected function getSession()
     {
         return $GLOBALS['TSFE']->fe_user->getKey(
-            'ses', 'contexts-getparam-' . $this->uid
+            'ses', 'contexts-' . $this->uid
         );
     }
 
@@ -302,7 +303,7 @@ abstract class Tx_Contexts_Context_Abstract
 
         /* @var $GLOBALS['TSFE'] tslib_feuserauth */
         $GLOBALS['TSFE']->fe_user->setKey(
-            'ses', 'contexts-getparam-' . $this->uid, $bMatch
+            'ses', 'contexts-' . $this->uid, $bMatch
         );
         $GLOBALS['TSFE']->storeSessionData();
         return $bMatch;
