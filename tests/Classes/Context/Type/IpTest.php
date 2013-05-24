@@ -21,9 +21,14 @@ class Tx_Contexts_Context_Type_IpTest extends PHPUnit_Framework_TestCase
             'Tx_Contexts_Context_Type_Ip',
             array('getConfValue')
         );
-        $ipm->expects($this->any())
+        $ipm->expects($this->at(0))
             ->method('getConfValue')
+            ->with($this->equalTo('field_ip'))
             ->will($this->returnValue('192.168.1.14'));
+        $ipm->expects($this->at(1))
+            ->method('getConfValue')
+            ->with($this->equalTo('field_invert'))
+            ->will($this->returnValue(false));
 
         $this->assertTrue($ipm->match());
     }
@@ -49,9 +54,10 @@ class Tx_Contexts_Context_Type_IpTest extends PHPUnit_Framework_TestCase
             'Tx_Contexts_Context_Type_Ip',
             array('getConfValue')
         );
-        $ipm->expects($this->any())
+        $ipm->expects($this->at(0))
             ->method('getConfValue')
-            ->will($this->returnValue('192.168.1.14'));
+            ->with($this->equalTo('field_invert'))
+            ->will($this->returnValue(false));
 
         $this->assertFalse($ipm->match());
     }
