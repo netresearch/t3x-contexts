@@ -17,7 +17,14 @@ class Tx_Contexts_Context_Type_CombinationTest extends PHPUnit_Framework_TestCas
         $abstractMock = $this->getMockForAbstractClass(
             'Tx_Contexts_Context_Abstract',
             array(
-                array('uid'=>123, 'type'=>'ip', 'title' => 'UNITTEST', 'alias' => 'UNITTEST', 'type_conf' => '')
+                array(
+                    'uid'=>123,
+                    'type'=>'ip',
+                    'title' => 'UNITTEST',
+                    'alias' => 'UNITTEST',
+                    'tstamp' => 1234567,
+                    'type_conf' => ''
+                )
             ),
             '',
             true,

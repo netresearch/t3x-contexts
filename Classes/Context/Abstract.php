@@ -53,6 +53,11 @@ abstract class Tx_Contexts_Context_Abstract
     protected $alias;
 
     /**
+     * Unix timestamp of last record modification
+     */
+    protected $tstamp;
+
+    /**
      * @var array
      */
     protected $conf;
@@ -76,10 +81,11 @@ abstract class Tx_Contexts_Context_Abstract
     public function __construct($arRow = array())
     {
         if (!empty($arRow)) {
-            $this->uid   = (int) $arRow['uid'];
-            $this->type  = $arRow['type'];
-            $this->title = $arRow['title'];
-            $this->alias = $arRow['alias'];
+            $this->uid    = (int) $arRow['uid'];
+            $this->type   = $arRow['type'];
+            $this->title  = $arRow['title'];
+            $this->alias  = $arRow['alias'];
+            $this->tstamp = $arRow['tstamp'];
             if ($arRow['type_conf'] != '') {
                 $this->conf  = t3lib_div::xml2array(
                     $arRow['type_conf']
@@ -282,7 +288,7 @@ abstract class Tx_Contexts_Context_Abstract
     protected function getSession()
     {
         return $GLOBALS['TSFE']->fe_user->getKey(
-            'ses', 'contexts-' . $this->uid
+            'ses', 'contexts-' . $this->uid . '-' . $this->tstamp
         );
     }
 
@@ -303,7 +309,7 @@ abstract class Tx_Contexts_Context_Abstract
 
         /* @var $GLOBALS['TSFE'] tslib_feuserauth */
         $GLOBALS['TSFE']->fe_user->setKey(
-            'ses', 'contexts-' . $this->uid, $bMatch
+            'ses', 'contexts-' . $this->uid . '-' . $this->tstamp, $bMatch
         );
         $GLOBALS['TSFE']->storeSessionData();
         return $bMatch;
