@@ -96,8 +96,8 @@ class Tx_Contexts_Api_Record
             $rowSetting     = $context->getSetting($table, $setting, $uid);
             $defaultSetting = $context->getSetting($table, $setting, 0);
 
-            if ($rowSetting && !$rowSetting->getEnabled()
-                || $defaultSetting && !$defaultSetting->getEnabled()
+            if (($rowSetting && !$rowSetting->getEnabled())
+                || ($defaultSetting && !$defaultSetting->getEnabled())
             ) {
                 return false;
             }
