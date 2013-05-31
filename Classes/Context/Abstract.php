@@ -118,7 +118,7 @@ abstract class Tx_Contexts_Context_Abstract
             $this->tstamp      = $arRow['tstamp'];
             $this->invert      = $arRow['invert'];
             $this->use_session = $arRow['use_session'];
-            $this->disabled = $arRow['disabled'];
+            $this->disabled    = $arRow['disabled'];
 
             if ($arRow['type_conf'] != '') {
                 $this->conf = t3lib_div::xml2array($arRow['type_conf']);

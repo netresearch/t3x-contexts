@@ -22,7 +22,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'tstamp' => 1234567,
                     'invert' => 0,
                     'use_session' => 0,
-                    'type_conf' => ''
+                    'type_conf' => '',
                     'disabled' => false,
                 )
             ),
@@ -78,6 +78,9 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'type'=>'ip',
                     'title' => 'UNITTEST',
                     'alias' => 'UNITTEST',
+                    'tstamp' => 1234567,
+                    'invert' => 0,
+                    'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => true,
                 )
@@ -166,6 +169,9 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'type'=>'ip',
                     'title' => 'UNITTEST',
                     'alias' => 'UNITTEST',
+                    'tstamp' => 1234567,
+                    'invert' => 0,
+                    'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => false,
                 )
@@ -189,6 +195,9 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'type'=>'getparam',
                     'title' => 'getUNITTEST',
                     'alias' => 'getUNITTEST',
+                    'tstamp' => 1234567,
+                    'invert' => 0,
+                    'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => false,
                 )
@@ -232,7 +241,8 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
 
         $instance->expects(self::any())
              ->method('getConfValue')
-             ->will(self::returnCallback('Tx_Contexts_Context_Type_CombinationTest::getConfValueCallback'));
+             ->with(self::equalTo('field_expression'))
+             ->will(self::returnValue('UNITTEST && getUNITTEST'));
 
         $matched = $this->callProtected($container, 'match', $arContexts);
         self::assertEquals(array(
@@ -252,6 +262,9 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'type'=>'ip',
                     'title' => 'UNITTEST',
                     'alias' => 'UNITTEST',
+                    'tstamp' => 1234567,
+                    'invert' => 0,
+                    'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => false,
                 )
@@ -275,6 +288,9 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'type'=>'getparam',
                     'title' => 'getUNITTEST',
                     'alias' => 'getUNITTEST',
+                    'tstamp' => 1234567,
+                    'invert' => 0,
+                    'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => true,
                 )
@@ -318,7 +334,8 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
 
         $instance->expects(self::any())
              ->method('getConfValue')
-             ->will(self::returnCallback('Tx_Contexts_Context_Type_CombinationTest::getConfValueCallback'));
+             ->with(self::equalTo('field_expression'))
+             ->will(self::returnValue('UNITTEST && getUNITTEST'));
 
         $matched = $this->callProtected($container, 'match', $arContexts);
         self::assertEquals(array(
@@ -337,6 +354,9 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'type'=>'ip',
                     'title' => 'UNITTEST',
                     'alias' => 'UNITTEST',
+                    'tstamp' => 1234567,
+                    'invert' => 0,
+                    'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => false,
                 )
@@ -360,6 +380,9 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'type'=>'getparam',
                     'title' => 'getUNITTEST',
                     'alias' => 'getUNITTEST',
+                    'tstamp' => 1234567,
+                    'invert' => 0,
+                    'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => false,
                 )
@@ -404,7 +427,8 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
 
         $instance->expects(self::any())
              ->method('getConfValue')
-             ->will(self::returnCallback('Tx_Contexts_Context_Type_CombinationTest::getConfValueCallback'));
+             ->with(self::equalTo('field_expression'))
+             ->will(self::returnValue('UNITTEST && getUNITTEST'));
 
         $matched = $this->callProtected($container, 'match', $arContexts);
         self::assertEquals(array(
@@ -422,6 +446,9 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'type'=>'ip',
                     'title' => 'UNITTEST',
                     'alias' => 'UNITTEST',
+                    'tstamp' => 1234567,
+                    'invert' => 0,
+                    'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => false,
                 )
@@ -445,6 +472,9 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'type'=>'getparam',
                     'title' => 'getUNITTEST',
                     'alias' => 'getUNITTEST',
+                    'tstamp' => 1234567,
+                    'invert' => 0,
+                    'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => true,
                 )
@@ -489,31 +519,11 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
 
         $instance->expects(self::any())
              ->method('getConfValue')
-             ->will(self::returnCallback('Tx_Contexts_Context_Type_CombinationTest::getConfValueCallback'));
+             ->with(self::equalTo('field_expression'))
+             ->will(self::returnValue('UNITTEST && getUNITTEST'));
 
         $matched = $this->callProtected($container, 'match', $arContexts);
         self::assertEquals(array(), $matched);
-    }
-
-    /**
-     * returns a specific conf value
-     *
-     * @param string $fieldName
-     * @param string $default
-     * @param string $sheet
-     * @param string $lang
-     * @param string $value
-     *
-     * @return boolean|string
-     */
-    public static function getConfValueCallback($fieldName, $default = null,
-        $sheet = 'sDEF', $lang = 'lDEF', $value = 'vDEF')
-    {
-        if ($fieldName == 'field_invert') {
-            return false;
-        } else {
-            return 'UNITTEST && getUNITTEST';
-        }
     }
 }
 
