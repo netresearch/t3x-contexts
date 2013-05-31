@@ -7,6 +7,7 @@
   <data type="array">
     <languageKey index="default" type="array">
       <label index="aliasesNotFound">The following aliases could not be found</label>
+      <label index="unknownTokensFound">The following expressions are unknown</label>
       <label index="field_invert">Invert the result</label>
       <label index="field_use_session">Store result in user session</label>
       <label index="domain.field_domains">Domains, one per line</label>

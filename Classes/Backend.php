@@ -23,7 +23,7 @@
 class Tx_Contexts_Backend
 {
     /**
-     * Display a textarea with validation for the entered aliases
+     * Display a textarea with validation for the entered aliases and expressions
      *
      * @param array          $arFieldInfo Information about the current input field
      * @param t3lib_tceforms $tceforms    Form rendering library object
@@ -39,6 +39,7 @@ class Tx_Contexts_Backend
         $arTokens = $evaluator->tokenize($arFieldInfo['itemFormElValue']);
 
         $arNotFound = array();
+        $arUnknownTokens = array();
         foreach ($arTokens as $token) {
             if (is_array($token)
                 && $token[0] === Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::T_VAR
@@ -54,20 +55,43 @@ class Tx_Contexts_Backend
                 if (!$bFound) {
                     $arNotFound[] = $token[1];
                 }
+            } elseif (is_array($token)
+                && $token[0] === Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::T_UNKNOWN
+            ) {
+                $arUnknownTokens[] = $token[1];
             }
         }
 
-        if (!$arNotFound) {
+        if (!$arNotFound && !$arUnknownTokens) {
             return $text;
         }
 
-        $strNotFound = implode(', ', $arNotFound);
         $html = <<<HTM
 $text<br />
 <div class="typo3-message message-error">
     <div class="message-body">
-        {$GLOBALS['LANG']->sL('LLL:EXT:contexts/Resources/Private/Language'
-            .'/flexform.xml:aliasesNotFound')}: $strNotFound
+HTM;
+        if ($arNotFound) {
+            $strNotFound = implode(', ', $arNotFound);
+            $html .= <<<HTM
+<div>
+    {$GLOBALS['LANG']->sL('LLL:EXT:contexts/Resources/Private/Language'
+        .'/flexform.xml:aliasesNotFound')}: $strNotFound
+</div>
+HTM;
+        }
+
+        if ($arUnknownTokens) {
+            $strUnknownTokens = implode(', ', $arUnknownTokens);
+            $html .= <<<HTM
+<div>
+    {$GLOBALS['LANG']->sL('LLL:EXT:contexts/Resources/Private/Language'
+        .'/flexform.xml:unknownTokensFound')}: $strUnknownTokens
+</div>
+HTM;
+        }
+
+        $html .= <<<HTM
     </div>
 </div>
 HTM;
