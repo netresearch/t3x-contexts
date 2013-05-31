@@ -33,53 +33,70 @@
 abstract class Tx_Contexts_Context_Abstract
 {
     /**
-     * @var int
+     * Uid of context.
+     *
+     * @var integer
      */
     protected $uid;
 
     /**
+     * Type of context.
+     *
      * @var string
      */
     protected $type;
 
     /**
+     * Title of context.
+     *
      * @var string
      */
     protected $title;
 
     /**
+     * Alias of context.
+     *
      * @var string
      */
     protected $alias;
 
     /**
-     * Unix timestamp of last record modification
+     * Unix timestamp of last record modification.
      *
      * @var integer
      */
     protected $tstamp;
 
     /**
-     * Invert the match result
+     * Invert the match result.
      *
      * @var boolean
      */
     protected $invert = false;
 
     /**
-     * Store match result in user session
+     * Store match result in user session.
+     *
+     * @var boolean
      */
     protected $use_session = true;
 
     /**
+     * Context configuration.
+     *
      * @var array
      */
     protected $conf;
 
+    /**
+     * List of all context settings.
+     *
+     * @var array
+     */
     private $settings = array();
 
     /**
-     * Constructor - set the values from database row
+     * Constructor - set the values from database row.
      *
      * @param array $arRow Database context row
      *
@@ -95,16 +112,15 @@ abstract class Tx_Contexts_Context_Abstract
             $this->tstamp      = $arRow['tstamp'];
             $this->invert      = $arRow['invert'];
             $this->use_session = $arRow['use_session'];
+
             if ($arRow['type_conf'] != '') {
-                $this->conf = t3lib_div::xml2array(
-                    $arRow['type_conf']
-                );
+                $this->conf = t3lib_div::xml2array($arRow['type_conf']);
             }
         }
     }
 
     /**
-     * Get a configuration value
+     * Get a configuration value.
      *
      * @param string $fieldName Name of the field
      * @param string $default   The value to use when none was found
@@ -115,14 +131,18 @@ abstract class Tx_Contexts_Context_Abstract
      * @return string The content
      */
     protected function getConfValue(
-        $fieldName, $default = null,
-        $sheet = 'sDEF', $lang = 'lDEF', $value = 'vDEF'
+        $fieldName,
+        $default = null,
+        $sheet   = 'sDEF',
+        $lang    = 'lDEF',
+        $value   = 'vDEF'
     ) {
         if (!isset($this->conf['data'][$sheet][$lang])) {
             return $default;
         }
 
         $ldata = $this->conf['data'][$sheet][$lang];
+
         if (!isset($ldata[$fieldName][$value])) {
             return $default;
         }
@@ -130,10 +150,9 @@ abstract class Tx_Contexts_Context_Abstract
         return $ldata[$fieldName][$value];
     }
 
-
     /**
      * Query a setting record and retrieve the value object
-     * if one was found
+     * if one was found.
      *
      * @param string $table   Database table name
      * @param string $setting Setting name
@@ -144,13 +163,14 @@ abstract class Tx_Contexts_Context_Abstract
     final public function getSetting($table, $setting, $uid)
     {
         $settings = $this->getSettings($table, $uid);
+
         return array_key_exists($setting, $settings)
             ? $settings[$setting]
             : null;
     }
 
     /**
-     * Get all settings of one record
+     * Get all settings of one record.
      *
      * @param string $table Database table
      * @param int    $uid   Record UID
@@ -169,9 +189,11 @@ abstract class Tx_Contexts_Context_Abstract
         if ($uid && !array_key_exists($table . '.0', $this->settings)) {
             $uids[] = 0;
         }
+
         $where = 'context_uid = ' . $this->uid;
         $where .= " AND foreign_table = '$table'";
         $where .= " AND foreign_uid IN ('" . implode("','", $uids) . "')";
+
         $rows = (array) Tx_Contexts_Api_Configuration::getDb()
             ->exec_SELECTgetRows('*', 'tx_contexts_settings', $where);
 
@@ -188,7 +210,7 @@ abstract class Tx_Contexts_Context_Abstract
     }
 
     /**
-     * Determines whether a setting exists for this record
+     * Determines whether a setting exists for this record.
      *
      * @param string $table   Database table
      * @param string $setting Setting name
@@ -212,9 +234,9 @@ abstract class Tx_Contexts_Context_Abstract
     abstract public function match(array $arDependencies = array());
 
     /**
-     * Get the uid of this context
+     * Get the uid of this context.
      *
-     * @return int
+     * @return integer
      */
     public function getUid()
     {
@@ -222,7 +244,7 @@ abstract class Tx_Contexts_Context_Abstract
     }
 
     /**
-     * Get the type of this context
+     * Get the type of this context.
      *
      * @return string
      */
@@ -232,7 +254,7 @@ abstract class Tx_Contexts_Context_Abstract
     }
 
     /**
-     * Get the title of this context
+     * Get the title of this context.
      *
      * @return string
      */
@@ -242,7 +264,7 @@ abstract class Tx_Contexts_Context_Abstract
     }
 
     /**
-     * Get the alias of this context
+     * Get the alias of this context.
      *
      * @return string
      */
@@ -289,7 +311,7 @@ abstract class Tx_Contexts_Context_Abstract
     }
 
     /**
-     * Get the contextsession
+     * Get the contextsession.
      *
      * @return mixed boolean match or null
      */
@@ -310,8 +332,7 @@ abstract class Tx_Contexts_Context_Abstract
      */
     protected function storeInSession($bMatch)
     {
-        $bUseSession = (bool) $this->use_session;
-        if (!$bUseSession) {
+        if (!((bool) $this->use_session)) {
             return $bMatch;
         }
 
@@ -332,20 +353,32 @@ abstract class Tx_Contexts_Context_Abstract
      */
     protected function invert($bMatch)
     {
-        $bInvert = (bool) $this->invert;
-
-        if ($bInvert) {
+        if ((bool) $this->invert) {
             return !$bMatch;
         }
 
         return $bMatch;
     }
 
+    /**
+     * Set invert flag.
+     *
+     * @param boolean $bInvert True or false
+     *
+     * @return void
+     */
     public function setInvert($bInvert)
     {
         $this->invert = (bool) $bInvert;
     }
 
+    /**
+     * Set use session flag.
+     *
+     * @param boolean $bUseSession True or false
+     *
+     * @return void
+     */
     public function setUseSession($bUseSession)
     {
         $this->use_session = (bool) $bUseSession;
