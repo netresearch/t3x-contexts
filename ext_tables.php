@@ -11,6 +11,9 @@ $TCA['tx_contexts_contexts'] = array(
         'cruser_id' => 'cruser_id',
         'default_sortby' => 'ORDER BY crdate',
         'delete' => 'deleted',
+        'enablecolumns' => array(
+            'disabled' => 'disabled'
+        ),
         'requestUpdate' => 'type',
         'adminOnly' => 1,
         'rootLevel' => 1,
