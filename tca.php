@@ -4,6 +4,7 @@ if (!defined('TYPO3_MODE')) {
 }
 
 $lf = 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xml';
+
 $TCA['tx_contexts_contexts'] = array(
     'ctrl' => $TCA['tx_contexts_contexts']['ctrl'],
     'interface' => array(
@@ -74,7 +75,16 @@ $TCA['tx_contexts_contexts'] = array(
         )
     ),
     'types' => array(
-        '0' => array('showitem' => '--div--;LLL:EXT:contexts/Resources/Private/Language/locallang_db.xml:tx_contexts_contexts.general,title;;;;2-2-2, alias;;;;3-3-3,type,type_conf,invert,use_session, --div--;LLL:EXT:contexts/Resources/Private/Language/locallang_db.xml:tx_contexts_contexts.defaults')
+        '0' => array(
+            'showitem'
+                => '--div--;'
+                . $lf
+                . ':tx_contexts_contexts.general,title;;;;'
+                . '2-2-2, alias;;;;3-3-3,type,type_conf,invert,use_session, '
+                . '--div--;'
+                . $lf
+                . ':tx_contexts_contexts.defaults'
+        )
     ),
     'palettes' => array(
         '1' => array('showitem' => '')
