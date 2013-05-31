@@ -80,7 +80,7 @@ class Tx_Contexts_Api_Record
                 t3lib_div::devLog(
                     'Missing uid field in row',
                     'tx_contexts',
-                    2
+                    t3lib_div::SYSLOG_SEVERITY_WARNING,
                     array('table' => $table, 'row' => $row)
                 );
                 return false;
@@ -135,7 +135,7 @@ class Tx_Contexts_Api_Record
                 t3lib_div::devLog(
                     'Missing flat field "' . $flatColumn . '"',
                     'tx_contexts',
-                    2,
+                    t3lib_div::SYSLOG_SEVERITY_WARNING,
                     array('table' => $table, 'row' => $row)
                 );
                 $rowValid = false;
