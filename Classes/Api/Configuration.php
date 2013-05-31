@@ -30,7 +30,8 @@
 class Tx_Contexts_Api_Configuration
 {
     /**
-     * The language file used for labels, added by contexts extension
+     * The language file used for labels, added by contexts extension.
+     *
      * @var string
      */
     const LANG_FILE = 'EXT:contexts/Resources/Private/Language/locallang_db.xml';
@@ -39,6 +40,7 @@ class Tx_Contexts_Api_Configuration
      * The name of the contexts settings column in TCA
      * (This is a USER column and will be handled by the TCEmain-
      * hooks in Tx_Contexts_Service_Tcemain)
+     *
      * @var string
      */
     const RECORD_SETTINGS_COLUMN = 'tx_contexts_settings';
@@ -87,6 +89,7 @@ class Tx_Contexts_Api_Configuration
      *                                Key is the setting name, value its config
      * @param boolean    $addDefaults If an "enableSetting" is added that is
      *                                used to hide/show elements
+     *
      * @return void
      */
     public static function enableContextsForTable(
@@ -119,10 +122,12 @@ class Tx_Contexts_Api_Configuration
      * Determine if a setting is a setting to flatten
      * (enableSettings currently require to be flattened)
      *
-     * @param array $config
+     * @param array $config Configuration
+     *
      * @return boolean
      */
-    protected static function isFlatSetting($config) {
+    protected static function isFlatSetting($config)
+    {
         return isset($config['flatten']) || isset($config['enables']);
     }
 
@@ -130,20 +135,24 @@ class Tx_Contexts_Api_Configuration
      * Determine which of the settings should be flattened and add them to the
      * $table's $flatSettings
      *
-     * @param string $table
-     * @param array  $settings
+     * @param string $table    Table name
+     * @param array  $settings Settings
+     *
      * @return void
      */
-    protected static function addToFlatColumns($table, $settings) {
+    protected static function addToFlatColumns($table, $settings)
+    {
         $flatSettings = (array) self::$flatColumns[$table];
+
         foreach ($settings as $setting => $config) {
             if (self::isFlatSetting($config)) {
                 $flatSettings[$setting] = array(
                     0 => $setting . '_disable',
-                    1 => $setting . '_enable'
+                    1 => $setting . '_enable',
                 );
             }
         }
+
         self::$flatColumns[$table] = $flatSettings;
     }
 
@@ -152,28 +161,35 @@ class Tx_Contexts_Api_Configuration
      * determine the database columns that need to be created on extension
      * installation/update)
      *
-     * @param string $extKey
-     * @param string $table
-     * @param array  $settings
+     * @param string $extKey   Extension key
+     * @param string $table    Table name
+     * @param array  $settings Settings
+     *
      * @return void
      */
-    protected static function addToExtensionFlatSettings($extKey, $table, $settings)
-    {
+    protected static function addToExtensionFlatSettings(
+        $extKey, $table, $settings
+    ) {
         $flatSettings = array();
+
         foreach ($settings as $setting => $config) {
             if (self::isFlatSetting($config)) {
                 $flatSettings[] = $setting;
             }
         }
+
         if (!array_key_exists($extKey, self::$extensionFlatSettings)) {
-            self::$extensionFlatSettings[$extKey] = array($table => $flatSettings);
+            self::$extensionFlatSettings[$extKey]
+                = array($table => $flatSettings);
         } elseif (!array_key_exists($table, self::$extensionFlatSettings[$extKey])) {
             self::$extensionFlatSettings[$extKey][$table] = $flatSettings;
         } else {
-            self::$extensionFlatSettings[$extKey][$table] = array_unique(array_merge(
-                self::$extensionFlatSettings[$extKey][$table],
-                $settings
-            ));
+            self::$extensionFlatSettings[$extKey][$table] = array_unique(
+                array_merge(
+                    self::$extensionFlatSettings[$extKey][$table],
+                    $settings
+                )
+            );
         }
     }
 
@@ -184,18 +200,25 @@ class Tx_Contexts_Api_Configuration
      * Hence this should be used rather than the TCA by calling
      * Tx_Contexts_Api_Configuration::getTcaCtrlEnablecolumns()
      *
-     * @param string $table
-     * @param array  $settings
+     * @param string $table    Table name
+     * @param array  $settings Settings
+     *
      * @return void
      */
-    protected static function addToEnableSettings($table, $settings) {
+    protected static function addToEnableSettings($table, $settings)
+    {
         global $TCA;
+
         $enableSettings = (array) self::$enableSettings[$table];
+
         foreach ($settings as $setting => $config) {
-            if (isset($config['enables']) && !in_array($setting, $enableSettings)) {
+            if (isset($config['enables'])
+                && !in_array($setting, $enableSettings)
+            ) {
                 $enableSettings = $setting;
             }
         }
+
         $TCA[$table]['ctrl']['enablecolumns']['tx_contexts'] = $enableSettings;
         self::$enableSettings[$table] = $enableSettings;
     }
@@ -203,17 +226,22 @@ class Tx_Contexts_Api_Configuration
     /**
      * Add setting columns to the TCA.
      *
-     * @param string     $table    Table to add settings to
-     * @param array|null $settings Array of settings to register.
-     *                             Key is the setting name, value its title
+     * @param string $table    Table to add settings to
+     * @param array  $settings Array of settings to register.
+     *                         Key is the setting name, value its title
+     *
      * @return void
      */
-    protected static function addToTcaColumns($table, array $settings) {
+    protected static function addToTcaColumns($table, array $settings)
+    {
         global $TCA;
+
         t3lib_div::loadTCA($table);
+
         if (!isset($TCA[$table])) {
             return;
         }
+
         t3lib_div::loadTCA('tx_contexts_contexts');
 
         if (!array_key_exists(self::RECORD_SETTINGS_COLUMN, $TCA[$table]['columns'])) {
@@ -223,20 +251,38 @@ class Tx_Contexts_Api_Configuration
                 "config" => array (
                     "type" => "user",
                     "size" => "30",
-                    "userFunc" => 'Tx_Contexts_Service_Tca->renderRecordSettingsField',
-                    'settings' => $settings
-                )
+                    "userFunc"
+                        => 'Tx_Contexts_Service_Tca->renderRecordSettingsField',
+                    'settings' => $settings,
+                ),
             );
-            t3lib_extMgm::addTCAcolumns($table, array(self::RECORD_SETTINGS_COLUMN => $recordSettingsConf), 1);
-            t3lib_extMgm::addToAllTCAtypes($table, '--div--;LLL:' . self::LANG_FILE . ':tabname,' . self::RECORD_SETTINGS_COLUMN . ';;;;1-1-1');
+
+            t3lib_extMgm::addTCAcolumns(
+                $table,
+                array(
+                    self::RECORD_SETTINGS_COLUMN => $recordSettingsConf
+                ),
+                1
+            );
+
+            t3lib_extMgm::addToAllTCAtypes(
+                $table,
+                '--div--;LLL:' . self::LANG_FILE
+                . ':tabname,' . self::RECORD_SETTINGS_COLUMN
+                . ';;;;1-1-1'
+            );
         } else {
-            $TCA[$table]['columns'][self::RECORD_SETTINGS_COLUMN]['config']['settings'] = array_merge(
-                $TCA[$table]['columns'][self::RECORD_SETTINGS_COLUMN]['config']['settings'],
-                $settings
-            );
+            $TCA[$table]['columns'][self::RECORD_SETTINGS_COLUMN]
+            ['config']['settings']
+                = array_merge(
+                    $TCA[$table]['columns'][self::RECORD_SETTINGS_COLUMN]
+                    ['config']['settings'],
+                    $settings
+                );
         }
 
         $defaultSettingsColumn = 'default_settings_' . $table;
+
         if (!array_key_exists($defaultSettingsColumn, $TCA['tx_contexts_contexts']['columns'])) {
             $defaultSettingsConf = array(
                 "exclude" => 1,
@@ -244,16 +290,30 @@ class Tx_Contexts_Api_Configuration
                 'config' => array(
                     'type' => 'user',
                     'size' => 30,
-                    'userFunc' => 'Tx_Contexts_Service_Tca->renderDefaultSettingsField',
+                    'userFunc'
+                        => 'Tx_Contexts_Service_Tca->renderDefaultSettingsField',
                     'table' => $table,
                     'settings' => $settings
                 )
             );
-            t3lib_extMgm::addTCAcolumns('tx_contexts_contexts', array($defaultSettingsColumn => $defaultSettingsConf), 1);
-            t3lib_extMgm::addToAllTCAtypes('tx_contexts_contexts', $defaultSettingsColumn);
+
+            t3lib_extMgm::addTCAcolumns(
+                'tx_contexts_contexts',
+                array(
+                    $defaultSettingsColumn => $defaultSettingsConf
+                ),
+                1
+            );
+
+            t3lib_extMgm::addToAllTCAtypes(
+                'tx_contexts_contexts',
+                $defaultSettingsColumn
+            );
         } else {
-            $TCA['tx_contexts_contexts']['columns'][$defaultSettingsColumn]['config']['settings'] = array_merge(
-                $TCA['tx_contexts_contexts']['columns'][$defaultSettingsColumn]['config']['settings'],
+            $TCA['tx_contexts_contexts']['columns'][$defaultSettingsColumn]
+            ['config']['settings'] = array_merge(
+                $TCA['tx_contexts_contexts']['columns'][$defaultSettingsColumn]
+                ['config']['settings'],
                 $settings
             );
         }
@@ -264,10 +324,12 @@ class Tx_Contexts_Api_Configuration
      * Makes it available in the context type dropdown
      * in the context record editor in the backend.
      *
-     * @param string $key
-     * @param string $title
-     * @param string $class
-     * @param string $flexFile
+     * @param string $key      Key used to assign the new type inside the
+     *                         context list
+     * @param string $title    Title of context inside dropdown
+     * @param string $class    Name of class implementing context type
+     * @param string $flexFile Flexform configuration file of context type
+     *
      * @return void
      */
     public static function registerContextType(
@@ -278,7 +340,7 @@ class Tx_Contexts_Api_Configuration
         $GLOBALS['EXTCONF']['tx_contexts']['contextTypes'][$key] = array(
             'title'    => $title,
             'class'    => $class,
-            'flexFile' => $flexFile
+            'flexFile' => $flexFile,
         );
 
         t3lib_div::loadTCA('tx_contexts_contexts');
@@ -292,11 +354,12 @@ class Tx_Contexts_Api_Configuration
     }
 
     /**
-     * Get the registered context types
+     * Get the registered context types.
      *
      * @return array
      */
-    public static function getContextTypes() {
+    public static function getContextTypes()
+    {
         return (array) $GLOBALS['EXTCONF']['tx_contexts']['contextTypes'];
     }
 
@@ -305,22 +368,25 @@ class Tx_Contexts_Api_Configuration
      * The flat columns array will contain the disabled column in key 0 and the
      * enabled column in key 1
      *
-     * @param string|null $table
-     * @param string|null $setting
+     * @param string|null $table   Table name
+     * @param string|null $setting Setting name
+     *
      * @return array
      */
-    public static function getFlatColumns($table = null, $setting = null) {
+    public static function getFlatColumns($table = null, $setting = null)
+    {
         if ($table) {
             if (isset(self::$flatColumns[$table])) {
                 if ($setting) {
                     return self::$flatColumns[$table][$setting];
-                } else {
-                    return self::$flatColumns[$table];
                 }
-            } else {
-                return null;
+
+                return self::$flatColumns[$table];
             }
+
+            return null;
         }
+
         return self::$flatColumns;
     }
 
@@ -329,14 +395,16 @@ class Tx_Contexts_Api_Configuration
      *
      * @return array $extensionFlatSettings
      */
-    public static function getExtensionFlatSettings() {
+    public static function getExtensionFlatSettings()
+    {
         return self::$extensionFlatSettings;
     }
 
     /**
-     * Get the settings names which should control access to records
+     * Get the settings names which should control access to records.
      *
-     * @param string $table
+     * @param string $table Table name
+     *
      * @return string $tcaCtrlEnablecolumns
      */
     public static function getEnableSettings($table)
@@ -345,7 +413,7 @@ class Tx_Contexts_Api_Configuration
     }
 
     /**
-     * Get the TYPO3_DB and it's type
+     * Get the TYPO3_DB and it's type.
      *
      * @return t3lib_db
      */
