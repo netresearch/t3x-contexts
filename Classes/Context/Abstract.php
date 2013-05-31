@@ -283,10 +283,12 @@ abstract class Tx_Contexts_Context_Abstract
     /**
      * Return all context UIDs this context depends on.
      *
+     * @param array $arContexts the available contexts
+     *
      * @return array Array of context uids this context depends on.
      *               Key is the UID, value is "true"
      */
-    public function getDependencies()
+    public function getDependencies($arContexts)
     {
         return array();
     }

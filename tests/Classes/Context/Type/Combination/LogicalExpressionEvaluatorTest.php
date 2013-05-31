@@ -99,22 +99,6 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
 
     }
 
-    /**
-     *
-     *
-     * @expectedException Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
-     * @expectedExceptionMessage Unknown variable "context3"
-     */
-    public function testRunWithExceptionUnknownVariable()
-    {
-
-        $strExpression = 'context1 xor context2 xor context3';
-        $arValues = array('context1' => true, 'context2' => true);
-        Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
-
-
-    }
-
 
     /**
      * Provide data for several tests

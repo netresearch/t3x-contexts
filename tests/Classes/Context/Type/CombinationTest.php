@@ -495,6 +495,17 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
         self::assertEquals(array(), $matched);
     }
 
+    /**
+     * returns a specific conf value
+     *
+     * @param string $fieldName
+     * @param string $default
+     * @param string $sheet
+     * @param string $lang
+     * @param string $value
+     *
+     * @return boolean|string
+     */
     public static function getConfValueCallback($fieldName, $default = null,
         $sheet = 'sDEF', $lang = 'lDEF', $value = 'vDEF')
     {
