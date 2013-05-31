@@ -93,7 +93,7 @@ class Tx_Contexts_Api_Configuration
      * @return void
      */
     public static function enableContextsForTable(
-        $extKey, $table, $settings = null, $addDefaults = true
+        $extKey, $table, array $settings = null, $addDefaults = true
     ) {
         $defaultSettings = array(
             'tx_contexts' => array(
@@ -126,7 +126,7 @@ class Tx_Contexts_Api_Configuration
      *
      * @return boolean
      */
-    protected static function isFlatSetting($config)
+    protected static function isFlatSetting(array $config)
     {
         return isset($config['flatten']) || isset($config['enables']);
     }
@@ -140,7 +140,7 @@ class Tx_Contexts_Api_Configuration
      *
      * @return void
      */
-    protected static function addToFlatColumns($table, $settings)
+    protected static function addToFlatColumns($table, array $settings)
     {
         $flatSettings = (array) self::$flatColumns[$table];
 
@@ -168,7 +168,7 @@ class Tx_Contexts_Api_Configuration
      * @return void
      */
     protected static function addToExtensionFlatSettings(
-        $extKey, $table, $settings
+        $extKey, $table, array $settings
     ) {
         $flatSettings = array();
 
@@ -205,7 +205,7 @@ class Tx_Contexts_Api_Configuration
      *
      * @return void
      */
-    protected static function addToEnableSettings($table, $settings)
+    protected static function addToEnableSettings($table, array $settings)
     {
         global $TCA;
 
