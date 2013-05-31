@@ -59,7 +59,7 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
                     }
                 }
 
-                if ($context) {
+                if (isset($context)) {
                     if (!$context->getDisabled()) {
                         $dependencies[$context->getUid()] = true;
                     } else {
