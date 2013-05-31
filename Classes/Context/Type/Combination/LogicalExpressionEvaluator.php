@@ -428,9 +428,7 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
                 $value = $token->evaluate($values);
             } else {
                 if (!array_key_exists($token[1], $values)) {
-                    throw new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception(
-                        'Unknown variable "' . $token[1] . '"'
-                    );
+                    $values[$token[1]] = true;
                 }
                 $value = $values[$token[1]];
                 if (array_key_exists(2, $token)) {
