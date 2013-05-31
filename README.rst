@@ -6,6 +6,7 @@ Show and hide pages and content elements based on configurable "contexts".
 Examples for contexts:
 
 - Screen size < 500px
+- Browser runs on a tablet or mobile phone
 - Location is 15km around a certain place
 - User is from one of certain countries
 - User entered website with GET-Parameter ``affID=foo``
@@ -35,7 +36,7 @@ Creating and using contexts
 
 Creating a context
 ==================
-1. Log into the TYPO3 backend
+1. Log into the TYPO3 backend as administrator
 2. Goto Web/List view, root page (ID 0)
 3. Create a new record: TYPO3 contexts -> Context
 
