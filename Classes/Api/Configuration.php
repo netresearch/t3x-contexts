@@ -25,7 +25,10 @@
 /**
  * General configuration API
  *
- * @author Christian Opitz <christian.opitz@netresearch.de>
+ * @package    Contexts
+ * @subpackage Api
+ * @author     Christian Opitz <christian.opitz@netresearch.de>
+ * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
 class Tx_Contexts_Api_Configuration
 {
