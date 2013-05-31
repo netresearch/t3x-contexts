@@ -17,6 +17,7 @@
             <label index="tx_contexts_contexts.invert">Invert the result</label>
             <label index="tx_contexts_contexts.use_session">Store result in user session</label>
             <label index="tx_contexts_contexts.defaults">Defaults</label>
+            <label index="tx_contexts_contexts.disable">Disable</label>
             <label index="tx_contexts_visibility">Visible</label>
             <label index="tx_contexts_menu_visibility">Visible in Menus</label>
         </languageKey>
