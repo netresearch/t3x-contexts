@@ -18,9 +18,14 @@ $TCA['tx_contexts_contexts'] = array(
         'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY) . 'icon_tx_contexts_contexts.gif',
     ),
 );
+t3lib_extMgm::addLLrefForTCAdescr(
+    'tx_contexts_contexts.type_conf.combination',
+    'EXT:contexts/Resources/Private/csh/Combination.xml'
+);
+
 require_once t3lib_extMgm::extPath($_EXTKEY) . 'tca.php';
 if (TYPO3_MODE == 'BE') {
     //all other modes did load it already
-    require_once t3lib_extMgm::extPath($_EXTKEY) . 'ext_contexts.php';
+    include_once t3lib_extMgm::extPath($_EXTKEY) . 'ext_contexts.php';
 }
 ?>
