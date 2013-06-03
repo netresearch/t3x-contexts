@@ -1,3 +1,8 @@
+2013-06-03  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* First public version with Domain, GetParam, IP, Combination support
+	* Version 0.2.0
+
 2013-01-30  Christian Opitz  <christian.opitz@netresearch.de>
 
 	* Initial code generated with kickstarter
