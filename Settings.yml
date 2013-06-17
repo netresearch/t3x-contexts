@@ -1,0 +1,20 @@
+﻿# Settings.yml for typo3.org documentation rendering
+# -*- coding: utf-8 -*- with BOM. Umlaut-check: ÄÖÜäöüß
+
+---
+conf.py:
+
+  # include content of ".. todo::" directives in output?
+  todo_include_todos: True
+
+  # Sphinx likes to see meaningful values for copyright, project,
+  # version and release in several places
+  copyright: 2013 to now
+  project: TYPO3 contexts
+  version: 0.2
+  release: 0.2.1
+
+  #render README.rst, not Documentation/Index.rst
+  master_doc: README
+
+...
