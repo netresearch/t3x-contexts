@@ -1,3 +1,7 @@
+2013-08-09  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Fix fatal error on TYPO3 6.2
+
 2013-06-03  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* First public version with Domain, GetParam, IP, Combination support

@@ -22,7 +22,12 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-require_once PATH_tslib . 'interfaces/interface.tslib_menu_filterMenuPagesHook.php';
+if (isset($TYPO3_CONF_VARS['SYS']['compat_version'])
+    && t3lib_div::int_from_ver($TYPO3_CONF_VARS['SYS']['compat_version']) < 6002000
+) {
+    //compatibility with TYPO3 < 6.2, see http://forge.typo3.org/issues/50881
+    require_once PATH_tslib . 'interfaces/interface.tslib_menu_filterMenuPagesHook.php';
+}
 
 /**
  * Hook into enableFields() to hide pages and elements that are
