@@ -5,19 +5,20 @@
 $extensionPath = t3lib_extMgm::extPath('contexts');
 $extensionClassesPath = $extensionPath . 'Classes/';
 return array(
-	'tx_contexts_api_configuration' => $extensionClassesPath . 'Api/Configuration.php',
+    'tx_contexts_api_configuration' => $extensionClassesPath . 'Api/Configuration.php',
     'tx_contexts_api_model' => $extensionClassesPath . 'Api/Model.php',
     'tx_contexts_api_model_contexts' => $extensionClassesPath . 'Api/Model/Contexts.php',
-	'tx_contexts_context_abstract' => $extensionClassesPath . 'Context/Abstract.php',
-	'tx_contexts_context_type_default' => $extensionClassesPath . 'Context/Type/Default.php',
-	'tx_contexts_context_type_domain' => $extensionClassesPath . 'Context/Type/Domain.php',
-	'tx_contexts_context_type_combination' => $extensionClassesPath . 'Context/Type/Combination.php',
-	'tx_contexts_context_type_combination_logicalexpressionevaluator' => $extensionClassesPath . 'Context/Type/Combination/LogicalExpressionEvaluator.php',
-	'tx_contexts_context_type_combination_logicalexpressionevaluator_exception' => $extensionClassesPath . 'Context/Type/Combination/LogicalExpressionEvaluator/Exception.php',
-	'tx_contexts_context_factory' => $extensionClassesPath . 'Context/Factory.php',
-	'tx_contexts_context_setting' => $extensionClassesPath . 'Context/Setting.php',
-	'tx_contexts_service_tca' => $extensionClassesPath . 'Service/Tca.php',
-	'tx_contexts_service_tcemain' => $extensionClassesPath . 'Service/Tcemain.php',
-	'tx_contexts_exception' => $extensionClassesPath . 'Exception.php',
+    'tx_contexts_context_abstract' => $extensionClassesPath . 'Context/Abstract.php',
+    'tx_contexts_context_type_default' => $extensionClassesPath . 'Context/Type/Default.php',
+    'tx_contexts_context_type_domain' => $extensionClassesPath . 'Context/Type/Domain.php',
+    'tx_contexts_context_type_combination' => $extensionClassesPath . 'Context/Type/Combination.php',
+    'tx_contexts_context_type_combination_logicalexpressionevaluator' => $extensionClassesPath . 'Context/Type/Combination/LogicalExpressionEvaluator.php',
+    'tx_contexts_context_type_combination_logicalexpressionevaluator_exception' => $extensionClassesPath . 'Context/Type/Combination/LogicalExpressionEvaluator/Exception.php',
+    'tx_contexts_context_factory' => $extensionClassesPath . 'Context/Factory.php',
+    'tx_contexts_context_setting' => $extensionClassesPath . 'Context/Setting.php',
+    'tx_contexts_service_tca' => $extensionClassesPath . 'Service/Tca.php',
+    'tx_contexts_service_tcemain' => $extensionClassesPath . 'Service/Tcemain.php',
+    'tx_contexts_exception' => $extensionClassesPath . 'Exception.php',
+    'ux_tslib_fe' => $extensionPath . 'class.ux_tslib_fe.php',
 );
 ?>
