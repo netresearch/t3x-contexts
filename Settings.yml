@@ -10,7 +10,7 @@ conf.py:
   # Sphinx likes to see meaningful values for copyright, project,
   # version and release in several places
   copyright: 2013 to now
-  project: TYPO3 contexts
+  project: Multi-channel contexts
   version: 0.2
   release: 0.2.1
 

@@ -11,7 +11,7 @@
 ########################################################################
 
 $EM_CONF[$_EXTKEY] = array(
-	'title' => 'TYPO3 contexts',
+	'title' => 'Multi-channel contexts',
 	'description' => 'Contexts for TYPO3 - can be used to modify page behaviour in the frontend based on several conditions',
 	'category' => 'misc',
 	'author' => 'Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag',

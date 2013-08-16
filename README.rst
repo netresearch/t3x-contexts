@@ -1,6 +1,6 @@
-**************
-TYPO3 contexts
-**************
+**********************
+Multi-channel contexts
+**********************
 Show and hide pages and content elements based on configurable "contexts".
 With the use of contexts, TYPO3 is able to do multi-channel output.
 
