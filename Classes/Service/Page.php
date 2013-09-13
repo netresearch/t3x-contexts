@@ -193,5 +193,21 @@ class Tx_Contexts_Service_Page
         Tx_Contexts_Api_Record::isEnabled('pages', $data) &&
         Tx_Contexts_Api_Record::isSettingEnabled('pages', 'tx_contexts_nav', $data);
     }
+
+    /**
+     * Checks if a page is OK to include in the final menu item array.
+     * this method is be called from typo < 4.6
+     *
+     * @param array &$data Array of menu items
+     * @param array $banUidArray Array of page uids which are to be excluded
+     * @param boolean $spacer If set, then the page is a spacer.
+     * @param \TYPO3\CMS\Frontend\ContentObject\Menu\AbstractMenuContentObject $obj The menu object
+     * @return boolean Returns TRUE if the page can be safely included.
+     */
+    public function tslib_menu_filterMenuPagesHook(
+        array &$data, array $banUidArray, $spacer, tslib_menu $obj
+    ) {
+        return $this->processFilter($data, $banUidArray, $spacer, $obj);
+    }
 }
 ?>
