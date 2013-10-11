@@ -49,7 +49,7 @@ class Tx_Contexts_Api_Configuration
     const RECORD_SETTINGS_COLUMN = 'tx_contexts_settings';
 
     /**
-     * Array containing tables, theyr flat settings and the flat column names
+     * Array containing tables, their flat settings and the flat column names
      *
      * @var array
      */
@@ -197,11 +197,8 @@ class Tx_Contexts_Api_Configuration
     }
 
     /**
-     * Add the enableSettings to the TCA enablecolumns - because this can be
-     * overridden when the ext_tables.php are loaded later those are also set
-     * in the internal self::$enableSettings
-     * Hence this should be used rather than the TCA by calling
-     * Tx_Contexts_Api_Configuration::getTcaCtrlEnablecolumns()
+     * Set internal enableSettings variable that is used by the record and
+     * page API.
      *
      * @param string $table    Table name
      * @param array  $settings Settings
@@ -222,7 +219,6 @@ class Tx_Contexts_Api_Configuration
             }
         }
 
-        $TCA[$table]['ctrl']['enablecolumns']['tx_contexts'] = $enableSettings;
         self::$enableSettings[$table] = $enableSettings;
     }
 
