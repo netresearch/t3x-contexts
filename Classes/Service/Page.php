@@ -102,26 +102,38 @@ class Tx_Contexts_Service_Page
                 continue;
             }
 
-            $enableChecks = array(
-                $flatColumns[1] . " = ''"
-            );
+            $enableChecks = array();
             $disableChecks = array();
+            $voidableDisableChecks = array();
 
             foreach (Tx_Contexts_Context_Container::get() as $context) {
                 /* @var $context Tx_Contexts_Context_Abstract */
-                $enableChecks[] = $GLOBALS['TYPO3_DB']->listQuery(
-                    $flatColumns[1], $context->getUid(), $table
-                );
-                $disableChecks[] = 'NOT ' . $GLOBALS['TYPO3_DB']->listQuery(
+                $disableCheck = 'NOT ' . $GLOBALS['TYPO3_DB']->listQuery(
                     $flatColumns[0], $context->getUid(), $table
                 );
+                if ($context->getNoIsVoidable()) {
+                    $voidableDisableChecks[] = $disableCheck;
+                } else {
+                    $enableChecks[] = $GLOBALS['TYPO3_DB']->listQuery(
+                        $flatColumns[1], $context->getUid(), $table
+                    );
+                    $disableChecks[] = $disableCheck;
+                }
             }
 
-            $sql = ' AND (' . implode(' OR ', $enableChecks) . ')';
+            if (count($voidableDisableChecks)) {
+                if (count($enableChecks)) {
+                    $sql .= ' AND (' . implode(' OR ', $voidableDisableChecks);
+                    $sql .= ' OR ' . implode(' OR ', $enableChecks) . ')';
+                } else {
+                    $disableChecks = array_merge(
+                        $disableChecks,
+                        $voidableDisableChecks
+                    );
+                }
+            }
             if (count($disableChecks)) {
-                $sql .= ' AND (' . $flatColumns[0] . " = ''" .
-                ' OR (' . implode(' AND ', $disableChecks) . ')' .
-                ')';
+                $sql .= ' AND ' . implode(' AND ', $disableChecks);
             }
         }
 

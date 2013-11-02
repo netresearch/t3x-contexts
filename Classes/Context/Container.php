@@ -75,7 +75,10 @@ class Tx_Contexts_Context_Container extends ArrayObject
             '*', 'tx_contexts_contexts', 'deleted=0'
         );
 
-        $contexts = array();
+        $contexts = array(
+            0 => new Tx_Contexts_Context_Type_Default()
+        );
+        
         foreach ($arRows as $arRow) {
             $context = Tx_Contexts_Context_Factory::createFromDb($arRow);
             if ($context !== null) {

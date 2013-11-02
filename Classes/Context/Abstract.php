@@ -80,6 +80,16 @@ abstract class Tx_Contexts_Context_Abstract
      * @var boolean
      */
     protected $use_session = true;
+    
+    /**
+     * Determines, if a NO for this context on a record can be voided by a YES
+     * for another matching context.
+     * Currently used only for the default context and thus not a field in 
+     * the contexts table yet - maybe added as such later
+     * 
+     * @var boolean
+     */
+    protected $noIsVoidable = false;
 
     /**
      * Context configuration.
@@ -301,6 +311,16 @@ abstract class Tx_Contexts_Context_Abstract
     public function getDisabled()
     {
         return $this->disabled;
+    }
+    
+    /**
+     * Returns if a NO for this context can be voided by a YES for another one
+     * 
+     * @return boolean
+     */
+    public function getNoIsVoidable()
+    {
+        return $this->noIsVoidable;
     }
 
     /**
