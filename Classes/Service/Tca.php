@@ -85,8 +85,8 @@ class Tx_Contexts_Service_Tca
 
             $content .= '<tr>'
                 . '<td class="tx_contexts_context">'
-                . '<span class="context-' . ($bHasSetting ? 'active' : 'inactive') . '">'
-                . $this->getRecordPreview($context, $uid)
+                . '<span class="context-' . ($bHasSetting ? 'active' : 'inactive') . ' nobr">'
+                . ($context->getUid() ? $this->getRecordPreview($context) : $this->getDefaultPreview($context))
                 . '</span>'
                 . '</td>'
                 . $contSettings
@@ -98,13 +98,37 @@ class Tx_Contexts_Service_Tca
     }
 
     /**
+     * Get the standard view for contexts without records
+     *
+     * @param Tx_Contexts_Context_Abstract $context
+     * @return string
+     */
+    protected function getDefaultPreview($context)
+    {
+        $row = array(
+            'uid'   => $context->getUid(),
+            'pid'   => 0,
+        );
+
+        return t3lib_iconWorks::getSpriteIconForRecord(
+                'tx_contexts_contexts',
+                $row,
+                array(
+                    'style' => 'vertical-align:top',
+                    'class' => 'context-default-icon'
+                )
+            ) .
+            '&nbsp;' .
+            htmlspecialchars($context->getTitle());
+    }
+
+    /**
      * Get the standard record view for context records
      *
      * @param Tx_Contexts_Context_Abstract $context
-     * @param int $thisUid
      * @return string
      */
-    protected function getRecordPreview($context, $thisUid)
+    protected function getRecordPreview($context)
     {
         $row = array(
             'uid'   => $context->getUid(),
@@ -113,8 +137,7 @@ class Tx_Contexts_Service_Tca
             'alias' => $context->getAlias()
         );
 
-        return '<span class="nobr">' .
-            $this->getClickMenu(
+        return $this->getClickMenu(
                 t3lib_iconWorks::getSpriteIconForRecord(
                     'tx_contexts_contexts',
                     $row,
@@ -130,8 +153,7 @@ class Tx_Contexts_Service_Tca
             ) .
             '&nbsp;' .
             htmlspecialchars($context->getTitle()) .
-            ' <span class="typo3-dimmed"><em>[' . $row['uid'] . ']</em></span>' .
-            '</span>';
+            ' <span class="typo3-dimmed"><em>[' . $row['uid'] . ']</em></span>';
     }
 
     /**

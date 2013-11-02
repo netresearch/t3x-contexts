@@ -20,6 +20,7 @@
             <label index="tx_contexts_contexts.disable">Disable</label>
             <label index="tx_contexts_visibility">Visible</label>
             <label index="tx_contexts_menu_visibility">Visible in Menus</label>
+            <label index="tx_contexts_contexts.default">Default</label>
         </languageKey>
         <languageKey index="de" type="array">
             <label index="tabname">Kontexte</label>
@@ -30,6 +31,7 @@
             <label index="tx_contexts_visibility">Sichtbar</label>
             <label index="tx_contexts_menu_visibility">Sichtbar in Menüs</label>
             <label index="tx_contexts_contexts.defaults">Standardwerte</label>
+            <label index="tx_contexts_contexts.default">Standard</label>
         </languageKey>
     </data>
 </T3locallang>
