@@ -61,19 +61,19 @@ class Tx_Contexts_Api_Record
      * Determines if a setting is enabled or disabled by the current contexts
      * (returns false if the setting is disabled for one of the contexts)
      *
-     * @param string        $table   Table name
-     * @param string        $setting Setting name
+     * @param string        $tableName   Table name
+     * @param string        $settingName Setting name
      * @param array|integer $row     Record array or an uid
      *
      * @return boolean
      */
-    public static function isSettingEnabled($table, $setting, $row)
+    public static function isSettingEnabled($tableName, $settingName, $row)
     {
         if (is_array($row)) {
-            $enabledFlat = self::isSettingEnabledFlat($table, $setting, $row);
+            $flatColumnContents = self::getFlatColumnContents($tableName, $settingName, $row);
 
-            if ($enabledFlat !== null) {
-                return $enabledFlat;
+            if ($flatColumnContents !== null) {
+                return self::evaluateFlatColumnContents($flatColumnContents);
             }
 
             if (!isset($row['uid'])) {
@@ -81,7 +81,7 @@ class Tx_Contexts_Api_Record
                     'Missing uid field in row',
                     'tx_contexts',
                     t3lib_div::SYSLOG_SEVERITY_WARNING,
-                    array('table' => $table, 'row' => $row)
+                    array('table' => $tableName, 'row' => $row)
                 );
                 return false;
             }
@@ -91,24 +91,21 @@ class Tx_Contexts_Api_Record
             $uid = (int) $row;
         }
 
+        $flatColumnContents = array(0 => array(), 1 => array());
+        
         /* @var $context Tx_Contexts_Context_Abstract */
         foreach (Tx_Contexts_Context_Container::get() as $context) {
-            $rowSetting     = $context->getSetting($table, $setting, $uid);
-            $defaultSetting = $context->getSetting($table, $setting, 0);
-
-            if (($rowSetting && !$rowSetting->getEnabled())
-                || ($defaultSetting && !$defaultSetting->getEnabled())
-            ) {
-                return false;
+            $setting = $context->getSetting($tableName, $settingName, $uid);
+            if ($setting) {
+                $flatColumnContents[$setting->getEnabled() ? 1 : 0][] = (string) $context->getUid();
             }
         }
 
-        return true;
+        return self::evaluateFlatColumnContents($flatColumnContents);
     }
 
     /**
-     * Tries to get if the setting is enabled by evaluating the flat columns
-     * within the record
+     * Get the flat column contents from the record if possible
      *
      * @param string $table   Table name
      * @param string $setting Setting name
@@ -118,10 +115,9 @@ class Tx_Contexts_Api_Record
      *                      doesn't contain the appropriate flat columns
      *                      boolean otherwise
      */
-    protected static function isSettingEnabledFlat($table, $setting, array $row)
+    protected static function getFlatColumnContents($table, $setting, array $row)
     {
-        $flatColumns
-            = Tx_Contexts_Api_Configuration::getFlatColumns($table, $setting);
+        $flatColumns = Tx_Contexts_Api_Configuration::getFlatColumns($table, $setting);
 
         if (!$flatColumns) {
             return null;
@@ -140,8 +136,7 @@ class Tx_Contexts_Api_Record
                 );
                 $rowValid = false;
             } elseif ($row[$flatColumn] !== '') {
-                $flatColumnContents[$i]
-                    = array_flip(explode(',', $row[$flatColumn]));
+                $flatColumnContents[$i] = explode(',', $row[$flatColumn]);
             } else {
                 $flatColumnContents[$i] = array();
             }
@@ -150,14 +145,47 @@ class Tx_Contexts_Api_Record
         if (!$rowValid) {
             return null;
         }
+        
+        return $flatColumnContents;
+    }
+    
+    /**
+     * Evaluate the flat columns contents with the current active contexts
+     * Same logic as the SQL conditions in {@see Tx_Contexts_Service_Page::getFilterSql()}
+     * 
+     * @param array $flatColumnContents
+     * @return boolean
+     */
+    protected static function evaluateFlatColumnContents($flatColumnContents) {
+        $enableChecks = array();
+        $disableChecks = array();
+        $voidableDisableChecks = array();
 
         foreach (Tx_Contexts_Context_Container::get() as $context) {
-            if (array_key_exists($context->getUid(), $flatColumnContents[0])) {
-                return false;
+            /* @var $context Tx_Contexts_Context_Abstract */
+            $id = (string) $context->getUid();
+            if ($context->getNoIsVoidable()) {
+                $voidableDisableChecks[] = $id;
+            } else {
+                $enableChecks[] = $id;
+                $disableChecks[] = $id;
             }
         }
 
-        return true;
+        $enableCheckRes = true;
+        if (count($voidableDisableChecks)) {
+            if (count($enableChecks)) {
+                $enableCheckRes = 
+                    !array_intersect($voidableDisableChecks, $flatColumnContents[0]) ||
+                    array_intersect($enableChecks, $flatColumnContents[1]);
+            } else {
+                $disableChecks = array_merge($disableChecks, $voidableDisableChecks);
+            }
+        }
+        
+        $disableCheckRes = !array_intersect($disableChecks, $flatColumnContents[0]);
+
+        return $enableCheckRes && $disableCheckRes;
     }
 }
 ?>
