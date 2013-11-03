@@ -4,14 +4,6 @@ require_once __DIR__ . '/../../../Classes/Context/Abstract.php';
 
 require_once __DIR__ . '/../../../../../../t3lib/class.t3lib_div.php';
 
-if (!class_exists('t3lib_div')
-    && class_exists('TYPO3\CMS\Core\Utility\GeneralUtility')
-) {
-    class t3lib_div extends TYPO3\CMS\Core\Utility\GeneralUtility
-    {
-    }
-}
-
 class Tx_Contexts_Context_AbstractTest extends TestBase
 {
     /**

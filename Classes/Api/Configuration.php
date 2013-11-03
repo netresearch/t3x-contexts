@@ -145,7 +145,11 @@ class Tx_Contexts_Api_Configuration
      */
     protected static function addToFlatColumns($table, array $settings)
     {
-        $flatSettings = (array) self::$flatColumns[$table];
+        if (array_key_exists($table, self::$flatColumns)) {
+            $flatSettings = (array) self::$flatColumns[$table];
+        } else {
+            $flatSettings = array();
+        }
 
         foreach ($settings as $setting => $config) {
             if (self::isFlatSetting($config)) {
@@ -209,13 +213,17 @@ class Tx_Contexts_Api_Configuration
     {
         global $TCA;
 
-        $enableSettings = (array) self::$enableSettings[$table];
+        if (array_key_exists($table, self::$enableSettings)) {
+            $enableSettings = (array) self::$enableSettings[$table];
+        } else {
+            $enableSettings = array();
+        }
 
         foreach ($settings as $setting => $config) {
             if (isset($config['enables'])
                 && !in_array($setting, $enableSettings)
             ) {
-                $enableSettings = $setting;
+                $enableSettings[] = $setting;
             }
         }
 

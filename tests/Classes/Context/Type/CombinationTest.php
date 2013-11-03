@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '../../../../TestBase.php';
+require_once __DIR__ . '../../../../../Classes/Context/Abstract.php';
 require_once __DIR__ . '../../../../../Classes/Context/Type/Combination.php';
 require_once __DIR__ . '../../../../../Classes/Context/Container.php';
 require_once __DIR__ . '../../../../../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php';
