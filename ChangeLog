@@ -1,3 +1,11 @@
+2013-11-22  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Fix bug in contexts that caused DAM not to show any usage references
+	* Fix a broken unit test
+	* Remove manual.sxw; it is not needed by TER anymore
+	* Set minimum TYPO3 version to 4.6.0
+	* Version 0.3.1
+
 2013-08-16  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Support "extend to subpages" in 4.7, 6.0, 6.1 and 6.2
