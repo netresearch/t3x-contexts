@@ -49,15 +49,7 @@ class Tx_Contexts_Context_Type_GetParam_TsfeService
     public function createHashBase(&$params, $ref)
     {
         ksort(self::$params);
-        $hashString = serialize(self::$params);
-        $key = strtolower(__CLASS__);
-        if (isset($params['pA'])) {
-            // TYPO3 < 4.7
-            $params['pA'][$key] = $hashString;
-        } else {
-            // TYPO3 >= 4.7
-            $params['hashParameters'][$key] = $hashString;
-        }
+        $params['hashParameters'][strtolower(__CLASS__)] = serialize(self::$params);
     }
 
     /**
@@ -91,10 +83,7 @@ class Tx_Contexts_Context_Type_GetParam_TsfeService
         $conf = &$GLOBALS['TSFE']->TYPO3_CONF_VARS;
         $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'][__CLASS__] =
             '&' . __CLASS__ . '->configArrayPostProc';
-        // override page hash generation, TYPO3 version < 4.7
-        $conf['SC_OPTIONS']['t3lib/class.t3lib_div.php']['cHashParamsHook'][__CLASS__] =
-            '&' . __CLASS__ . '->createHashBase';
-        // override page hash generation, TYPO3 version >= 4.7
+        // override page hash generation
         $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][__CLASS__] =
             '&' . __CLASS__ . '->createHashBase';
     }

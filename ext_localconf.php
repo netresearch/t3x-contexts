@@ -26,11 +26,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/tslib/class.tslib_menu.php']['fil
     = 'EXT:contexts/Classes/Service/Page.php:'
     . '&Tx_Contexts_Service_Page';
 
-//override page hash generation, TYPO3 version < 4.7
-$TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_div.php']['cHashParamsHook'][]
-    = 'EXT:contexts/Classes/Service/Page.php:'
-    . '&Tx_Contexts_Service_Page->cHashParams';
-//override page hash generation, TYPO3 version >= 4.7
+//override page hash generation
 $TYPO3_CONF_VARS['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][]
     = 'EXT:contexts/Classes/Service/Page.php:'
     . '&Tx_Contexts_Service_Page->createHashBase';
