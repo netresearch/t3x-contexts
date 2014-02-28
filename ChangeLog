@@ -1,3 +1,7 @@
+2014-02-28  Mathias Brodala  <mbrodala@pagemachine.de>
+
+	* Implement #56269: Backport TSFE getHash hook to TYPO3 4.5
+
 2013-11-22  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Fix bug in contexts that caused DAM not to show any usage references
