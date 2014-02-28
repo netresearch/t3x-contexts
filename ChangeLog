@@ -2,6 +2,7 @@
 
 	* Fix bug: GET parameters get appended to all URLs even when
 	           they are stored in session
+	* Set minimum TYPO3 version to 4.5.0
 
 2014-02-28  Mathias Brodala  <mbrodala@pagemachine.de>
 
