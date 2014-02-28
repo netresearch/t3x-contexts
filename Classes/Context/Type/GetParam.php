@@ -60,7 +60,9 @@ class Tx_Contexts_Context_Type_GetParam extends Tx_Contexts_Context_Abstract
         }
 
         // Register param on TSFE service for cache and linkVars management
-        Tx_Contexts_Context_Type_GetParam_TsfeService::register($param, $value);
+        Tx_Contexts_Context_Type_GetParam_TsfeService::register(
+            $param, $value, !(bool) $this->use_session
+        );
 
         return $this->invert($this->storeInSession(
             $this->matchParameters($value)

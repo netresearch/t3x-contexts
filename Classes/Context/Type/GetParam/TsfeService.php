@@ -36,7 +36,23 @@ class Tx_Contexts_Context_Type_GetParam_TsfeService
 {
     protected static $hooksRegistered = false;
 
+    /**
+     * Parameters that modify the page hash.
+     * Key is the parameter name, value its value.
+     *
+     * @var array
+     */
     protected static $params = array();
+
+    /**
+     * GET parameters that are carried across all URLs.
+     * Key is the parameter name, value is ignored
+     *
+     * @var array
+     */
+    protected static $linkVarParams = array();
+
+
 
     /**
      * Add an additional parameter to cHash so that caches are specific
@@ -60,7 +76,7 @@ class Tx_Contexts_Context_Type_GetParam_TsfeService
      * @return void
      */
     public function configArrayPostProc(&$params, $tsfe) {
-        $linkVars = $params['config']['linkVars'] . ',' . implode(',', array_keys(self::$params));
+        $linkVars = $params['config']['linkVars'] . ',' . implode(',', array_keys(self::$linkVarParams));
         $params['config']['linkVars'] = trim($linkVars, ',');
     }
 
@@ -72,8 +88,11 @@ class Tx_Contexts_Context_Type_GetParam_TsfeService
      * @param mixed  $value
      * @return void
      */
-    public static function register($param, $value) {
+    public static function register($param, $value, $addToLinkVars) {
         self::$params[$param] = $value;
+        if ($addToLinkVars) {
+            self::$linkVarParams[$param] = true;
+        }
 
         if (self::$hooksRegistered) {
             return;
