@@ -67,12 +67,14 @@ class Tx_Contexts_Service_Tca
 
         $uid = (int) $params['row']['uid'];
 
+        $visibleContexts = 0;
         foreach ($contexts as $context) {
             if ($context->getDisabled()) {
                 continue;
             }
 
             /* @var $context Tx_Contexts_Context_Abstract */
+            ++$visibleContexts;
             $contSettings = '';
             $bHasSetting = false;
             foreach ($settings as $settingName => $config) {
@@ -98,6 +100,14 @@ class Tx_Contexts_Service_Tca
                 . $contSettings
                 . '</tr>';
         }
+        if ($visibleContexts == 0) {
+            $content .= '<tr>'
+                . '<td colspan="4" style="text-align: center">'
+                . $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':no_contexts')
+                . '</td>'
+                . '</tr>';
+        }
+
         $content .= '</tbody></table>';
 
         return $content;

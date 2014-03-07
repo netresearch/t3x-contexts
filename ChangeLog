@@ -1,6 +1,7 @@
 2014-03-07  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Prettify contexts list in TCA (page/content records)
+	* Show message when no contexts defined
 
 2014-02-28  Christian Weiske  <christian.weiske@netresearch.de>
 
