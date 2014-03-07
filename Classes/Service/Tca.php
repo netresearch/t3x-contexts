@@ -53,12 +53,15 @@ class Tx_Contexts_Service_Tca
 
         $settings = $params['fieldConf']['config']['settings'];
 
-        $content = '<br/><table class="tx_contexts_table_settings">' .
-            '<tr><th class="tx_contexts_context">' .
+        $content = '<br/><table class="tx_contexts_table_settings typo3-dblist">'
+            . '<tbody>'
+            . '<tr class="t3-row-header">'
+            . '<td></td>'
+            . '<td class="tx_contexts_context">' .
             $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_contexts') .
-            '</th>';
+            '</td>';
         foreach ($settings as $settingName => $config) {
-            $content .= '<th class="tx_contexts_setting">' . $fobj->sL($config['label']) . '</th>';
+            $content .= '<td class="tx_contexts_setting">' . $fobj->sL($config['label']) . '</td>';
         }
         $content .= '</tr>';
 
@@ -83,16 +86,19 @@ class Tx_Contexts_Service_Tca
                     . '</select></td>';
             }
 
-            $content .= '<tr>'
+            list($icon, $title) = $this->getRecordPreview($context, $uid);
+            $content .= '<tr class="db_list_normal">'
+                . '<td class="tx_contexts_context col-icon"">'
+                . $icon . '</td>'
                 . '<td class="tx_contexts_context">'
                 . '<span class="context-' . ($bHasSetting ? 'active' : 'inactive') . '">'
-                . $this->getRecordPreview($context, $uid)
+                . $title
                 . '</span>'
                 . '</td>'
                 . $contSettings
                 . '</tr>';
         }
-        $content .= '</table>';
+        $content .= '</tbody></table>';
 
         return $content;
     }
@@ -101,8 +107,9 @@ class Tx_Contexts_Service_Tca
      * Get the standard record view for context records
      *
      * @param Tx_Contexts_Context_Abstract $context
-     * @param int $thisUid
-     * @return string
+     * @param int                          $thisUid
+     *
+     * @return array First value is click icon, second is title
      */
     protected function getRecordPreview($context, $thisUid)
     {
@@ -113,7 +120,7 @@ class Tx_Contexts_Service_Tca
             'alias' => $context->getAlias()
         );
 
-        return '<span class="nobr">' .
+        return array(
             $this->getClickMenu(
                 t3lib_iconWorks::getSpriteIconForRecord(
                     'tx_contexts_contexts',
@@ -127,11 +134,10 @@ class Tx_Contexts_Service_Tca
                 ),
                 'tx_contexts_contexts',
                 $row['uid']
-            ) .
-            '&nbsp;' .
+            ),
             htmlspecialchars($context->getTitle()) .
-            ' <span class="typo3-dimmed"><em>[' . $row['uid'] . ']</em></span>' .
-            '</span>';
+            ' <span class="typo3-dimmed"><em>[' . $row['uid'] . ']</em></span>'
+        );
     }
 
     /**

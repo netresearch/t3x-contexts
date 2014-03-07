@@ -1,3 +1,7 @@
+2014-03-07  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Prettify contexts list in TCA (page/content records)
+
 2014-02-28  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Fix bug: GET parameters get appended to all URLs even when
