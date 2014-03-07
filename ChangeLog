@@ -2,6 +2,7 @@
 
 	* Prettify contexts list in TCA (page/content records)
 	* Show message when no contexts defined
+	* Version 0.4.0
 
 2014-02-28  Christian Weiske  <christian.weiske@netresearch.de>
 
