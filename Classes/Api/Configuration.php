@@ -383,7 +383,7 @@ class Tx_Contexts_Api_Configuration
                 return self::$flatColumns[$table];
             }
 
-            return null;
+            return array();
         }
 
         return self::$flatColumns;

@@ -1,3 +1,7 @@
+2014-03-21    <christian.weiske@netresearch.de.de>
+
+	* Fix PHP warning when saving content element
+
 2014-03-07  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Prettify contexts list in TCA (page/content records)
