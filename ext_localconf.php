@@ -59,7 +59,7 @@ if (isset($TYPO3_CONF_VARS['SYS']['compat_version'])
         = $strContextsPath . 'class.ux_tslib_fe.php';
 }
 
-
+require_once t3lib_extMgm::extPath($_EXTKEY) . 'Library/ts_connector.php';
 
 if (TYPO3_MODE != 'BE') {
     //we load that file in ext_tables.php for the backend
