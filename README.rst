@@ -129,3 +129,19 @@ the following signs:
 
 
 Stored in table tx_contexts_contexts.
+
+=============================
+Fluid template implementation
+=============================
+
+The implementation of a context query in fluid templates looks like:
+
+::
+
+    <div xmlns="http://www.w3.org/1999/xhtml" xmlns:contexts="http://typo3.org/ns/Tx_Contexts_ViewHelpers">
+
+        <f:if condition="{contexts:matches(alias:'mobile')}">
+            <f:then>is Mobile</f:then>
+            <f:else>is not Mobile</f:else>
+        </f:if>
+    </div>
