@@ -53,7 +53,7 @@ class Tx_Contexts_Service_Tca
 
         $settings = $params['fieldConf']['config']['settings'];
 
-        $content = '<br/><table class="tx_contexts_table_settings typo3-dblist">'
+        $content = '<table class="tx_contexts_table_settings typo3-dblist" style="width: auto; min-width:50%">'
             . '<tbody>'
             . '<tr class="t3-row-header">'
             . '<td></td>'
