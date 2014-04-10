@@ -246,7 +246,7 @@ class Tx_Contexts_Api_Configuration
         if (!array_key_exists(self::RECORD_SETTINGS_COLUMN, $TCA[$table]['columns'])) {
             $recordSettingsConf = array(
                 "exclude" => 1,
-                "label" => '',
+                "label" => 'LLL:' . self::LANG_FILE. ':tabname',
                 "config" => array (
                     "type" => "user",
                     "size" => "30",
@@ -264,12 +264,31 @@ class Tx_Contexts_Api_Configuration
                 1
             );
 
-            t3lib_extMgm::addToAllTCAtypes(
-                $table,
-                '--div--;LLL:' . self::LANG_FILE
-                . ':tabname,' . self::RECORD_SETTINGS_COLUMN
-                . ';;;;1-1-1'
-            );
+            switch ($table) {
+            case'pages':
+                t3lib_extMgm::addToAllTCAtypes(
+                    $table,
+                    self::RECORD_SETTINGS_COLUMN,
+                    '1,4,5',
+                    'after:fe_group'
+                );
+                t3lib_extMgm::addToAllTCAtypes(
+                    $table,
+                    self::RECORD_SETTINGS_COLUMN,
+                    '254',
+                    'after:hidden'
+                );
+                break;
+            case 'tt_content':
+                t3lib_extMgm::addToAllTCAtypes(
+                    $table,
+                    self::RECORD_SETTINGS_COLUMN,
+                    '',
+                    'after:fe_group'
+                );
+                break;
+            }
+
         } else {
             $TCA[$table]['columns'][self::RECORD_SETTINGS_COLUMN]
             ['config']['settings']
