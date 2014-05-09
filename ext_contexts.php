@@ -1,7 +1,7 @@
 <?php
 Tx_Contexts_Api_Configuration::enableContextsForTable($_EXTKEY, 'pages', array(
     'tx_contexts_nav' => array(
-    	'label' => 'LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_menu_visibility',
+        'label' => 'LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_menu_visibility',
         'flatten' => true
     )
 ));
@@ -32,5 +32,11 @@ Tx_Contexts_Api_Configuration::registerContextType(
     'FILE:EXT:contexts/Configuration/flexform/ContextType/Combination.xml'
 );
 
+Tx_Contexts_Api_Configuration::registerContextType(
+    'session',
+    'Session variable',
+    'Tx_Contexts_Context_Type_Session',
+    'FILE:EXT:contexts/Configuration/flexform/ContextType/Session.xml'
+);
 
 ?>

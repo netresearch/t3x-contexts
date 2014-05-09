@@ -12,6 +12,7 @@ Examples for contexts:
 - User is from one of certain countries
 - User entered website with GET-Parameter ``affID=foo``
 - User IP matches a given rule
+- A session variable is set
 - A combination of any other rules
 
 Apart from the context rules, this extension also provides an API to use
@@ -69,7 +70,9 @@ anymore - because "Store result in user session" had been activated.
 =============
 Context types
 =============
-The ``contexts`` extension ships with a number of simple contexts:
+The ``contexts`` extension ships with a number of simple contexts.
+All of them get stored in table ``tx_contexts_contexts``.
+
 
 Domain
 ======
@@ -93,7 +96,7 @@ In this case, all subdomains will match:
 
 
 GET parameter
--------------
+=============
 Checks if a GET parameter is available and has a certain value.
 
 Activate "Store result in user session" to keep the context when navigating
@@ -104,7 +107,7 @@ will activate the context.
 
 
 IP address
-----------
+==========
 Matches the user's IP address. IPv4 and IPv6 are supported.
 
 Supported notations:
@@ -115,7 +118,7 @@ Supported notations:
 
 
 Logical context combination
----------------------------
+===========================
 Combines other contexts with logical operators.
 
 Contexts are referenced via their alias and can be combined with
@@ -127,8 +130,11 @@ the following signs:
 - parentheses to group parts of expressions: ``(...)``
 
 
+Session variable
+================
+This context checks if a session variable with the given name is
+set (is not NULL).
 
-Stored in table tx_contexts_contexts.
 
 =============================
 Fluid template implementation
