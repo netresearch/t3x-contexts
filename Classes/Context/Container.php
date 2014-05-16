@@ -49,14 +49,20 @@ class Tx_Contexts_Context_Container extends ArrayObject
     /**
      * Make the given contexts active (available in this container)
      *
-     * @param array $arContexts Array of context objects     *
+     * @param array $arContexts Array of context objects
+     *
      * @return Tx_Contexts_Context_Container
      */
     protected function setActive($arContexts)
     {
         $this->exchangeArray($arContexts);
+        $aliases = array();
+        foreach ($arContexts as $context) {
+            $aliases[] = $context->getAlias();
+        }
         t3lib_div::devLog(
-            count($this) . ' active contexts', 'tx_contexts', 0
+            count($this) . ' active contexts: ' . implode(', ', $aliases),
+            'tx_contexts', 0
         );
 
         return $this;
@@ -90,6 +96,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
      * Matches all context objects. Resolves dependencies.
      *
      * @param array $arContexts Array of available context objects
+     *
      * @return array Array of matched Tx_Contexts_Context_Abstract objects,
      *               key is their uid
      */
@@ -158,7 +165,8 @@ class Tx_Contexts_Context_Container extends ArrayObject
     /**
      * Find context by uid or alias
      *
-     * @param int|string $uidOrAlias     *
+     * @param int|string $uidOrAlias
+     *
      * @return Tx_Contexts_Context_Abstract
      */
     public function find($uidOrAlias)
