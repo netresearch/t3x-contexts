@@ -110,6 +110,10 @@ abstract class Tx_Contexts_Context_Abstract
      */
     public function __construct($arRow = array())
     {
+        //check TSFE is set
+        //prevent Exceptions in eID
+        $this->initTsfe();
+
         if (!empty($arRow)) {
             $this->uid         = (int) $arRow['uid'];
             $this->type        = $arRow['type'];
@@ -362,6 +366,23 @@ abstract class Tx_Contexts_Context_Abstract
         $GLOBALS['TSFE']->storeSessionData();
         return $bMatch;
     }
+
+    /**
+     * Init TSFE with FE user
+     *
+     * @return void
+     */
+    protected function initTsfe()
+    {
+        if (!isset($GLOBALS['TSFE'])) {
+            $GLOBALS['TSFE'] = t3lib_div::makeInstance(
+                'tslib_fe',
+                $GLOBALS['TYPO3_CONF_VARS'], 0, 0
+            );
+            $GLOBALS['TSFE']->initFEuser();
+        }
+    }
+
 
     /**
      * Inverts the current match setting if inverting is activated.
