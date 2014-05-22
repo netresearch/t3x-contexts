@@ -8,7 +8,7 @@ $lf = 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xml';
 $TCA['tx_contexts_contexts'] = array(
     'ctrl' => $TCA['tx_contexts_contexts']['ctrl'],
     'interface' => array(
-        'showRecordFieldList' => 'title,alias,type,invert,use_session,disabled'
+        'showRecordFieldList' => 'title,alias,type,invert,use_session,disabled,hide_in_backend'
     ),
     'feInterface' => $TCA['tx_contexts_contexts']['feInterface'],
     'columns' => array(
@@ -24,6 +24,13 @@ $TCA['tx_contexts_contexts'] = array(
         'disabled' => array(
             'exclude' => 0,
             'label' => $lf . ':tx_contexts_contexts.disable',
+            'config' => array(
+                'type' => 'check',
+            )
+        ),
+        'hide_in_backend' => array(
+            'exclude' => 0,
+            'label' => $lf . ':tx_contexts_contexts.hide_in_backend',
             'config' => array(
                 'type' => 'check',
             )
@@ -84,18 +91,17 @@ $TCA['tx_contexts_contexts'] = array(
     'types' => array(
         '0' => array(
             'showitem'
-                => '--div--;'
-                . $lf
-                . ':tx_contexts_contexts.general,title;;;;2-2-2, '
-                . 'disabled;;;;2-2-2,alias;;;;3-3-3,type,type_conf,invert,'
-                . 'use_session, '
-                . '--div--;'
-                . $lf
-                . ':tx_contexts_contexts.defaults'
+                => '--div--;' . $lf . ':tx_contexts_contexts.general'
+                . ',title;;1'
+                . ',--palette--;' . $lf . ':tx_contexts_contexts.visibility;visibility;;1-1-1'
+                . ',alias,type,type_conf,invert,'
+                . 'use_session'
+                . ',--div--;' . $lf . ':tx_contexts_contexts.defaults'
         )
     ),
     'palettes' => array(
-        '1' => array('showitem' => '')
+        '1' => array('showitem' => ''),
+        'visibility' => array('showitem' => 'disabled,hide_in_backend', 'canNotCollapse' => 1)
     )
 );
 ?>

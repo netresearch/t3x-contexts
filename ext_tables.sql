@@ -15,6 +15,7 @@ CREATE TABLE tx_contexts_contexts (
     invert tinyint(4) DEFAULT '0' NOT NULL,
     use_session tinyint(4) DEFAULT '0' NOT NULL,
     disabled tinyint(4) DEFAULT '0' NOT NULL,
+    hide_in_backend tinyint(4) DEFAULT '0' NOT NULL,
 
     PRIMARY KEY (uid),
     KEY parent (pid)

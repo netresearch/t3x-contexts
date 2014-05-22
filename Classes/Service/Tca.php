@@ -69,7 +69,7 @@ class Tx_Contexts_Service_Tca
 
         $visibleContexts = 0;
         foreach ($contexts as $context) {
-            if ($context->getDisabled()) {
+            if ($context->getDisabled() || $context->getHideInBackend()) {
                 continue;
             }
 

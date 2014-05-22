@@ -102,6 +102,13 @@ abstract class Tx_Contexts_Context_Abstract
     protected $disabled;
 
     /**
+     * Hide Context in backend
+     *
+     * @var boolean
+     */
+    protected $bHideInBackend = false;
+
+    /**
      * Constructor - set the values from database row.
      *
      * @param array $arRow Database context row
@@ -115,14 +122,15 @@ abstract class Tx_Contexts_Context_Abstract
         $this->initTsfe();
 
         if (!empty($arRow)) {
-            $this->uid         = (int) $arRow['uid'];
-            $this->type        = $arRow['type'];
-            $this->title       = $arRow['title'];
-            $this->alias       = $arRow['alias'];
-            $this->tstamp      = $arRow['tstamp'];
-            $this->invert      = $arRow['invert'];
-            $this->use_session = $arRow['use_session'];
-            $this->disabled    = $arRow['disabled'];
+            $this->uid            = (int) $arRow['uid'];
+            $this->type           = $arRow['type'];
+            $this->title          = $arRow['title'];
+            $this->alias          = $arRow['alias'];
+            $this->tstamp         = $arRow['tstamp'];
+            $this->invert         = $arRow['invert'];
+            $this->use_session    = $arRow['use_session'];
+            $this->disabled       = $arRow['disabled'];
+            $this->bHideInBackend = (bool) $arRow['hide_in_backend'];
 
             if ($arRow['type_conf'] != '') {
                 $this->conf = t3lib_div::xml2array($arRow['type_conf']);
@@ -305,6 +313,16 @@ abstract class Tx_Contexts_Context_Abstract
     public function getDisabled()
     {
         return $this->disabled;
+    }
+
+    /**
+     * Get hide in backend
+     *
+     * @return boolean true if the context not shown in backend
+     */
+    public function getHideInBackend()
+    {
+        return $this->bHideInBackend;
     }
 
     /**
