@@ -374,7 +374,7 @@ abstract class Tx_Contexts_Context_Abstract
      */
     protected function initTsfe()
     {
-        if (!isset($GLOBALS['TSFE'])) {
+        if (!isset($GLOBALS['TSFE']) && TYPO3_MODE === 'FE') {
             $GLOBALS['TSFE'] = t3lib_div::makeInstance(
                 'tslib_fe',
                 $GLOBALS['TYPO3_CONF_VARS'], 0, 0

@@ -31,11 +31,16 @@ declare(encoding = 'UTF-8');
  * @param string $strContext context alias
  *
  * @return boolean True if it matches, false if not
- *
- * @throws \Exception When the context does not exist
  */
 function user_contexts_matches($strContext)
 {
+    static $initialized = false;
+    if (!$initialized) {
+        //load and resolve all contexts
+        Tx_Contexts_Context_Container::get()->initMatching();
+        $initialized = true;
+    }
+
     return Tx_Contexts_Api_ContextMatcher::getInstance()
         ->matches($strContext);
 }

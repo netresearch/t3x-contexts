@@ -42,13 +42,6 @@ class Tx_Contexts_Api_ContextMatcher
     protected static $instance;
 
     /**
-     * Database table name with contexts
-     *
-     * @var string
-     */
-    protected $strTable = 'tx_contexts_contexts';
-
-    /**
      * Match results. Alias => boolean match result
      *
      * @var array
@@ -85,8 +78,6 @@ class Tx_Contexts_Api_ContextMatcher
      * @param string $strContext alias from context entry
      *
      * @return boolean TRUE if context matches, FALSE if not
-     *
-     * @throws \Exception Database error or context not found
      */
     public function matches($strContext)
     {
@@ -94,53 +85,13 @@ class Tx_Contexts_Api_ContextMatcher
             return $this->arMatches[$strContext];
         }
 
-        $arRow = $this->getContextRow($strContext);
-        try {
-            $context = Tx_Contexts_Context_Factory::createFromDb($arRow);
-            if ($context) {
-                $this->arMatches[$strContext] = (bool) $context->match();
-            } else {
-                $this->arMatches[$strContext] = true;
-            }
-        } catch (\Exception $e) {
-            $this->arMatches[$strContext] = false;
-        }
+        $container = Tx_Contexts_Context_Container::get();
+        $context = $container->find($strContext);
+
+        $this->arMatches[$strContext] = $context !== null;
 
         return $this->arMatches[$strContext];
-    }
 
-    /**
-     * Load context from database
-     *
-     * @param string $strContext alias from context entry
-     *
-     * @return array database result
-     *
-     * @throws \Exception Database error or context not found
-     */
-    protected function getContextRow($strContext)
-    {
-        /* @var $TYPO3_DB \TYPO3\CMS\Core\Database\DatabaseConnection */
-        global $TYPO3_DB;
-
-        $strWhere = 'deleted = 0 AND disabled = 0'
-            . ' AND alias =' . $TYPO3_DB->fullQuoteStr($strContext, $this->strTable);
-
-        $arRow = $TYPO3_DB->exec_SELECTgetSingleRow(
-            '*', $this->strTable, $strWhere
-        );
-
-        //sql error
-        if ($arRow === null) {
-            throw new \Exception($TYPO3_DB->sql_error());
-        }
-
-        //Nothing found
-        if ($arRow === false) {
-            throw new \Exception('Context does not exist: ' . $strContext);
-        }
-
-        return $arRow;
     }
 }
 ?>
