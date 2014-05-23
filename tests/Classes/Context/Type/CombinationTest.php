@@ -37,7 +37,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
         );
 
 
-       $instance = $this->getMock(
+        $instance = $this->getMock(
             'Tx_Contexts_Context_Type_Combination',
             array(
                 'getConfValue',
@@ -54,20 +54,19 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
         );
 
 
-       $instance->expects(self::once())
+        $instance->expects(self::once())
             ->method('getConfValue')
             ->will(self::returnValue('(UNITTEST && UNITTEST || UNITTEST) xor >< UNITTEST '));
 
-       $arTest = $instance->getDependencies(array(
-           123 => $abstractMock,
-           125 => $instance,
-       ));
+        $arTest = $instance->getDependencies(
+            array(
+                123 => $abstractMock,
+                125 => $instance,
+            )
+        );
 
-       self::assertArrayHasKey(123, $arTest);
-       self::assertEquals(array(
-           123 => true
-       ), $arTest);
-
+        self::assertArrayHasKey(123, $arTest);
+        self::assertEquals(array(123 => true), $arTest);
     }
 
     public function testGetDependenciesSuccesWithDisabled()
@@ -98,7 +97,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
         );
 
 
-       $instance = $this->getMock(
+        $instance = $this->getMock(
             'Tx_Contexts_Context_Type_Combination',
             array(
                 'getConfValue',
@@ -115,27 +114,26 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
         );
 
 
-       $instance->expects(self::once())
+        $instance->expects(self::once())
             ->method('getConfValue')
             ->will(self::returnValue('(UNITTEST && UNITTEST || UNITTEST) xor >< UNITTEST '));
 
-       $arTest = $instance->getDependencies(array(
-           123 => $abstractMock,
-           125 => $instance,
-       ));
+        $arTest = $instance->getDependencies(
+            array(
+                123 => $abstractMock,
+                125 => $instance,
+            )
+        );
 
-       self::assertArrayHasKey(123, $arTest);
-       self::assertEquals(array(
-           123 => false
-       ), $arTest);
-
+        self::assertArrayHasKey(123, $arTest);
+        self::assertEquals(array(123 => false), $arTest);
     }
 
 
     public function testGetDependenciesEmpty()
     {
 
-       $instance = $this->getMock(
+        $instance = $this->getMock(
             'Tx_Contexts_Context_Type_Combination',
             array(
                 'getConfValue',
@@ -152,16 +150,15 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
         );
 
 
-       $instance->expects(self::once())
+        $instance->expects(self::once())
             ->method('getConfValue')
             ->will(self::returnValue('(context1 && context2 || context3) xor >< context5 '));
 
-       $arTest = $instance->getDependencies(array(
-           125 => $instance,
-       ));
+        $arTest = $instance->getDependencies(
+            array(125 => $instance)
+        );
 
-       self::assertEmpty($arTest);
-
+        self::assertEmpty($arTest);
     }
 
     public function testMatchSuccess()
@@ -191,8 +188,8 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             )
         );
         $ipContextMock->expects(self::any())
-             ->method('match')
-             ->will(self::returnValue(true));
+            ->method('match')
+            ->will(self::returnValue(true));
         $getContextMock = $this->getMockForAbstractClass(
             'Tx_Contexts_Context_Abstract',
             array(
@@ -218,8 +215,8 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             )
         );
         $getContextMock->expects(self::any())
-             ->method('match')
-             ->will(self::returnValue(true));
+            ->method('match')
+            ->will(self::returnValue(true));
 
         $instance = $this->getMock(
             'Tx_Contexts_Context_Type_Combination',
@@ -248,16 +245,19 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
         );
 
         $instance->expects(self::any())
-             ->method('getConfValue')
-             ->with(self::equalTo('field_expression'))
-             ->will(self::returnValue('UNITTEST && getUNITTEST'));
+            ->method('getConfValue')
+            ->with(self::equalTo('field_expression'))
+            ->will(self::returnValue('UNITTEST && getUNITTEST'));
 
         $matched = $this->callProtected($container, 'match', $arContexts);
-        self::assertEquals(array(
-            123 => $ipContextMock,
-            124 => $getContextMock,
-            125 => $instance,
-        ), $matched);
+        self::assertEquals(
+            array(
+                123 => $ipContextMock,
+                124 => $getContextMock,
+                125 => $instance,
+            ),
+            $matched
+        );
     }
 
     public function testMatchSuccessWithDisabled()
@@ -287,8 +287,8 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             )
         );
         $ipContextMock->expects(self::any())
-             ->method('match')
-             ->will(self::returnValue(true));
+            ->method('match')
+            ->will(self::returnValue(true));
         $getContextMock = $this->getMockForAbstractClass(
             'Tx_Contexts_Context_Abstract',
             array(
@@ -314,8 +314,8 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             )
         );
         $getContextMock->expects(self::any())
-             ->method('match')
-             ->will(self::returnValue(true));
+            ->method('match')
+            ->will(self::returnValue(true));
 
         $instance = $this->getMock(
             'Tx_Contexts_Context_Type_Combination',
@@ -343,15 +343,18 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
         );
 
         $instance->expects(self::any())
-             ->method('getConfValue')
-             ->with(self::equalTo('field_expression'))
-             ->will(self::returnValue('UNITTEST && getUNITTEST'));
+            ->method('getConfValue')
+            ->with(self::equalTo('field_expression'))
+            ->will(self::returnValue('UNITTEST && getUNITTEST'));
 
         $matched = $this->callProtected($container, 'match', $arContexts);
-        self::assertEquals(array(
-            123 => $ipContextMock,
-            125 => $instance,
-        ), $matched);
+        self::assertEquals(
+            array(
+                123 => $ipContextMock,
+                125 => $instance,
+            ),
+            $matched
+        );
     }
 
     public function testMatchFailed()
@@ -381,8 +384,8 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             )
         );
         $ipContextMock->expects(self::any())
-             ->method('match')
-             ->will(self::returnValue(false));
+            ->method('match')
+            ->will(self::returnValue(false));
         $getContextMock = $this->getMockForAbstractClass(
             'Tx_Contexts_Context_Abstract',
             array(
@@ -408,8 +411,8 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             )
         );
         $getContextMock->expects(self::any())
-             ->method('match')
-             ->will(self::returnValue(true));
+            ->method('match')
+            ->will(self::returnValue(true));
 
         $instance = $this->getMock(
             'Tx_Contexts_Context_Type_Combination',
@@ -439,14 +442,12 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
         );
 
         $instance->expects(self::any())
-             ->method('getConfValue')
-             ->with(self::equalTo('field_expression'))
-             ->will(self::returnValue('UNITTEST && getUNITTEST'));
+            ->method('getConfValue')
+            ->with(self::equalTo('field_expression'))
+            ->will(self::returnValue('UNITTEST && getUNITTEST'));
 
         $matched = $this->callProtected($container, 'match', $arContexts);
-        self::assertEquals(array(
-            124 => $getContextMock,
-        ), $matched);
+        self::assertEquals(array(124 => $getContextMock), $matched);
     }
 
     public function testMatchFailedWithDisabled()
@@ -476,8 +477,8 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             )
         );
         $ipContextMock->expects(self::any())
-             ->method('match')
-             ->will(self::returnValue(false));
+            ->method('match')
+            ->will(self::returnValue(false));
         $getContextMock = $this->getMockForAbstractClass(
             'Tx_Contexts_Context_Abstract',
             array(
@@ -503,8 +504,8 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             )
         );
         $getContextMock->expects(self::any())
-             ->method('match')
-             ->will(self::returnValue(true));
+            ->method('match')
+            ->will(self::returnValue(true));
 
         $instance = $this->getMock(
             'Tx_Contexts_Context_Type_Combination',
@@ -533,9 +534,9 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
         );
 
         $instance->expects(self::any())
-             ->method('getConfValue')
-             ->with(self::equalTo('field_expression'))
-             ->will(self::returnValue('UNITTEST && getUNITTEST'));
+            ->method('getConfValue')
+            ->with(self::equalTo('field_expression'))
+            ->will(self::returnValue('UNITTEST && getUNITTEST'));
 
         $matched = $this->callProtected($container, 'match', $arContexts);
         self::assertEquals(array(), $matched);
