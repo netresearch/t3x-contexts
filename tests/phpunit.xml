@@ -3,6 +3,7 @@
     colors="true"
     verbose="true"
     strict="true"
+    bootstrap="bootstrap.php"
 >
     <filter>
         <whitelist>

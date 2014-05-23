@@ -12,6 +12,7 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
      */
     public function testRunWithoutException($expression, $rebuiltExpression, $values)
     {
+        //Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($expression, $values);
         self::assertSame(
             self::getEval($expression, $values),
             Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($expression, $values)
@@ -149,7 +150,17 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
                 'context1 xor (context2 && !context3)',
                 'context1 >< (context2 && !context3)',
                 array('context1'=>true, 'context2'=>true, 'context3'=>false)
-            )
+            ),
+            array(
+                $e = 'context1-hyphen && context2',
+                $e,
+                array('context1-hyphen'=>true, 'context2'=>true)
+            ),
+             array(
+                $e = 'context1_underscore && context2',
+                $e,
+                array('context1_underscore'=>true, 'context2'=>true)
+            ),
         );
     }
 

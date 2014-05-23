@@ -24,6 +24,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => false,
+                    'hide_in_backend' => false,
                 )
             ),
             '',
@@ -48,6 +49,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                 'alias' => 'combiUNITTEST',
                 'type_conf' => '',
                 'disabled' => false,
+                'hide_in_backend' => false,
             )
         );
 
@@ -83,6 +85,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => true,
+                    'hide_in_backend' => false,
                 )
             ),
             '',
@@ -107,6 +110,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                 'alias' => 'combiUNITTEST',
                 'type_conf' => '',
                 'disabled' => false,
+                'hide_in_backend' => false,
             )
         );
 
@@ -143,6 +147,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                 'alias' => 'combiUNITTEST',
                 'type_conf' => '',
                 'disabled' => false,
+                'hide_in_backend' => false,
             )
         );
 
@@ -174,6 +179,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => false,
+                    'hide_in_backend' => false,
                 )
             ),
             '',
@@ -200,6 +206,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => false,
+                    'hide_in_backend' => false,
                 )
             ),
             '',
@@ -226,6 +233,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                 'alias' => 'combiUNITTEST',
                 'type_conf' => '',
                 'disabled' => false,
+                'hide_in_backend' => false,
             )
         );
         $container = $this->getMock(
@@ -267,6 +275,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => false,
+                    'hide_in_backend' => false,
                 )
             ),
             '',
@@ -293,6 +302,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => true,
+                    'hide_in_backend' => false,
                 )
             ),
             '',
@@ -359,6 +369,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => false,
+                    'hide_in_backend' => false,
                 )
             ),
             '',
@@ -385,6 +396,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => false,
+                    'hide_in_backend' => false,
                 )
             ),
             '',
@@ -412,6 +424,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                 'alias' => 'combiUNITTEST',
                 'type_conf' => '',
                 'disabled' => false,
+                'hide_in_backend' => false,
             )
         );
         $container = $this->getMock(
@@ -451,6 +464,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => false,
+                    'hide_in_backend' => false,
                 )
             ),
             '',
@@ -477,6 +491,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
                     'use_session' => 0,
                     'type_conf' => '',
                     'disabled' => true,
+                    'hide_in_backend' => false,
                 )
             ),
             '',

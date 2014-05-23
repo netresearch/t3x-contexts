@@ -181,7 +181,7 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
             ),
             $expression
         );
-        $pattern = '/[^\w]/';
+        $pattern = '/[^\w-_]/';
         preg_match_all($pattern, $expression . ' ', $operators, PREG_OFFSET_CAPTURE);
         $nextPosition = 0;
         $tokens = array();
