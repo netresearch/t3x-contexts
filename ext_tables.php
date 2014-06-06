@@ -16,7 +16,7 @@ $TCA['tx_contexts_contexts'] = array(
         ),
         'requestUpdate' => 'type',
         'adminOnly' => 1,
-        'rootLevel' => 1,
+        'rootLevel' => -1,
         'dividers2tabs' => 1,
         'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY) . 'icon_tx_contexts_contexts.gif',
     ),
