@@ -41,7 +41,7 @@ $TCA['tx_contexts_contexts'] = array(
             'config' => array(
                 'type' => 'input',
                 'size' => '30',
-                'eval' => 'alphanum_x,nospace,unique',
+                'eval' => 'alphanum_x,nospace,unique,lower',
             )
         ),
         'type' => array(

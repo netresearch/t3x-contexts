@@ -289,7 +289,7 @@ abstract class Tx_Contexts_Context_Abstract
      */
     public function getAlias()
     {
-        return $this->alias;
+        return strtolower($this->alias);
     }
 
     /**

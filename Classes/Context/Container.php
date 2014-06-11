@@ -176,7 +176,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
         }
 
         foreach ($this as $context) {
-            if ($context->getAlias() === $uidOrAlias
+            if ($context->getAlias() === strtolower($uidOrAlias)
                 || $context->getUid() == $uidOrAlias
             ) {
                 return $context;
