@@ -31,4 +31,13 @@ if (TYPO3_MODE == 'BE') {
     //all other modes did load it already
     include_once t3lib_extMgm::extPath($_EXTKEY) . 'ext_contexts.php';
 }
+
+$dir = t3lib_extMgm::extRelPath($_EXTKEY);
+$icons = array(
+    'status-overlay-contexts'     => $dir . 'overlay-contexts.png',
+);
+t3lib_SpriteManager::addSingleIcons($icons, 'contexts');
+$GLOBALS['TBE_STYLES']['spriteIconApi']['spriteIconRecordOverlayPriorities'][150] = 'contexts';
+$GLOBALS['TBE_STYLES']['spriteIconApi']['spriteIconRecordOverlayNames']['contexts']
+    = 'extensions-contexts-status-overlay-contexts';
 ?>

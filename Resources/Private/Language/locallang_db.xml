@@ -23,6 +23,7 @@
             <label index="no_contexts">No contexts found</label>
             <label index="tx_contexts_contexts.visibility">Visibility</label>
             <label index="tx_contexts_contexts.hide_in_backend">Not visible in the backend</label>
+            <label index="tx_contexts_contexts.iconHookShow">Visible for: </label>
         </languageKey>
         <languageKey index="de" type="array">
             <label index="tabname">Kontexte</label>
@@ -36,6 +37,7 @@
             <label index="no_contexts">Keine Kontexte eingerichtet</label>
             <label index="tx_contexts_contexts.visibility">Sichtbarkeit</label>
             <label index="tx_contexts_contexts.hide_in_backend">Nicht Sichtbar im Backend</label>
+            <label index="tx_contexts_contexts.iconHookShow">Sichtbar für: </label>
         </languageKey>
     </data>
 </T3locallang>

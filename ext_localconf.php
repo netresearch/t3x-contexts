@@ -37,6 +37,11 @@ $TYPO3_CONF_VARS['SC_OPTIONS']['tslib/class.tslib_fe.php']['initFEuser']['contex
 $TYPO3_CONF_VARS['SC_OPTIONS']['typo3/mod/tools/em/index.php']['checkDBupdates']['contexts'] = 'EXT:contexts/Classes/Service/Install.php:Tx_Contexts_Service_Install';
 
 
+//add tree icons
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_iconworks.php']['overrideIconOverlay'][]
+    = 'EXT:contexts/Classes/Service/Icon.php:'
+    . '&Tx_Contexts_Service_Icon';
+
 if (isset($TYPO3_CONF_VARS['SYS']['compat_version'])
     && t3lib_div::int_from_ver($TYPO3_CONF_VARS['SYS']['compat_version']) >= 6002000
 ) {
