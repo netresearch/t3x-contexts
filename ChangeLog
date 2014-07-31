@@ -1,6 +1,7 @@
-2014-07-31  Christian Weiske  <christian.weiske@netresearch.de>
+B1;2802;0c2014-07-31  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Fix !negation in logical context combinations
+	* Version 0.4.1
 
 2014-03-21  Christian Weiske  <christian.weiske@netresearch.de.de>
 
