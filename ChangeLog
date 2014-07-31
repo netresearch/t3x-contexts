@@ -1,4 +1,8 @@
-2014-03-21    <christian.weiske@netresearch.de.de>
+2014-07-31  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Fix !negation in logical context combinations
+
+2014-03-21  Christian Weiske  <christian.weiske@netresearch.de.de>
 
 	* Fix PHP warning when saving content element
 
