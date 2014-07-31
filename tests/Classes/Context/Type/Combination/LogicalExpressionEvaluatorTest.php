@@ -17,8 +17,6 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
             self::getEval($expression, $values),
             Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($expression, $values)
         );
-
-
     }
 
     /**
@@ -36,8 +34,6 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
             $evaluator->rebuild(),
             'Rebuild must be revised'
         );
-
-
     }
 
     /**
@@ -50,8 +46,6 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
         $strExpression = '(context1 ||';
         $arValues = array('context1' => true);
         Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
-
-
     }
 
     /**
@@ -65,8 +59,6 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
         $strExpression = '(context1 ';
         $arValues = array('context1' => true);
         Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
-
-
     }
 
      /**
@@ -80,8 +72,6 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
         $strExpression = '(context1 context2)';
         $arValues = array('context1' => true);
         Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
-
-
     }
 
     /**
@@ -96,10 +86,7 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
         $strExpression = 'context1 xor context2 xor context3';
         $arValues = array('context1' => true, 'context2' => true, 'context3' => true);
         Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
-
-
     }
-
 
     /**
      * Provide data for several tests
@@ -156,7 +143,7 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
                 $e,
                 array('context1-hyphen'=>true, 'context2'=>true)
             ),
-             array(
+            array(
                 $e = 'context1_underscore && context2',
                 $e,
                 array('context1_underscore'=>true, 'context2'=>true)
