@@ -88,6 +88,35 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
         Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
+    public function testNot()
+    {
+        $strExpression = '!a';
+        $arValues = array(
+            'a' => true,
+        );
+        $this->assertFalse(
+            Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run(
+                $strExpression, $arValues
+            )
+        );
+    }
+
+    public function testAndNot()
+    {
+        $strExpression = 'a && !b';
+        $arValues = array(
+            'a' => true,
+            'b' => true,
+        );
+        $this->assertFalse(
+            Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run(
+                $strExpression, $arValues
+            )
+        );
+    }
+
+
+
     /**
      * Provide data for several tests
      * @return array Array of arguments where

@@ -431,7 +431,7 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
                     $values[$token[1]] = true;
                 }
                 $value = $values[$token[1]];
-                if ($value == 'disabled') {
+                if ($value === 'disabled') {
                     // context is disabled, so treat it as matching
                     $value = true;
                 } elseif (array_key_exists(2, $token)) {
