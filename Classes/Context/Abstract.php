@@ -176,12 +176,31 @@ abstract class Tx_Contexts_Context_Abstract
      * @param string $table   Database table name
      * @param string $setting Setting name
      * @param string $uid     Record UID
+     * @param array  $arRow   Database row for the given UID.
+     *                        Useful for flat settings.
      *
-     * @return Tx_Contexts_Context_Setting|null
+     * @return Tx_Contexts_Context_Setting|null NULL when not enabled
+     *                                          and not disabled
      */
-    final public function getSetting($table, $setting, $uid)
+    final public function getSetting($table, $setting, $uid, $arRow = null)
     {
-        $settings = $this->getSettings($table, $uid);
+        if ($arRow !== null) {
+            //if it's a flat column, use the settings directly from the
+            // database row instead of relying on the tx_contexts_settings
+            // table
+            $arFlatColumns = Tx_Contexts_Api_Configuration::getFlatColumns(
+                $table, $setting
+            );
+            if (isset($arRow[$arFlatColumns[0]])
+                && isset($arRow[$arFlatColumns[1]])
+            ) {
+                return Tx_Contexts_Context_Setting::fromFlatData(
+                    $this, $table, $setting, $arFlatColumns, $arRow
+                );
+            }
+        }
+
+        $settings = $this->getSettings($table, $uid, $arRow);
 
         return array_key_exists($setting, $settings)
             ? $settings[$setting]
@@ -194,7 +213,9 @@ abstract class Tx_Contexts_Context_Abstract
      * @param string $table Database table
      * @param int    $uid   Record UID
      *
-     * @return array
+     * @return array Array of settings
+     *               Key is the context column name (e.g. "tx_contexts_nav")
+     *               Value is a Tx_Contexts_Context_Setting object
      */
     final public function getSettings($table, $uid)
     {
