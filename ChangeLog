@@ -1,3 +1,7 @@
+2015-06-18  Tobias Hein  <tobias.hein@netresearch.de>
+
+	* Version: 0.4.2
+
 B1;2802;0c2014-07-31  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Fix !negation in logical context combinations
