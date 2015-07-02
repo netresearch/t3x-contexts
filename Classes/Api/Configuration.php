@@ -235,15 +235,17 @@ class Tx_Contexts_Api_Configuration
     {
         global $TCA;
 
-        t3lib_div::loadTCA($table);
 
-        if (!isset($TCA[$table])) {
+
+        //t3lib_div::loadTCA($table);
+
+        if (!isset($GLOBALS['TCA'][$table])) {
             return;
         }
 
-        t3lib_div::loadTCA('tx_contexts_contexts');
+        $GLOBALS['TCA']['tx_contexts_contexts'];
 
-        if (!array_key_exists(self::RECORD_SETTINGS_COLUMN, $TCA[$table]['columns'])) {
+        if (!array_key_exists(self::RECORD_SETTINGS_COLUMN, $GLOBALS['TCA'][$table]['columns'])) {
             $recordSettingsConf = array(
                 "exclude" => 1,
                 "label" => 'LLL:' . self::LANG_FILE. ':tabname',
@@ -290,10 +292,10 @@ class Tx_Contexts_Api_Configuration
             }
 
         } else {
-            $TCA[$table]['columns'][self::RECORD_SETTINGS_COLUMN]
+            $GLOBALS['TCA'][$table]['columns'][self::RECORD_SETTINGS_COLUMN]
             ['config']['settings']
                 = array_merge(
-                    $TCA[$table]['columns'][self::RECORD_SETTINGS_COLUMN]
+                $GLOBALS['TCA'][$table]['columns'][self::RECORD_SETTINGS_COLUMN]
                     ['config']['settings'],
                     $settings
                 );
@@ -301,10 +303,10 @@ class Tx_Contexts_Api_Configuration
 
         $defaultSettingsColumn = 'default_settings_' . $table;
 
-        if (!array_key_exists($defaultSettingsColumn, $TCA['tx_contexts_contexts']['columns'])) {
+        if (!array_key_exists($defaultSettingsColumn, $GLOBALS['TCA']['tx_contexts_contexts']['columns'])) {
             $defaultSettingsConf = array(
                 "exclude" => 1,
-                'label' => $TCA[$table]['ctrl']['title'],
+                'label' => $GLOBALS['TCA'][$table]['ctrl']['title'],
                 'config' => array(
                     'type' => 'user',
                     'size' => 30,
@@ -328,9 +330,9 @@ class Tx_Contexts_Api_Configuration
                 $defaultSettingsColumn
             );
         } else {
-            $TCA['tx_contexts_contexts']['columns'][$defaultSettingsColumn]
+            $GLOBALS['TCA']['tx_contexts_contexts']['columns'][$defaultSettingsColumn]
             ['config']['settings'] = array_merge(
-                $TCA['tx_contexts_contexts']['columns'][$defaultSettingsColumn]
+                $GLOBALS['TCA']['tx_contexts_contexts']['columns'][$defaultSettingsColumn]
                 ['config']['settings'],
                 $settings
             );
@@ -361,12 +363,12 @@ class Tx_Contexts_Api_Configuration
             'flexFile' => $flexFile,
         );
 
-        t3lib_div::loadTCA('tx_contexts_contexts');
+        //t3lib_div::loadTCA('tx_contexts_contexts');
 
-        if (isset($TCA['tx_contexts_contexts']['columns']['type'])) {
-            $TCA['tx_contexts_contexts']['columns']['type']['config']
+        if (isset($GLOBALS['TCA']['tx_contexts_contexts']['columns']['type'])) {
+            $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type']['config']
                 ['items'][] = array($title, $key);
-            $TCA['tx_contexts_contexts']['columns']['type_conf']['config']
+            $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type_conf']['config']
                 ['ds'][$key] = $flexFile;
         }
     }

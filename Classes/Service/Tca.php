@@ -40,11 +40,17 @@ class Tx_Contexts_Service_Tca
     {
         global $TCA;
         $table = $params['table'];
-
-        $fobj->addStyleSheet(
+//
+//        $fobj->addStyleSheet(
+//            'tx_contexts_bestyles',
+//            t3lib_extMgm::extRelPath('contexts') . 'Resources/Public/StyleSheet/be.css'
+//        );
+        $GLOBALS['SOBE']->doc->addStyleSheet(
             'tx_contexts_bestyles',
             t3lib_extMgm::extRelPath('contexts') . 'Resources/Public/StyleSheet/be.css'
         );
+
+        $langService = $GLOBALS['LANG'];
 
         $contexts = new Tx_Contexts_Context_Container();
         $contexts->initAll();
@@ -58,10 +64,10 @@ class Tx_Contexts_Service_Tca
             . '<tr class="t3-row-header">'
             . '<td></td>'
             . '<td class="tx_contexts_context">' .
-            $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_contexts') .
+            $langService->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_contexts') .
             '</td>';
         foreach ($settings as $settingName => $config) {
-            $content .= '<td class="tx_contexts_setting">' . $fobj->sL($config['label']) . '</td>';
+            $content .= '<td class="tx_contexts_setting">' . $langService->sL($config['label']) . '</td>';
         }
         $content .= '</tr>';
 
@@ -103,7 +109,7 @@ class Tx_Contexts_Service_Tca
         if ($visibleContexts == 0) {
             $content .= '<tr>'
                 . '<td colspan="4" style="text-align: center">'
-                . $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':no_contexts')
+                . $langService->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':no_contexts')
                 . '</td>'
                 . '</tr>';
         }
@@ -184,10 +190,10 @@ class Tx_Contexts_Service_Tca
     {
         global $TCA;
         $table = $params['fieldConf']['config']['table'];
-        t3lib_div::loadTCA($table);
+        //t3lib_div::loadTCA($table);
 
         $content = '';
-
+        $langService = $GLOBALS['LANG'];
         $namePre = str_replace('[default_settings_', '[default_settings][', $params['itemFormElName']);
 
         /* @var $context Tx_Contexts_Context_Abstract */
@@ -210,7 +216,7 @@ class Tx_Contexts_Service_Tca
             }
             $content .= 'value="1" id="' . $id . '" /> ';
             $content .= '<label for="' . $id . '">';
-            $content .= $fobj->sL($config['label']);
+            $content .= $langService->sL($config['label']);
             $content .= '</label><br/>';
         }
 
