@@ -1,8 +1,15 @@
+2015-07-10  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Fix #65964: Keep context configuration when copying content
+	              elements or page records
+	* Version 0.4.3
+
 2015-06-18  Tobias Hein  <tobias.hein@netresearch.de>
 
+	* Check if tfse is a instance of tslib_fe
 	* Version: 0.4.2
 
-B1;2802;0c2014-07-31  Christian Weiske  <christian.weiske@netresearch.de>
+2014-07-31  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Fix !negation in logical context combinations
 	* Version 0.4.1
