@@ -13,6 +13,10 @@ if (isset($TYPO3_CONF_VARS['SYS']['compat_version'])
 if (!class_exists('t3lib_div')
     && class_exists('TYPO3\CMS\Core\Utility\GeneralUtility')
 ) {
+    /**
+     * Class t3lib_div
+     * @internal
+     */
     class t3lib_div extends TYPO3\CMS\Core\Utility\GeneralUtility
     {
     }

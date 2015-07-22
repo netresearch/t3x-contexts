@@ -7,6 +7,10 @@ require_once __DIR__ . '../../../../../Classes/Context/Type/GetParam/TsfeService
 if (!class_exists('t3lib_div')
     && class_exists('TYPO3\CMS\Core\Utility\GeneralUtility')
 ) {
+    /**
+     * Class t3lib_div
+     * @internal
+     */
     class t3lib_div extends TYPO3\CMS\Core\Utility\GeneralUtility
     {
     }
