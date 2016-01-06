@@ -117,6 +117,17 @@ Supported notations:
 - Wildcards: ``80.76.201.*``, ``80.76.*.37``, ``80.76.*.*``
 
 
+HTTP header
+===========
+Checks if a HTTP header is available and has a certain value.
+
+Activate "Store result in user session" to keep the context when navigating
+between pages.
+
+When leaving the parameter values field empty, any non-empty parameter value
+will activate the context.
+
+
 Logical context combination
 ===========================
 Combines other contexts with logical operators.
