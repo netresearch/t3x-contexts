@@ -1,6 +1,11 @@
 **********************
 Multi-channel contexts
 **********************
+
+.. image:: https://api.travis-ci.org/netresearch/t3x-contexts.png
+   :target: https://travis-ci.org/netresearch/t3x-contexts
+   :align: right
+
 Show and hide pages and content elements based on configurable "contexts".
 With the use of contexts, TYPO3 is able to do multi-channel output.
 
