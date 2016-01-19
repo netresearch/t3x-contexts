@@ -2,12 +2,11 @@
 require_once __DIR__ . '/../../TestBase.php';
 require_once __DIR__ . '/../../../Classes/Context/Abstract.php';
 
-if (isset($TYPO3_CONF_VARS['SYS']['compat_version'])
-    && t3lib_div::int_from_ver($TYPO3_CONF_VARS['SYS']['compat_version']) < 6000000
-) {
-    require_once __DIR__ . '/../../../../../../t3lib/class.t3lib_div.php';
+$rootDir = __DIR__ . '/../../../../../../';
+if (is_dir($rootDir . '/t3lib')) {
+    require_once $rootDir . '/t3lib/class.t3lib_div.php';
 } else {
-    require_once __DIR__ . '/../../../../../../typo3/sysext/core/Classes/Utility/GeneralUtility.php';
+    require_once $rootDir . '/typo3/sysext/core/Classes/Utility/GeneralUtility.php';
 }
 
 if (!class_exists('t3lib_div')
