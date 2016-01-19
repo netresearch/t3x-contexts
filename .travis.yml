@@ -21,7 +21,8 @@ before_script:
   - git clone --single-branch --branch $TYPO3 --depth 1 https://github.com/TYPO3/TYPO3.CMS.git typo3_src
   - ln -sfn typo3_src/typo3 typo3
   - ln -sfn typo3_src/index.php
-  - if [[ -d typo3_src/t3lib ]]; then ln -sfn typo3_src/typo3 t3lib; fi
+  - if [[ -d typo3_src/t3lib ]]; then ln -sfn typo3_src/t3lib t3lib; fi
+  - echo 'zend.multibyte = 1' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   
 script:
   - cd typo3conf/ext/contexts/tests
