@@ -1,3 +1,8 @@
+2016-01-06  Michael Schams  <typo3@2016.schams.net>
+
+	* Implement new context type: HTTP header
+	* Update documentation
+
 2015-07-10  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Fix #65964: Keep context configuration when copying content
