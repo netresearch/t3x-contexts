@@ -1,5 +1,4 @@
 <?php
-declare(encoding = 'UTF-8');
 
 const TYPO3_MODE = 'BE';
 
