@@ -42,9 +42,8 @@ class Tx_Contexts_Service_Icon
     public static function overrideIconOverlay($table, $row, &$status)
     {
 
-        if (isset($row['tx_contexts_enable'])
-            && $row['tx_contexts_enable'] != ''
-        ) {
+        if (isset($row['tx_contexts_enable']) && $row['tx_contexts_enable'] != '' ||
+            isset($row['tx_contexts_disable']) && $row['tx_contexts_disable'] != '') {
             $status['contexts'] = true;
         }
     }
