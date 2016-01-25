@@ -25,6 +25,7 @@ t3lib_extMgm::addLLrefForTCAdescr(
     'tx_contexts_contexts.type_conf.combination',
     'EXT:contexts/Resources/Private/csh/Combination.xml'
 );
+t3lib_extMgm::allowTableOnStandardPages('tx_contexts_contexts');
 
 require_once t3lib_extMgm::extPath($_EXTKEY) . 'tca.php';
 if (TYPO3_MODE == 'BE') {
