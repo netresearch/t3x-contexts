@@ -65,6 +65,33 @@ class Tx_Contexts_Context_AbstractTest extends TestBase
             array('1','whatever', array(true,true)),
         );
     }
+
+    /**
+     * Test that the remote address returns the correct value
+     *
+     * @return void
+     */
+    public function testGetRemoteAddressWithProxyGetFirst()
+    {
+        $test = new test();
+        global $TYPO3_CONF_VARS;
+        $TYPO3_CONF_VARS = array(
+            'SYS' => array(
+                'reverseProxyIP'               => '1.1.1.1',
+                'reverseProxyHeaderMultiValue' => 'first'
+            )
+        );
+        $_SERVER[Tx_Contexts_Context_Abstract::REMOTE_ADDR] = '1.1.1.1';
+        $_SERVER[Tx_Contexts_Context_Abstract::HTTP_X_FORWARDED_FOR]
+            = '1.2.3.4';
+        $this->assertSame(
+            '1.2.3.4',
+            $this->callProtected(
+                $test,
+                'getRemoteAddress'
+            )
+        );
+    }
 }
 
 class test extends Tx_Contexts_Context_Abstract

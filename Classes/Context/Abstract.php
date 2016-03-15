@@ -33,6 +33,20 @@
 abstract class Tx_Contexts_Context_Abstract
 {
     /**
+     * Key for the ip forward header
+     *
+     * @var string
+     */
+    const HTTP_X_FORWARDED_FOR = 'HTTP_X_FORWARDED_FOR';
+
+    /**
+     * Key for the ip remote address
+     *
+     * @var string
+     */
+    const REMOTE_ADDR = 'REMOTE_ADDR';
+
+    /**
      * Uid of context.
      *
      * @var integer
@@ -461,6 +475,33 @@ abstract class Tx_Contexts_Context_Abstract
     public function setUseSession($bUseSession)
     {
         $this->use_session = (bool) $bUseSession;
+    }
+
+
+    /**
+     * Returns the value for the passed key
+     *
+     * @param string $strKey the key, e.g. REMOTE_ADDR
+     *
+     * @return string
+     */
+    protected function getIndpEnv($strKey)
+    {
+        return \t3lib_div::getIndpEnv(
+            $strKey
+        );
+    }
+
+    /**
+     * Returns the clients remote address.
+     *
+     * @return string
+     */
+    protected function getRemoteAddress()
+    {
+        return  $this->getIndpEnv(
+            self::REMOTE_ADDR
+        );
     }
 }
 ?>
