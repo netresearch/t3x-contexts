@@ -88,6 +88,16 @@ class ux_tslib_fe extends tslib_fe
                     = t3lib_div::getIndpEnv($strAdditionalCacheHashParam);
             }
         }
+
+        if (empty($arCacheHashParams)) {
+            $arCacheHashParams = array();
+        }
+
+        $arCacheHashParams = array_merge(
+            $this->createHashBase(true),
+            $arCacheHashParams
+        );
+
         $this->hash_base = serialize($arCacheHashParams);
         return md5($this->hash_base);
     }
@@ -104,7 +114,8 @@ class ux_tslib_fe extends tslib_fe
      */
     function getLockHash()  {
         $lockHash = $this->createHashBase(TRUE);
-        return md5($lockHash);
+        $strLockHash = serialize($lockHash);
+        return md5($strLockHash);
     }
 
     /**
@@ -117,7 +128,7 @@ class ux_tslib_fe extends tslib_fe
      * Backported from TYPO3 4.7
      *
      * @param boolean $createLockHashBase whether to create the lock hash, which doesn't contain the "this->all" (the template information)
-     * @return string the serialized hash base
+     * @return array
      */
     protected function createHashBase($createLockHashBase = FALSE) {
         $hashParameters = array(
@@ -145,7 +156,7 @@ class ux_tslib_fe extends tslib_fe
             }
         }
 
-        return serialize($hashParameters);
+        return $hashParameters;
     }
 }
 
