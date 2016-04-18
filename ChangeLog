@@ -1,3 +1,7 @@
+2016-04-18  Thomas Schöne  <thomas.schoene@netresearch.de>
+
+	* TYPO-4217: pay attention on additionalCacheHashParams when calculating the cache hash
+
 2016-03-15  Tobias Hein  <tobias.hein@netresearch.de>
 
 	* MYC-869: use getIndpEnv to determine REMOTE_ADDR, allow reverse proxys to work
