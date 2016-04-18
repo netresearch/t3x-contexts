@@ -81,7 +81,14 @@ class ux_tslib_fe extends tslib_fe
      * @see getFromCache(), getLockHash()
      */
     function getHash()  {
-        $this->hash_base = $this->createHashBase(FALSE);
+        global $TYPO3_CONF_VARS;
+        if (is_array($TYPO3_CONF_VARS['FE']['additionalCacheHashParams'])) {
+            foreach ($TYPO3_CONF_VARS['FE']['additionalCacheHashParams'] as $strAdditionalCacheHashParam) {
+                $arCacheHashParams[$strAdditionalCacheHashParam]
+                    = t3lib_div::getIndpEnv($strAdditionalCacheHashParam);
+            }
+        }
+        $this->hash_base = serialize($arCacheHashParams);
         return md5($this->hash_base);
     }
 
