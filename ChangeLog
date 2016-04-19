@@ -1,10 +1,34 @@
+2016-04-18  Thomas Schöne  <thomas.schoene@netresearch.de>
+
+	* TYPO-4217: pay attention on additionalCacheHashParams when calculating the cache hash
+
+2016-03-15  Tobias Hein  <tobias.hein@netresearch.de>
+
+	* MYC-869: use getIndpEnv to determine REMOTE_ADDR, allow reverse proxys to work
+
+2016-01-06  Michael Schams  <typo3@2016.schams.net>
+
+	* Implement new context type: HTTP header
+
+	* Update documentation
+
+2015-07-10  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Fix #65964: Keep context configuration when copying content
+      elements or page records
+
+	* Version 0.4.3
+
 2015-06-18  Tobias Hein  <tobias.hein@netresearch.de>
+
+	* Check if tfse is a instance of tslib_fe
 
 	* Version: 0.4.2
 
-B1;2802;0c2014-07-31  Christian Weiske  <christian.weiske@netresearch.de>
+2014-07-31  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Fix !negation in logical context combinations
+
 	* Version 0.4.1
 
 2014-03-21  Christian Weiske  <christian.weiske@netresearch.de.de>
@@ -14,14 +38,17 @@ B1;2802;0c2014-07-31  Christian Weiske  <christian.weiske@netresearch.de>
 2014-03-07  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Prettify contexts list in TCA (page/content records)
+
 	* Show message when no contexts defined
+
 	* Version 0.4.0
 
 2014-02-28  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Fix bug: GET parameters get appended to all URLs even when
-	           they are stored in session
-	* Set minimum TYPO3 version to 4.5.0
+      they are stored in session
+
+	* Set minimum TYPO3  version to  4.5.0
 
 2014-02-28  Mathias Brodala  <mbrodala@pagemachine.de>
 
@@ -30,20 +57,27 @@ B1;2802;0c2014-07-31  Christian Weiske  <christian.weiske@netresearch.de>
 2013-11-22  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Fix bug in contexts that caused DAM not to show any usage references
+
 	* Fix a broken unit test
+
 	* Remove manual.sxw; it is not needed by TER anymore
-	* Set minimum TYPO3 version to 4.6.0
+
+	* Set minimum TYPO3  version to  4.6.0
+
 	* Version 0.3.1
 
 2013-08-16  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Support "extend to subpages" in 4.7, 6.0, 6.1 and 6.2
+
 	* Fix fatal error in TYPO3 6.2
+
 	* Version 0.3.0
 
 2013-06-03  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* First public version with Domain, GetParam, IP, Combination support
+
 	* Version 0.2.0
 
 2013-01-30  Christian Opitz  <christian.opitz@netresearch.de>

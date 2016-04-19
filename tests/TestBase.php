@@ -1,12 +1,6 @@
 <?php
 require_once __DIR__ . '/../Classes/Context/Abstract.php';
 
-if (isset($TYPO3_CONF_VARS['SYS']['compat_version'])
-    && t3lib_div::int_from_ver($TYPO3_CONF_VARS['SYS']['compat_version']) < 6000000
-) {
-    require_once __DIR__ . '/../../../../t3lib/class.t3lib_div.php';
-}
-
 abstract class TestBase extends PHPUnit_Framework_TestCase
 {
     /**

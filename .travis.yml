@@ -1,0 +1,29 @@
+language: php
+sudo: false
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+
+env:
+  - TYPO3=TYPO3_6-2
+  - TYPO3=TYPO3_6-1
+  - TYPO3=TYPO3_6-0
+  - TYPO3=TYPO3_4-7
+  - TYPO3=TYPO3_4-6
+  - TYPO3=TYPO3_4-5
+  
+before_script:
+  - cd ..
+  - mkdir -p typo3conf/ext
+  - mv t3x-contexts typo3conf/ext/contexts
+  - git clone --single-branch --branch $TYPO3 --depth 1 https://github.com/TYPO3/TYPO3.CMS.git typo3_src
+  - ln -sfn typo3_src/typo3 typo3
+  - ln -sfn typo3_src/index.php
+  - if [[ -d typo3_src/t3lib ]]; then ln -sfn typo3_src/t3lib t3lib; fi
+  - echo 'zend.multibyte = 1' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  
+script:
+  - cd typo3conf/ext/contexts/tests
+  - phpunit --coverage-text .

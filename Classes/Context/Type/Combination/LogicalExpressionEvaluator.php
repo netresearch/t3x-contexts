@@ -203,7 +203,7 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
             if ($operator[1] && $operator[1] - $nextPosition) {
                 $tokens[] = array(
                     self::T_VAR,
-                    substr($expression, $nextPosition, $operator[1] - $nextPosition)
+                    strtolower(substr($expression, $nextPosition, $operator[1] - $nextPosition))
                 );
             }
 

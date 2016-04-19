@@ -14,6 +14,8 @@
       <label index="getparam.field_name">GET parameter name</label>
       <label index="getparam.field_values">Parameter values: one per line, empty for any value</label>
       <label index="ip.field_ip">User IP, one per line. * and partial IPs allowed</label>
+      <label index="httpheader.field_name">HTTP header name</label>
+      <label index="httpheader.field_values">Header values: one per line, empty for any value</label>
       <label index="combination.field_logicalExpression">Logical expression combination, (use context alias to combine) </label>
       <label index="session.field_variable">Session variable</label>
     </languageKey>
