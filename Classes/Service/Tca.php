@@ -32,7 +32,9 @@ class Tx_Contexts_Service_Tca
     /**
      * Render the context settings field for a certain table
      *
-     * @param array $params
+     * @param array          $params Array of record information
+     *                               - table - table name
+     *                               - row   - array with database row data
      * @param t3lib_TCEforms $fobj
      * @return string
      */
@@ -78,7 +80,7 @@ class Tx_Contexts_Service_Tca
             $contSettings = '';
             $bHasSetting = false;
             foreach ($settings as $settingName => $config) {
-                $setting = $uid ? $context->getSetting($table, $settingName, $uid) : null;
+                $setting = $uid ? $context->getSetting($table, $settingName, $uid, $params['row']) : null;
                 $bHasSetting = $bHasSetting || (bool) $setting;
                 $contSettings .= '<td class="tx_contexts_setting">'
                     . '<select name="' . $namePre . '[' . $context->getUid() . '][' . $settingName . ']">'

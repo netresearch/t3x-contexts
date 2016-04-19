@@ -109,8 +109,15 @@ class Tx_Contexts_Service_Tcemain
     protected function saveRecordSettings($table, $uid, $contextsAndSettings)
     {
         $db = Tx_Contexts_Api_Configuration::getDb();
+        $flatSettingColumns = Tx_Contexts_Api_Configuration::getFlatColumns(
+            $table
+        );
+
         foreach ($contextsAndSettings as $contextId => $settings) {
             foreach ($settings as $field => $setting) {
+                if (isset($flatSettingColumns[$field])) {
+                    continue;
+                }
                 $row = $db->exec_SELECTgetSingleRow(
                     'uid',
                     'tx_contexts_settings',
