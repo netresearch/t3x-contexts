@@ -81,24 +81,7 @@ class ux_tslib_fe extends tslib_fe
      * @see getFromCache(), getLockHash()
      */
     function getHash()  {
-        global $TYPO3_CONF_VARS;
-        if (is_array($TYPO3_CONF_VARS['FE']['additionalCacheHashParams'])) {
-            foreach ($TYPO3_CONF_VARS['FE']['additionalCacheHashParams'] as $strAdditionalCacheHashParam) {
-                $arCacheHashParams[$strAdditionalCacheHashParam]
-                    = t3lib_div::getIndpEnv($strAdditionalCacheHashParam);
-            }
-        }
-
-        if (empty($arCacheHashParams)) {
-            $arCacheHashParams = array();
-        }
-
-        $arCacheHashParams = array_merge(
-            $this->createHashBase(true),
-            $arCacheHashParams
-        );
-
-        $this->hash_base = serialize($arCacheHashParams);
+        $this->hash_base = $this->createHashBase(FALSE);
         return md5($this->hash_base);
     }
 
@@ -114,8 +97,7 @@ class ux_tslib_fe extends tslib_fe
      */
     function getLockHash()  {
         $lockHash = $this->createHashBase(TRUE);
-        $strLockHash = serialize($lockHash);
-        return md5($strLockHash);
+        return md5($lockHash);
     }
 
     /**
@@ -128,7 +110,7 @@ class ux_tslib_fe extends tslib_fe
      * Backported from TYPO3 4.7
      *
      * @param boolean $createLockHashBase whether to create the lock hash, which doesn't contain the "this->all" (the template information)
-     * @return array
+     * @return string the serialized hash base
      */
     protected function createHashBase($createLockHashBase = FALSE) {
         $hashParameters = array(
@@ -156,7 +138,24 @@ class ux_tslib_fe extends tslib_fe
             }
         }
 
-        return $hashParameters;
+        global $TYPO3_CONF_VARS;
+        if (is_array($TYPO3_CONF_VARS['FE']['additionalCacheHashParams'])) {
+            foreach ($TYPO3_CONF_VARS['FE']['additionalCacheHashParams'] as $strAdditionalCacheHashParam) {
+                $arCacheHashParams[$strAdditionalCacheHashParam]
+                    = t3lib_div::getIndpEnv($strAdditionalCacheHashParam);
+            }
+        }
+
+        if (empty($arCacheHashParams)) {
+            $arCacheHashParams = array();
+        }
+
+        $arCacheHashParams = array_merge(
+            $hashParameters,
+            $arCacheHashParams
+        );
+
+        return serialize($hashParameters);
     }
 }
 
