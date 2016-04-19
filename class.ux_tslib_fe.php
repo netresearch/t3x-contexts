@@ -138,6 +138,23 @@ class ux_tslib_fe extends tslib_fe
             }
         }
 
+        global $TYPO3_CONF_VARS;
+        if (is_array($TYPO3_CONF_VARS['FE']['additionalCacheHashParams'])) {
+            foreach ($TYPO3_CONF_VARS['FE']['additionalCacheHashParams'] as $strAdditionalCacheHashParam) {
+                $arCacheHashParams[$strAdditionalCacheHashParam]
+                    = t3lib_div::getIndpEnv($strAdditionalCacheHashParam);
+            }
+        }
+
+        if (empty($arCacheHashParams)) {
+            $arCacheHashParams = array();
+        }
+
+        $arCacheHashParams = array_merge(
+            $hashParameters,
+            $arCacheHashParams
+        );
+
         return serialize($hashParameters);
     }
 }

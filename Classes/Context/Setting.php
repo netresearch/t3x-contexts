@@ -47,6 +47,38 @@ final class Tx_Contexts_Context_Setting
 	    $this->enabled = $row['enabled'] ? true : false;
 	}
 
+    /**
+     * Create a context settings object from flat data
+     *
+     * @return Tx_Contexts_Context_Setting|null NULL when not enabled/disabled
+     */
+    public static function fromFlatData(
+        Tx_Contexts_Context_Abstract $context,
+        $table, $setting, $arFlatColumns, $arRow
+    ) {
+        $bDisabled = strpos(
+            ',' . $arRow[$arFlatColumns[0]] . ',',
+            ',' . $context->getUid() . ','
+        ) !== false;
+        $bEnabled = strpos(
+            ',' . $arRow[$arFlatColumns[1]] . ',',
+            ',' . $context->getUid() . ','
+        ) !== false;
+
+        if (!$bEnabled && !$bDisabled) {
+            return null;
+        }
+
+        $arDummyRow = array(
+            'uid'  => null,
+            'name' => $setting,
+            'foreign_table' => $table,
+            'foreign_uid'   => null,
+            'enabled' => $bEnabled
+        );
+        return new self($context, $arDummyRow);
+    }
+
 	public function isDefaultSetting()
 	{
 	    return !$this->uid;

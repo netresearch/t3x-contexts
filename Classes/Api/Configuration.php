@@ -255,14 +255,22 @@ class Tx_Contexts_Api_Configuration
                     'settings' => $settings,
                 ),
             );
-
-            t3lib_extMgm::addTCAcolumns(
-                $table,
-                array(
-                    self::RECORD_SETTINGS_COLUMN => $recordSettingsConf
-                ),
-                1
+            $arColumns = array(
+                self::RECORD_SETTINGS_COLUMN => $recordSettingsConf
             );
+            $arFlatColumns = Tx_Contexts_Api_Configuration::getFlatColumns($table);
+            if (count($arFlatColumns)) {
+                //add passthrough fields to keep settings when copying records
+                foreach ($arFlatColumns as $arSetting) {
+                    foreach ($arSetting as $columnName) {
+                        $arColumns[$columnName] = array(
+                            'config' => array('type' => 'passthrough')
+                        );
+                    }
+                }
+            }
+
+            t3lib_extMgm::addTCAcolumns($table, $arColumns, 1);
 
             switch ($table) {
             case'pages':
@@ -389,7 +397,14 @@ class Tx_Contexts_Api_Configuration
      * @param string|null $table   Table name
      * @param string|null $setting Setting name
      *
-     * @return array
+     * @return array When $setting is NULL: Array of arrays.
+     *                   Each array contains a pair of column names.
+     *                   First name is the disable column,
+     *                   second the enable column name.
+     *               When $setting is given, a pair of column names is
+     *                   returned.
+     *                   First name is the disable column,
+     *                   second the enable column name.
      */
     public static function getFlatColumns($table = null, $setting = null)
     {

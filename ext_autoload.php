@@ -17,6 +17,7 @@ return array(
     'tx_contexts_context_type_getparam' => $extensionClassesPath . 'Context/Type/GetParam.php',
     'tx_contexts_context_type_getparam_tsfeservice' => $extensionClassesPath . 'Context/Type/GetParam/TsfeService.php',
     'tx_contexts_context_type_ip' => $extensionClassesPath . 'Context/Type/Ip.php',
+    'tx_contexts_context_type_httpheader' => $extensionClassesPath . 'Context/Type/HttpHeader.php',
     'tx_contexts_context_type_combination' => $extensionClassesPath . 'Context/Type/Combination.php',
     'tx_contexts_context_type_combination_logicalexpressionevaluator' => $extensionClassesPath . 'Context/Type/Combination/LogicalExpressionEvaluator.php',
     'tx_contexts_context_type_combination_logicalexpressionevaluator_exception' => $extensionClassesPath . 'Context/Type/Combination/LogicalExpressionEvaluator/Exception.php',

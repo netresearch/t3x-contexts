@@ -1,6 +1,11 @@
 **********************
 Multi-channel contexts
 **********************
+
+.. image:: https://api.travis-ci.org/netresearch/t3x-contexts.png
+   :target: https://travis-ci.org/netresearch/t3x-contexts
+   :align: right
+
 Show and hide pages and content elements based on configurable "contexts".
 With the use of contexts, TYPO3 is able to do multi-channel output.
 
@@ -115,6 +120,17 @@ Supported notations:
 - Full addresses: ``80.76.201.32``
 - Prefix: ``80.76.201.32/27``, ``FE80::/16``
 - Wildcards: ``80.76.201.*``, ``80.76.*.37``, ``80.76.*.*``
+
+
+HTTP header
+===========
+Checks if a HTTP header is available and has a certain value.
+
+Activate "Store result in user session" to keep the context when navigating
+between pages.
+
+When leaving the parameter values field empty, any non-empty parameter value
+will activate the context.
 
 
 Logical context combination
