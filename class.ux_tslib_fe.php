@@ -155,7 +155,7 @@ class ux_tslib_fe extends tslib_fe
             $arCacheHashParams
         );
 
-        return serialize($hashParameters);
+        return serialize($arCacheHashParams);
     }
 }
 
