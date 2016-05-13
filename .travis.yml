@@ -25,20 +25,22 @@ before_script:
   - echo 'zend.multibyte = 1' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   
 script:
-  - cd typo3conf/ext/contexts/tests
+  - cd typo3conf/ext/contexts
   - phpunit --coverage-text .
 
 after_script:
   - >
     if [ -n "$TRAVIS_TAG" ] && [ -n "$TYPO3_ORG_USERNAME" ] && [ -n "$TYPO3_ORG_PASSWORD" ]; then
-      cd ..
       echo -e "Preparing upload of release ${TRAVIS_TAG} to TER\n"
       curl -sSL https://raw.githubusercontent.com/alrra/travis-after-all/1.4.4/lib/travis-after-all.js | node
       if [ $? -eq 0 ]; then
+        mkdir "$TRAVIS_BUILD_DIR/.build"
+        composer init --require=namelesscoder/typo3-repository-client:1.1.x-dev --stability=dev -n -d "$TRAVIS_BUILD_DIR/.build"
+        composer install -d "$TRAVIS_BUILD_DIR/.build"
         # Cleanup before we upload
         git reset --hard HEAD && git clean -fx
         TAG_MESSAGE=`git tag -n10 -l $TRAVIS_TAG | sed 's/^[0-9.]*[ ]*//g'`
         echo "Uploading release ${TRAVIS_TAG} to TER"
-        .Build/bin/upload . "$TYPO3_ORG_USERNAME" "$TYPO3_ORG_PASSWORD" "$TAG_MESSAGE"
+        $TRAVIS_BUILD_DIR/.build/vendor/bin/upload . "$TYPO3_ORG_USERNAME" "$TYPO3_ORG_PASSWORD" "$TAG_MESSAGE"
       fi;
     fi;
