@@ -18,6 +18,9 @@ before_script:
   - cd ..
   - mkdir -p typo3conf/ext
   - mv t3x-contexts typo3conf/ext/contexts
+  - mkdir t3x-contexts
+  - cd t3x-contexts
+  - mv ../typo3conf .
   - git clone --single-branch --branch $TYPO3 --depth 1 https://github.com/TYPO3/TYPO3.CMS.git typo3_src
   - ln -sfn typo3_src/typo3 typo3
   - ln -sfn typo3_src/index.php
