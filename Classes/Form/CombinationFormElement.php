@@ -22,7 +22,6 @@ use TYPO3\CMS\Backend\Form\FormEngine;
  * Provides methods used in the backend by flexforms.
  *
  * @category   TYPO3-Extensions
- * @package    Contexts
  * @author     Marian Pollzien <marian.pollzien@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts
@@ -83,7 +82,7 @@ HTM;
             $html .= <<<HTM
 <div>
     {$GLOBALS['LANG']->sL('LLL:EXT:contexts/Resources/Private/Language'
-        .'/flexform.xml:aliasesNotFound')}: $strNotFound
+        . '/flexform.xml:aliasesNotFound')}: $strNotFound
 </div>
 HTM;
         }
@@ -93,7 +92,7 @@ HTM;
             $html .= <<<HTM
 <div>
     {$GLOBALS['LANG']->sL('LLL:EXT:contexts/Resources/Private/Language'
-        .'/flexform.xml:unknownTokensFound')}: $strUnknownTokens
+        . '/flexform.xml:unknownTokensFound')}: $strUnknownTokens
 </div>
 HTM;
         }

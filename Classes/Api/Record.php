@@ -31,8 +31,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * API with methods to retrieve context information for records
  *
- * @package    Contexts
- * @subpackage Api
  * @author     Christian Opitz <christian.opitz@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
@@ -44,9 +42,9 @@ class Record
      * are disabled for one of the current contexts)
      *
      * @param string        $table Table name
-     * @param array|integer $row   Record array or an uid
+     * @param array|int $row   Record array or an uid
      *
-     * @return boolean
+     * @return bool
      */
     public static function isEnabled($table, $row)
     {
@@ -68,9 +66,9 @@ class Record
      *
      * @param string        $table   Table name
      * @param string        $setting Setting name
-     * @param array|integer $row     Record array or an uid
+     * @param array|int $row     Record array or an uid
      *
-     * @return boolean
+     * @return bool
      */
     public static function isSettingEnabled($table, $setting, $row)
     {
@@ -119,7 +117,7 @@ class Record
      * @param string $setting Setting name
      * @param array  $row     Record array
      *
-     * @return null|boolean NULL when table has no flat settings or the record
+     * @return null|bool NULL when table has no flat settings or the record
      *                      doesn't contain the appropriate flat columns
      *                      boolean otherwise
      */

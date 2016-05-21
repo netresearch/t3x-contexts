@@ -126,7 +126,7 @@ class DataHandlerService
                     'uid',
                     'tx_contexts_settings',
                     'context_uid = ' . (int)$contextId .  ' AND ' .
-                    'foreign_table = '. $databaseConnection->fullQuoteStr($table, 'tx_contexts_settings') . ' AND ' .
+                    'foreign_table = ' . $databaseConnection->fullQuoteStr($table, 'tx_contexts_settings') . ' AND ' .
                     'name = ' . $databaseConnection->fullQuoteStr($field, 'tx_contexts_settings') . ' AND ' .
                     'foreign_uid = ' . (int)$uid
                 );

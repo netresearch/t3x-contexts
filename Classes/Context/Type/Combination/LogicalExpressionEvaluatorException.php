@@ -27,9 +27,9 @@ namespace Bmack\Contexts\Context\Type\Combination;
 /**
  * Exception for parsing and evaluation errors
  *
- * @package Contexts
- * @subpackage Types_Combination
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @license http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-class LogicalExpressionEvaluatorException extends \Exception {}
+class LogicalExpressionEvaluatorException extends \Exception
+{
+}

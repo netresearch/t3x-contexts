@@ -1,5 +1,6 @@
 <?php
 namespace Bmack\Contexts\Api;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -29,8 +30,6 @@ use Bmack\Contexts\Context\Container;
  * Load context by alias.
  * Caches results.
  *
- * @package    Contexts
- * @subpackage Api
  * @author     André Hähnel <andre.haehnel@netresearch.de>
  */
 class ContextMatcher
@@ -48,7 +47,6 @@ class ContextMatcher
      * @var array
      */
     protected $arMatches = array();
-
 
     /**
      * Singleton
@@ -78,7 +76,7 @@ class ContextMatcher
      *
      * @param string $strContext alias from context entry
      *
-     * @return boolean TRUE if context matches, FALSE if not
+     * @return bool TRUE if context matches, FALSE if not
      */
     public function matches($strContext)
     {
@@ -90,6 +88,5 @@ class ContextMatcher
         $this->arMatches[$strContext] = $context !== null;
 
         return $this->arMatches[$strContext];
-
     }
 }

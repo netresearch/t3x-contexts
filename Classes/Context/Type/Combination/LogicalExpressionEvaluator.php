@@ -27,8 +27,6 @@ namespace Bmack\Contexts\Context\Type\Combination;
 /**
  * An evaluator that tokenizes, parses and evaluates logical expressions
  *
- * @package Contexts
- * @subpackage Types_Combination
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @license http://opensource.org/licenses/gpl-license GPLv2 or later
  */
@@ -115,7 +113,7 @@ class LogicalExpressionEvaluator
     /**
      * Set when an negation token was handled and
      * factored in when the next token gets pushed
-     * @var boolean
+     * @var bool
      */
     protected $nextTokenNegated = false;
 
@@ -150,7 +148,7 @@ class LogicalExpressionEvaluator
      *
      * @param string $expression
      * @param array $values
-     * @return boolean
+     * @return bool
      */
     public static function run($expression, $values)
     {
@@ -418,7 +416,7 @@ class LogicalExpressionEvaluator
      *
      * @param array $values
      * @throws LogicalExpressionEvaluatorException
-     * @return boolean
+     * @return bool
      */
     public function evaluate(array $values)
     {
@@ -477,7 +475,7 @@ class LogicalExpressionEvaluator
      * (set $unshifted to true when the tokens were not yet
      * precedence shifted)
      *
-     * @param boolean $unshifted
+     * @param bool $unshifted
      * @return string
      */
     public function rebuild($unshifted = false)

@@ -30,7 +30,6 @@ use Bmack\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
 /**
  * Matches when a logical expression with other contexts evaluates to true
  *
- * @package Contexts
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @license http://opensource.org/licenses/gpl-license GPLv2 or later
  */
@@ -87,7 +86,7 @@ class CombinationContext extends AbstractContext
      * the parsed expression by those values.
      *
      * @param array $arDependencies
-     * @return boolean
+     * @return bool
      */
     public function match(array $arDependencies = array())
     {

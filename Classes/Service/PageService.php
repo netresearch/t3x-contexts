@@ -39,7 +39,6 @@ use TYPO3\CMS\Frontend\Page\PageRepositoryGetPageHookInterface;
  * Hook into enableFields() to hide pages and elements that are
  * may not be shown for the current contexts.
  *
- * @package Contexts
  * @author  Christian Weiske <christian.weiske@netresearch.de>
  * @license http://opensource.org/licenses/gpl-license GPLv2 or later
  */
@@ -67,8 +66,8 @@ class PageService
     /**
      * Add page access restrictions through context settings.
      *
-     * @param integer          &$uid                     The page ID
-     * @param boolean          &$disableGroupAccessCheck If set, the check for
+     * @param int          &$uid                     The page ID
+     * @param bool          &$disableGroupAccessCheck If set, the check for
      *                                                   group access is disabled.
      *                                                   VERY rarely used
      * @param PageRepository $pObj                     t3lib_pageSelect object
@@ -92,7 +91,8 @@ class PageService
      * @param string $table Database table name
      * @return string SQL filter string beginning with " AND "
      */
-    protected function getFilterSql($table) {
+    protected function getFilterSql($table)
+    {
         $sql = '';
 
         foreach (Configuration::getEnableSettings($table) as $setting) {
@@ -168,9 +168,9 @@ class PageService
      *
      * @param array &$data Array of menu items
      * @param array $banUidArray Array of page uids which are to be excluded
-     * @param boolean $spacer If set, then the page is a spacer.
+     * @param bool $spacer If set, then the page is a spacer.
      * @param AbstractMenuContentObject $obj The menu object
-     * @return boolean Returns TRUE if the page can be safely included.
+     * @return bool Returns TRUE if the page can be safely included.
      */
     public function processFilter(
         array &$data, array $banUidArray, $spacer, AbstractMenuContentObject $obj

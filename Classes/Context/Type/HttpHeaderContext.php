@@ -1,5 +1,6 @@
 <?php
 namespace Bmack\Contexts\Context\Type;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -28,8 +29,6 @@ use Bmack\Contexts\Context\AbstractContext;
 /**
  * Matches on a HTTP header with a certain value
  *
- * @package    Contexts
- * @subpackage Contexts_Type
  * @author     Michael Schams <schams.net>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
@@ -40,7 +39,7 @@ class HttpHeaderContext extends AbstractContext
      *
      * @param array $arDependencies Array of dependent context objects
      *
-     * @return boolean True if the context is active, false if not
+     * @return bool True if the context is active, false if not
      */
     public function match(array $arDependencies = array())
     {
@@ -67,7 +66,7 @@ class HttpHeaderContext extends AbstractContext
      *
      * @param string $value Current parameter value
      *
-     * @return boolean True if the current paramter value is one of the
+     * @return bool True if the current paramter value is one of the
      *                 configured values
      */
     protected function matchValues($value)

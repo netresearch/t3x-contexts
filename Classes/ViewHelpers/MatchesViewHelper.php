@@ -40,8 +40,6 @@ use Bmack\Contexts\Api\ContextMatcher;
  *         </f:if>
  *     </div>
  *
- * @package    Contexts
- * @subpackage ViewHelper
  * @author     André Hähnel <andre.haehnel@netresearch.de>
  */
 class MatchesViewHelper
@@ -63,7 +61,7 @@ class MatchesViewHelper
     /**
      * Render the context match method
      *
-     * @return integer 1 if context match or 0
+     * @return int 1 if context match or 0
      */
     public function render()
     {

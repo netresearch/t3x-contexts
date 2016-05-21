@@ -30,8 +30,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Matches on a GET parameter with a certain value
  *
- * @package    Contexts
- * @subpackage Contexts_Type
  * @author     Christian Weiske <christian.weiske@netresearch.de>
  * @author     Christian Opitz <christian.opitz@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
@@ -79,7 +77,7 @@ class QueryParameterContext extends AbstractContext
      *
      * @param string $value Current parameter value
      *
-     * @return boolean True if the current paramter value is one of the
+     * @return bool True if the current paramter value is one of the
      *                 configured values
      */
     protected function matchParameters($value)

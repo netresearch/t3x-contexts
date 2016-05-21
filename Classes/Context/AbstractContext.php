@@ -31,8 +31,6 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 /**
  * Abstract context - must be extended by the context types
  *
- * @package    Contexts
- * @subpackage Contexts_Type
  * @author     Christian Opitz <christian.opitz@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
@@ -55,7 +53,7 @@ abstract class AbstractContext
     /**
      * Uid of context.
      *
-     * @var integer
+     * @var int
      */
     protected $uid;
 
@@ -83,21 +81,21 @@ abstract class AbstractContext
     /**
      * Unix timestamp of last record modification.
      *
-     * @var integer
+     * @var int
      */
     protected $tstamp;
 
     /**
      * Invert the match result.
      *
-     * @var boolean
+     * @var bool
      */
     protected $invert = false;
 
     /**
      * Store match result in user session.
      *
-     * @var boolean
+     * @var bool
      */
     protected $use_session = true;
 
@@ -117,14 +115,14 @@ abstract class AbstractContext
 
     /**
      * Constructor - set the values from database row.
-     * @var boolean
+     * @var bool
      */
     protected $disabled;
 
     /**
      * Hide Context in backend
      *
-     * @var boolean
+     * @var bool
      */
     protected $bHideInBackend = false;
 
@@ -279,7 +277,7 @@ abstract class AbstractContext
      * @param string $setting Setting name
      * @param int    $uid     Record UID
      *
-     * @return boolean
+     * @return bool
      */
     final public function hasSetting($table, $setting, $uid)
     {
@@ -292,14 +290,14 @@ abstract class AbstractContext
      * @param array $arDependencies Array of context objects that are
      *                              dependencies of this context
      *
-     * @return boolean True when your context matches, false if not
+     * @return bool True when your context matches, false if not
      */
     abstract public function match(array $arDependencies = array());
 
     /**
      * Get the uid of this context.
      *
-     * @return integer
+     * @return int
      */
     public function getUid()
     {
@@ -352,7 +350,7 @@ abstract class AbstractContext
     /**
      * Get the disabled status of this context
      *
-     * @return boolean
+     * @return bool
      */
     public function getDisabled()
     {
@@ -362,7 +360,7 @@ abstract class AbstractContext
     /**
      * Get hide in backend
      *
-     * @return boolean true if the context not shown in backend
+     * @return bool true if the context not shown in backend
      */
     public function getHideInBackend()
     {
@@ -382,7 +380,6 @@ abstract class AbstractContext
         $bUseSession = (bool) $this->use_session;
 
         if (!$bUseSession) {
-
             return array(false, null);
         }
 
@@ -411,9 +408,9 @@ abstract class AbstractContext
      * Stores the current match setting in the session if the type
      * is configured that way.
      *
-     * @param boolean $bMatch If the context matches
+     * @param bool $bMatch If the context matches
      *
-     * @return boolean $bMatch value
+     * @return bool $bMatch value
      */
     protected function storeInSession($bMatch)
     {
@@ -445,13 +442,12 @@ abstract class AbstractContext
         }
     }
 
-
     /**
      * Inverts the current match setting if inverting is activated.
      *
-     * @param boolean $bMatch If the context matches
+     * @param bool $bMatch If the context matches
      *
-     * @return boolean
+     * @return bool
      */
     protected function invert($bMatch)
     {
@@ -465,7 +461,7 @@ abstract class AbstractContext
     /**
      * Set invert flag.
      *
-     * @param boolean $bInvert True or false
+     * @param bool $bInvert True or false
      *
      * @return void
      */
@@ -477,7 +473,7 @@ abstract class AbstractContext
     /**
      * Set use session flag.
      *
-     * @param boolean $bUseSession True or false
+     * @param bool $bUseSession True or false
      *
      * @return void
      */
@@ -485,7 +481,6 @@ abstract class AbstractContext
     {
         $this->use_session = (bool) $bUseSession;
     }
-
 
     /**
      * Returns the value for the passed key

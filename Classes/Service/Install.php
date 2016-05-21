@@ -85,4 +85,3 @@ class Tx_Contexts_Service_Install implements tx_em_Index_CheckDatabaseUpdatesHoo
         return '';
     }
 }
-?>

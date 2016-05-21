@@ -32,8 +32,6 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 /**
  * General configuration API
  *
- * @package    Contexts
- * @subpackage Api
  * @author     Christian Opitz <christian.opitz@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
@@ -97,7 +95,7 @@ class Configuration
      * @param string     $table       Table to add settings to
      * @param array|null $settings    Array of settings to register.
      *                                Key is the setting name, value its config
-     * @param boolean    $addDefaults If an "enableSetting" is added that is
+     * @param bool    $addDefaults If an "enableSetting" is added that is
      *                                used to hide/show elements
      *
      * @return void
@@ -132,7 +130,7 @@ class Configuration
      *
      * @param array $config Configuration
      *
-     * @return boolean
+     * @return bool
      */
     protected static function isFlatSetting(array $config)
     {
@@ -243,7 +241,7 @@ class Configuration
         if (!array_key_exists(self::RECORD_SETTINGS_COLUMN, $GLOBALS['TCA'][$table]['columns'])) {
             $recordSettingsConf = array(
                 'exclude' => 1,
-                'label' => 'LLL:' . self::LANG_FILE. ':tabname',
+                'label' => 'LLL:' . self::LANG_FILE . ':tabname',
                 'config' => array(
                     'type' => 'user',
                     'size' => '30',
@@ -292,7 +290,6 @@ class Configuration
                     );
                     break;
             }
-
         } else {
             $GLOBALS['TCA'][$table]['columns'][self::RECORD_SETTINGS_COLUMN]
             ['config']['settings']

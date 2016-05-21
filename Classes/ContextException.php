@@ -14,4 +14,6 @@ namespace Bmack\Contexts;
  * The TYPO3 project - inspiring people to share!
  */
 
-class ContextException extends \Exception {}
+class ContextException extends \Exception
+{
+}

@@ -21,46 +21,46 @@ final class Setting
      */
     protected $context;
 
-	/**
-	 * The uid of the setting record
-	 * @var int
-	 */
-	protected $uid;
+    /**
+     * The uid of the setting record
+     * @var int
+     */
+    protected $uid;
 
-	/**
-	 * The name of table the setting is for
-	 * @var string
-	 */
-	protected $foreignTable;
+    /**
+     * The name of table the setting is for
+     * @var string
+     */
+    protected $foreignTable;
 
-	/**
-	 * The uid of the record the setting is for
-	 * (0 for default setting)
-	 * @var int
-	 */
-	protected $foreignUid;
+    /**
+     * The uid of the record the setting is for
+     * (0 for default setting)
+     * @var int
+     */
+    protected $foreignUid;
 
-	/**
-	 * The name of the setting
-	 * @var string
-	 */
-	protected $name;
+    /**
+     * The name of the setting
+     * @var string
+     */
+    protected $name;
 
-	/**
-	 * Whether the record is enabled by this setting
-	 * @var boolean
-	 */
-	protected $enabled;
+    /**
+     * Whether the record is enabled by this setting
+     * @var bool
+     */
+    protected $enabled;
 
-	public function __construct(AbstractContext $context, array $row)
-	{
-	    $this->context = $context;
-	    $this->uid = (int) $row['uid'];
-	    $this->foreignTable = $row['foreign_table'];
-	    $this->name = $row['name'];
-	    $this->foreignUid = (int) $row['foreign_uid'];
-	    $this->enabled = $row['enabled'] ? true : false;
-	}
+    public function __construct(AbstractContext $context, array $row)
+    {
+        $this->context = $context;
+        $this->uid = (int) $row['uid'];
+        $this->foreignTable = $row['foreign_table'];
+        $this->name = $row['name'];
+        $this->foreignUid = (int) $row['foreign_uid'];
+        $this->enabled = $row['enabled'] ? true : false;
+    }
 
     /**
      * Create a context settings object from flat data
@@ -94,12 +94,12 @@ final class Setting
         return new self($context, $arDummyRow);
     }
 
-	public function isDefaultSetting()
-	{
-	    return !$this->uid;
-	}
+    public function isDefaultSetting()
+    {
+        return !$this->uid;
+    }
 
-	/**
+    /**
      * @return AbstractContext
      */
     public function getContext()
@@ -107,7 +107,7 @@ final class Setting
         return $this->context;
     }
 
-	/**
+    /**
      * @return int
      */
     public function getUid()
@@ -115,7 +115,7 @@ final class Setting
         return $this->uid;
     }
 
-	/**
+    /**
      * @return string
      */
     public function getForeignTable()
@@ -123,7 +123,7 @@ final class Setting
         return $this->foreignTable;
     }
 
-	/**
+    /**
      * @return int
      */
     public function getForeignUid()
@@ -131,7 +131,7 @@ final class Setting
         return $this->foreignUid;
     }
 
-	/**
+    /**
      * @return string
      */
     public function getName()
@@ -139,8 +139,8 @@ final class Setting
         return $this->name;
     }
 
-	/**
-     * @return boolean
+    /**
+     * @return bool
      */
     public function getEnabled()
     {

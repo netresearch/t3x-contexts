@@ -45,7 +45,6 @@ class IconService implements SingletonInterface
      */
     public function overrideIconOverlay($table, $row, &$status)
     {
-
         if (isset($row['tx_contexts_enable']) && $row['tx_contexts_enable'] != '' ||
             isset($row['tx_contexts_disable']) && $row['tx_contexts_disable'] != '') {
             $status['contexts'] = true;

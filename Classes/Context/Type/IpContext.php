@@ -29,8 +29,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Matches on the current frontend user IP
  *
- * @package    Contexts
- * @subpackage Contexts_Type
  * @author     Andre Hähnel <andre.haehnel@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
@@ -41,7 +39,7 @@ class IpContext extends AbstractContext
      *
      * @param array $arDependencies Array of dependent context objects
      *
-     * @return boolean True if the context is active, false if not
+     * @return bool True if the context is active, false if not
      */
     public function match(array $arDependencies = array())
     {
@@ -74,11 +72,11 @@ class IpContext extends AbstractContext
      * Supports IPv4 and IPv6.
      *
      * @param string  $strIp    remote IP address
-     * @param boolean $bIpv4    If the IP is IPv4 (if not, it's IPv6)
+     * @param bool $bIpv4    If the IP is IPv4 (if not, it's IPv6)
      * @param string  $strRange Defined range. Comma-separated list of IPs.
      *                          * supported for parts of the address.
      *
-     * @return boolean True if the IP is in the range
+     * @return bool True if the IP is in the range
      */
     protected function isIpInRange($strIp, $bIpv4, $strRange)
     {

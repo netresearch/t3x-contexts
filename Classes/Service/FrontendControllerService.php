@@ -58,7 +58,7 @@ class FrontendControllerService implements SingletonInterface
      *                      key: row  value: page record to evaluate
      *                      key: bypassGroupCheck  value: boolean
      *
-     * @return boolean false if context from root does not match
+     * @return bool false if context from root does not match
      */
     public function checkEnableFields($arData)
     {
@@ -92,7 +92,6 @@ class FrontendControllerService implements SingletonInterface
      * methods related to the QueryParameterContext
      */
 
-
     /**
      * Add an additional parameter to cHash so that caches are specific
      * to the current context combination.
@@ -114,7 +113,8 @@ class FrontendControllerService implements SingletonInterface
      * @param TypoScriptFrontendController $tsfe
      * @return void
      */
-    public function configArrayPostProc(&$params, $tsfe) {
+    public function configArrayPostProc(&$params, $tsfe)
+    {
         $linkVars = $params['config']['linkVars'] . ',' . implode(',', array_keys(self::$linkVarParams));
         $params['config']['linkVars'] = trim($linkVars, ',');
     }
@@ -127,7 +127,8 @@ class FrontendControllerService implements SingletonInterface
      * @param mixed  $value
      * @return void
      */
-    public static function registerQueryParameter($param, $value, $addToLinkVars) {
+    public static function registerQueryParameter($param, $value, $addToLinkVars)
+    {
         self::$params[$param] = $value;
         if ($addToLinkVars) {
             self::$linkVarParams[$param] = true;

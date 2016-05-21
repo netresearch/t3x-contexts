@@ -164,10 +164,9 @@ class RecordSettingsFormElement
     protected function getClickMenu($str, $table, $uid = '')
     {
         $onClick = htmlspecialchars($GLOBALS['SOBE']->doc->wrapClickMenuOnIcon(
-            $str, $table, $uid, 1, '', '+info,edit,view,new', TRUE
+            $str, $table, $uid, 1, '', '+info,edit,view,new', true
         ));
         return
             '<a href="#" onclick="' . $onClick . '" onrightclick="' . $onClick . '">' . $str . '</a>';
     }
-
 }
