@@ -16,7 +16,7 @@
            <rows>5</rows>
            <eval>trim,required</eval>
            <form_type>user</form_type>
-           <userFunc>Tx_Contexts_Backend-&gt;textCombinations</userFunc>
+           <userFunc>Bmack\Contexts\Form\CombinationFormElement-&gt;render</userFunc>
          </config>
        </TCEforms>
      </field_expression>

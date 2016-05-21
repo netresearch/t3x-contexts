@@ -1,9 +1,25 @@
 <?php
+namespace Bmack\Contexts\Context\Type;
+
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
+use Bmack\Contexts\Context\AbstractContext;
 
 /**
  * Matches on the current domain name
  */
-class Tx_Contexts_Context_Type_Domain extends Tx_Contexts_Context_Abstract
+class DomainContext extends AbstractContext
 {
     public function match(array $arDependencies = array())
     {
@@ -37,4 +53,3 @@ class Tx_Contexts_Context_Type_Domain extends Tx_Contexts_Context_Abstract
         return false;
     }
 }
-?>

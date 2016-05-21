@@ -1,4 +1,6 @@
 <?php
+namespace Bmack\Contexts\Service;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -22,12 +24,16 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-if (isset($TYPO3_CONF_VARS['SYS']['compat_version'])
-    && t3lib_div::int_from_ver($TYPO3_CONF_VARS['SYS']['compat_version']) < 6002000
-) {
-    //compatibility with TYPO3 < 6.2, see http://forge.typo3.org/issues/50881
-    require_once PATH_tslib . 'interfaces/interface.tslib_menu_filterMenuPagesHook.php';
-}
+use Bmack\Contexts\Api\Configuration;
+use Bmack\Contexts\Api\Record;
+use Bmack\Contexts\Context\AbstractContext;
+use Bmack\Contexts\Context\Container;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\ContentObject\Menu\AbstractMenuContentObject;
+use TYPO3\CMS\Frontend\ContentObject\Menu\AbstractMenuFilterPagesHookInterface;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Frontend\Page\PageRepositoryGetPageHookInterface;
 
 /**
  * Hook into enableFields() to hide pages and elements that are
@@ -37,8 +43,8 @@ if (isset($TYPO3_CONF_VARS['SYS']['compat_version'])
  * @author  Christian Weiske <christian.weiske@netresearch.de>
  * @license http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-class Tx_Contexts_Service_Page
-    implements t3lib_pageSelect_getPageHook, tslib_menu_filterMenuPagesHook
+class PageService
+    implements PageRepositoryGetPageHookInterface, AbstractMenuFilterPagesHookInterface, SingletonInterface
 {
     /**
      * Add context filtering to an SQL query
@@ -50,7 +56,7 @@ class Tx_Contexts_Service_Page
      *                                 - ignore_array - enable field names which
      *                                                  should not be used
      *                                 - ctrl         - TCA table control data
-     * @param t3lib_pageSelect $ref    Object that calls the hook     *
+     * @param PageRepository $ref    Object that calls the hook     *
      * @return string SQL command part that gets added to the query
      */
     public function enableFields($params, $ref)
@@ -65,11 +71,11 @@ class Tx_Contexts_Service_Page
      * @param boolean          &$disableGroupAccessCheck If set, the check for
      *                                                   group access is disabled.
      *                                                   VERY rarely used
-     * @param t3lib_pageSelect $pObj                     t3lib_pageSelect object
+     * @param PageRepository $pObj                     t3lib_pageSelect object
      * @return void
      */
     public function getPage_preProcess(
-        &$uid, &$disableGroupAccessCheck, t3lib_pageSelect $pObj
+        &$uid, &$disableGroupAccessCheck, PageRepository $pObj
     ) {
         static $done = false;
         if ($done) {
@@ -87,13 +93,12 @@ class Tx_Contexts_Service_Page
      * @return string SQL filter string beginning with " AND "
      */
     protected function getFilterSql($table) {
-        global $TCA;
         $sql = '';
 
-        foreach (Tx_Contexts_Api_Configuration::getEnableSettings($table) as $setting) {
-            $flatColumns = Tx_Contexts_Api_Configuration::getFlatColumns($table, $setting);
+        foreach (Configuration::getEnableSettings($table) as $setting) {
+            $flatColumns = Configuration::getFlatColumns($table, $setting);
             if (!$flatColumns) {
-                t3lib_div::devLog(
+                GeneralUtility::devLog(
                     'Missing flat columns for setting "' . $setting . '"',
                     'tx_contexts',
                     2,
@@ -107,8 +112,8 @@ class Tx_Contexts_Service_Page
             );
             $disableChecks = array();
 
-            foreach (Tx_Contexts_Context_Container::get() as $context) {
-                /* @var $context Tx_Contexts_Context_Abstract */
+            foreach (Container::get() as $context) {
+                /* @var $context AbstractContext */
                 $enableChecks[] = $GLOBALS['TYPO3_DB']->listQuery(
                     $flatColumns[1], $context->getUid(), $table
                 );
@@ -152,7 +157,7 @@ class Tx_Contexts_Service_Page
     protected function getHashString()
     {
         $keys = array_keys(
-            Tx_Contexts_Context_Container::get()->getArrayCopy()
+            Container::get()->getArrayCopy()
         );
         sort($keys, SORT_NUMERIC);
         return implode(',', $keys);
@@ -164,31 +169,14 @@ class Tx_Contexts_Service_Page
      * @param array &$data Array of menu items
      * @param array $banUidArray Array of page uids which are to be excluded
      * @param boolean $spacer If set, then the page is a spacer.
-     * @param \TYPO3\CMS\Frontend\ContentObject\Menu\AbstractMenuContentObject $obj The menu object
+     * @param AbstractMenuContentObject $obj The menu object
      * @return boolean Returns TRUE if the page can be safely included.
      */
     public function processFilter(
-        array &$data, array $banUidArray, $spacer, tslib_menu $obj
+        array &$data, array $banUidArray, $spacer, AbstractMenuContentObject $obj
     ) {
         return
-        Tx_Contexts_Api_Record::isEnabled('pages', $data) &&
-        Tx_Contexts_Api_Record::isSettingEnabled('pages', 'tx_contexts_nav', $data);
-    }
-
-    /**
-     * Checks if a page is OK to include in the final menu item array.
-     * this method is be called from typo < 4.6
-     *
-     * @param array &$data Array of menu items
-     * @param array $banUidArray Array of page uids which are to be excluded
-     * @param boolean $spacer If set, then the page is a spacer.
-     * @param \TYPO3\CMS\Frontend\ContentObject\Menu\AbstractMenuContentObject $obj The menu object
-     * @return boolean Returns TRUE if the page can be safely included.
-     */
-    public function tslib_menu_filterMenuPagesHook(
-        array &$data, array $banUidArray, $spacer, tslib_menu $obj
-    ) {
-        return $this->processFilter($data, $banUidArray, $spacer, $obj);
+        Record::isEnabled('pages', $data) &&
+        Record::isSettingEnabled('pages', 'tx_contexts_nav', $data);
     }
 }
-?>

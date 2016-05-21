@@ -11,8 +11,8 @@ conf.py:
   # version and release in several places
   copyright: 2013 to now
   project: Multi-channel contexts
-  version: 0.3
-  release: 0.3.0
+  version: 0.6
+  release: 0.6.0
 
   #render README.rst, not Documentation/Index.rst
   master_doc: README

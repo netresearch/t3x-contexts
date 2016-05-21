@@ -23,24 +23,23 @@
 ***************************************************************/
 
 /**
- * Exception for parsing and evaluation errors
+ * Context Typoscript Connector
  *
- * @package Contexts
- * @subpackage Types_Combination
- * @author  Christian Opitz <christian.opitz@netresearch.de>
- * @license http://opensource.org/licenses/gpl-license GPLv2 or later
+ * This function is for usage in Typo3 TypoScript to get match context directly.
+ *
+ * @param string $strContext context alias
+ *
+ * @return boolean True if it matches, false if not
  */
-class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception extends Exception
+function user_contexts_matches($strContext)
 {
-    /**
-     * Construct without code
-     *
-     * @param string $message
-     * @return void
-     */
-    public function __construct($message)
-    {
-        parent::__construct($message);
+    static $initialized = false;
+    if (!$initialized) {
+        //load and resolve all contexts
+        \Bmack\Contexts\Context\Container::get()->initMatching();
+        $initialized = true;
     }
+
+    return \Bmack\Contexts\Api\ContextMatcher::getInstance()
+        ->matches($strContext);
 }
-?>

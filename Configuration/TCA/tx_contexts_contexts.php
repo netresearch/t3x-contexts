@@ -1,16 +1,26 @@
 <?php
-if (!defined('TYPO3_MODE')) {
-    die ('Access denied.');
-}
-
 $lf = 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xml';
 
-$TCA['tx_contexts_contexts'] = array(
-    'ctrl' => $TCA['tx_contexts_contexts']['ctrl'],
+return array(
+    'ctrl' => array(
+        'title'     => $lf . ':tx_contexts_contexts',
+        'label'     => 'title',
+        'tstamp'    => 'tstamp',
+        'crdate'    => 'crdate',
+        'cruser_id' => 'cruser_id',
+        'default_sortby' => 'ORDER BY title',
+        'delete' => 'deleted',
+        'enablecolumns' => array(
+            'disabled' => 'disabled'
+        ),
+        'requestUpdate' => 'type',
+        'adminOnly' => 1,
+        'rootLevel' => -1,
+        'iconfile'  => 'EXT:contexts/Resources/Public/Icons/tx_contexts_contexts.gif',
+    ),
     'interface' => array(
         'showRecordFieldList' => 'title,alias,type,invert,use_session,disabled,hide_in_backend'
     ),
-    'feInterface' => $TCA['tx_contexts_contexts']['feInterface'],
     'columns' => array(
         'title' => array(
             'exclude' => 0,
@@ -92,16 +102,14 @@ $TCA['tx_contexts_contexts'] = array(
         '0' => array(
             'showitem'
                 => '--div--;' . $lf . ':tx_contexts_contexts.general'
-                . ',title;;1'
-                . ',--palette--;' . $lf . ':tx_contexts_contexts.visibility;visibility;;1-1-1'
+                . ',title'
+                . ',--palette--;' . $lf . ':tx_contexts_contexts.visibility;visibility'
                 . ',alias,type,type_conf,invert,'
                 . 'use_session'
                 . ',--div--;' . $lf . ':tx_contexts_contexts.defaults'
         )
     ),
     'palettes' => array(
-        '1' => array('showitem' => ''),
         'visibility' => array('showitem' => 'disabled,hide_in_backend', 'canNotCollapse' => 1)
     )
 );
-?>

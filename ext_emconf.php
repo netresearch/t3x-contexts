@@ -14,25 +14,16 @@ $EM_CONF[$_EXTKEY] = array(
 	'title' => 'Multi-channel contexts',
 	'description' => 'Contexts for TYPO3 - can be used to modify page behaviour in the frontend based on several conditions',
 	'category' => 'misc',
-	'author' => 'Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag',
+	'author' => 'Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag, Benni Mack',
 	'author_email' => 'typo3.org@netresearch.de',
-	'shy' => '',
-	'dependencies' => '',
-	'conflicts' => '',
 	'priority' => 'top',
-	'module' => '',
-	'state' => 'stable',
-	'internal' => '',
-	'uploadfolder' => 0,
-	'createDirs' => '',
-	'modify_tables' => '',
+	'state' => 'beta',
 	'clearCacheOnLoad' => 1,
-	'lockType' => '',
 	'author_company' => 'Netresearch GmbH & Co.KG',
-	'version' => '0.5.1',
+	'version' => '0.6.0',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '4.5.0-6.2.99',
+			'typo3' => '6.2.0-7.9.99',
 		),
 		'conflicts' => array(
 		),
@@ -44,5 +35,3 @@ $EM_CONF[$_EXTKEY] = array(
 	'suggests' => array(
 	),
 );
-
-?>

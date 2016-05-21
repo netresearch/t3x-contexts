@@ -1,20 +1,35 @@
 <?php
+namespace Bmack\Contexts\Context;
+
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Loads contexts and provides access to them
  */
-class Tx_Contexts_Context_Container extends ArrayObject
+class Container extends \ArrayObject
 {
     /**
-     * @var Tx_Contexts_Context_Container
+     * @var Container
      */
     protected static $instance;
-
-
 
     /**
      * Singleton accessor
      *
-     * @return Tx_Contexts_Context_Container
+     * @return Container
      */
     public static function get()
     {
@@ -27,7 +42,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
     /**
      * Loads all contexts and checks if they match
      *
-     * @return Tx_Contexts_Context_Container
+     * @return Container
      */
     public function initMatching()
     {
@@ -38,7 +53,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
     /**
      * Loads all contexts.
      *
-     * @return Tx_Contexts_Context_Container
+     * @return Container
      */
     public function initAll()
     {
@@ -51,7 +66,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
      *
      * @param array $arContexts Array of context objects
      *
-     * @return Tx_Contexts_Context_Container
+     * @return Container
      */
     protected function setActive($arContexts)
     {
@@ -60,7 +75,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
         foreach ($arContexts as $context) {
             $aliases[] = $context->getAlias();
         }
-        t3lib_div::devLog(
+        GeneralUtility::devLog(
             count($this) . ' active contexts: ' . implode(', ', $aliases),
             'tx_contexts', 0
         );
@@ -83,7 +98,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
 
         $contexts = array();
         foreach ($arRows as $arRow) {
-            $context = Tx_Contexts_Context_Factory::createFromDb($arRow);
+            $context = Factory::createFromDb($arRow);
             if ($context !== null) {
                 $contexts[$arRow['uid']] = $context;
             }
@@ -109,7 +124,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
         $loops = 0;
         do {
             foreach (array_keys($arContexts) as $uid) {
-                /* @var $context Tx_Contexts_Context_Abstract */
+                /* @var $context AbstractContext */
                 $context = $arContexts[$uid];
 
                 if ($context->getDisabled()) {
@@ -167,7 +182,7 @@ class Tx_Contexts_Context_Container extends ArrayObject
      *
      * @param int|string $uidOrAlias
      *
-     * @return Tx_Contexts_Context_Abstract
+     * @return AbstractContext
      */
     public function find($uidOrAlias)
     {
@@ -186,4 +201,3 @@ class Tx_Contexts_Context_Container extends ArrayObject
         return null;
     }
 }
-?>

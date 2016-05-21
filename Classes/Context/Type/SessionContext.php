@@ -1,4 +1,6 @@
 <?php
+namespace Bmack\Contexts\Context\Type;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -21,6 +23,7 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+use Bmack\Contexts\Context\AbstractContext;
 
 /**
  * Check if a session variable is set or not
@@ -30,7 +33,7 @@
  * @author     Andre Hähnel <andre.haehnel@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-class Tx_Contexts_Context_Type_Session extends Tx_Contexts_Context_Abstract
+class SessionContext extends AbstractContext
 {
     /**
      * Check if the context is active now.
@@ -41,15 +44,12 @@ class Tx_Contexts_Context_Type_Session extends Tx_Contexts_Context_Abstract
      */
     public function match(array $arDependencies = array())
     {
-        /* @var $TSFE tslib_fe  */
-        global $TSFE;
-
-        $session = $TSFE->fe_user->getKey(
+        /* @var $GLOBALS['TSFE'] \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
+        $session = $GLOBALS['TSFE']->fe_user->getKey(
             'ses', $this->getConfValue('field_variable')
         );
 
         return $this->invert($session !== null);
     }
-
 }
-?>
+

@@ -1,8 +1,10 @@
 <?php
+namespace Bmack\Contexts\Api;
 /***************************************************************
 *  Copyright notice
 *
 *  (c) 2013 Netresearch GmbH & Co. KG <typo3.org@netresearch.de>
+*  (c) 2016 Benjamin Mack <benjamin.mack@b13.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -21,6 +23,7 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+use Bmack\Contexts\Context\Container;
 
 /**
  * Load context by alias.
@@ -30,12 +33,12 @@
  * @subpackage Api
  * @author     André Hähnel <andre.haehnel@netresearch.de>
  */
-class Tx_Contexts_Api_ContextMatcher
+class ContextMatcher
 {
     /**
      * Singleton instance
      *
-     * @var Tx_Contexts_Api_ContextMatcher
+     * @var ContextMatcher
      */
     protected static $instance;
 
@@ -83,13 +86,10 @@ class Tx_Contexts_Api_ContextMatcher
             return $this->arMatches[$strContext];
         }
 
-        $container = Tx_Contexts_Context_Container::get();
-        $context = $container->find($strContext);
-
+        $context = Container::get()->find($strContext);
         $this->arMatches[$strContext] = $context !== null;
 
         return $this->arMatches[$strContext];
 
     }
 }
-?>

@@ -1,4 +1,6 @@
 <?php
+namespace Bmack\Contexts\Context;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -22,6 +24,10 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use Bmack\Contexts\Api\Configuration;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+
 /**
  * Abstract context - must be extended by the context types
  *
@@ -30,7 +36,7 @@
  * @author     Christian Opitz <christian.opitz@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-abstract class Tx_Contexts_Context_Abstract
+abstract class AbstractContext
 {
     /**
      * Key for the ip forward header
@@ -126,8 +132,6 @@ abstract class Tx_Contexts_Context_Abstract
      * Constructor - set the values from database row.
      *
      * @param array $arRow Database context row
-     *
-     * @return void
      */
     public function __construct($arRow = array())
     {
@@ -147,7 +151,7 @@ abstract class Tx_Contexts_Context_Abstract
             $this->bHideInBackend = (bool) $arRow['hide_in_backend'];
 
             if ($arRow['type_conf'] != '') {
-                $this->conf = t3lib_div::xml2array($arRow['type_conf']);
+                $this->conf = GeneralUtility::xml2array($arRow['type_conf']);
             }
         }
     }
@@ -193,7 +197,7 @@ abstract class Tx_Contexts_Context_Abstract
      * @param array  $arRow   Database row for the given UID.
      *                        Useful for flat settings.
      *
-     * @return Tx_Contexts_Context_Setting|null NULL when not enabled
+     * @return Setting|null NULL when not enabled
      *                                          and not disabled
      */
     final public function getSetting($table, $setting, $uid, $arRow = null)
@@ -202,19 +206,19 @@ abstract class Tx_Contexts_Context_Abstract
             //if it's a flat column, use the settings directly from the
             // database row instead of relying on the tx_contexts_settings
             // table
-            $arFlatColumns = Tx_Contexts_Api_Configuration::getFlatColumns(
+            $arFlatColumns = Configuration::getFlatColumns(
                 $table, $setting
             );
             if (isset($arRow[$arFlatColumns[0]])
                 && isset($arRow[$arFlatColumns[1]])
             ) {
-                return Tx_Contexts_Context_Setting::fromFlatData(
+                return Setting::fromFlatData(
                     $this, $table, $setting, $arFlatColumns, $arRow
                 );
             }
         }
 
-        $settings = $this->getSettings($table, $uid, $arRow);
+        $settings = $this->getSettings($table, $uid);
 
         return array_key_exists($setting, $settings)
             ? $settings[$setting]
@@ -248,16 +252,21 @@ abstract class Tx_Contexts_Context_Abstract
         $where .= " AND foreign_table = '$table'";
         $where .= " AND foreign_uid IN ('" . implode("','", $uids) . "')";
 
-        $rows = (array) Tx_Contexts_Api_Configuration::getDb()
-            ->exec_SELECTgetRows('*', 'tx_contexts_settings', $where);
+        $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+            '*',
+            'tx_contexts_settings',
+            $where
+        );
 
         foreach ($uids as $uid) {
             $this->settings[$table . '.' . $uid] = array();
         }
 
-        foreach ($rows as $row) {
-            $this->settings[$table . '.' . $row['foreign_uid']][$row['name']]
-                = new Tx_Contexts_Context_Setting($this, $row);
+        if (is_array($rows)) {
+            foreach ($rows as $row) {
+                $this->settings[$table . '.' . $row['foreign_uid']][$row['name']]
+                    = new Setting($this, $row);
+            }
         }
 
         return $this->settings[$settingsKey];
@@ -428,8 +437,8 @@ abstract class Tx_Contexts_Context_Abstract
     protected function initTsfe()
     {
         if (!isset($GLOBALS['TSFE']) && TYPO3_MODE === 'FE') {
-            $GLOBALS['TSFE'] = t3lib_div::makeInstance(
-                'tslib_fe',
+            $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
+                TypoScriptFrontendController::class,
                 $GLOBALS['TYPO3_CONF_VARS'], 0, 0
             );
             $GLOBALS['TSFE']->initFEuser();
@@ -487,7 +496,7 @@ abstract class Tx_Contexts_Context_Abstract
      */
     protected function getIndpEnv($strKey)
     {
-        return \t3lib_div::getIndpEnv(
+        return GeneralUtility::getIndpEnv(
             $strKey
         );
     }
@@ -499,9 +508,8 @@ abstract class Tx_Contexts_Context_Abstract
      */
     protected function getRemoteAddress()
     {
-        return  $this->getIndpEnv(
+        return $this->getIndpEnv(
             self::REMOTE_ADDR
         );
     }
 }
-?>

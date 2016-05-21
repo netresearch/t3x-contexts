@@ -1,4 +1,6 @@
 <?php
+namespace Bmack\Contexts\Context\Type;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -21,6 +23,8 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+use Bmack\Contexts\Context\AbstractContext;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Matches on the current frontend user IP
@@ -30,7 +34,7 @@
  * @author     Andre Hähnel <andre.haehnel@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-class Tx_Contexts_Context_Type_Ip extends Tx_Contexts_Context_Abstract
+class IpContext extends AbstractContext
 {
     /**
      * Check if the context is active now.
@@ -79,11 +83,9 @@ class Tx_Contexts_Context_Type_Ip extends Tx_Contexts_Context_Abstract
     protected function isIpInRange($strIp, $bIpv4, $strRange)
     {
         if ($bIpv4) {
-            return t3lib_div::cmpIPv4($strIp, $strRange);
+            return GeneralUtility::cmpIPv4($strIp, $strRange);
+        } else {
+            return GeneralUtility::cmpIPv6($strIp, $strRange);
         }
-
-        return t3lib_div::cmpIPv6($strIp, $strRange);
     }
-
 }
-?>

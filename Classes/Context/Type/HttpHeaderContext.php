@@ -1,4 +1,5 @@
 <?php
+namespace Bmack\Contexts\Context\Type;
 /***************************************************************
 *  Copyright notice
 *
@@ -22,6 +23,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use Bmack\Contexts\Context\AbstractContext;
+
 /**
  * Matches on a HTTP header with a certain value
  *
@@ -30,7 +33,7 @@
  * @author     Michael Schams <schams.net>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-class Tx_Contexts_Context_Type_HttpHeader extends Tx_Contexts_Context_Abstract
+class HttpHeaderContext extends AbstractContext
 {
     /**
      * Check if the context is active now.

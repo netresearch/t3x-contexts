@@ -1,4 +1,6 @@
 <?php
+namespace Bmack\Contexts\Service;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -22,12 +24,14 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use TYPO3\CMS\Core\SingletonInterface;
+
 /**
- * Hook methods used in Typo3 for Icons
+ * Hook methods used in TYPO3 for Icons
  *
  * @author André Hähnel <andre.haehnel@netresearch.de>
  */
-class Tx_Contexts_Service_Icon
+class IconService implements SingletonInterface
 {
     /**
      * Add a "contexts" icon to the standard page/content element item
@@ -39,7 +43,7 @@ class Tx_Contexts_Service_Icon
      *
      * @return void
      */
-    public static function overrideIconOverlay($table, $row, &$status)
+    public function overrideIconOverlay($table, $row, &$status)
     {
 
         if (isset($row['tx_contexts_enable']) && $row['tx_contexts_enable'] != '' ||
@@ -48,4 +52,3 @@ class Tx_Contexts_Service_Icon
         }
     }
 }
-?>

@@ -1,8 +1,23 @@
 <?php
-final class Tx_Contexts_Context_Setting
+namespace Bmack\Contexts\Context;
+
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
+final class Setting
 {
     /**
-     * @var Tx_Contexts_Context_Abstract
+     * @var AbstractContext
      */
     protected $context;
 
@@ -37,7 +52,7 @@ final class Tx_Contexts_Context_Setting
 	 */
 	protected $enabled;
 
-	public function __construct(Tx_Contexts_Context_Abstract $context, array $row)
+	public function __construct(AbstractContext $context, array $row)
 	{
 	    $this->context = $context;
 	    $this->uid = (int) $row['uid'];
@@ -50,10 +65,10 @@ final class Tx_Contexts_Context_Setting
     /**
      * Create a context settings object from flat data
      *
-     * @return Tx_Contexts_Context_Setting|null NULL when not enabled/disabled
+     * @return Setting|null NULL when not enabled/disabled
      */
     public static function fromFlatData(
-        Tx_Contexts_Context_Abstract $context,
+        AbstractContext $context,
         $table, $setting, $arFlatColumns, $arRow
     ) {
         $bDisabled = strpos(
@@ -85,7 +100,7 @@ final class Tx_Contexts_Context_Setting
 	}
 
 	/**
-     * @return Tx_Contexts_Context_Abstract
+     * @return AbstractContext
      */
     public function getContext()
     {

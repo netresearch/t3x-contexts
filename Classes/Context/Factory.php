@@ -1,4 +1,6 @@
 <?php
+namespace Bmack\Contexts\Context;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -21,29 +23,33 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+use Bmack\Contexts\Api\Configuration;
+use Bmack\Contexts\ContextException;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Context factory
  *
  * @author Christian Opitz <christian.opitz@netresearch.de>
  */
-class Tx_Contexts_Context_Factory
+class Factory
 {
     /**
      * Find the right class for the context type and instantiate it
      *
      * @param array $arRow Database context row
      *
-     * @return Tx_Contexts_Context_Abstract|null
-     * @throws Tx_Contexts_Exception
+     * @return AbstractContext|null
+     * @throws \Bmack\Contexts\ContextException
      */
     public static function createFromDb($arRow)
     {
-        $classMap = Tx_Contexts_Api_Configuration::getContextTypes();
+        $classMap = Configuration::getContextTypes();
         $type     = $arRow['type'];
 
         if (!$type || !array_key_exists($type, $classMap)) {
-            t3lib_div::devLog(
+            GeneralUtility::devLog(
                 'No class found for context type "' . $type . '"',
                 'tx_contexts', 2
             );
@@ -58,16 +64,15 @@ class Tx_Contexts_Context_Factory
             return null;
         }
 
-        $instance = t3lib_div::makeInstance($class, $arRow);
-        if ($instance instanceof t3lib_Singleton) {
-            throw new Tx_Contexts_Exception($class . ' may not be singleton');
+        $instance = GeneralUtility::makeInstance($class, $arRow);
+        if ($instance instanceof SingletonInterface) {
+            throw new ContextException($class . ' may not be singleton');
         }
-        if (!$instance instanceof Tx_Contexts_Context_Abstract) {
-            throw new Tx_Contexts_Exception(
+        if (!$instance instanceof AbstractContext) {
+            throw new ContextException(
                 $class . ' must extend Tx_Contexts_Context_Abstract'
             );
         }
         return $instance;
     }
 }
-?>

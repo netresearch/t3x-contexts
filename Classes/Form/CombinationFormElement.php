@@ -1,15 +1,22 @@
 <?php
-/**
- * Part of context extension
+namespace Bmack\Contexts\Form;
+
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- * PHP version 5
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- * @category   TYPO3-Extensions
- * @package    Contexts
- * @author     Marian Pollzien <marian.pollzien@netresearch.de>
- * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
- * @link       http://github.com/netresearch/contexts
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
  */
+
+use Bmack\Contexts\Context\Container;
+use Bmack\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
+use TYPO3\CMS\Backend\Form\FormEngine;
 
 /**
  * Provides methods used in the backend by flexforms.
@@ -20,31 +27,31 @@
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts
  */
-class Tx_Contexts_Backend
+class CombinationFormElement
 {
     /**
      * Display a textarea with validation for the entered aliases and expressions
      *
      * @param array          $arFieldInfo Information about the current input field
-     * @param t3lib_tceforms $tceforms    Form rendering library object
+     * @param FormEngine     $formEngineObject    Form rendering library object
      * @return string HTML code
      */
-    public function textCombinations($arFieldInfo, t3lib_tceforms $tceforms)
+    public function render($arFieldInfo, FormEngine $formEngineObject)
     {
-        $text = $tceforms->getSingleField_typeText(
+        $text = $formEngineObject->getSingleField_typeText(
             $arFieldInfo['table'], $arFieldInfo['field'],
             $arFieldInfo['row'], $arFieldInfo
         );
-        $evaluator = new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator();
+        $evaluator = new LogicalExpressionEvaluator();
         $arTokens = $evaluator->tokenize($arFieldInfo['itemFormElValue']);
 
         $arNotFound = array();
         $arUnknownTokens = array();
         foreach ($arTokens as $token) {
             if (is_array($token)
-                && $token[0] === Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::T_VAR
+                && $token[0] === LogicalExpressionEvaluator::T_VAR
             ) {
-                $contexts = Tx_Contexts_Context_Container::get()->initAll();
+                $contexts = Container::get()->initAll();
                 $bFound = false;
                 foreach ($contexts as $context) {
                     if ($context->getAlias() == $token[1]) {
@@ -56,7 +63,7 @@ class Tx_Contexts_Backend
                     $arNotFound[] = $token[1];
                 }
             } elseif (is_array($token)
-                && $token[0] === Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::T_UNKNOWN
+                && $token[0] === LogicalExpressionEvaluator::T_UNKNOWN
             ) {
                 $arUnknownTokens[] = $token[1];
             }
@@ -99,4 +106,3 @@ HTM;
         return $html;
     }
 }
-?>

@@ -1,8 +1,8 @@
 .test {
     color:#ff0000;
 }
-table.typo3-TCEforms table.tx_contexts_table_settings td,
-table.typo3-TCEforms table.tx_contexts_table_settings th {
+table.tx_contexts_table_settings td,
+table.tx_contexts_table_settings th {
     padding: 2px;
     vertical-align: middle;
 }

@@ -1,4 +1,6 @@
 <?php
+namespace Bmack\Contexts\Context\Type;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -22,6 +24,9 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use Bmack\Contexts\Context\AbstractContext;
+use Bmack\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
+
 /**
  * Matches when a logical expression with other contexts evaluates to true
  *
@@ -29,13 +34,17 @@
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @license http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
+class CombinationContext extends AbstractContext
 {
+    /**
+     * @var LogicalExpressionEvaluator
+     */
     protected $evaluator;
 
+    /**
+     * @var array
+     */
     protected $tokens;
-
-
 
     /**
      * Initialize the evaluator, tokenize the expression and create
@@ -46,12 +55,12 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
      */
     public function getDependencies($arContexts)
     {
-        $this->evaluator = new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator();
+        $this->evaluator = new LogicalExpressionEvaluator();
         $this->tokens = $this->evaluator->tokenize($this->getConfValue('field_expression'));
         $dependencies = array();
         foreach ($this->tokens as $token) {
             if (is_array($token)
-                && $token[0] === Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::T_VAR
+                && $token[0] === LogicalExpressionEvaluator::T_VAR
             ) {
                 foreach ($arContexts as $dependent) {
                     if ($dependent->getAlias() == $token[1]) {
@@ -94,4 +103,3 @@ class Tx_Contexts_Context_Type_Combination extends Tx_Contexts_Context_Abstract
         return $this->invert($this->evaluator->evaluate($values));
     }
 }
-?>

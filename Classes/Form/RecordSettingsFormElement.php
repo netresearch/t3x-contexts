@@ -1,33 +1,32 @@
 <?php
-/***************************************************************
-*  Copyright notice
-*
-*  (c) 2013 Netresearch GmbH & Co. KG <typo3-2013@netresearch.de>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+namespace Bmack\Contexts\Form;
+
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
+use Bmack\Contexts\Api\Configuration;
+use Bmack\Contexts\Context\AbstractContext;
+use Bmack\Contexts\Context\Container;
+use TYPO3\CMS\Backend\Form\FormEngine;
+use TYPO3\CMS\Backend\Utility\IconUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
- * USER functions to render the defaults and record settings fields
+ * USER function to render the record settings fields
  *
  * @author Christian Opitz <christian.opitz@netresearch.de>
  */
-class Tx_Contexts_Service_Tca
+class RecordSettingsFormElement
 {
     /**
      * Render the context settings field for a certain table
@@ -35,20 +34,19 @@ class Tx_Contexts_Service_Tca
      * @param array          $params Array of record information
      *                               - table - table name
      *                               - row   - array with database row data
-     * @param t3lib_TCEforms $fobj
+     * @param FormEngine $formEngineObject
      * @return string
      */
-    public function renderRecordSettingsField($params, $fobj)
+    public function render($params, $formEngineObject)
     {
-        global $TCA;
         $table = $params['table'];
 
-        $fobj->addStyleSheet(
+        $formEngineObject->addStyleSheet(
             'tx_contexts_bestyles',
-            t3lib_extMgm::extRelPath('contexts') . 'Resources/Public/StyleSheet/be.css'
+            ExtensionManagementUtility::extRelPath('contexts') . 'Resources/Public/StyleSheet/be.css'
         );
 
-        $contexts = new Tx_Contexts_Context_Container();
+        $contexts = new Container();
         $contexts->initAll();
 
         $namePre = str_replace('[' . $params['field'] . '_', '[' . $params['field'] . '][', $params['itemFormElName']);
@@ -60,10 +58,10 @@ class Tx_Contexts_Service_Tca
             . '<tr class="t3-row-header">'
             . '<td></td>'
             . '<td class="tx_contexts_context">' .
-            $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':tx_contexts_contexts') .
+            $formEngineObject->sL('LLL:' . Configuration::LANG_FILE . ':tx_contexts_contexts') .
             '</td>';
         foreach ($settings as $settingName => $config) {
-            $content .= '<td class="tx_contexts_setting">' . $fobj->sL($config['label']) . '</td>';
+            $content .= '<td class="tx_contexts_setting">' . $formEngineObject->sL($config['label']) . '</td>';
         }
         $content .= '</tr>';
 
@@ -71,11 +69,11 @@ class Tx_Contexts_Service_Tca
 
         $visibleContexts = 0;
         foreach ($contexts as $context) {
+            /* @var $context AbstractContext */
             if ($context->getDisabled() || $context->getHideInBackend()) {
                 continue;
             }
 
-            /* @var $context Tx_Contexts_Context_Abstract */
             ++$visibleContexts;
             $contSettings = '';
             $bHasSetting = false;
@@ -90,7 +88,7 @@ class Tx_Contexts_Service_Tca
                     . '</select></td>';
             }
 
-            list($icon, $title) = $this->getRecordPreview($context, $uid);
+            list($icon, $title) = $this->getRecordPreview($context);
             $content .= '<tr class="db_list_normal">'
                 . '<td class="tx_contexts_context col-icon"">'
                 . $icon . '</td>'
@@ -105,7 +103,7 @@ class Tx_Contexts_Service_Tca
         if ($visibleContexts == 0) {
             $content .= '<tr>'
                 . '<td colspan="4" style="text-align: center">'
-                . $fobj->sL('LLL:' . Tx_Contexts_Api_Configuration::LANG_FILE . ':no_contexts')
+                . $formEngineObject->sL('LLL:' . Configuration::LANG_FILE . ':no_contexts')
                 . '</td>'
                 . '</tr>';
         }
@@ -118,12 +116,11 @@ class Tx_Contexts_Service_Tca
     /**
      * Get the standard record view for context records
      *
-     * @param Tx_Contexts_Context_Abstract $context
-     * @param int                          $thisUid
+     * @param AbstractContext $context
      *
      * @return array First value is click icon, second is title
      */
-    protected function getRecordPreview($context, $thisUid)
+    protected function getRecordPreview($context)
     {
         $row = array(
             'uid'   => $context->getUid(),
@@ -134,7 +131,7 @@ class Tx_Contexts_Service_Tca
 
         return array(
             $this->getClickMenu(
-                t3lib_iconWorks::getSpriteIconForRecord(
+                IconUtility::getSpriteIconForRecord(
                     'tx_contexts_contexts',
                     $row,
                     array(
@@ -161,7 +158,7 @@ class Tx_Contexts_Service_Tca
      * @param string  $str   The icon HTML to wrap
      * @param string  $table Table name (eg. "pages" or "tt_content") OR the
      *                       absolute path to the file
-     * @param integer $uid   The uid of the record OR if file, just blank value.
+     * @param mixed   $uid   The uid of the record OR if file, just blank value.
      * @return string HTML
      */
     protected function getClickMenu($str, $table, $uid = '')
@@ -170,54 +167,7 @@ class Tx_Contexts_Service_Tca
             $str, $table, $uid, 1, '', '+info,edit,view,new', TRUE
         ));
         return
-        '<a href="#" onclick="' . $onClick . '" onrightclick="' . $onClick . '">' . $str . '</a>';
-    }
-
-
-    /**
-     * Render a checkbox for the default settings of records in
-     * this table
-     *
-     * @param array $params
-     * @param t3lib_TCEforms $fobj
-     * @return string
-     */
-    public function renderDefaultSettingsField($params, $fobj)
-    {
-        global $TCA;
-        $table = $params['fieldConf']['config']['table'];
-        t3lib_div::loadTCA($table);
-
-        $content = '';
-
-        $namePre = str_replace('[default_settings_', '[default_settings][', $params['itemFormElName']);
-
-        /* @var $context Tx_Contexts_Context_Abstract */
-        $uid = (int) $params['row']['uid'];
-        $context = $uid
-            ? Tx_Contexts_Context_Container::get()->initAll()->find($uid)
-            : null;
-
-        foreach ($params['fieldConf']['config']['settings'] as $setting => $config) {
-            $id = $params['itemFormElID'] . '-' . $setting;
-            $name = $namePre . '[' . $setting . ']';
-            $content .= '<input type="hidden" name="' . $name . '" value="0"/>';
-            $content .= '<input class="checkbox" type="checkbox" name="' . $name . '" ';
-            if (
-                !$context ||
-                !$context->hasSetting($table, $setting, 0) ||
-                $context->getSetting($table, $setting, 0)->getEnabled()
-            ) {
-                $content .= 'checked="checked" ';
-            }
-            $content .= 'value="1" id="' . $id . '" /> ';
-            $content .= '<label for="' . $id . '">';
-            $content .= $fobj->sL($config['label']);
-            $content .= '</label><br/>';
-        }
-
-        return $content;
+            '<a href="#" onclick="' . $onClick . '" onrightclick="' . $onClick . '">' . $str . '</a>';
     }
 
 }
-?>

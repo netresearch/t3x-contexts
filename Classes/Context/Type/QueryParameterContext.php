@@ -1,4 +1,6 @@
 <?php
+namespace Bmack\Contexts\Context\Type;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -21,6 +23,9 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+use Bmack\Contexts\Context\AbstractContext;
+use Bmack\Contexts\Service\FrontendControllerService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Matches on a GET parameter with a certain value
@@ -31,25 +36,25 @@
  * @author     Christian Opitz <christian.opitz@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-class Tx_Contexts_Context_Type_GetParam extends Tx_Contexts_Context_Abstract
+class QueryParameterContext extends AbstractContext
 {
     /**
      * Check if the context is active now.
      *
      * @param array $arDependencies Array of dependent context objects
-     *
-     * @return boolean True if the context is active, false if not
+     * @return bool True if the context is active, false if not
+     * @throws \Exception
      */
     public function match(array $arDependencies = array())
     {
         $param = trim($this->getConfValue('field_name'));
         if ($param === '') {
-            throw new Exception(
+            throw new \Exception(
                 'Parameter name missing from GET Parameter'
                 . ' context configuration'
             );
         }
-        $value = t3lib_div::_GET($param);
+        $value = GeneralUtility::_GET($param);
 
         if ($value === null) {
             //load from session if no param given
@@ -60,7 +65,7 @@ class Tx_Contexts_Context_Type_GetParam extends Tx_Contexts_Context_Abstract
         }
 
         // Register param on TSFE service for cache and linkVars management
-        Tx_Contexts_Context_Type_GetParam_TsfeService::register(
+        FrontendControllerService::registerQueryParameter(
             $param, $value, !(bool) $this->use_session
         );
 
@@ -90,4 +95,3 @@ class Tx_Contexts_Context_Type_GetParam extends Tx_Contexts_Context_Abstract
         return in_array($value, $arValues, true);
     }
 }
-?>

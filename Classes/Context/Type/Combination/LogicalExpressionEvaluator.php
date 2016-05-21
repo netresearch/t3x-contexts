@@ -1,4 +1,6 @@
 <?php
+namespace Bmack\Contexts\Context\Type\Combination;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -30,7 +32,7 @@
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @license http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
+class LogicalExpressionEvaluator
 {
     /**
      * Identifier for any unknown token
@@ -106,7 +108,7 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
     /**
      * Parent scope - set by @see pushScope()
      * (thats NOT the same as getScope())
-     * @var Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
+     * @var LogicalExpressionEvaluator
      */
     protected $parentScope;
 
@@ -273,7 +275,7 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
     /**
      * Get the current scope (not to confuse with parent scope)
      *
-     * @return Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
+     * @return LogicalExpressionEvaluator
      */
     protected function getScope()
     {
@@ -285,7 +287,7 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
      * does some syntax checks
      *
      * @param int|array $token
-     * @throws Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
+     * @throws LogicalExpressionEvaluatorException
      * @return void
      */
     protected function handleToken($token)
@@ -301,12 +303,12 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
                 $scope = $this->getScope();
                 $this->popScope();
                 if (!$scope->parentScope->parentScope) {
-                    throw new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception(
+                    throw new LogicalExpressionEvaluatorException(
                         'Found not opened closing parentheses'
                     );
                 }
                 if (is_int(end($this->tokens))) {
-                    throw new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception(
+                    throw new LogicalExpressionEvaluatorException(
                         'Unexpected )'
                     );
                 }
@@ -316,7 +318,7 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
             case self::T_OR:
             case self::T_XOR:
                 if (!$this->tokens || is_int(end($this->tokens))) {
-                    throw new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception(
+                    throw new LogicalExpressionEvaluatorException(
                         'Unexpected Operator'
                     );
                 }
@@ -324,13 +326,13 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
                 break;
             case self::T_END:
                 if (is_int(end($this->tokens))) {
-                    throw new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception(
+                    throw new LogicalExpressionEvaluatorException(
                         'Unexpected end'
                     );
                 }
 
                 if ($this->getScope()->parentScope->parentScope) {
-                    throw new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception(
+                    throw new LogicalExpressionEvaluatorException(
                         'Missing closing parentheses'
                     );
                 }
@@ -339,13 +341,13 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
             default:
                 if ($token[0] == self::T_VAR) {
                     if ($this->tokens && !is_int(end($this->tokens))) {
-                        throw new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception(
+                        throw new LogicalExpressionEvaluatorException(
                             'Unexpected variable'
                         );
                     }
                     $this->pushToken($token);
                 } else {
-                    throw new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception(
+                    throw new LogicalExpressionEvaluatorException(
                         'Unexpected "' . $token[1] . '"'
                     );
                 }
@@ -355,8 +357,8 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
     /**
      * Add a token to the current scope tokens
      *
-     * @param int|array|Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator $token
-     * @throws Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
+     * @param int|array|LogicalExpressionEvaluator $token
+     * @throws LogicalExpressionEvaluatorException
      * @return void
      */
     protected function pushToken($token)
@@ -367,7 +369,7 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
             } elseif ($token instanceof self) {
                 $token->negated = true;
             } else {
-                throw new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception(
+                throw new LogicalExpressionEvaluatorException(
                     '! can\'t preceed operators'
                 );
             }
@@ -415,13 +417,14 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
      * provided values
      *
      * @param array $values
-     * @throws Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
+     * @throws LogicalExpressionEvaluatorException
      * @return boolean
      */
     public function evaluate(array $values)
     {
         // default if no operator isset
         $value = false;
+        $lastValue = null;
 
         foreach ($this->tokens as $i => $token) {
             if ($token instanceof self) {
@@ -451,7 +454,7 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
                     break;
                 case self::T_XOR:
                     if ($i > 1) {
-                        throw new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception(
+                        throw new LogicalExpressionEvaluatorException(
                             'Can\'t evaluate more than two items by xor'
                         );
                     }
@@ -509,4 +512,3 @@ class Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator
         return implode($operator, $parts);
     }
 }
-?>

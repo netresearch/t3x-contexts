@@ -1,8 +1,11 @@
 <?php
+namespace Bmack\Contexts\Api;
+
 /***************************************************************
 *  Copyright notice
 *
 *  (c) 2013 Netresearch GmbH & Co. KG <typo3-2013@netresearch.de>
+*  (c) 2016 Benjamin Mack <benjamin.mack@b13.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -22,6 +25,10 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use Bmack\Contexts\Form\DefaultSettingsFormElement;
+use Bmack\Contexts\Form\RecordSettingsFormElement;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 /**
  * General configuration API
  *
@@ -30,7 +37,7 @@
  * @author     Christian Opitz <christian.opitz@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-class Tx_Contexts_Api_Configuration
+class Configuration
 {
     /**
      * The language file used for labels, added by contexts extension.
@@ -66,11 +73,11 @@ class Tx_Contexts_Api_Configuration
      * if it should be used to enable/disable records:
      *
      * <code title="Adding the visibility setting only">
-     * Tx_Contexts_Api_Configuration::addToTca($_EXTKEY, 'some_table');
+     * \Bmack\Contexts\Api\Configuration::addToTca($_EXTKEY, 'some_table');
      * </code>
      *
      * <code title="Adding the visibility and another setting">
-     * Tx_Contexts_Api_Configuration::addToTca($_EXTKEY, 'some_table', array(
+     * \Bmack\Contexts\Api\Configuration::addToTca($_EXTKEY, 'some_table', array(
      *     'some_setting' => array(
      *         'label' => 'LLL:langfile:some_setting',
      *         // if the setting should also be stored directly into the records
@@ -115,10 +122,8 @@ class Tx_Contexts_Api_Configuration
         self::addToEnableSettings($table, $settings);
         self::addToFlatColumns($table, $settings);
 
-        if (TYPO3_MODE == 'BE') {
-            self::addToTcaColumns($table, $settings);
-            self::addToExtensionFlatSettings($extKey, $table, $settings);
-        }
+        self::addToTcaColumns($table, $settings);
+        self::addToExtensionFlatSettings($extKey, $table, $settings);
     }
 
     /**
@@ -207,8 +212,6 @@ class Tx_Contexts_Api_Configuration
      */
     protected static function addToEnableSettings($table, array $settings)
     {
-        global $TCA;
-
         $enableSettings = (array) self::$enableSettings[$table];
 
         foreach ($settings as $setting => $config) {
@@ -233,32 +236,25 @@ class Tx_Contexts_Api_Configuration
      */
     protected static function addToTcaColumns($table, array $settings)
     {
-        global $TCA;
-
-        t3lib_div::loadTCA($table);
-
-        if (!isset($TCA[$table])) {
+        if (!isset($GLOBALS['TCA'][$table])) {
             return;
         }
 
-        t3lib_div::loadTCA('tx_contexts_contexts');
-
-        if (!array_key_exists(self::RECORD_SETTINGS_COLUMN, $TCA[$table]['columns'])) {
+        if (!array_key_exists(self::RECORD_SETTINGS_COLUMN, $GLOBALS['TCA'][$table]['columns'])) {
             $recordSettingsConf = array(
-                "exclude" => 1,
-                "label" => 'LLL:' . self::LANG_FILE. ':tabname',
-                "config" => array (
-                    "type" => "user",
-                    "size" => "30",
-                    "userFunc"
-                        => 'Tx_Contexts_Service_Tca->renderRecordSettingsField',
+                'exclude' => 1,
+                'label' => 'LLL:' . self::LANG_FILE. ':tabname',
+                'config' => array(
+                    'type' => 'user',
+                    'size' => '30',
+                    'userFunc' => RecordSettingsFormElement::class . '->render',
                     'settings' => $settings,
                 ),
             );
             $arColumns = array(
                 self::RECORD_SETTINGS_COLUMN => $recordSettingsConf
             );
-            $arFlatColumns = Tx_Contexts_Api_Configuration::getFlatColumns($table);
+            $arFlatColumns = self::getFlatColumns($table);
             if (count($arFlatColumns)) {
                 //add passthrough fields to keep settings when copying records
                 foreach ($arFlatColumns as $arSetting) {
@@ -270,38 +266,38 @@ class Tx_Contexts_Api_Configuration
                 }
             }
 
-            t3lib_extMgm::addTCAcolumns($table, $arColumns, 1);
+            ExtensionManagementUtility::addTCAcolumns($table, $arColumns);
 
             switch ($table) {
-            case'pages':
-                t3lib_extMgm::addToAllTCAtypes(
-                    $table,
-                    self::RECORD_SETTINGS_COLUMN,
-                    '1,4,5',
-                    'after:fe_group'
-                );
-                t3lib_extMgm::addToAllTCAtypes(
-                    $table,
-                    self::RECORD_SETTINGS_COLUMN,
-                    '254',
-                    'after:hidden'
-                );
-                break;
-            case 'tt_content':
-                t3lib_extMgm::addToAllTCAtypes(
-                    $table,
-                    self::RECORD_SETTINGS_COLUMN,
-                    '',
-                    'after:fe_group'
-                );
-                break;
+                case 'pages':
+                    ExtensionManagementUtility::addToAllTCAtypes(
+                        $table,
+                        self::RECORD_SETTINGS_COLUMN,
+                        '1,4,5',
+                        'after:fe_group'
+                    );
+                    ExtensionManagementUtility::addToAllTCAtypes(
+                        $table,
+                        self::RECORD_SETTINGS_COLUMN,
+                        '254',
+                        'after:hidden'
+                    );
+                    break;
+                case 'tt_content':
+                    ExtensionManagementUtility::addToAllTCAtypes(
+                        $table,
+                        self::RECORD_SETTINGS_COLUMN,
+                        '',
+                        'after:fe_group'
+                    );
+                    break;
             }
 
         } else {
-            $TCA[$table]['columns'][self::RECORD_SETTINGS_COLUMN]
+            $GLOBALS['TCA'][$table]['columns'][self::RECORD_SETTINGS_COLUMN]
             ['config']['settings']
                 = array_merge(
-                    $TCA[$table]['columns'][self::RECORD_SETTINGS_COLUMN]
+                    $GLOBALS['TCA'][$table]['columns'][self::RECORD_SETTINGS_COLUMN]
                     ['config']['settings'],
                     $settings
                 );
@@ -309,36 +305,34 @@ class Tx_Contexts_Api_Configuration
 
         $defaultSettingsColumn = 'default_settings_' . $table;
 
-        if (!array_key_exists($defaultSettingsColumn, $TCA['tx_contexts_contexts']['columns'])) {
+        if (!array_key_exists($defaultSettingsColumn, $GLOBALS['TCA']['tx_contexts_contexts']['columns'])) {
             $defaultSettingsConf = array(
-                "exclude" => 1,
-                'label' => $TCA[$table]['ctrl']['title'],
+                'exclude' => 1,
+                'label' => $GLOBALS['TCA'][$table]['ctrl']['title'],
                 'config' => array(
                     'type' => 'user',
                     'size' => 30,
-                    'userFunc'
-                        => 'Tx_Contexts_Service_Tca->renderDefaultSettingsField',
+                    'userFunc' => DefaultSettingsFormElement::class . '->render',
                     'table' => $table,
                     'settings' => $settings
                 )
             );
 
-            t3lib_extMgm::addTCAcolumns(
+            ExtensionManagementUtility::addTCAcolumns(
                 'tx_contexts_contexts',
                 array(
                     $defaultSettingsColumn => $defaultSettingsConf
-                ),
-                1
+                )
             );
 
-            t3lib_extMgm::addToAllTCAtypes(
+            ExtensionManagementUtility::addToAllTCAtypes(
                 'tx_contexts_contexts',
                 $defaultSettingsColumn
             );
         } else {
-            $TCA['tx_contexts_contexts']['columns'][$defaultSettingsColumn]
+            $GLOBALS['TCA']['tx_contexts_contexts']['columns'][$defaultSettingsColumn]
             ['config']['settings'] = array_merge(
-                $TCA['tx_contexts_contexts']['columns'][$defaultSettingsColumn]
+                $GLOBALS['TCA']['tx_contexts_contexts']['columns'][$defaultSettingsColumn]
                 ['config']['settings'],
                 $settings
             );
@@ -361,20 +355,16 @@ class Tx_Contexts_Api_Configuration
     public static function registerContextType(
         $key, $title, $class, $flexFile
     ) {
-        global $TCA;
-
         $GLOBALS['EXTCONF']['tx_contexts']['contextTypes'][$key] = array(
             'title'    => $title,
             'class'    => $class,
             'flexFile' => $flexFile,
         );
 
-        t3lib_div::loadTCA('tx_contexts_contexts');
-
-        if (isset($TCA['tx_contexts_contexts']['columns']['type'])) {
-            $TCA['tx_contexts_contexts']['columns']['type']['config']
+        if (isset($GLOBALS['TCA']['tx_contexts_contexts']['columns']['type'])) {
+            $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type']['config']
                 ['items'][] = array($title, $key);
-            $TCA['tx_contexts_contexts']['columns']['type_conf']['config']
+            $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type_conf']['config']
                 ['ds'][$key] = $flexFile;
         }
     }
@@ -438,21 +428,10 @@ class Tx_Contexts_Api_Configuration
      *
      * @param string $table Table name
      *
-     * @return string $tcaCtrlEnablecolumns
+     * @return array $tcaCtrlEnablecolumns
      */
     public static function getEnableSettings($table)
     {
         return (array) self::$enableSettings[$table];
     }
-
-    /**
-     * Get the TYPO3_DB and it's type.
-     *
-     * @return t3lib_db
-     */
-    public static function getDb()
-    {
-        return $GLOBALS['TYPO3_DB'];
-    }
 }
-?>

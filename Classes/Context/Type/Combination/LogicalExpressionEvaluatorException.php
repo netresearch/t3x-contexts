@@ -1,4 +1,6 @@
 <?php
+namespace Bmack\Contexts\Context\Type\Combination;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -23,24 +25,11 @@
 ***************************************************************/
 
 /**
- * Context Typoscript Connector
+ * Exception for parsing and evaluation errors
  *
- * This function is for usage in Typo3 TypoScript to get match context directly.
- *
- * @param string $strContext context alias
- *
- * @return boolean True if it matches, false if not
+ * @package Contexts
+ * @subpackage Types_Combination
+ * @author  Christian Opitz <christian.opitz@netresearch.de>
+ * @license http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-function user_contexts_matches($strContext)
-{
-    static $initialized = false;
-    if (!$initialized) {
-        //load and resolve all contexts
-        Tx_Contexts_Context_Container::get()->initMatching();
-        $initialized = true;
-    }
-
-    return Tx_Contexts_Api_ContextMatcher::getInstance()
-        ->matches($strContext);
-}
-?>
+class LogicalExpressionEvaluatorException extends \Exception {}

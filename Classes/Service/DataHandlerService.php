@@ -1,4 +1,6 @@
 <?php
+namespace Bmack\Contexts\Service;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -21,6 +23,9 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+use Bmack\Contexts\Api\Configuration;
+use TYPO3\CMS\Core\Database\DatabaseConnection;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
 
 /**
  * Class for TCEmain-hooks: Capture incoming default and record settings
@@ -28,7 +33,7 @@
  *
  * @author Christian Opitz <christian.opitz@netresearch.de>
  */
-class Tx_Contexts_Service_Tcemain
+class DataHandlerService
 {
     protected $currentSettings;
 
@@ -40,14 +45,12 @@ class Tx_Contexts_Service_Tcemain
      * @param array         &$incomingFieldArray
      * @param string        $table
      * @param string        $id
-     * @param t3lib_TCEmain &$reference
+     * @param DataHandler   &$reference
      * @return void
      */
     public function processDatamap_preProcessFieldArray(
         &$incomingFieldArray, $table, $id, &$reference
     ) {
-        $data = $incomingFieldArray;
-
         if (!is_array($incomingFieldArray)) {
             // some strange DB situation
             return;
@@ -62,9 +65,9 @@ class Tx_Contexts_Service_Tcemain
             return;
         }
 
-        if (isset($incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_COLUMN])) {
-            $this->currentSettings = $incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_COLUMN];
-            unset($incomingFieldArray[Tx_Contexts_Api_Configuration::RECORD_SETTINGS_COLUMN]);
+        if (isset($incomingFieldArray[Configuration::RECORD_SETTINGS_COLUMN])) {
+            $this->currentSettings = $incomingFieldArray[Configuration::RECORD_SETTINGS_COLUMN];
+            unset($incomingFieldArray[Configuration::RECORD_SETTINGS_COLUMN]);
         }
     }
 
@@ -75,7 +78,7 @@ class Tx_Contexts_Service_Tcemain
      * @param string        $table
      * @param string        $id
      * @param array         $fieldArray
-     * @param t3lib_TCEmain $reference
+     * @param DataHandler   $reference
      * @return void
      */
     public function processDatamap_afterDatabaseOperations(
@@ -108,29 +111,30 @@ class Tx_Contexts_Service_Tcemain
      */
     protected function saveRecordSettings($table, $uid, $contextsAndSettings)
     {
-        $db = Tx_Contexts_Api_Configuration::getDb();
-        $flatSettingColumns = Tx_Contexts_Api_Configuration::getFlatColumns(
+        $flatSettingColumns = Configuration::getFlatColumns(
             $table
         );
+        /** @var DatabaseConnection $databaseConnection */
+        $databaseConnection = $GLOBALS['TYPO3_DB'];
 
         foreach ($contextsAndSettings as $contextId => $settings) {
             foreach ($settings as $field => $setting) {
                 if (isset($flatSettingColumns[$field])) {
                     continue;
                 }
-                $row = $db->exec_SELECTgetSingleRow(
+                $row = $databaseConnection->exec_SELECTgetSingleRow(
                     'uid',
                     'tx_contexts_settings',
-                    "context_uid = $contextId AND " .
-                    "foreign_table = '$table' AND " .
-                    "name = '$field' AND " .
-                    "foreign_uid = $uid"
+                    'context_uid = ' . (int)$contextId .  ' AND ' .
+                    'foreign_table = '. $databaseConnection->fullQuoteStr($table, 'tx_contexts_settings') . ' AND ' .
+                    'name = ' . $databaseConnection->fullQuoteStr($field, 'tx_contexts_settings') . ' AND ' .
+                    'foreign_uid = ' . (int)$uid
                 );
                 if ($setting === '0' || $setting === '1') {
                     if ($row) {
-                        $db->exec_UPDATEquery('tx_contexts_settings', 'uid=' . $row['uid'], array('enabled' => $setting));
+                        $databaseConnection->exec_UPDATEquery('tx_contexts_settings', 'uid=' . (int)$row['uid'], array('enabled' => $setting));
                     } else {
-                        $db->exec_INSERTquery('tx_contexts_settings', array(
+                        $databaseConnection->exec_INSERTquery('tx_contexts_settings', array(
                             'context_uid' => $contextId,
                             'foreign_table' => $table,
                             'name' => $field,
@@ -139,7 +143,7 @@ class Tx_Contexts_Service_Tcemain
                         ));
                     }
                 } elseif ($row) {
-                    $db->exec_DELETEquery('tx_contexts_settings', 'uid=' . $row['uid']);
+                    $databaseConnection->exec_DELETEquery('tx_contexts_settings', 'uid=' . (int)$row['uid']);
                 }
             }
         }
@@ -161,13 +165,13 @@ class Tx_Contexts_Service_Tcemain
      *                                    menu_visibility => '0'
      *                                    '' = undecided, 1 - on, 0 - off
      * @return void
-     * @see Tx_Contexts_Service_Tsfe::enableFields()
+     * @see FrontendControllerService::enableFields()
      */
     protected function saveFlatSettings($table, $uid, $contextsAndSettings)
     {
         $values = array();
 
-        $flatSettingColumns = Tx_Contexts_Api_Configuration::getFlatColumns($table);
+        $flatSettingColumns = Configuration::getFlatColumns($table);
         foreach ($flatSettingColumns as $setting => $flatColumns) {
             $values[$flatColumns[0]] = array();
             $values[$flatColumns[1]] = array();
@@ -182,8 +186,8 @@ class Tx_Contexts_Service_Tcemain
             foreach ($values as $colname => &$val) {
                 $val = implode(',', $val);
             }
-            Tx_Contexts_Api_Configuration::getDb()->exec_UPDATEquery(
-                $table, 'uid=' . $uid, $values
+            $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+                $table, 'uid=' . (int)$uid, $values
             );
         }
     }
@@ -198,10 +202,10 @@ class Tx_Contexts_Service_Tcemain
      */
     protected function saveDefaultSettings($contextId, $settings)
     {
-        $existingSettings = (array) Tx_Contexts_Api_Configuration::getDb()->exec_SELECTgetRows(
+        $existingSettings = (array)$GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
             '*',
             'tx_contexts_settings',
-            "context_uid = '$contextId' AND foreign_uid = 0"
+            'context_uid = ' . (int)$contextId . ' AND foreign_uid = 0'
         );
 
         foreach ($settings as $table => $fields) {
@@ -213,25 +217,24 @@ class Tx_Contexts_Service_Tcemain
             }
             foreach ($fields as $field => $enabled) {
                 if (array_key_exists($field, $fieldSettings)) {
-                    Tx_Contexts_Api_Configuration::getDb()->exec_UPDATEquery(
+                    $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
                         'tx_contexts_settings',
-                        'uid=' . $fieldSettings[$field],
-                        array('enabled' => (int) $enabled)
+                        'uid=' . (int)$fieldSettings[$field],
+                        array('enabled' => (int)$enabled)
                     );
                 } else {
-                    Tx_Contexts_Api_Configuration::getDb()->exec_INSERTquery(
+                    $GLOBALS['TYPO3_DB']->exec_INSERTquery(
                         'tx_contexts_settings',
                         array(
                             'context_uid' => $contextId,
                             'foreign_table' => $table,
                             'name' => $field,
                             'foreign_uid' => 0,
-                            'enabled' => (int) $enabled
+                            'enabled' => (int)$enabled
                         )
                     );
                 }
-            };
+            }
         }
     }
 }
-?>

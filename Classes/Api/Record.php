@@ -1,4 +1,6 @@
 <?php
+namespace Bmack\Contexts\Api;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -22,6 +24,10 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use Bmack\Contexts\Context\AbstractContext;
+use Bmack\Contexts\Context\Container;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * API with methods to retrieve context information for records
  *
@@ -30,7 +36,7 @@
  * @author     Christian Opitz <christian.opitz@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-class Tx_Contexts_Api_Record
+class Record
 {
     /**
      * Determines if the specified record is enabled or disabled by the current
@@ -44,8 +50,7 @@ class Tx_Contexts_Api_Record
      */
     public static function isEnabled($table, $row)
     {
-        global $TCA;
-        $enableSettings = Tx_Contexts_Api_Configuration::getEnableSettings($table);
+        $enableSettings = Configuration::getEnableSettings($table);
         if (!$enableSettings) {
             return true;
         }
@@ -77,10 +82,10 @@ class Tx_Contexts_Api_Record
             }
 
             if (!isset($row['uid'])) {
-                t3lib_div::devLog(
+                GeneralUtility::devLog(
                     'Missing uid field in row',
                     'tx_contexts',
-                    t3lib_div::SYSLOG_SEVERITY_WARNING,
+                    GeneralUtility::SYSLOG_SEVERITY_WARNING,
                     array('table' => $table, 'row' => $row)
                 );
                 return false;
@@ -91,8 +96,8 @@ class Tx_Contexts_Api_Record
             $uid = (int) $row;
         }
 
-        /* @var $context Tx_Contexts_Context_Abstract */
-        foreach (Tx_Contexts_Context_Container::get() as $context) {
+        /* @var $context AbstractContext */
+        foreach (Container::get() as $context) {
             $rowSetting     = $context->getSetting($table, $setting, $uid);
             $defaultSetting = $context->getSetting($table, $setting, 0);
 
@@ -121,7 +126,7 @@ class Tx_Contexts_Api_Record
     protected static function isSettingEnabledFlat($table, $setting, array $row)
     {
         $flatColumns
-            = Tx_Contexts_Api_Configuration::getFlatColumns($table, $setting);
+            = Configuration::getFlatColumns($table, $setting);
 
         if (!$flatColumns) {
             return null;
@@ -132,10 +137,10 @@ class Tx_Contexts_Api_Record
 
         foreach ($flatColumns as $i => $flatColumn) {
             if (!array_key_exists($flatColumn, $row)) {
-                t3lib_div::devLog(
+                GeneralUtility::devLog(
                     'Missing flat field "' . $flatColumn . '"',
                     'tx_contexts',
-                    t3lib_div::SYSLOG_SEVERITY_WARNING,
+                    GeneralUtility::SYSLOG_SEVERITY_WARNING,
                     array('table' => $table, 'row' => $row)
                 );
                 $rowValid = false;
@@ -151,7 +156,7 @@ class Tx_Contexts_Api_Record
             return null;
         }
 
-        foreach (Tx_Contexts_Context_Container::get() as $context) {
+        foreach (Container::get() as $context) {
             if (array_key_exists($context->getUid(), $flatColumnContents[0])) {
                 return false;
             }
@@ -160,4 +165,3 @@ class Tx_Contexts_Api_Record
         return true;
     }
 }
-?>

@@ -1,4 +1,6 @@
 <?php
+namespace Bmack\Contexts\ViewHelpers;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -22,6 +24,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use Bmack\Contexts\Api\ContextMatcher;
+
 /**
  * context match view helper class.
  *
@@ -40,7 +44,7 @@
  * @subpackage ViewHelper
  * @author     André Hähnel <andre.haehnel@netresearch.de>
  */
-class Tx_Contexts_ViewHelpers_MatchesViewHelper
+class MatchesViewHelper
     extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
 {
 
@@ -64,10 +68,9 @@ class Tx_Contexts_ViewHelpers_MatchesViewHelper
     public function render()
     {
         if (isset($this->arguments['alias'])) {
-            return (int) Tx_Contexts_Api_ContextMatcher::getInstance()
+            return (int) ContextMatcher::getInstance()
                 ->matches($this->arguments['alias']);
         }
         return 0;
     }
 }
-?>
