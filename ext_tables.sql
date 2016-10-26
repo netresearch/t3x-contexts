@@ -44,16 +44,16 @@ CREATE TABLE tx_contexts_settings (
 # Update structure of table 'pages'
 #
 CREATE TABLE pages (
-    tx_contexts_enable tinytext NOT NULL,
-    tx_contexts_disable tinytext NOT NULL,
-    tx_contexts_nav_enable tinytext NOT NULL,
-    tx_contexts_nav_disable tinytext NOT NULL
+    tx_contexts_enable tinytext,
+    tx_contexts_disable tinytext,
+    tx_contexts_nav_enable tinytext,
+    tx_contexts_nav_disable tinytext
 );
 
 #
 # Update structure of table 'tt_content'
 #
 CREATE TABLE tt_content (
-    tx_contexts_enable tinytext NOT NULL,
-    tx_contexts_disable tinytext NOT NULL
+    tx_contexts_enable tinytext,
+    tx_contexts_disable tinytext
 );
