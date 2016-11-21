@@ -1,11 +1,10 @@
 <?php
-namespace Bmack\Contexts\Api;
+namespace Netresearch\Contexts\Api;
 
 /***************************************************************
 *  Copyright notice
 *
 *  (c) 2013 Netresearch GmbH & Co. KG <typo3.org@netresearch.de>
-*  (c) 2016 Benjamin Mack <benjamin.mack@b13.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -24,7 +23,7 @@ namespace Bmack\Contexts\Api;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-use Bmack\Contexts\Context\Container;
+use Netresearch\Contexts\Context\Container;
 
 /**
  * Load context by alias.

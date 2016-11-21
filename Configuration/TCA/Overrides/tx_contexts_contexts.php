@@ -1,39 +1,46 @@
 <?php
+//TODO check, prevent xml error for new records
+\Netresearch\Contexts\Api\Configuration::registerContextType(
+    '',
+    'Select a type',
+    '',
+    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Empty.xml'
+);
 
-\Bmack\Contexts\Api\Configuration::registerContextType(
+\Netresearch\Contexts\Api\Configuration::registerContextType(
     'domain',
     'Domain',
-    \Bmack\Contexts\Context\Type\DomainContext::class,
+    \Netresearch\Contexts\Context\Type\DomainContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Domain.xml'
 );
-\Bmack\Contexts\Api\Configuration::registerContextType(
+\Netresearch\Contexts\Api\Configuration::registerContextType(
     'getparam',
     'GET parameter',
-    \Bmack\Contexts\Context\Type\QueryParameterContext::class,
+    \Netresearch\Contexts\Context\Type\QueryParameterContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/GetParam.xml'
 );
-\Bmack\Contexts\Api\Configuration::registerContextType(
+\Netresearch\Contexts\Api\Configuration::registerContextType(
     'ip',
     'IP',
-    \Bmack\Contexts\Context\Type\IpContext::class,
+    \Netresearch\Contexts\Context\Type\IpContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Ip.xml'
 );
-\Bmack\Contexts\Api\Configuration::registerContextType(
+\Netresearch\Contexts\Api\Configuration::registerContextType(
     'httpheader',
     'HTTP header',
-    \Bmack\Contexts\Context\Type\HttpHeaderContext::class,
+    \Netresearch\Contexts\Context\Type\HttpHeaderContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/HttpHeader.xml'
 );
-\Bmack\Contexts\Api\Configuration::registerContextType(
+\Netresearch\Contexts\Api\Configuration::registerContextType(
     'combination',
     'Logical context combination',
-    \Bmack\Contexts\Context\Type\CombinationContext::class,
+    \Netresearch\Contexts\Context\Type\CombinationContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Combination.xml'
 );
 
-\Bmack\Contexts\Api\Configuration::registerContextType(
+\Netresearch\Contexts\Api\Configuration::registerContextType(
     'session',
     'Session variable',
-    \Bmack\Contexts\Context\Type\SessionContext::class,
+    \Netresearch\Contexts\Context\Type\SessionContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Session.xml'
 );

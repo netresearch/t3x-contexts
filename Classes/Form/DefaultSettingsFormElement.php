@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\Form;
+namespace Netresearch\Contexts\Form;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -14,8 +14,8 @@ namespace Bmack\Contexts\Form;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Bmack\Contexts\Context\AbstractContext;
-use Bmack\Contexts\Context\Container;
+use Netresearch\Contexts\Context\AbstractContext;
+use Netresearch\Contexts\Context\Container;
 use TYPO3\CMS\Backend\Form\FormEngine;
 
 /**
@@ -61,7 +61,7 @@ class DefaultSettingsFormElement
             }
             $content .= 'value="1" id="' . $id . '" /> ';
             $content .= '<label for="' . $id . '">';
-            $content .= $formEngineObject->sL($config['label']);
+            $content .= $GLOBALS['LANG']->sL($config['label']);
             $content .= '</label><br/>';
         }
 

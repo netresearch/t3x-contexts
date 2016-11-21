@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\ViewHelpers;
+namespace Netresearch\Contexts\ViewHelpers;
 
 /***************************************************************
 *  Copyright notice
@@ -24,7 +24,7 @@ namespace Bmack\Contexts\ViewHelpers;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use Bmack\Contexts\Api\ContextMatcher;
+use Netresearch\Contexts\Api\ContextMatcher;
 
 /**
  * context match view helper class.

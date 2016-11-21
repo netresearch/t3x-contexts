@@ -1,3 +1,3 @@
 <?php
 
-\Bmack\Contexts\Api\Configuration::enableContextsForTable('contexts', 'tt_content');
+\Netresearch\Contexts\Api\Configuration::enableContextsForTable('contexts', 'tt_content');

@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\Service;
+namespace Netresearch\Contexts\Service;
 
 /***************************************************************
 *  Copyright notice
@@ -23,7 +23,7 @@ namespace Bmack\Contexts\Service;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-use Bmack\Contexts\Api\Configuration;
+use Netresearch\Contexts\Api\Configuration;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 

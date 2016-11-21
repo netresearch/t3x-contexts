@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\Context\Type\Combination;
+namespace Netresearch\Contexts\Context\Type\Combination;
 
 /***************************************************************
 *  Copyright notice

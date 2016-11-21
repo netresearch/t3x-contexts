@@ -36,10 +36,10 @@ function user_contexts_matches($strContext)
     static $initialized = false;
     if (!$initialized) {
         //load and resolve all contexts
-        \Bmack\Contexts\Context\Container::get()->initMatching();
+        \Netresearch\Contexts\Context\Container::get()->initMatching();
         $initialized = true;
     }
 
-    return \Bmack\Contexts\Api\ContextMatcher::getInstance()
+    return \Netresearch\Contexts\Api\ContextMatcher::getInstance()
         ->matches($strContext);
 }

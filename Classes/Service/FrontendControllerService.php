@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\Service;
+namespace Netresearch\Contexts\Service;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -14,7 +14,7 @@ namespace Bmack\Contexts\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Bmack\Contexts\Context\Container;
+use Netresearch\Contexts\Context\Container;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 

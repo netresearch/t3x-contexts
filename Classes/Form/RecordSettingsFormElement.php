@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\Form;
+namespace Netresearch\Contexts\Form;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -14,9 +14,9 @@ namespace Bmack\Contexts\Form;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Bmack\Contexts\Api\Configuration;
-use Bmack\Contexts\Context\AbstractContext;
-use Bmack\Contexts\Context\Container;
+use Netresearch\Contexts\Api\Configuration;
+use Netresearch\Contexts\Context\AbstractContext;
+use Netresearch\Contexts\Context\Container;
 use TYPO3\CMS\Backend\Form\FormEngine;
 use TYPO3\CMS\Backend\Utility\IconUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -41,11 +41,12 @@ class RecordSettingsFormElement
     {
         $table = $params['table'];
 
-        $formEngineObject->addStyleSheet(
-            'tx_contexts_bestyles',
-            ExtensionManagementUtility::extRelPath('contexts') . 'Resources/Public/StyleSheet/be.css'
-        );
-
+        //TODO fixme in T3 version 7/8
+//        $formEngineObject->addStyleSheet(
+//            'tx_contexts_bestyles',
+//            ExtensionManagementUtility::extRelPath('contexts') . 'Resources/Public/StyleSheet/be.css'
+//        );
+//var_dump($params);
         $contexts = new Container();
         $contexts->initAll();
 
@@ -58,10 +59,10 @@ class RecordSettingsFormElement
             . '<tr class="t3-row-header">'
             . '<td></td>'
             . '<td class="tx_contexts_context">' .
-            $formEngineObject->sL('LLL:' . Configuration::LANG_FILE . ':tx_contexts_contexts') .
+            $GLOBALS['LANG']->sL('LLL:' . Configuration::LANG_FILE . ':tx_contexts_contexts') .
             '</td>';
         foreach ($settings as $settingName => $config) {
-            $content .= '<td class="tx_contexts_setting">' . $formEngineObject->sL($config['label']) . '</td>';
+            $content .= '<td class="tx_contexts_setting">' . $GLOBALS['LANG']->sL($config['label']) . '</td>';
         }
         $content .= '</tr>';
 
@@ -103,7 +104,7 @@ class RecordSettingsFormElement
         if ($visibleContexts == 0) {
             $content .= '<tr>'
                 . '<td colspan="4" style="text-align: center">'
-                . $formEngineObject->sL('LLL:' . Configuration::LANG_FILE . ':no_contexts')
+                . $GLOBALS['LANG']->sL('LLL:' . Configuration::LANG_FILE . ':no_contexts')
                 . '</td>'
                 . '</tr>';
         }
@@ -129,18 +130,20 @@ class RecordSettingsFormElement
             'alias' => $context->getAlias()
         );
 
+        //TODO
         return array(
             $this->getClickMenu(
-                IconUtility::getSpriteIconForRecord(
-                    'tx_contexts_contexts',
-                    $row,
-                    array(
-                        'style' => 'vertical-align:top',
-                        'title' => htmlspecialchars(
-                            $context->getTitle() .
-                            ' [UID: ' . $row['uid'] . ']')
-                    )
-                ),
+//                IconUtility::getSpriteIconForRecord(
+//                    'tx_contexts_contexts',
+//                    $row,
+//                    array(
+//                        'style' => 'vertical-align:top',
+//                        'title' => htmlspecialchars(
+//                            $context->getTitle() .
+//                            ' [UID: ' . $row['uid'] . ']')
+//                    )
+//                ),
+                'TODO ICON',
                 'tx_contexts_contexts',
                 $row['uid']
             ),
@@ -163,9 +166,11 @@ class RecordSettingsFormElement
      */
     protected function getClickMenu($str, $table, $uid = '')
     {
-        $onClick = htmlspecialchars($GLOBALS['SOBE']->doc->wrapClickMenuOnIcon(
-            $str, $table, $uid, 1, '', '+info,edit,view,new', true
-        ));
+
+        //TODO
+//        $onClick = htmlspecialchars($GLOBALS['SOBE']->doc->wrapClickMenuOnIcon(
+//            $str, $table, $uid, 1, '', '+info,edit,view,new', true
+//        ));
         return
             '<a href="#" onclick="' . $onClick . '" onrightclick="' . $onClick . '">' . $str . '</a>';
     }

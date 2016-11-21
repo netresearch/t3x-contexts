@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\Context;
+namespace Netresearch\Contexts\Context;
 
 /***************************************************************
 *  Copyright notice
@@ -23,8 +23,8 @@ namespace Bmack\Contexts\Context;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-use Bmack\Contexts\Api\Configuration;
-use Bmack\Contexts\ContextException;
+use Netresearch\Contexts\Api\Configuration;
+use Netresearch\Contexts\ContextException;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -41,11 +41,14 @@ class Factory
      * @param array $arRow Database context row
      *
      * @return AbstractContext|null
-     * @throws \Bmack\Contexts\ContextException
+     * @throws \Netresearch\Contexts\ContextException
      */
     public static function createFromDb($arRow)
     {
+
+        //TODO types should be load everytime
         $classMap = Configuration::getContextTypes();
+
         $type     = $arRow['type'];
 
         if (!$type || !array_key_exists($type, $classMap)) {

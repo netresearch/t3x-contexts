@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\Service;
+namespace Netresearch\Contexts\Service;
 
 /***************************************************************
 *  Copyright notice

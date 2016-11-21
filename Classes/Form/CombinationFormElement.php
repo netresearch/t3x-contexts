@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\Form;
+namespace Netresearch\Contexts\Form;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -14,8 +14,8 @@ namespace Bmack\Contexts\Form;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Bmack\Contexts\Context\Container;
-use Bmack\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
+use Netresearch\Contexts\Context\Container;
+use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
 use TYPO3\CMS\Backend\Form\FormEngine;
 
 /**

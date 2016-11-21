@@ -59,9 +59,9 @@ return array(
             'label' => $lf . ':tx_contexts_contexts.type',
             'config' => array(
                 'type' => 'select',
-                'items' => array(
-                    array($lf . ':tx_contexts_contexts.type.select_type', '')
-                ),
+//                'items' => array(
+//                    array($lf . ':tx_contexts_contexts.type.select_type', '')
+//                ),
                 'size' => 1,
                 'maxitems' => 1,
             )

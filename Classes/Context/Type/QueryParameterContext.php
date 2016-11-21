@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\Context\Type;
+namespace Netresearch\Contexts\Context\Type;
 
 /***************************************************************
 *  Copyright notice
@@ -23,8 +23,8 @@ namespace Bmack\Contexts\Context\Type;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-use Bmack\Contexts\Context\AbstractContext;
-use Bmack\Contexts\Service\FrontendControllerService;
+use Netresearch\Contexts\Context\AbstractContext;
+use Netresearch\Contexts\Service\FrontendControllerService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**

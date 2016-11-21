@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\Context;
+namespace Netresearch\Contexts\Context;
 
 /***************************************************************
 *  Copyright notice
@@ -24,7 +24,7 @@ namespace Bmack\Contexts\Context;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use Bmack\Contexts\Api\Configuration;
+use Netresearch\Contexts\Api\Configuration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\Service;
+namespace Netresearch\Contexts\Service;
 
 /***************************************************************
 *  Copyright notice
@@ -24,10 +24,10 @@ namespace Bmack\Contexts\Service;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use Bmack\Contexts\Api\Configuration;
-use Bmack\Contexts\Api\Record;
-use Bmack\Contexts\Context\AbstractContext;
-use Bmack\Contexts\Context\Container;
+use Netresearch\Contexts\Api\Configuration;
+use Netresearch\Contexts\Api\Record;
+use Netresearch\Contexts\Context\AbstractContext;
+use Netresearch\Contexts\Context\Container;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\Menu\AbstractMenuContentObject;

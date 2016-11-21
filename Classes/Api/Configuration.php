@@ -1,11 +1,10 @@
 <?php
-namespace Bmack\Contexts\Api;
+namespace Netresearch\Contexts\Api;
 
 /***************************************************************
 *  Copyright notice
 *
 *  (c) 2013 Netresearch GmbH & Co. KG <typo3-2013@netresearch.de>
-*  (c) 2016 Benjamin Mack <benjamin.mack@b13.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -25,8 +24,8 @@ namespace Bmack\Contexts\Api;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use Bmack\Contexts\Form\DefaultSettingsFormElement;
-use Bmack\Contexts\Form\RecordSettingsFormElement;
+use Netresearch\Contexts\Form\DefaultSettingsFormElement;
+use Netresearch\Contexts\Form\RecordSettingsFormElement;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
@@ -71,11 +70,11 @@ class Configuration
      * if it should be used to enable/disable records:
      *
      * <code title="Adding the visibility setting only">
-     * \Bmack\Contexts\Api\Configuration::addToTca($_EXTKEY, 'some_table');
+     * \Netresearch\Contexts\Api\Configuration::addToTca($_EXTKEY, 'some_table');
      * </code>
      *
      * <code title="Adding the visibility and another setting">
-     * \Bmack\Contexts\Api\Configuration::addToTca($_EXTKEY, 'some_table', array(
+     * \Netresearch\Contexts\Api\Configuration::addToTca($_EXTKEY, 'some_table', array(
      *     'some_setting' => array(
      *         'label' => 'LLL:langfile:some_setting',
      *         // if the setting should also be stored directly into the records
@@ -352,6 +351,7 @@ class Configuration
     public static function registerContextType(
         $key, $title, $class, $flexFile
     ) {
+
         $GLOBALS['EXTCONF']['tx_contexts']['contextTypes'][$key] = array(
             'title'    => $title,
             'class'    => $class,

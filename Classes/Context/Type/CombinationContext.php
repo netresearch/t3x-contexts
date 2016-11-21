@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\Context\Type;
+namespace Netresearch\Contexts\Context\Type;
 
 /***************************************************************
 *  Copyright notice
@@ -24,8 +24,8 @@ namespace Bmack\Contexts\Context\Type;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use Bmack\Contexts\Context\AbstractContext;
-use Bmack\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
+use Netresearch\Contexts\Context\AbstractContext;
+use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
 
 /**
  * Matches when a logical expression with other contexts evaluates to true

@@ -1,5 +1,5 @@
 <?php
-namespace Bmack\Contexts\Context;
+namespace Netresearch\Contexts\Context;
 
 /*
  * This file is part of the TYPO3 CMS project.
