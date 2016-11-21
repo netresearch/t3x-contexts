@@ -41,6 +41,9 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_chec
     = \Netresearch\Contexts\Service\FrontendControllerService::class . '->checkEnableFields';
 
 
+// register context classes
+require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('contexts', 'Configuration/TCA/Overrides/tx_contexts_contexts.php');
+
 // load the custom typoscript condition here
 if (TYPO3_MODE == 'FE') {
     require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('contexts', 'Resources/Private/PHP/TypoScriptConditionMatcher.php');

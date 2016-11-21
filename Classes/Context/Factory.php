@@ -45,8 +45,6 @@ class Factory
      */
     public static function createFromDb($arRow)
     {
-
-        //TODO types should be load everytime
         $classMap = Configuration::getContextTypes();
 
         $type     = $arRow['type'];
