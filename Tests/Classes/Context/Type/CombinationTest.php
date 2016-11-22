@@ -1,18 +1,18 @@
 <?php
 
-require_once __DIR__ . '../../../../TestBase.php';
-require_once __DIR__ . '../../../../../Classes/Context/Type/Combination.php';
-require_once __DIR__ . '../../../../../Classes/Context/Container.php';
-require_once __DIR__ . '../../../../../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php';
+require_once TEST_PATH . 'TestBase.php';
+require_once TEST_PATH . '../Classes/Context/Type/CombinationContext.php';
+require_once TEST_PATH . '../Classes/Context/Container.php';
+require_once TEST_PATH . '../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php';
 
 
-class Tx_Contexts_Context_Type_CombinationTest extends TestBase
+class CombinationTest extends TestBase
 {
 
     public function testGetDependenciesSucces()
     {
         $abstractMock = $this->getMockForAbstractClass(
-            'Tx_Contexts_Context_Abstract',
+            '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
                     'uid'=>123,
@@ -38,7 +38,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
 
 
         $instance = $this->getMock(
-            'Tx_Contexts_Context_Type_Combination',
+            '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
             ),
@@ -72,7 +72,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
     public function testGetDependenciesSuccesWithDisabled()
     {
         $abstractMock = $this->getMockForAbstractClass(
-            'Tx_Contexts_Context_Abstract',
+            '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
                     'uid'=>123,
@@ -98,7 +98,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
 
 
         $instance = $this->getMock(
-            'Tx_Contexts_Context_Type_Combination',
+            '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
             ),
@@ -134,7 +134,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
     {
 
         $instance = $this->getMock(
-            'Tx_Contexts_Context_Type_Combination',
+            '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
             ),
@@ -164,7 +164,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
     public function testMatchSuccess()
     {
         $ipContextMock = $this->getMockForAbstractClass(
-            'Tx_Contexts_Context_Abstract',
+            '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
                     'uid'=>123,
@@ -191,7 +191,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             ->method('match')
             ->will(self::returnValue(true));
         $getContextMock = $this->getMockForAbstractClass(
-            'Tx_Contexts_Context_Abstract',
+            '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
                     'uid'=>124,
@@ -219,7 +219,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             ->will(self::returnValue(true));
 
         $instance = $this->getMock(
-            'Tx_Contexts_Context_Type_Combination',
+            '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
             ),
@@ -234,7 +234,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             )
         );
         $container = $this->getMock(
-            'Tx_Contexts_Context_Container',
+            '\Netresearch\Contexts\Context\Container',
             array()
         );
 
@@ -263,7 +263,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
     public function testMatchSuccessWithDisabled()
     {
         $ipContextMock = $this->getMockForAbstractClass(
-            'Tx_Contexts_Context_Abstract',
+            '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
                     'uid'=>123,
@@ -290,7 +290,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             ->method('match')
             ->will(self::returnValue(true));
         $getContextMock = $this->getMockForAbstractClass(
-            'Tx_Contexts_Context_Abstract',
+            '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
                     'uid'=>124,
@@ -318,7 +318,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             ->will(self::returnValue(true));
 
         $instance = $this->getMock(
-            'Tx_Contexts_Context_Type_Combination',
+            '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
             ),
@@ -332,7 +332,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             )
         );
         $container = $this->getMock(
-            'Tx_Contexts_Context_Container',
+            '\Netresearch\Contexts\Context\Container',
             array()
         );
 
@@ -360,7 +360,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
     public function testMatchFailed()
     {
         $ipContextMock = $this->getMockForAbstractClass(
-            'Tx_Contexts_Context_Abstract',
+            '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
                     'uid'=>123,
@@ -387,7 +387,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             ->method('match')
             ->will(self::returnValue(false));
         $getContextMock = $this->getMockForAbstractClass(
-            'Tx_Contexts_Context_Abstract',
+            '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
                     'uid'=>124,
@@ -415,7 +415,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             ->will(self::returnValue(true));
 
         $instance = $this->getMock(
-            'Tx_Contexts_Context_Type_Combination',
+            '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
                 'findInContainer',
@@ -431,7 +431,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             )
         );
         $container = $this->getMock(
-            'Tx_Contexts_Context_Container',
+            '\Netresearch\Contexts\Context\Container',
             array()
         );
 
@@ -453,7 +453,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
     public function testMatchFailedWithDisabled()
     {
         $ipContextMock = $this->getMockForAbstractClass(
-            'Tx_Contexts_Context_Abstract',
+            '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
                     'uid'=>123,
@@ -480,7 +480,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             ->method('match')
             ->will(self::returnValue(false));
         $getContextMock = $this->getMockForAbstractClass(
-            'Tx_Contexts_Context_Abstract',
+            '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
                     'uid'=>124,
@@ -508,7 +508,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             ->will(self::returnValue(true));
 
         $instance = $this->getMock(
-            'Tx_Contexts_Context_Type_Combination',
+            '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
                 'findInContainer',
@@ -523,7 +523,7 @@ class Tx_Contexts_Context_Type_CombinationTest extends TestBase
             )
         );
         $container = $this->getMock(
-            'Tx_Contexts_Context_Container',
+            '\Netresearch\Contexts\Context\Container',
             array()
         );
 

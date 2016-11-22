@@ -1,27 +1,11 @@
 <?php
-require_once __DIR__ . '/../../TestBase.php';
-require_once __DIR__ . '/../../../Classes/Context/Abstract.php';
+require_once TEST_PATH . 'TestBase.php';
+require_once TEST_PATH . '../Classes/Context/AbstractContext.php';
 
-$rootDir = __DIR__ . '/../../../../../../';
-if (is_dir($rootDir . '/t3lib')) {
-    require_once $rootDir . '/t3lib/class.t3lib_div.php';
-} else {
-    require_once $rootDir . '/typo3/sysext/core/Classes/Utility/GeneralUtility.php';
-}
+require_once TEST_PATH . '../../../../typo3/sysext/core/Classes/Utility/GeneralUtility.php';
 
-if (!class_exists('t3lib_div')
-    && class_exists('TYPO3\CMS\Core\Utility\GeneralUtility')
-) {
-    /**
-     * Class t3lib_div
-     * @internal
-     */
-    class t3lib_div extends TYPO3\CMS\Core\Utility\GeneralUtility
-    {
-    }
-}
 
-class Tx_Contexts_Context_AbstractTest extends TestBase
+class AbstractTest extends TestBase
 {
     /**
      * @dataProvider SessionProvider
@@ -81,8 +65,8 @@ class Tx_Contexts_Context_AbstractTest extends TestBase
                 'reverseProxyHeaderMultiValue' => 'first'
             )
         );
-        $_SERVER[Tx_Contexts_Context_Abstract::REMOTE_ADDR] = '1.1.1.1';
-        $_SERVER[Tx_Contexts_Context_Abstract::HTTP_X_FORWARDED_FOR]
+        $_SERVER[\Netresearch\Contexts\Context\AbstractContext::REMOTE_ADDR] = '1.1.1.1';
+        $_SERVER[\Netresearch\Contexts\Context\AbstractContext::HTTP_X_FORWARDED_FOR]
             = '1.2.3.4';
         $this->assertSame(
             '1.2.3.4',
@@ -94,7 +78,7 @@ class Tx_Contexts_Context_AbstractTest extends TestBase
     }
 }
 
-class test extends Tx_Contexts_Context_Abstract
+class test extends \Netresearch\Contexts\Context\AbstractContext
 {
     public function match(array $arDependencies = array())
     {

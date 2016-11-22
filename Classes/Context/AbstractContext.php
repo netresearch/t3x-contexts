@@ -435,7 +435,7 @@ abstract class AbstractContext
     {
         if (!isset($GLOBALS['TSFE']) && TYPO3_MODE === 'FE') {
             $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
-                TypoScriptFrontendController::class,
+                'TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController',
                 $GLOBALS['TYPO3_CONF_VARS'], 0, 0
             );
             $GLOBALS['TSFE']->initFEuser();

@@ -231,7 +231,7 @@ class LogicalExpressionEvaluator
      */
     public function parse($tokens)
     {
-        $this->scopeContainer = new stdClass();
+        $this->scopeContainer = new \stdClass();
         $this->scopeContainer->scopes = array();
         $this->scopeContainer->keys = array();
         $this->pushScope();

@@ -178,9 +178,9 @@ class RecordSettingsFormElement
      */
     protected function getIcon($row, $context)
     {
-        if (class_exists(\TYPO3\CMS\Core\Imaging\IconFactory::class)) {
+        if (class_exists('TYPO3\CMS\Core\Imaging\IconFactory')) {
             $iconClass  = GeneralUtility::makeInstance(
-                \TYPO3\CMS\Core\Imaging\IconFactory::class
+                'TYPO3\CMS\Core\Imaging\IconFactory'
             );
 
             return $iconClass->getIconForRecord(
@@ -190,9 +190,9 @@ class RecordSettingsFormElement
             );
         }
 
-        if (class_exists(\TYPO3\CMS\Backend\Utility\IconUtility::class)) {
+        if (class_exists('TYPO3\CMS\Backend\Utility\IconUtility')) {
             $iconClass =  GeneralUtility::makeInstance(
-                \TYPO3\CMS\Backend\Utility\IconUtility::class
+                'TYPO3\CMS\Backend\Utility\IconUtility'
             );
 
             return $iconClass::getSpriteIconForRecord(

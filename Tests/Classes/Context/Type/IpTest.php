@@ -1,26 +1,14 @@
 <?php
-require_once __DIR__ . '../../../../TestBase.php';
-require_once __DIR__ . '../../../../../Classes/Context/Type/Ip.php';
+require_once TEST_PATH . 'TestBase.php';
+require_once TEST_PATH . '../Classes/Context/Type/IpContext.php';
 
-if (!class_exists('t3lib_div')
-    && class_exists('TYPO3\CMS\Core\Utility\GeneralUtility')
-) {
-    /**
-     * Class t3lib_div
-     * @internal
-     */
-    class t3lib_div extends TYPO3\CMS\Core\Utility\GeneralUtility
-    {
-    }
-}
-
-class Tx_Contexts_Context_Type_IpTest extends TestBase
+class IpContextTest extends TestBase
 {
     public function testMatch()
     {
         $_SERVER['REMOTE_ADDR'] = '192.168.1.14';
         $ipm = $this->getMock(
-            'Tx_Contexts_Context_Type_Ip',
+            '\Netresearch\Contexts\Context\Type\IpContext',
             array('getConfValue')
         );
         $ipm->expects($this->at(0))
@@ -36,7 +24,7 @@ class Tx_Contexts_Context_Type_IpTest extends TestBase
     {
         $_SERVER['REMOTE_ADDR'] = '192.168.1.14';
         $ipm = $this->getMock(
-            'Tx_Contexts_Context_Type_Ip',
+            '\Netresearch\Contexts\Context\Type\IpContext',
             array('getConfValue')
         );
         $ipm->expects($this->at(0))
@@ -52,7 +40,7 @@ class Tx_Contexts_Context_Type_IpTest extends TestBase
     {
         $_SERVER['REMOTE_ADDR'] = '192.168.1.20';
         $ipm = $this->getMock(
-            'Tx_Contexts_Context_Type_Ip',
+            '\Netresearch\Contexts\Context\Type\IpContext',
             array('getConfValue')
         );
         $ipm->expects($this->any())
@@ -66,7 +54,7 @@ class Tx_Contexts_Context_Type_IpTest extends TestBase
     {
         $_SERVER['REMOTE_ADDR'] = '';
         $ipm = $this->getMock(
-            'Tx_Contexts_Context_Type_Ip',
+            '\Netresearch\Contexts\Context\Type\IpContext',
             array('getConfValue')
         );
         $ipm->setInvert(false);
@@ -79,7 +67,7 @@ class Tx_Contexts_Context_Type_IpTest extends TestBase
      */
     public function testIsIpInRange($ip, $range, $res)
     {
-        $instance = new Tx_Contexts_Context_Type_Ip();
+        $instance = new \Netresearch\Contexts\Context\Type\IpContext();
 
         $this->assertSame(
             $res,

@@ -1,10 +1,12 @@
 <?php
 
-require_once __DIR__ . '../../../../../../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php';
-require_once __DIR__ . '../../../../../../Classes/Context/Type/Combination/LogicalExpressionEvaluator/Exception.php';
+namespace Netresearch\Contexts\Context\Type\Combination;
+
+require_once TEST_PATH . '../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php';
+require_once TEST_PATH . '../Classes/Context/Type/Combination/LogicalExpressionEvaluatorException.php';
 
 
-class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Framework_TestCase
+class LogicalExpressionEvaluatorTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -12,10 +14,10 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
      */
     public function testRunWithoutException($expression, $rebuiltExpression, $values)
     {
-        //Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($expression, $values);
+        LogicalExpressionEvaluator::run($expression, $values);
         self::assertSame(
             self::getEval($expression, $values),
-            Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($expression, $values)
+            LogicalExpressionEvaluator::run($expression, $values)
         );
     }
 
@@ -24,7 +26,7 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
      */
     public function testRebuild($expression, $rebuiltExpression, $values)
     {
-        $evaluator = new Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator();
+        $evaluator = new LogicalExpressionEvaluator();
         $evaluator->parse($evaluator->tokenize($expression));
 
         self::assertSame(
@@ -37,7 +39,7 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
     }
 
     /**
-     * @expectedException Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
+     * @expectedException \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException
      * @expectedExceptionMessage Unexpected end
      */
     public function testRunWithExceptionUnexpectedEnd()
@@ -45,12 +47,12 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
 
         $strExpression = '(context1 ||';
         $arValues = array('context1' => true);
-        Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
+        LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
     /**
      *
-     * @expectedException Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
+     * @expectedException \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException
      * @expectedExceptionMessage Missing closing parentheses
      */
     public function testRunWithExceptionMissingClosingParentheses()
@@ -58,12 +60,12 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
 
         $strExpression = '(context1 ';
         $arValues = array('context1' => true);
-        Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
+        LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
      /**
      *
-     * @expectedException Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
+     * @expectedException \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException
      * @expectedExceptionMessage Unexpected variable
      */
     public function testRunWithExceptionMissingOperator()
@@ -71,13 +73,13 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
 
         $strExpression = '(context1 context2)';
         $arValues = array('context1' => true);
-        Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
+        LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
     /**
      *
      *
-     * @expectedException Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator_Exception
+     * @expectedException \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException
      * @expectedExceptionMessage Can't evaluate more than two items by xor
      */
     public function testRunWithExceptionTwoXor()
@@ -85,7 +87,7 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
 
         $strExpression = 'context1 xor context2 xor context3';
         $arValues = array('context1' => true, 'context2' => true, 'context3' => true);
-        Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run($strExpression, $arValues);
+        LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
     public function testNot()
@@ -95,7 +97,7 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
             'a' => true,
         );
         $this->assertFalse(
-            Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run(
+            LogicalExpressionEvaluator::run(
                 $strExpression, $arValues
             )
         );
@@ -109,7 +111,7 @@ class Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest extends PHPUnit_Fr
             'b' => true,
         );
         $this->assertFalse(
-            Tx_Contexts_Context_Type_Combination_LogicalExpressionEvaluator::run(
+            LogicalExpressionEvaluator::run(
                 $strExpression, $arValues
             )
         );

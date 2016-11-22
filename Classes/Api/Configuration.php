@@ -244,7 +244,7 @@ class Configuration
                 'config' => array(
                     'type' => 'user',
                     'size' => '30',
-                    'userFunc' => RecordSettingsFormElement::class . '->render',
+                    'userFunc' => 'Netresearch\Contexts\Form\RecordSettingsFormElement->render',
                     'settings' => $settings,
                 ),
             );
@@ -308,7 +308,7 @@ class Configuration
                 'config' => array(
                     'type' => 'user',
                     'size' => 30,
-                    'userFunc' => DefaultSettingsFormElement::class . '->render',
+                    'userFunc' => 'Netresearch\Contexts\Form\DefaultSettingsFormElement->render',
                     'table' => $table,
                     'settings' => $settings
                 )

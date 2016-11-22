@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../Classes/Context/Abstract.php';
+require_once __DIR__ . '/../Classes/Context/AbstractContext.php';
 
 abstract class TestBase extends PHPUnit_Framework_TestCase
 {

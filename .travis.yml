@@ -1,19 +1,40 @@
 language: php
 sudo: false
+
 php:
   - 5.3
   - 5.4
   - 5.5
   - 5.6
+  - 7.0
+  - 7.1
 
 env:
   - TYPO3=TYPO3_6-2
-  - TYPO3=TYPO3_6-1
-  - TYPO3=TYPO3_6-0
-  - TYPO3=TYPO3_4-7
-  - TYPO3=TYPO3_4-6
-  - TYPO3=TYPO3_4-5
-  
+  - TYPO3=TYPO3_7-6
+  - TYPO3=TYPO3_8-4
+
+matrix:
+  exclude:
+  - env: TYPO3=TYPO3_6-2
+    php: 7.0
+  - env: TYPO3=TYPO3_6-2
+    php: 7.1
+  - env: TYPO3=TYPO3_7-6
+    php: 5.3
+  - env: TYPO3=TYPO3_7-6
+    php: 5.4
+  - env: TYPO3=TYPO3_7-6
+    php: 7.1
+  - env: TYPO3=TYPO3_8-4
+    php: 5.3
+  - env: TYPO3=TYPO3_8-4
+    php: 5.4
+  - env: TYPO3=TYPO3_8-4
+    php: 5.5
+  - env: TYPO3=TYPO3_8-4
+    php: 5.6
+
 before_script:
   - cd ..
   - mkdir -p typo3conf/ext

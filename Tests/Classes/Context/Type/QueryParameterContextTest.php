@@ -1,22 +1,19 @@
 <?php
-require_once __DIR__ . '../../../../../Classes/Context/Abstract.php';
-require_once __DIR__ . '../../../../../Classes/Context/Type/GetParam.php';
-require_once __DIR__ . '../../../../../Classes/Context/Type/GetParam/TsfeService.php';
+
+require_once TEST_PATH . '../../../../typo3/sysext/core/Classes/SingletonInterface.php';
+
+require_once TEST_PATH . '../Classes/Context/AbstractContext.php';
+require_once TEST_PATH . '../Classes/Context/Type/QueryParameterContext.php';
+require_once TEST_PATH . '../Classes/Service/FrontendControllerService.php';
 
 
-if (!class_exists('t3lib_div')
-    && class_exists('TYPO3\CMS\Core\Utility\GeneralUtility')
-) {
-    /**
-     * Class t3lib_div
-     * @internal
-     */
-    class t3lib_div extends TYPO3\CMS\Core\Utility\GeneralUtility
-    {
-    }
-}
 
-class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
+
+
+
+
+
+class QueryParameterContextTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -30,7 +27,7 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
     public function testMatchParameterMissing()
     {
         $getm = $this->getMock(
-            'Tx_Contexts_Context_Type_GetParam',
+            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
         $getm->setUseSession(false);
@@ -51,7 +48,7 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
         $_GET['affID'] = '';
 
         $getm = $this->getMock(
-            'Tx_Contexts_Context_Type_GetParam',
+            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
         $getm->setUseSession(false);
@@ -72,7 +69,7 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
         $_GET['affID'] = 123;
 
         $getm = $this->getMock(
-            'Tx_Contexts_Context_Type_GetParam',
+            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
         $getm->setUseSession(false);
@@ -93,7 +90,7 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
         $_GET['affID'] = 125;
 
         $getm = $this->getMock(
-            'Tx_Contexts_Context_Type_GetParam',
+            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
         $getm->setUseSession(false);
@@ -117,7 +114,7 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
         $_GET['affID'] = 124125;
 
         $getm = $this->getMock(
-            'Tx_Contexts_Context_Type_GetParam',
+            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
         $getm->setUseSession(false);
@@ -141,7 +138,7 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
         $_GET['bla'] = 'aslkfj';
 
         $getm = $this->getMock(
-            'Tx_Contexts_Context_Type_GetParam',
+            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
         $getm->setUseSession(false);
@@ -162,7 +159,7 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
         $_GET['affID'] = 'aslkfj';
 
         $getm = $this->getMock(
-            'Tx_Contexts_Context_Type_GetParam',
+            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
         $getm->setUseSession(false);
@@ -184,7 +181,7 @@ class Tx_Contexts_Context_Type_GetParamTest extends PHPUnit_Framework_TestCase
     public function testMatchUnconfiguredNoParameter()
     {
         $getm = $this->getMock(
-            'Tx_Contexts_Context_Type_GetParam',
+            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
         $getm->setUseSession(false);
