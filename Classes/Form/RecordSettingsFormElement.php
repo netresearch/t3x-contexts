@@ -18,8 +18,10 @@ use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use TYPO3\CMS\Backend\Form\FormEngine;
-use TYPO3\CMS\Backend\Utility\IconUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /**
  * USER function to render the record settings fields
@@ -41,12 +43,6 @@ class RecordSettingsFormElement
     {
         $table = $params['table'];
 
-        //TODO fixme in T3 version 7/8
-//        $formEngineObject->addStyleSheet(
-//            'tx_contexts_bestyles',
-//            ExtensionManagementUtility::extRelPath('contexts') . 'Resources/Public/StyleSheet/be.css'
-//        );
-//var_dump($params);
         $contexts = new Container();
         $contexts->initAll();
 
@@ -130,20 +126,9 @@ class RecordSettingsFormElement
             'alias' => $context->getAlias()
         );
 
-        //TODO
         return array(
             $this->getClickMenu(
-//                IconUtility::getSpriteIconForRecord(
-//                    'tx_contexts_contexts',
-//                    $row,
-//                    array(
-//                        'style' => 'vertical-align:top',
-//                        'title' => htmlspecialchars(
-//                            $context->getTitle() .
-//                            ' [UID: ' . $row['uid'] . ']')
-//                    )
-//                ),
-                'TODO ICON',
+                $this->getIcon($row, $context),
                 'tx_contexts_contexts',
                 $row['uid']
             ),
@@ -166,12 +151,63 @@ class RecordSettingsFormElement
      */
     protected function getClickMenu($str, $table, $uid = '')
     {
+        $nVersion = VersionNumberUtility::convertVersionNumberToInteger(
+            TYPO3_version
+        );
 
-        //TODO
-//        $onClick = htmlspecialchars($GLOBALS['SOBE']->doc->wrapClickMenuOnIcon(
-//            $str, $table, $uid, 1, '', '+info,edit,view,new', true
-//        ));
-        return
-            '<a href="#" onclick="' . $onClick . '" onrightclick="' . $onClick . '">' . $str . '</a>';
+        if ($nVersion < 8000000) {
+            return $GLOBALS['SOBE']->doc->wrapClickMenuOnIcon(
+                $str, $table, $uid, 1, '', '+info,edit,view,new', false
+            );
+        } else {
+            return BackendUtility::wrapClickMenuOnIcon(
+                $str, $table, $uid, true, '', '+info,edit,view,new', false
+            );
+        }
+
+
     }
+
+    /**
+     * Get the icon
+     *
+     * @param  array          $row
+     * @param AbstractContext $context
+     *
+     * @return Icon|string
+     */
+    protected function getIcon($row, $context)
+    {
+        if (class_exists(\TYPO3\CMS\Core\Imaging\IconFactory::class)) {
+            $iconClass  = GeneralUtility::makeInstance(
+                \TYPO3\CMS\Core\Imaging\IconFactory::class
+            );
+
+            return $iconClass->getIconForRecord(
+                'tx_contexts_contexts',
+                $row,
+                'small'
+            );
+        }
+
+        if (class_exists(\TYPO3\CMS\Backend\Utility\IconUtility::class)) {
+            $iconClass =  GeneralUtility::makeInstance(
+                \TYPO3\CMS\Backend\Utility\IconUtility::class
+            );
+
+            return $iconClass::getSpriteIconForRecord(
+                'tx_contexts_contexts',
+                $row,
+                array(
+                    'style' => 'vertical-align:top',
+                    'title' => htmlspecialchars(
+                        $context->getTitle() .
+                        ' [UID: ' . $row['uid'] . ']')
+                )
+            );
+        }
+
+        return '';
+    }
+
 }

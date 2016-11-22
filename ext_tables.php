@@ -15,3 +15,11 @@ defined('TYPO3_MODE') || die();
 //$GLOBALS['TBE_STYLES']['spriteIconApi']['spriteIconRecordOverlayPriorities'][150] = 'contexts';
 //$GLOBALS['TBE_STYLES']['spriteIconApi']['spriteIconRecordOverlayNames']['contexts']
 //    = 'extensions-contexts-status-overlay-contexts';
+
+
+$GLOBALS['TBE_STYLES']['skins']['contexts'] = array (
+    'name' => 'contexts',
+    'stylesheetDirectories' => array(
+        'css' => 'EXT:contexts/Resources/Public/css/typo3_backend/'
+    )
+);
