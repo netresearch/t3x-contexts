@@ -38,7 +38,7 @@ after_script:
       curl -sSL https://raw.githubusercontent.com/alrra/travis-after-all/1.4.4/lib/travis-after-all.js | node
       if [ $? -eq 0 ]; then
         mkdir "$TRAVIS_BUILD_DIR/.build"
-        composer init --require=namelesscoder/typo3-repository-client:1.1.x-dev --stability=dev -n -d "$TRAVIS_BUILD_DIR/.build"
+        composer init --require=namelesscoder/typo3-repository-client:1.2.0 -n -d "$TRAVIS_BUILD_DIR/.build"
         composer install -d "$TRAVIS_BUILD_DIR/.build"
         # Cleanup before we upload
         git reset --hard HEAD && git clean -fx
