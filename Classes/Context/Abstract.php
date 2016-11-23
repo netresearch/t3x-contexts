@@ -341,6 +341,18 @@ abstract class Tx_Contexts_Context_Abstract
     }
 
     /**
+     * Get the cache parameter of this context
+     *
+     * This parameter can add more uniqueness to cached page versions.
+     * 
+     * @return string|NULL
+     */
+    public function getCacheParameter()
+    {
+        return NULL;
+    }
+
+    /**
      * Get the disabled status of this context
      *
      * @return boolean

@@ -151,11 +151,23 @@ class Tx_Contexts_Service_Page
      */
     protected function getHashString()
     {
-        $keys = array_keys(
-            Tx_Contexts_Context_Container::get()->getArrayCopy()
-        );
-        sort($keys, SORT_NUMERIC);
-        return implode(',', $keys);
+        $contexts = Tx_Contexts_Context_Container::get()->getArrayCopy();
+        ksort($contexts, SORT_NUMERIC);
+
+        $hashStringParts = array();
+
+        foreach ($contexts as $uid => $context) {
+            $contextHashString = $uid;
+            $contextCacheParameter = $context->getCacheParameter();
+
+            if ($contextCacheParameter !== NULL) {
+                $contextHashString .= ':' . $contextCacheParameter;
+            }
+            
+            $hashStringParts[] = $contextHashString;
+        }
+
+        return implode(',', $hashStringParts);
     }
 
     /**
