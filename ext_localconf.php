@@ -32,9 +32,14 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['checkAlte
 //    = 'EXT:contexts/Classes/Service/Install.php:Tx_Contexts_Service_Install';
 
 
-// Add tree icons
+// Add tree icons before TYPO3 7.5
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_iconworks.php']['overrideIconOverlay'][]
     = 'Netresearch\Contexts\Service\IconService';
+//Add tree icons after TYPO3 7.5
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['TYPO3\CMS\Core\Imaging\IconFactory']['overrideIconOverlay'][]
+    = 'Netresearch\Contexts\Service\IconService';
+
+
 
 // add some hooks
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_checkEnableFields']['contexts']
