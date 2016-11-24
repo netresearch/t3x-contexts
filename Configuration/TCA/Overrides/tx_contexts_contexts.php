@@ -1,5 +1,5 @@
 <?php
-//TODO check, prevent xml error for new records
+//prevent xml error for new records
 \Netresearch\Contexts\Api\Configuration::registerContextType(
     '',
     'Select a type',

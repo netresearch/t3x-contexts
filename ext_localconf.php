@@ -41,9 +41,13 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_chec
     = 'Netresearch\Contexts\Service\FrontendControllerService->checkEnableFields';
 
 
+// this is required for install, before register context classes enable contexts for tables
+$GLOBALS['TCA']['tx_contexts_contexts']
+    = include \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('contexts', 'Configuration/TCA/tx_contexts_contexts.php');
+
 // register context classes
 require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('contexts', 'Configuration/TCA/Overrides/tx_contexts_contexts.php');
-
+// enable contexts for tables
 require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('contexts', 'Configuration/TCA/Overrides/pages.php');
 require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('contexts', 'Configuration/TCA/Overrides/tt_content.php');
 
