@@ -26,12 +26,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHas
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['checkAlternativeIdMethods-PostProc']['contexts']
     = 'Netresearch\Contexts\Service\FrontendControllerService->initFEuser';
 
-
-//TODO
-//$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/mod/tools/em/index.php']['checkDBupdates']['contexts']
-//    = 'EXT:contexts/Classes/Service/Install.php:Tx_Contexts_Service_Install';
-
-
 // Add tree icons before TYPO3 7.5
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_iconworks.php']['overrideIconOverlay'][]
     = 'Netresearch\Contexts\Service\IconService';
@@ -60,3 +54,12 @@ require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('contex
 if (TYPO3_MODE == 'FE') {
     require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('contexts', 'Resources/Private/PHP/TypoScriptConditionMatcher.php');
 }
+
+/** @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher */
+$signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Extbase\SignalSlot\Dispatcher');
+$signalSlotDispatcher->connect(
+    'TYPO3\CMS\Extensionmanager\Utility\InstallUtility',
+    'tablesDefinitionIsBeingBuilt',
+    'Netresearch\Contexts\Service\InstallService',
+    'appendTableDefinitions'
+);
