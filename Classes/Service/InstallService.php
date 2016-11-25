@@ -47,7 +47,7 @@ class InstallService
     {
         global $TCA;
 
-        $extensionFlatSettings = Configuration::getExtensionFlatSettings();
+        $extensionFlatSettings = Configuration::getExtensionFlatSettings($strExtKey);
 
         if (!array_key_exists($strExtKey, $extensionFlatSettings)) {
             return array();
@@ -67,7 +67,6 @@ class InstallService
             }
             $sql .= ');';
         }
-
         return array('sqlString' => array($sql), 'extensionKey' => $strExtKey);
     }
 }
