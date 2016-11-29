@@ -1,11 +1,8 @@
 <?php
-require_once TEST_PATH . 'TestBase.php';
-require_once TEST_PATH . '../Classes/Context/AbstractContext.php';
 
-require_once TEST_PATH . '../../../../typo3/sysext/core/Classes/Utility/GeneralUtility.php';
+namespace Netresearch\Contexts\Tests\Unit\Context;
 
-
-class AbstractTest extends TestBase
+class AbstractTest extends \Netresearch\Contexts\Tests\Unit\TestBase
 {
     /**
      * @dataProvider SessionProvider
@@ -13,7 +10,7 @@ class AbstractTest extends TestBase
     public function testGetMatchFromSession($configRet, $sessionRet, $expected)
     {
         $stub = $this->getMock(
-            'test',
+            '\Netresearch\Contexts\Tests\Unit\Context\test',
             array(
                 'getConfValue',
                 'getSession'

@@ -25,7 +25,7 @@ if (class_exists('TYPO3\CMS\Core\Imaging\IconRegistry')) {
     );
     $iconRegistry->registerIcon(
         'extensions-contexts-status-overlay-contexts',
-        \TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider::class,
+        '\TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider',
         array('source' => 'EXT:contexts/Resources/Public/Icons/overlay-contexts.png')
     );
 }

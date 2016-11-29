@@ -1,7 +1,8 @@
 <?php
-require_once __DIR__ . '/../Classes/Context/AbstractContext.php';
 
-abstract class TestBase extends PHPUnit_Framework_TestCase
+namespace Netresearch\Contexts\Tests\Unit;
+
+abstract class TestBase extends \PHPUnit_Framework_TestCase
 {
     /**
      * Make a proteced/private method accessible.
@@ -13,7 +14,7 @@ abstract class TestBase extends PHPUnit_Framework_TestCase
      */
     public function getAccessibleMethod($strClass, $strMethodName)
     {
-        $reflectedClass = new ReflectionClass($strClass);
+        $reflectedClass = new \ReflectionClass($strClass);
 
         /* @var $method ReflectionMethod */
         $method = $reflectedClass->getMethod($strMethodName);

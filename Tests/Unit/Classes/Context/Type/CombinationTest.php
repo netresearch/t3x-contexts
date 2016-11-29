@@ -1,12 +1,6 @@
 <?php
 
-require_once TEST_PATH . 'TestBase.php';
-require_once TEST_PATH . '../Classes/Context/Type/CombinationContext.php';
-require_once TEST_PATH . '../Classes/Context/Container.php';
-require_once TEST_PATH . '../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php';
-
-
-class CombinationTest extends TestBase
+class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
 {
 
     public function testGetDependenciesSucces()

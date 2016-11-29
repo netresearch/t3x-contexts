@@ -1,19 +1,7 @@
 <?php
+namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
-require_once TEST_PATH . '../../../../typo3/sysext/core/Classes/SingletonInterface.php';
-
-require_once TEST_PATH . '../Classes/Context/AbstractContext.php';
-require_once TEST_PATH . '../Classes/Context/Type/QueryParameterContext.php';
-require_once TEST_PATH . '../Classes/Service/FrontendControllerService.php';
-
-
-
-
-
-
-
-
-class QueryParameterContextTest extends PHPUnit_Framework_TestCase
+class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

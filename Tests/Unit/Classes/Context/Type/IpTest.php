@@ -1,8 +1,7 @@
 <?php
-require_once TEST_PATH . 'TestBase.php';
-require_once TEST_PATH . '../Classes/Context/Type/IpContext.php';
+namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
-class IpContextTest extends TestBase
+class IpContextTest extends \Netresearch\Contexts\Tests\Unit\TestBase
 {
     public function testMatch()
     {

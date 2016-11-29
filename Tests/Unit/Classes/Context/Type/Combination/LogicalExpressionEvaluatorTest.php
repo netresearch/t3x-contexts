@@ -1,10 +1,7 @@
 <?php
+namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
-namespace Netresearch\Contexts\Context\Type\Combination;
-
-require_once TEST_PATH . '../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php';
-require_once TEST_PATH . '../Classes/Context/Type/Combination/LogicalExpressionEvaluatorException.php';
-
+use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
 
 class LogicalExpressionEvaluatorTest extends \PHPUnit_Framework_TestCase
 {
