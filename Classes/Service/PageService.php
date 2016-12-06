@@ -108,6 +108,7 @@ class PageService
             }
 
             $enableChecks = array(
+                $flatColumns[1] . " IS NULL",
                 $flatColumns[1] . " = ''"
             );
             $disableChecks = array();
@@ -124,8 +125,10 @@ class PageService
 
             $sql = ' AND (' . implode(' OR ', $enableChecks) . ')';
             if (count($disableChecks)) {
-                $sql .= ' AND (' . $flatColumns[0] . " = ''" .
-                ' OR (' . implode(' AND ', $disableChecks) . ')' .
+                $sql .= ' AND ('
+                    . $flatColumns[0] . " IS NULL"
+                    . ' OR ' . $flatColumns[0] . " = ''"
+                    . ' OR (' . implode(' AND ', $disableChecks) . ')' .
                 ')';
             }
         }
