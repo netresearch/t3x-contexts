@@ -103,6 +103,7 @@ class Tx_Contexts_Service_Page
             }
 
             $enableChecks = array(
+                $flatColumns[1] . " IS NULL",
                 $flatColumns[1] . " = ''"
             );
             $disableChecks = array();
@@ -119,9 +120,11 @@ class Tx_Contexts_Service_Page
 
             $sql = ' AND (' . implode(' OR ', $enableChecks) . ')';
             if (count($disableChecks)) {
-                $sql .= ' AND (' . $flatColumns[0] . " = ''" .
-                ' OR (' . implode(' AND ', $disableChecks) . ')' .
-                ')';
+                $sql .= ' AND ('
+                    . $flatColumns[0] . " IS NULL"
+                    . ' OR ' . $flatColumns[0] . " = ''"
+                    . ' OR (' . implode(' AND ', $disableChecks) . ')' .
+                    ')';
             }
         }
 

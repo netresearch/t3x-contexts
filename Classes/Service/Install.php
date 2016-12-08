@@ -56,11 +56,18 @@ class Tx_Contexts_Service_Install implements tx_em_Index_CheckDatabaseUpdatesHoo
         $sql = '';
         foreach ($extensionFlatSettings[$extKey] as $table => $settings) {
             $sql .= "\nCREATE TABLE $table (\n";
+
+            $arSql = array();
             foreach ($settings as $setting) {
+                if (is_array($setting)) {
+                    continue;
+                }
                 $flatColumns = Tx_Contexts_Api_Configuration::getFlatColumns($table, $setting);
-                $sql .= $flatColumns[0] . " tinytext NOT NULL,\n";
-                $sql .= $flatColumns[1] . " tinytext NOT NULL\n";
+                $arSql[] = $flatColumns[0] . " tinytext";
+                $arSql[] = $flatColumns[1] . " tinytext";
             }
+
+            $sql .= implode(",\n", $arSql);
             $sql .= ');';
         }
 
