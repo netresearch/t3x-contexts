@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+
+    <tx_contexts_settings>
+        <uid>1</uid>
+        <pid>0</pid>
+        <context_uid>1</context_uid>
+        <foreign_table>pages</foreign_table>
+        <foreign_uid>1</foreign_uid>
+        <name>tx_contexts</name>
+        <enabled>1</enabled>
+    </tx_contexts_settings>
+
+</dataset>

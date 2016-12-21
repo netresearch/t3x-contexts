@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+
+    <tx_contexts_contexts>
+        <uid>1</uid>
+        <pid>1</pid>
+        <title>test get</title>
+        <alias>testget</alias>
+        <type>getparam</type>
+        <type_conf>
+            &lt;T3FlexForms&gt;
+            &lt;data&gt;
+            &lt;sheet index=&quot;sDEF&quot;&gt;
+            &lt;language index=&quot;lDEF&quot;&gt;
+            &lt;field index=&quot;field_name&quot;&gt;
+            &lt;value index=&quot;vDEF&quot;&gt;test&lt;/value&gt;
+            &lt;/field&gt;
+            &lt;field index=&quot;field_values&quot;&gt;
+            &lt;value index=&quot;vDEF&quot;&gt;1&lt;/value&gt;
+            &lt;/field&gt;
+            &lt;/language&gt;
+            &lt;/sheet&gt;
+            &lt;/data&gt;
+            &lt;/T3FlexForms&gt;
+        </type_conf>
+        <invert>0</invert>
+        <use_session>1</use_session>
+        <disabled>0</disabled>
+        <hide_in_backend>0</hide_in_backend>
+    </tx_contexts_contexts>
+
+</dataset>
