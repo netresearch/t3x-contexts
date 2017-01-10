@@ -48,8 +48,11 @@ before_install:
   - phpenv config-rm xdebug.ini
   - composer self-update
   - composer --version
+  # Dirname is important for extension upload
+  - cd ..; mv t3x-contexts contexts; cd contexts
 
 before_script:
+  - pwd
   - composer require typo3/cms="$TYPO3_VERSION"
   # Restore composer.json
   - git checkout composer.json
@@ -80,8 +83,6 @@ after_script:
       if [ $? -eq 0 ]; then
         # Cleanup before we upload
         git reset --hard HEAD && git clean -fx
-        # Build extension files
-        composer extension-release
         # Upload
         TAG_MESSAGE=`git tag -n10 -l $TRAVIS_TAG | sed 's/^[0-9.]*[ ]*//g'`
         echo "Uploading release ${TRAVIS_TAG} to TER"
