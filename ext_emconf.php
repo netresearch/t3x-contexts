@@ -17,20 +17,19 @@ $EM_CONF[$_EXTKEY] = array(
 	'author' => 'Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag, Benni Mack',
 	'author_email' => 'typo3.org@netresearch.de',
 	'priority' => 'top',
-	'state' => 'beta',
+	'state' => 'stable',
 	'clearCacheOnLoad' => 1,
 	'author_company' => 'Netresearch GmbH & Co.KG',
 	'version' => '1.0.0',
 	'constraints' => array(
 		'depends' => array(
 			'typo3' => '6.2.0-8.9.99',
-			'php'   => '5.3.0-7.0.12'
+			'php'   => '5.3.0-7.1.99'
 		),
 		'conflicts' => array(
 		),
 		'suggests' => array(
 			'contexts_geolocation' => '',
-			'contexts_wurfl' => '',
 		),
 	),
 	'suggests' => array(
