@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Context;
 
 /*
@@ -22,32 +23,37 @@ final class Setting
     protected $context;
 
     /**
-     * The uid of the setting record
+     * The uid of the setting record.
+     *
      * @var int
      */
     protected $uid;
 
     /**
-     * The name of table the setting is for
+     * The name of table the setting is for.
+     *
      * @var string
      */
     protected $foreignTable;
 
     /**
      * The uid of the record the setting is for
-     * (0 for default setting)
+     * (0 for default setting).
+     *
      * @var int
      */
     protected $foreignUid;
 
     /**
-     * The name of the setting
+     * The name of the setting.
+     *
      * @var string
      */
     protected $name;
 
     /**
-     * Whether the record is enabled by this setting
+     * Whether the record is enabled by this setting.
+     *
      * @var bool
      */
     protected $enabled;
@@ -63,7 +69,7 @@ final class Setting
     }
 
     /**
-     * Create a context settings object from flat data
+     * Create a context settings object from flat data.
      *
      * @return Setting|null NULL when not enabled/disabled
      */
@@ -72,25 +78,26 @@ final class Setting
         $table, $setting, $arFlatColumns, $arRow
     ) {
         $bDisabled = strpos(
-            ',' . $arRow[$arFlatColumns[0]] . ',',
-            ',' . $context->getUid() . ','
+            ','.$arRow[$arFlatColumns[0]].',',
+            ','.$context->getUid().','
         ) !== false;
         $bEnabled = strpos(
-            ',' . $arRow[$arFlatColumns[1]] . ',',
-            ',' . $context->getUid() . ','
+            ','.$arRow[$arFlatColumns[1]].',',
+            ','.$context->getUid().','
         ) !== false;
 
         if (!$bEnabled && !$bDisabled) {
-            return null;
+            return;
         }
 
-        $arDummyRow = array(
-            'uid'  => null,
-            'name' => $setting,
+        $arDummyRow = [
+            'uid'           => null,
+            'name'          => $setting,
             'foreign_table' => $table,
             'foreign_uid'   => null,
-            'enabled' => $bEnabled
-        );
+            'enabled'       => $bEnabled,
+        ];
+
         return new self($context, $arDummyRow);
     }
 

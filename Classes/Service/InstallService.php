@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Service;
 
 /***************************************************************
@@ -24,10 +25,11 @@ namespace Netresearch\Contexts\Service;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 use Netresearch\Contexts\Api\Configuration;
+
 /**
  * Hooks for InstallUtility: Append the necessary field definitions for
  * the enableSettings (tx_contexts_enable, tx_contexts_disable)
- * to the tables they were registered for
+ * to the tables they were registered for.
  *
  * @author Christian Opitz <christian.opitz@netresearch.de>
  */
@@ -50,27 +52,27 @@ class InstallService
         $extensionFlatSettings = Configuration::getExtensionFlatSettings($strExtKey);
 
         if (!array_key_exists($strExtKey, $extensionFlatSettings)) {
-            return array();
+            return [];
         }
 
         $sql = '';
         foreach ($extensionFlatSettings[$strExtKey] as $table => $settings) {
             $sql .= "\nCREATE TABLE $table (\n";
 
-            $arSql = array();
+            $arSql = [];
             foreach ($settings as $setting) {
                 if (is_array($setting)) {
                     continue;
                 }
                 $flatColumns = Configuration::getFlatColumns($table, $setting);
-                $arSql[] = $flatColumns[0] . " tinytext";
-                $arSql[] = $flatColumns[1] . " tinytext";
+                $arSql[] = $flatColumns[0].' tinytext';
+                $arSql[] = $flatColumns[1].' tinytext';
             }
 
             $sql .= implode(",\n", $arSql);
             $sql .= ');';
         }
 
-        return array('sqlString' => array($sql), 'extensionKey' => $strExtKey);
+        return ['sqlString' => [$sql], 'extensionKey' => $strExtKey];
     }
 }

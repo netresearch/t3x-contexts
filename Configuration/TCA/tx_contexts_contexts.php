@@ -1,115 +1,115 @@
 <?php
+
 $lf = 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xml';
 
-return array(
-    'ctrl' => array(
-        'title'     => $lf . ':tx_contexts_contexts',
-        'label'     => 'title',
-        'tstamp'    => 'tstamp',
-        'crdate'    => 'crdate',
-        'cruser_id' => 'cruser_id',
+return [
+    'ctrl' => [
+        'title'          => $lf.':tx_contexts_contexts',
+        'label'          => 'title',
+        'tstamp'         => 'tstamp',
+        'crdate'         => 'crdate',
+        'cruser_id'      => 'cruser_id',
         'default_sortby' => 'ORDER BY title',
-        'delete' => 'deleted',
-        'enablecolumns' => array(
-            'disabled' => 'disabled'
-        ),
+        'delete'         => 'deleted',
+        'enablecolumns'  => [
+            'disabled' => 'disabled',
+        ],
         'requestUpdate' => 'type',
-        'adminOnly' => 1,
-        'rootLevel' => -1,
-        'iconfile'  => 'EXT:contexts/Resources/Public/Icons/tx_contexts_contexts.gif',
-    ),
-    'interface' => array(
-        'showRecordFieldList' => 'title,alias,type,invert,use_session,disabled,hide_in_backend'
-    ),
-    'columns' => array(
-        'title' => array(
+        'adminOnly'     => 1,
+        'rootLevel'     => -1,
+        'iconfile'      => 'EXT:contexts/Resources/Public/Icons/tx_contexts_contexts.gif',
+    ],
+    'interface' => [
+        'showRecordFieldList' => 'title,alias,type,invert,use_session,disabled,hide_in_backend',
+    ],
+    'columns' => [
+        'title' => [
             'exclude' => 0,
-            'label' => $lf . ':tx_contexts_contexts.title',
-            'config' => array(
+            'label'   => $lf.':tx_contexts_contexts.title',
+            'config'  => [
                 'type' => 'input',
                 'size' => '30',
                 'eval' => 'required',
-            )
-        ),
-        'disabled' => array(
+            ],
+        ],
+        'disabled' => [
             'exclude' => 0,
-            'label' => $lf . ':tx_contexts_contexts.disable',
-            'config' => array(
+            'label'   => $lf.':tx_contexts_contexts.disable',
+            'config'  => [
                 'type' => 'check',
-            )
-        ),
-        'hide_in_backend' => array(
+            ],
+        ],
+        'hide_in_backend' => [
             'exclude' => 0,
-            'label' => $lf . ':tx_contexts_contexts.hide_in_backend',
-            'config' => array(
+            'label'   => $lf.':tx_contexts_contexts.hide_in_backend',
+            'config'  => [
                 'type' => 'check',
-            )
-        ),
-        'alias' => array(
+            ],
+        ],
+        'alias' => [
             'exclude' => 0,
-            'label' => $lf . ':tx_contexts_contexts.alias',
-            'config' => array(
+            'label'   => $lf.':tx_contexts_contexts.alias',
+            'config'  => [
                 'type' => 'input',
                 'size' => '30',
                 'eval' => 'alphanum_x,nospace,unique,lower',
-            )
-        ),
-        'type' => array(
+            ],
+        ],
+        'type' => [
             'exclude' => 0,
-            'label' => $lf . ':tx_contexts_contexts.type',
-            'config' => array(
+            'label'   => $lf.':tx_contexts_contexts.type',
+            'config'  => [
                 'type' => 'select',
 //                'items' => array(
 //                    array($lf . ':tx_contexts_contexts.type.select_type', '')
 //                ),
-                'size' => 1,
+                'size'     => 1,
                 'maxitems' => 1,
-            )
-        ),
-        'type_conf' => array(
-            'exclude' => 0,
+            ],
+        ],
+        'type_conf' => [
+            'exclude'     => 0,
             'displayCond' => 'FIELD:type:REQ:true',
-            'label' => $lf . ':tx_contexts_contexts.type_conf',
-            'config' => array(
-                'type' => 'flex',
+            'label'       => $lf.':tx_contexts_contexts.type_conf',
+            'config'      => [
+                'type'            => 'flex',
                 'ds_pointerField' => 'type',
-                'ds' => array()
-            )
-        ),
-        'invert' => array(
+                'ds'              => [],
+            ],
+        ],
+        'invert' => [
             'exclude' => 0,
-            'label'   => $lf . ':tx_contexts_contexts.invert',
-            'config'  => array(
+            'label'   => $lf.':tx_contexts_contexts.invert',
+            'config'  => [
                 'type'    => 'check',
-                'default' => 0
-            )
-        ),
-        'use_session' => array(
+                'default' => 0,
+            ],
+        ],
+        'use_session' => [
             'exclude' => 0,
-            'label'   => $lf . ':tx_contexts_contexts.use_session',
-            'config'  => array(
+            'label'   => $lf.':tx_contexts_contexts.use_session',
+            'config'  => [
                 'type'    => 'check',
-                'default' => 1
-            )
-        ),
-        'default_settings' => array(
-            'config' => array(
-                'type' => 'passthrough'
-            )
-        )
-    ),
-    'types' => array(
-        '0' => array(
-            'showitem'
-                => '--div--;' . $lf . ':tx_contexts_contexts.general'
-                . ',title'
-                . ',--palette--;' . $lf . ':tx_contexts_contexts.visibility;visibility'
-                . ',alias,type,type_conf,invert,'
-                . 'use_session'
-                . ',--div--;' . $lf . ':tx_contexts_contexts.defaults'
-        )
-    ),
-    'palettes' => array(
-        'visibility' => array('showitem' => 'disabled,hide_in_backend', 'canNotCollapse' => 1)
-    )
-);
+                'default' => 1,
+            ],
+        ],
+        'default_settings' => [
+            'config' => [
+                'type' => 'passthrough',
+            ],
+        ],
+    ],
+    'types' => [
+        '0' => [
+            'showitem' => '--div--;'.$lf.':tx_contexts_contexts.general'
+                .',title'
+                .',--palette--;'.$lf.':tx_contexts_contexts.visibility;visibility'
+                .',alias,type,type_conf,invert,'
+                .'use_session'
+                .',--div--;'.$lf.':tx_contexts_contexts.defaults',
+        ],
+    ],
+    'palettes' => [
+        'visibility' => ['showitem' => 'disabled,hide_in_backend', 'canNotCollapse' => 1],
+    ],
+];
