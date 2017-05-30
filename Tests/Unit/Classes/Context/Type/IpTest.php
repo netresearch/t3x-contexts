@@ -1,14 +1,15 @@
 <?php
+
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
-class IpContextTest extends \Netresearch\Contexts\Tests\Unit\TestBase
+class IpTest extends \Netresearch\Contexts\Tests\Unit\TestBase
 {
     public function testMatch()
     {
         $_SERVER['REMOTE_ADDR'] = '192.168.1.14';
         $ipm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\IpContext',
-            array('getConfValue')
+            ['getConfValue']
         );
         $ipm->expects($this->at(0))
             ->method('getConfValue')
@@ -24,7 +25,7 @@ class IpContextTest extends \Netresearch\Contexts\Tests\Unit\TestBase
         $_SERVER['REMOTE_ADDR'] = '192.168.1.14';
         $ipm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\IpContext',
-            array('getConfValue')
+            ['getConfValue']
         );
         $ipm->expects($this->at(0))
             ->method('getConfValue')
@@ -40,7 +41,7 @@ class IpContextTest extends \Netresearch\Contexts\Tests\Unit\TestBase
         $_SERVER['REMOTE_ADDR'] = '192.168.1.20';
         $ipm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\IpContext',
-            array('getConfValue')
+            ['getConfValue']
         );
         $ipm->expects($this->any())
             ->method('getConfValue')
@@ -54,7 +55,7 @@ class IpContextTest extends \Netresearch\Contexts\Tests\Unit\TestBase
         $_SERVER['REMOTE_ADDR'] = '';
         $ipm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\IpContext',
-            array('getConfValue')
+            ['getConfValue']
         );
         $ipm->setInvert(false);
 
@@ -84,21 +85,19 @@ class IpContextTest extends \Netresearch\Contexts\Tests\Unit\TestBase
 
     public static function addressProvider()
     {
-        return array(
-            array('80.76.201.37', '80.76.201.32/27', true),
-            array('FE80:FFFF:0:FFFF:129:144:52:38', "FE80::/16", true),
-            array('80.76.202.37', '80.76.201.32/27', false),
-            array('FE80:FFFF:0:FFFF:129:144:52:38', "FE80::/128", false),
-            array('80.76.201.37', '', false),
-            array('80.76.201', '', false),
+        return [
+            ['80.76.201.37', '80.76.201.32/27', true],
+            ['FE80:FFFF:0:FFFF:129:144:52:38', 'FE80::/16', true],
+            ['80.76.202.37', '80.76.201.32/27', false],
+            ['FE80:FFFF:0:FFFF:129:144:52:38', 'FE80::/128', false],
+            ['80.76.201.37', '', false],
+            ['80.76.201', '', false],
 
-            array('80.76.201.37', '80.76.201.*', true),
-            array('80.76.201.37', '80.76.*.*', true),
-            array('80.76.201.37', '80.76.*', true),
-            array('80.76.201.37', '80.76.*.37', true),
-            array('80.76.201.37', '80.76.*.40', false),
-        );
+            ['80.76.201.37', '80.76.201.*', true],
+            ['80.76.201.37', '80.76.*.*', true],
+            ['80.76.201.37', '80.76.*', true],
+            ['80.76.201.37', '80.76.*.37', true],
+            ['80.76.201.37', '80.76.*.40', false],
+        ];
     }
 }
-
-?>

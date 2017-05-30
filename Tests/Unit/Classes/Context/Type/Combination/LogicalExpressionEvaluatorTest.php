@@ -1,11 +1,11 @@
 <?php
+
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
 
 class LogicalExpressionEvaluatorTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @dataProvider expressionValueProvider
      */
@@ -41,58 +41,50 @@ class LogicalExpressionEvaluatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testRunWithExceptionUnexpectedEnd()
     {
-
         $strExpression = '(context1 ||';
-        $arValues = array('context1' => true);
+        $arValues = ['context1' => true];
         LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
     /**
-     *
      * @expectedException \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException
      * @expectedExceptionMessage Missing closing parentheses
      */
     public function testRunWithExceptionMissingClosingParentheses()
     {
-
         $strExpression = '(context1 ';
-        $arValues = array('context1' => true);
+        $arValues = ['context1' => true];
         LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
-     /**
-     *
+    /**
      * @expectedException \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException
      * @expectedExceptionMessage Unexpected variable
      */
     public function testRunWithExceptionMissingOperator()
     {
-
         $strExpression = '(context1 context2)';
-        $arValues = array('context1' => true);
+        $arValues = ['context1' => true];
         LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
     /**
-     *
-     *
      * @expectedException \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException
      * @expectedExceptionMessage Can't evaluate more than two items by xor
      */
     public function testRunWithExceptionTwoXor()
     {
-
         $strExpression = 'context1 xor context2 xor context3';
-        $arValues = array('context1' => true, 'context2' => true, 'context3' => true);
+        $arValues = ['context1' => true, 'context2' => true, 'context3' => true];
         LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
     public function testNot()
     {
         $strExpression = '!a';
-        $arValues = array(
+        $arValues = [
             'a' => true,
-        );
+        ];
         $this->assertFalse(
             LogicalExpressionEvaluator::run(
                 $strExpression, $arValues
@@ -103,10 +95,10 @@ class LogicalExpressionEvaluatorTest extends \PHPUnit_Framework_TestCase
     public function testAndNot()
     {
         $strExpression = 'a && !b';
-        $arValues = array(
+        $arValues = [
             'a' => true,
             'b' => true,
-        );
+        ];
         $this->assertFalse(
             LogicalExpressionEvaluator::run(
                 $strExpression, $arValues
@@ -114,10 +106,9 @@ class LogicalExpressionEvaluatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-
-
     /**
-     * Provide data for several tests
+     * Provide data for several tests.
+     *
      * @return array Array of arguments where
      *               1st is the expression
      *               2nd is the expected rebuilt expression
@@ -125,58 +116,58 @@ class LogicalExpressionEvaluatorTest extends \PHPUnit_Framework_TestCase
      */
     public static function expressionValueProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 $e = 'context1 || context2',
                 $e,
-                array('context1'=>true, 'context2'=>false),
-            ),
-            array(
+                ['context1'=> true, 'context2'=>false],
+            ],
+            [
                 'context1 or context2',
                 $e,
-                array('context1'=>true, 'context2'=>true)
-            ),
-            array(
+                ['context1'=> true, 'context2'=>true],
+            ],
+            [
                 $e = 'context1 && context2',
                 $e,
-                array('context1'=>true, 'context2'=>true)
-            ),
-            array(
+                ['context1'=> true, 'context2'=>true],
+            ],
+            [
                 'context1 and context2',
                 $e,
-                array('context1'=>true, 'context2'=>false)
-            ),
-            array(
+                ['context1'=> true, 'context2'=>false],
+            ],
+            [
                 $e = 'context1 >< context2',
                 $e,
-                array('context1'=>true, 'context2'=>false)
-            ),
-            array(
+                ['context1'=> true, 'context2'=>false],
+            ],
+            [
                 'context1 xor context2',
                 $e,
-                array('context1'=>true, 'context2'=>true)
-            ),
-            array(
+                ['context1'=> true, 'context2'=>true],
+            ],
+            [
                 'context1 && !(context2 || !!context3)',
                 'context1 && !(context2 || context3)',
-                array('context1'=>true, 'context2'=>false, 'context3' => false)
-            ),
-            array(
+                ['context1'=> true, 'context2'=>false, 'context3' => false],
+            ],
+            [
                 'context1 xor (context2 && !context3)',
                 'context1 >< (context2 && !context3)',
-                array('context1'=>true, 'context2'=>true, 'context3'=>false)
-            ),
-            array(
+                ['context1'=> true, 'context2'=>true, 'context3'=>false],
+            ],
+            [
                 $e = 'context1-hyphen && context2',
                 $e,
-                array('context1-hyphen'=>true, 'context2'=>true)
-            ),
-            array(
+                ['context1-hyphen'=> true, 'context2'=>true],
+            ],
+            [
                 $e = 'context1_underscore && context2',
                 $e,
-                array('context1_underscore'=>true, 'context2'=>true)
-            ),
-        );
+                ['context1_underscore'=> true, 'context2'=>true],
+            ],
+        ];
     }
 
     protected static function getEval($string, $values)
@@ -185,9 +176,7 @@ class LogicalExpressionEvaluatorTest extends \PHPUnit_Framework_TestCase
         foreach ($values as $key => $value) {
             $string = str_replace($key, $value ? 'true' : 'false', $string);
         }
-        return eval("return (".$string.");");
+
+        return eval('return ('.$string.');');
     }
-
 }
-
-?>

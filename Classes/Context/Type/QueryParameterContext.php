@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Context\Type;
 
 /***************************************************************
@@ -28,7 +29,7 @@ use Netresearch\Contexts\Service\FrontendControllerService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Matches on a GET parameter with a certain value
+ * Matches on a GET parameter with a certain value.
  *
  * @author     Christian Weiske <christian.weiske@netresearch.de>
  * @author     Christian Opitz <christian.opitz@netresearch.de>
@@ -40,16 +41,18 @@ class QueryParameterContext extends AbstractContext
      * Check if the context is active now.
      *
      * @param array $arDependencies Array of dependent context objects
-     * @return bool True if the context is active, false if not
+     *
      * @throws \Exception
+     *
+     * @return bool True if the context is active, false if not
      */
-    public function match(array $arDependencies = array())
+    public function match(array $arDependencies = [])
     {
         $param = trim($this->getConfValue('field_name'));
         if ($param === '') {
             throw new \Exception(
                 'Parameter name missing from GET Parameter'
-                . ' context configuration'
+                .' context configuration'
             );
         }
         $value = GeneralUtility::_GET($param);
@@ -73,12 +76,12 @@ class QueryParameterContext extends AbstractContext
     }
 
     /**
-     * Checks if the given value is one of the configured allowed values
+     * Checks if the given value is one of the configured allowed values.
      *
      * @param string $value Current parameter value
      *
      * @return bool True if the current paramter value is one of the
-     *                 configured values
+     *              configured values
      */
     protected function matchParameters($value)
     {
@@ -90,6 +93,7 @@ class QueryParameterContext extends AbstractContext
         }
 
         $arValues = array_map('trim', $arValues);
+
         return in_array($value, $arValues, true);
     }
 }

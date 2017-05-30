@@ -1,12 +1,13 @@
 <?php
+
 namespace Netresearch\Contexts\Tests\Functional;
 
 class TcaTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
 {
-    protected $testExtensionsToLoad = array('typo3conf/ext/contexts');
+    protected $testExtensionsToLoad = ['typo3conf/ext/contexts'];
 
     /**
-     * Test the tca configuration
+     * Test the tca configuration.
      */
     public function testHasTcaEntries()
     {
@@ -41,4 +42,3 @@ class TcaTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
         $this->assertSame('tx_contexts_enable', $GLOBALS['TCA']['tt_content']['ctrl']['tx_contexts']['flatSettings']['tx_contexts'][1]);
     }
 }
-?>
