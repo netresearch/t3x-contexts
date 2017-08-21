@@ -1,7 +1,7 @@
 <?php
 //prevent xml error for new records
 \Netresearch\Contexts\Api\Configuration::registerContextType(
-    '',
+    'default',
     'Select a type',
     '',
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Empty.xml'
