@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Form;
 
 /*
@@ -19,7 +20,7 @@ use Netresearch\Contexts\Context\Container;
 use TYPO3\CMS\Backend\Form\FormEngine;
 
 /**
- * USER functions to render the defaults fields
+ * USER functions to render the defaults fields.
  *
  * @author Christian Opitz <christian.opitz@netresearch.de>
  */
@@ -27,10 +28,11 @@ class DefaultSettingsFormElement
 {
     /**
      * Render a checkbox for the default settings of records in
-     * this table
+     * this table.
      *
-     * @param array $params
+     * @param array      $params
      * @param FormEngine $formEngineObject
+     *
      * @return string
      */
     public function render($params, $formEngineObject)
@@ -42,16 +44,16 @@ class DefaultSettingsFormElement
         $namePre = str_replace('[default_settings_', '[default_settings][', $params['itemFormElName']);
 
         /* @var $context AbstractContext */
-        $uid = (int)$params['row']['uid'];
+        $uid = (int) $params['row']['uid'];
         $context = $uid
             ? Container::get()->initAll()->find($uid)
             : null;
 
         foreach ($params['fieldConf']['config']['settings'] as $setting => $config) {
-            $id = $params['itemFormElID'] . '-' . $setting;
-            $name = $namePre . '[' . $setting . ']';
-            $content .= '<input type="hidden" name="' . $name . '" value="0"/>';
-            $content .= '<input class="checkbox" type="checkbox" name="' . $name . '" ';
+            $id = $params['itemFormElID'].'-'.$setting;
+            $name = $namePre.'['.$setting.']';
+            $content .= '<input type="hidden" name="'.$name.'" value="0"/>';
+            $content .= '<input class="checkbox" type="checkbox" name="'.$name.'" ';
             if (
                 !$context ||
                 !$context->hasSetting($table, $setting, 0) ||
@@ -59,8 +61,8 @@ class DefaultSettingsFormElement
             ) {
                 $content .= 'checked="checked" ';
             }
-            $content .= 'value="1" id="' . $id . '" /> ';
-            $content .= '<label for="' . $id . '">';
+            $content .= 'value="1" id="'.$id.'" /> ';
+            $content .= '<label for="'.$id.'">';
             $content .= $GLOBALS['LANG']->sL($config['label']);
             $content .= '</label><br/>';
         }

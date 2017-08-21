@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Service;
 
 /*
@@ -28,15 +29,15 @@ class FrontendControllerService implements SingletonInterface
      *
      * @var array
      */
-    protected static $params = array();
+    protected static $params = [];
 
     /**
      * GET parameters that are carried across all URLs.
-     * Key is the parameter name, value is ignored
+     * Key is the parameter name, value is ignored.
      *
      * @var array
      */
-    protected static $linkVarParams = array();
+    protected static $linkVarParams = [];
 
     /**
      * Initialize the frontend user - contexts are initialized here.
@@ -52,7 +53,7 @@ class FrontendControllerService implements SingletonInterface
 
     /**
      * Check subpages for context from rootline
-     * method is called from hook "hook_checkEnableFields"
+     * method is called from hook "hook_checkEnableFields".
      *
      * @param array $arData key: pObj value: TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController (required)
      *                      key: row  value: page record to evaluate
@@ -89,7 +90,7 @@ class FrontendControllerService implements SingletonInterface
     }
 
     /**
-     * methods related to the QueryParameterContext
+     * methods related to the QueryParameterContext.
      */
 
     /**
@@ -98,6 +99,7 @@ class FrontendControllerService implements SingletonInterface
      *
      * @param array &$params Array of parameters
      * @param null  $ref     Empty reference object
+     *
      * @return void
      */
     public function createHashBase(&$params, $ref)
@@ -107,24 +109,26 @@ class FrontendControllerService implements SingletonInterface
     }
 
     /**
-     * Add current param names to config.linkVars
+     * Add current param names to config.linkVars.
      *
-     * @param array    &$params
+     * @param array                        &$params
      * @param TypoScriptFrontendController $tsfe
+     *
      * @return void
      */
     public function configArrayPostProc(&$params, $tsfe)
     {
-        $linkVars = $params['config']['linkVars'] . ',' . implode(',', array_keys(self::$linkVarParams));
+        $linkVars = $params['config']['linkVars'].','.implode(',', array_keys(self::$linkVarParams));
         $params['config']['linkVars'] = trim($linkVars, ',');
     }
 
     /**
      * Register a param and it's value and hook into configArrayPostProc and
-     * createHashBase/cHashParamsHook
+     * createHashBase/cHashParamsHook.
      *
      * @param string $param
      * @param mixed  $value
+     *
      * @return void
      */
     public static function registerQueryParameter($param, $value, $addToLinkVars)
@@ -141,9 +145,9 @@ class FrontendControllerService implements SingletonInterface
         self::$hooksRegistered = true;
         $conf = &$GLOBALS['TSFE']->TYPO3_CONF_VARS;
         $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'][__CLASS__] =
-            __CLASS__ . '->configArrayPostProc';
+            __CLASS__.'->configArrayPostProc';
         // override page hash generation
         $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][__CLASS__] =
-            __CLASS__ . '->createHashBase';
+            __CLASS__.'->createHashBase';
     }
 }
