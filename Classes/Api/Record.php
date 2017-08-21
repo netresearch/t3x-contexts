@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Api;
 
 /***************************************************************
@@ -29,7 +30,7 @@ use Netresearch\Contexts\Context\Container;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * API with methods to retrieve context information for records
+ * API with methods to retrieve context information for records.
  *
  * @author     Christian Opitz <christian.opitz@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
@@ -39,9 +40,9 @@ class Record
     /**
      * Determines if the specified record is enabled or disabled by the current
      * contexts (means that the records is disabled if one of the enableSettings
-     * are disabled for one of the current contexts)
+     * are disabled for one of the current contexts).
      *
-     * @param string        $table Table name
+     * @param string    $table Table name
      * @param array|int $row   Record array or an uid
      *
      * @return bool
@@ -57,15 +58,16 @@ class Record
                 return false;
             }
         }
+
         return true;
     }
 
     /**
      * Determines if a setting is enabled or disabled by the current contexts
-     * (returns false if the setting is disabled for one of the contexts)
+     * (returns false if the setting is disabled for one of the contexts).
      *
-     * @param string        $table   Table name
-     * @param string        $setting Setting name
+     * @param string    $table   Table name
+     * @param string    $setting Setting name
      * @param array|int $row     Record array or an uid
      *
      * @return bool
@@ -84,8 +86,9 @@ class Record
                     'Missing uid field in row',
                     'tx_contexts',
                     GeneralUtility::SYSLOG_SEVERITY_WARNING,
-                    array('table' => $table, 'row' => $row)
+                    ['table' => $table, 'row' => $row]
                 );
+
                 return false;
             }
 
@@ -96,7 +99,7 @@ class Record
 
         /* @var $context AbstractContext */
         foreach (Container::get() as $context) {
-            $rowSetting     = $context->getSetting($table, $setting, $uid);
+            $rowSetting = $context->getSetting($table, $setting, $uid);
             $defaultSetting = $context->getSetting($table, $setting, 0);
 
             if (($rowSetting && !$rowSetting->getEnabled())
@@ -111,15 +114,15 @@ class Record
 
     /**
      * Tries to get if the setting is enabled by evaluating the flat columns
-     * within the record
+     * within the record.
      *
      * @param string $table   Table name
      * @param string $setting Setting name
      * @param array  $row     Record array
      *
      * @return null|bool NULL when table has no flat settings or the record
-     *                      doesn't contain the appropriate flat columns
-     *                      boolean otherwise
+     *                   doesn't contain the appropriate flat columns
+     *                   boolean otherwise
      */
     protected static function isSettingEnabledFlat($table, $setting, array $row)
     {
@@ -127,31 +130,31 @@ class Record
             = Configuration::getFlatColumns($table, $setting);
 
         if (!$flatColumns) {
-            return null;
+            return;
         }
 
-        $rowValid           = true;
-        $flatColumnContents = array();
+        $rowValid = true;
+        $flatColumnContents = [];
 
         foreach ($flatColumns as $i => $flatColumn) {
             if (!array_key_exists($flatColumn, $row)) {
                 GeneralUtility::devLog(
-                    'Missing flat field "' . $flatColumn . '"',
+                    'Missing flat field "'.$flatColumn.'"',
                     'tx_contexts',
                     GeneralUtility::SYSLOG_SEVERITY_WARNING,
-                    array('table' => $table, 'row' => $row)
+                    ['table' => $table, 'row' => $row]
                 );
                 $rowValid = false;
             } elseif ($row[$flatColumn] !== '') {
                 $flatColumnContents[$i]
                     = array_flip(explode(',', $row[$flatColumn]));
             } else {
-                $flatColumnContents[$i] = array();
+                $flatColumnContents[$i] = [];
             }
         }
 
         if (!$rowValid) {
-            return null;
+            return;
         }
 
         foreach (Container::get() as $context) {

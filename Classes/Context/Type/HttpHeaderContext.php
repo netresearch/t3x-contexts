@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Context\Type;
 
 /***************************************************************
@@ -27,7 +28,7 @@ namespace Netresearch\Contexts\Context\Type;
 use Netresearch\Contexts\Context\AbstractContext;
 
 /**
- * Matches on a HTTP header with a certain value
+ * Matches on a HTTP header with a certain value.
  *
  * @author     Michael Schams <schams.net>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
@@ -41,7 +42,7 @@ class HttpHeaderContext extends AbstractContext
      *
      * @return bool True if the context is active, false if not
      */
-    public function match(array $arDependencies = array())
+    public function match(array $arDependencies = [])
     {
         // determine which HTTP header has been configured
         $httpHeaderName = trim(strtolower($this->getConfValue('field_name')));
@@ -62,12 +63,12 @@ class HttpHeaderContext extends AbstractContext
     }
 
     /**
-     * Checks if the given value is one of the configured allowed values
+     * Checks if the given value is one of the configured allowed values.
      *
      * @param string $value Current parameter value
      *
      * @return bool True if the current paramter value is one of the
-     *                 configured values
+     *              configured values
      */
     protected function matchValues($value)
     {
@@ -79,6 +80,7 @@ class HttpHeaderContext extends AbstractContext
         }
 
         $arValues = array_map('trim', $arValues);
+
         return in_array($value, $arValues, true);
     }
 }

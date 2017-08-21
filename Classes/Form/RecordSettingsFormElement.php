@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Form;
 
 /*
@@ -18,25 +19,25 @@ use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use TYPO3\CMS\Backend\Form\FormEngine;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /**
- * USER function to render the record settings fields
+ * USER function to render the record settings fields.
  *
  * @author Christian Opitz <christian.opitz@netresearch.de>
  */
 class RecordSettingsFormElement
 {
     /**
-     * Render the context settings field for a certain table
+     * Render the context settings field for a certain table.
      *
-     * @param array          $params Array of record information
-     *                               - table - table name
-     *                               - row   - array with database row data
+     * @param array      $params           Array of record information
+     *                                     - table - table name
+     *                                     - row   - array with database row data
      * @param FormEngine $formEngineObject
+     *
      * @return string
      */
     public function render($params, $formEngineObject)
@@ -46,19 +47,19 @@ class RecordSettingsFormElement
         $contexts = new Container();
         $contexts->initAll();
 
-        $namePre = str_replace('[' . $params['field'] . '_', '[' . $params['field'] . '][', $params['itemFormElName']);
+        $namePre = str_replace('['.$params['field'].'_', '['.$params['field'].'][', $params['itemFormElName']);
 
         $settings = $params['fieldConf']['config']['settings'];
 
         $content = '<table class="tx_contexts_table_settings typo3-dblist" style="width: auto; min-width:50%">'
-            . '<tbody>'
-            . '<tr class="t3-row-header">'
-            . '<td></td>'
-            . '<td class="tx_contexts_context">' .
-            $GLOBALS['LANG']->sL('LLL:' . Configuration::LANG_FILE . ':tx_contexts_contexts') .
+            .'<tbody>'
+            .'<tr class="t3-row-header">'
+            .'<td></td>'
+            .'<td class="tx_contexts_context">'.
+            $GLOBALS['LANG']->sL('LLL:'.Configuration::LANG_FILE.':tx_contexts_contexts').
             '</td>';
         foreach ($settings as $settingName => $config) {
-            $content .= '<td class="tx_contexts_setting">' . $GLOBALS['LANG']->sL($config['label']) . '</td>';
+            $content .= '<td class="tx_contexts_setting">'.$GLOBALS['LANG']->sL($config['label']).'</td>';
         }
         $content .= '</tr>';
 
@@ -78,31 +79,31 @@ class RecordSettingsFormElement
                 $setting = $uid ? $context->getSetting($table, $settingName, $uid, $params['row']) : null;
                 $bHasSetting = $bHasSetting || (bool) $setting;
                 $contSettings .= '<td class="tx_contexts_setting">'
-                    . '<select name="' . $namePre . '[' . $context->getUid() . '][' . $settingName . ']">'
-                    . '<option value="">n/a</option>'
-                    . '<option value="1"' . ($setting && $setting->getEnabled() ? ' selected="selected"' : '') . '>Yes</option>'
-                    . '<option value="0"' . ($setting && !$setting->getEnabled() ? ' selected="selected"' : '') . '>No</option>'
-                    . '</select></td>';
+                    .'<select name="'.$namePre.'['.$context->getUid().']['.$settingName.']">'
+                    .'<option value="">n/a</option>'
+                    .'<option value="1"'.($setting && $setting->getEnabled() ? ' selected="selected"' : '').'>Yes</option>'
+                    .'<option value="0"'.($setting && !$setting->getEnabled() ? ' selected="selected"' : '').'>No</option>'
+                    .'</select></td>';
             }
 
             list($icon, $title) = $this->getRecordPreview($context);
             $content .= '<tr class="db_list_normal">'
-                . '<td class="tx_contexts_context col-icon"">'
-                . $icon . '</td>'
-                . '<td class="tx_contexts_context">'
-                . '<span class="context-' . ($bHasSetting ? 'active' : 'inactive') . '">'
-                . $title
-                . '</span>'
-                . '</td>'
-                . $contSettings
-                . '</tr>';
+                .'<td class="tx_contexts_context col-icon"">'
+                .$icon.'</td>'
+                .'<td class="tx_contexts_context">'
+                .'<span class="context-'.($bHasSetting ? 'active' : 'inactive').'">'
+                .$title
+                .'</span>'
+                .'</td>'
+                .$contSettings
+                .'</tr>';
         }
         if ($visibleContexts == 0) {
             $content .= '<tr>'
-                . '<td colspan="4" style="text-align: center">'
-                . $GLOBALS['LANG']->sL('LLL:' . Configuration::LANG_FILE . ':no_contexts')
-                . '</td>'
-                . '</tr>';
+                .'<td colspan="4" style="text-align: center">'
+                .$GLOBALS['LANG']->sL('LLL:'.Configuration::LANG_FILE.':no_contexts')
+                .'</td>'
+                .'</tr>';
         }
 
         $content .= '</tbody></table>';
@@ -111,7 +112,7 @@ class RecordSettingsFormElement
     }
 
     /**
-     * Get the standard record view for context records
+     * Get the standard record view for context records.
      *
      * @param AbstractContext $context
      *
@@ -119,22 +120,22 @@ class RecordSettingsFormElement
      */
     protected function getRecordPreview($context)
     {
-        $row = array(
+        $row = [
             'uid'   => $context->getUid(),
             'pid'   => 0,
             'type'  => $context->getType(),
-            'alias' => $context->getAlias()
-        );
+            'alias' => $context->getAlias(),
+        ];
 
-        return array(
+        return [
             $this->getClickMenu(
                 $this->getIcon($row, $context),
                 'tx_contexts_contexts',
                 $row['uid']
             ),
-            htmlspecialchars($context->getTitle()) .
-            ' <span class="typo3-dimmed"><em>[' . $row['uid'] . ']</em></span>'
-        );
+            htmlspecialchars($context->getTitle()).
+            ' <span class="typo3-dimmed"><em>['.$row['uid'].']</em></span>',
+        ];
     }
 
     /**
@@ -143,10 +144,11 @@ class RecordSettingsFormElement
      *
      * Copied from class.t3lib_befunc.php
      *
-     * @param string  $str   The icon HTML to wrap
-     * @param string  $table Table name (eg. "pages" or "tt_content") OR the
-     *                       absolute path to the file
-     * @param mixed   $uid   The uid of the record OR if file, just blank value.
+     * @param string $str   The icon HTML to wrap
+     * @param string $table Table name (eg. "pages" or "tt_content") OR the
+     *                      absolute path to the file
+     * @param mixed  $uid   The uid of the record OR if file, just blank value.
+     *
      * @return string HTML
      */
     protected function getClickMenu($str, $table, $uid = '')
@@ -164,14 +166,12 @@ class RecordSettingsFormElement
                 $str, $table, $uid, true, '', '+info,edit,view,new', false
             );
         }
-
-
     }
 
     /**
-     * Get the icon
+     * Get the icon.
      *
-     * @param  array          $row
+     * @param array           $row
      * @param AbstractContext $context
      *
      * @return Icon|string
@@ -179,7 +179,7 @@ class RecordSettingsFormElement
     protected function getIcon($row, $context)
     {
         if (class_exists('TYPO3\CMS\Core\Imaging\IconFactory')) {
-            $iconClass  = GeneralUtility::makeInstance(
+            $iconClass = GeneralUtility::makeInstance(
                 'TYPO3\CMS\Core\Imaging\IconFactory'
             );
 
@@ -191,23 +191,22 @@ class RecordSettingsFormElement
         }
 
         if (class_exists('TYPO3\CMS\Backend\Utility\IconUtility')) {
-            $iconClass =  GeneralUtility::makeInstance(
+            $iconClass = GeneralUtility::makeInstance(
                 'TYPO3\CMS\Backend\Utility\IconUtility'
             );
 
             return $iconClass::getSpriteIconForRecord(
                 'tx_contexts_contexts',
                 $row,
-                array(
+                [
                     'style' => 'vertical-align:top',
                     'title' => htmlspecialchars(
-                        $context->getTitle() .
-                        ' [UID: ' . $row['uid'] . ']')
-                )
+                        $context->getTitle().
+                        ' [UID: '.$row['uid'].']'),
+                ]
             );
         }
 
         return '';
     }
-
 }

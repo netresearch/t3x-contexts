@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Context\Type\Combination;
 
 /***************************************************************
@@ -25,7 +26,7 @@ namespace Netresearch\Contexts\Context\Type\Combination;
 ***************************************************************/
 
 /**
- * Exception for parsing and evaluation errors
+ * Exception for parsing and evaluation errors.
  *
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @license http://opensource.org/licenses/gpl-license GPLv2 or later

@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Context\Type;
 
 /***************************************************************
@@ -27,7 +28,7 @@ use Netresearch\Contexts\Context\AbstractContext;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Matches on the current frontend user IP
+ * Matches on the current frontend user IP.
  *
  * @author     Andre Hähnel <andre.haehnel@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
@@ -41,7 +42,7 @@ class IpContext extends AbstractContext
      *
      * @return bool True if the context is active, false if not
      */
-    public function match(array $arDependencies = array())
+    public function match(array $arDependencies = [])
     {
         $strCurIp = $_SERVER['REMOTE_ADDR'];
 
@@ -64,6 +65,7 @@ class IpContext extends AbstractContext
         }
 
         $strRange = implode(',', $arIpRange);
+
         return $this->invert($this->isIpInRange($strCurIp, $bIpv4, $strRange));
     }
 
@@ -71,10 +73,10 @@ class IpContext extends AbstractContext
      * Check if the remote IP is the allowed range.
      * Supports IPv4 and IPv6.
      *
-     * @param string  $strIp    remote IP address
-     * @param bool $bIpv4    If the IP is IPv4 (if not, it's IPv6)
-     * @param string  $strRange Defined range. Comma-separated list of IPs.
-     *                          * supported for parts of the address.
+     * @param string $strIp    remote IP address
+     * @param bool   $bIpv4    If the IP is IPv4 (if not, it's IPv6)
+     * @param string $strRange Defined range. Comma-separated list of IPs.
+     *                         * supported for parts of the address.
      *
      * @return bool True if the IP is in the range
      */
