@@ -24,7 +24,7 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Call a protected method on an object and return the result
+     * Call a protected method on an object and return the result.
      *
      * @param object $obj           Object the method should be called on
      * @param string $strMethodName Method to be called
@@ -40,7 +40,7 @@ abstract class TestBase extends \PHPUnit_Framework_TestCase
         array_shift($params);
         array_shift($params);
         $m = $this->getAccessibleMethod(get_class($obj), $strMethodName);
+
         return $m->invokeArgs($obj, $params);
     }
 }
-?>

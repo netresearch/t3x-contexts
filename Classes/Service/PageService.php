@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Service;
 
 /***************************************************************
@@ -42,20 +43,20 @@ use TYPO3\CMS\Frontend\Page\PageRepositoryGetPageHookInterface;
  * @author  Christian Weiske <christian.weiske@netresearch.de>
  * @license http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-class PageService
-    implements PageRepositoryGetPageHookInterface, AbstractMenuFilterPagesHookInterface, SingletonInterface
+class PageService implements PageRepositoryGetPageHookInterface, AbstractMenuFilterPagesHookInterface, SingletonInterface
 {
     /**
-     * Add context filtering to an SQL query
+     * Add context filtering to an SQL query.
      *
-     * @param array            $params Array of parameters:
-     *                                 - table        - table name
-     *                                 - show_hidden  - if hidden elements shall
-     *                                                  be shown
-     *                                 - ignore_array - enable field names which
-     *                                                  should not be used
-     *                                 - ctrl         - TCA table control data
+     * @param array          $params Array of parameters:
+     *                               - table        - table name
+     *                               - show_hidden  - if hidden elements shall
+     *                               be shown
+     *                               - ignore_array - enable field names which
+     *                               should not be used
+     *                               - ctrl         - TCA table control data
      * @param PageRepository $ref    Object that calls the hook     *
+     *
      * @return string SQL command part that gets added to the query
      */
     public function enableFields($params, $ref)
@@ -66,11 +67,12 @@ class PageService
     /**
      * Add page access restrictions through context settings.
      *
-     * @param int          &$uid                     The page ID
-     * @param bool          &$disableGroupAccessCheck If set, the check for
-     *                                                   group access is disabled.
-     *                                                   VERY rarely used
+     * @param int            &$uid                     The page ID
+     * @param bool           &$disableGroupAccessCheck If set, the check for
+     *                                                 group access is disabled.
+     *                                                 VERY rarely used
      * @param PageRepository $pObj                     t3lib_pageSelect object
+     *
      * @return void
      */
     public function getPage_preProcess(
@@ -86,9 +88,10 @@ class PageService
 
     /**
      * Generates a SQL WHERE statement that filters out records
-     * that may not be accessed with the current context settings
+     * that may not be accessed with the current context settings.
      *
      * @param string $table Database table name
+     *
      * @return string SQL filter string beginning with " AND "
      */
     protected function getFilterSql($table)
@@ -99,36 +102,36 @@ class PageService
             $flatColumns = Configuration::getFlatColumns($table, $setting);
             if (!$flatColumns) {
                 GeneralUtility::devLog(
-                    'Missing flat columns for setting "' . $setting . '"',
+                    'Missing flat columns for setting "'.$setting.'"',
                     'tx_contexts',
                     2,
-                    array('table' => $table)
+                    ['table' => $table]
                 );
                 continue;
             }
 
-            $enableChecks = array(
-                $flatColumns[1] . " IS NULL",
-                $flatColumns[1] . " = ''"
-            );
-            $disableChecks = array();
+            $enableChecks = [
+                $flatColumns[1].' IS NULL',
+                $flatColumns[1]." = ''",
+            ];
+            $disableChecks = [];
 
             foreach (Container::get() as $context) {
                 /* @var $context AbstractContext */
                 $enableChecks[] = $GLOBALS['TYPO3_DB']->listQuery(
                     $flatColumns[1], $context->getUid(), $table
                 );
-                $disableChecks[] = 'NOT ' . $GLOBALS['TYPO3_DB']->listQuery(
+                $disableChecks[] = 'NOT '.$GLOBALS['TYPO3_DB']->listQuery(
                     $flatColumns[0], $context->getUid(), $table
                 );
             }
 
-            $sql = ' AND (' . implode(' OR ', $enableChecks) . ')';
+            $sql = ' AND ('.implode(' OR ', $enableChecks).')';
             if (count($disableChecks)) {
                 $sql .= ' AND ('
-                    . $flatColumns[0] . " IS NULL"
-                    . ' OR ' . $flatColumns[0] . " = ''"
-                    . ' OR (' . implode(' AND ', $disableChecks) . ')' .
+                    .$flatColumns[0].' IS NULL'
+                    .' OR '.$flatColumns[0]." = ''"
+                    .' OR ('.implode(' AND ', $disableChecks).')'.
                 ')';
             }
         }
@@ -137,11 +140,12 @@ class PageService
     }
 
     /**
-     * Modify the cache hash
+     * Modify the cache hash.
      *
      * @param array &$params Array of parameters: hashParameters,
      *                       createLockHashBase
      * @param null  $ref     Reference object
+     *
      * @return void
      */
     public function createHashBase(&$params, $ref)
@@ -163,16 +167,18 @@ class PageService
             Container::get()->getArrayCopy()
         );
         sort($keys, SORT_NUMERIC);
+
         return implode(',', $keys);
     }
 
     /**
      * Checks if a page is OK to include in the final menu item array.
      *
-     * @param array &$data Array of menu items
-     * @param array $banUidArray Array of page uids which are to be excluded
-     * @param bool $spacer If set, then the page is a spacer.
-     * @param AbstractMenuContentObject $obj The menu object
+     * @param array                     &$data       Array of menu items
+     * @param array                     $banUidArray Array of page uids which are to be excluded
+     * @param bool                      $spacer      If set, then the page is a spacer.
+     * @param AbstractMenuContentObject $obj         The menu object
+     *
      * @return bool Returns TRUE if the page can be safely included.
      */
     public function processFilter(

@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Context\Type;
 
 /***************************************************************
@@ -28,7 +29,7 @@ use Netresearch\Contexts\Service\FrontendControllerService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Matches on a GET parameter with a certain value
+ * Matches on a GET parameter with a certain value.
  *
  * @author     Christian Weiske <christian.weiske@netresearch.de>
  * @author     Christian Opitz <christian.opitz@netresearch.de>
@@ -40,22 +41,25 @@ class QueryParameterContext extends AbstractContext
      * Check if the context is active now.
      *
      * @param array $arDependencies Array of dependent context objects
-     * @return bool True if the context is active, false if not
+     *
      * @throws \Exception
+     *
+     * @return bool True if the context is active, false if not
      */
-    public function match(array $arDependencies = array())
+    public function match(array $arDependencies = [])
     {
         $param = trim($this->getConfValue('field_name'));
         if ($param === '') {
             throw new \Exception(
                 'Parameter name missing from GET Parameter'
-                . ' context configuration'
+                .' context configuration'
             );
         }
 
         if (!array_key_exists($param, $_GET)) {
             //load from session if no param given
             list($bUseMatch, $bMatch) = $this->getMatchFromSession();
+
             return $this->invert($bUseMatch && $bMatch);
         }
 
