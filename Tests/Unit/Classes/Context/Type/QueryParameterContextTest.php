@@ -123,7 +123,7 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
 
     public function testMatchParameterAnyValue()
     {
-        $_GET['bla'] = 'aslkfj';
+        $_GET['affID'] = 'aslkfj';
 
         $getm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
@@ -142,9 +142,9 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($getm->match(), 'Any value is correct');
     }
 
-    public function testMatchParameterAnyValueWrongName()
+    public function testMatchParameterAnyValueMissing()
     {
-        $_GET['affID'] = 'aslkfj';
+        unset($_GET['affID']);
 
         $getm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
@@ -160,7 +160,7 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
             ->method('getConfValue')
             ->will($this->returnValueMap($retValMap));
 
-        $this->assertTrue($getm->match(), 'Any value is correct');
+        $this->assertFalse($getm->match(), 'Any value is missing');
     }
 
     /**
