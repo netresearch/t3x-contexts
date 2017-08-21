@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Context;
 
 /*
@@ -17,7 +18,7 @@ namespace Netresearch\Contexts\Context;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Loads contexts and provides access to them
+ * Loads contexts and provides access to them.
  */
 class Container extends \ArrayObject
 {
@@ -27,7 +28,7 @@ class Container extends \ArrayObject
     protected static $instance;
 
     /**
-     * Singleton accessor
+     * Singleton accessor.
      *
      * @return Container
      */
@@ -36,17 +37,19 @@ class Container extends \ArrayObject
         if (static::$instance === null) {
             static::$instance = new self();
         }
+
         return static::$instance;
     }
 
     /**
-     * Loads all contexts and checks if they match
+     * Loads all contexts and checks if they match.
      *
      * @return Container
      */
     public function initMatching()
     {
         $this->setActive($this->match($this->loadAvailable()));
+
         return $this;
     }
 
@@ -58,11 +61,12 @@ class Container extends \ArrayObject
     public function initAll()
     {
         $this->setActive($this->loadAvailable());
+
         return $this;
     }
 
     /**
-     * Make the given contexts active (available in this container)
+     * Make the given contexts active (available in this container).
      *
      * @param array $arContexts Array of context objects
      *
@@ -71,12 +75,12 @@ class Container extends \ArrayObject
     protected function setActive($arContexts)
     {
         $this->exchangeArray($arContexts);
-        $aliases = array();
+        $aliases = [];
         foreach ($arContexts as $context) {
             $aliases[] = $context->getAlias();
         }
         GeneralUtility::devLog(
-            count($this) . ' active contexts: ' . implode(', ', $aliases),
+            count($this).' active contexts: '.implode(', ', $aliases),
             'tx_contexts', 0
         );
 
@@ -96,7 +100,7 @@ class Container extends \ArrayObject
             '*', 'tx_contexts_contexts', 'deleted=0'
         );
 
-        $contexts = array();
+        $contexts = [];
         foreach ($arRows as $arRow) {
             $context = Factory::createFromDb($arRow);
             if ($context !== null) {
@@ -117,8 +121,8 @@ class Container extends \ArrayObject
      */
     protected function match($arContexts)
     {
-        $matched          = array();
-        $notMatched       = array();
+        $matched = [];
+        $notMatched = [];
         $arContextsHelper = $arContexts;
 
         $loops = 0;
@@ -137,23 +141,23 @@ class Container extends \ArrayObject
                 foreach ($arDeps as $depUid => $enabled) {
                     if ($enabled) {
                         if (isset($matched[$depUid])) {
-                            $arDeps[$depUid] = (object) array(
+                            $arDeps[$depUid] = (object) [
                                 'context' => $matched[$depUid],
-                                'matched' => true
-                            );
+                                'matched' => true,
+                            ];
                             $unresolvedDeps--;
                         } elseif (isset($notMatched[$depUid])) {
-                            $arDeps[$depUid] = (object) array(
+                            $arDeps[$depUid] = (object) [
                                 'context' => $notMatched[$depUid],
-                                'matched' => false
-                            );
+                                'matched' => false,
+                            ];
                             $unresolvedDeps--;
                         }
                     } else {
-                        $arDeps[$depUid] = (object) array(
+                        $arDeps[$depUid] = (object) [
                             'context' => $arContextsHelper[$depUid],
-                            'matched' => 'disabled'
-                        );
+                            'matched' => 'disabled',
+                        ];
                         $unresolvedDeps--;
                     }
                     // FIXME: what happens when dependency context is not
@@ -178,7 +182,7 @@ class Container extends \ArrayObject
     }
 
     /**
-     * Find context by uid or alias
+     * Find context by uid or alias.
      *
      * @param int|string $uidOrAlias
      *
@@ -197,7 +201,5 @@ class Container extends \ArrayObject
                 return $context;
             }
         }
-
-        return null;
     }
 }

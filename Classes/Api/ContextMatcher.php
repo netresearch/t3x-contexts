@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Api;
 
 /***************************************************************
@@ -34,21 +35,21 @@ use Netresearch\Contexts\Context\Container;
 class ContextMatcher
 {
     /**
-     * Singleton instance
+     * Singleton instance.
      *
      * @var ContextMatcher
      */
     protected static $instance;
 
     /**
-     * Match results. Alias => boolean match result
+     * Match results. Alias => boolean match result.
      *
      * @var array
      */
-    protected $arMatches = array();
+    protected $arMatches = [];
 
     /**
-     * Singleton
+     * Singleton.
      *
      * @return self One instance
      */
@@ -57,11 +58,12 @@ class ContextMatcher
         if (self::$instance === null) {
             self::$instance = new self();
         }
+
         return self::$instance;
     }
 
     /**
-     * Unsets this instance
+     * Unsets this instance.
      *
      * @return void
      */
@@ -71,7 +73,7 @@ class ContextMatcher
     }
 
     /**
-     * Match context by alias
+     * Match context by alias.
      *
      * @param string $strContext alias from context entry
      *

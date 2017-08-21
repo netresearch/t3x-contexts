@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\ViewHelpers;
 
 /***************************************************************
@@ -42,12 +43,10 @@ use Netresearch\Contexts\Api\ContextMatcher;
  *
  * @author     André Hähnel <andre.haehnel@netresearch.de>
  */
-class MatchesViewHelper
-    extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class MatchesViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
 {
-
     /**
-     * Initializes arguments (attributes)
+     * Initializes arguments (attributes).
      *
      * @return void
      */
@@ -59,7 +58,7 @@ class MatchesViewHelper
     }
 
     /**
-     * Render the context match method
+     * Render the context match method.
      *
      * @return int 1 if context match or 0
      */
@@ -69,6 +68,7 @@ class MatchesViewHelper
             return (int) ContextMatcher::getInstance()
                 ->matches($this->arguments['alias']);
         }
+
         return 0;
     }
 }

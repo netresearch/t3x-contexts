@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Context;
 
 /***************************************************************
@@ -29,51 +30,53 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Context factory
+ * Context factory.
  *
  * @author Christian Opitz <christian.opitz@netresearch.de>
  */
 class Factory
 {
     /**
-     * Find the right class for the context type and instantiate it
+     * Find the right class for the context type and instantiate it.
      *
      * @param array $arRow Database context row
      *
-     * @return AbstractContext|null
      * @throws \Netresearch\Contexts\ContextException
+     *
+     * @return AbstractContext|null
      */
     public static function createFromDb($arRow)
     {
         $classMap = Configuration::getContextTypes();
 
-        $type     = $arRow['type'];
+        $type = $arRow['type'];
 
         if (!$type || !array_key_exists($type, $classMap)) {
             GeneralUtility::devLog(
-                'No class found for context type "' . $type . '"',
+                'No class found for context type "'.$type.'"',
                 'tx_contexts', 2
             );
             $type = 'default';
         }
 
         if (!isset($classMap[$type]['class'])) {
-            return null;
+            return;
         }
         $class = $classMap[$type]['class'];
         if (!$class) {
-            return null;
+            return;
         }
 
         $instance = GeneralUtility::makeInstance($class, $arRow);
         if ($instance instanceof SingletonInterface) {
-            throw new ContextException($class . ' may not be singleton');
+            throw new ContextException($class.' may not be singleton');
         }
         if (!$instance instanceof AbstractContext) {
             throw new ContextException(
-                $class . ' must extend Tx_Contexts_Context_Abstract'
+                $class.' must extend Tx_Contexts_Context_Abstract'
             );
         }
+
         return $instance;
     }
 }
