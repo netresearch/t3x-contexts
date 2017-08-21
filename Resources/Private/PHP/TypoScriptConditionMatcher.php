@@ -23,13 +23,13 @@
 ***************************************************************/
 
 /**
- * Context Typoscript Connector
+ * Context Typoscript Connector.
  *
  * This function is for usage in Typo3 TypoScript to get match context directly.
  *
  * @param string $strContext context alias
  *
- * @return boolean True if it matches, false if not
+ * @return bool True if it matches, false if not
  */
 function user_contexts_matches($strContext)
 {

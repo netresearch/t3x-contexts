@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Context\Type;
 
 /***************************************************************
@@ -26,7 +27,7 @@ namespace Netresearch\Contexts\Context\Type;
 use Netresearch\Contexts\Context\AbstractContext;
 
 /**
- * Check if a session variable is set or not
+ * Check if a session variable is set or not.
  *
  * @author     Andre Hähnel <andre.haehnel@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
@@ -40,7 +41,7 @@ class SessionContext extends AbstractContext
      *
      * @return bool True if the context is active, false if not
      */
-    public function match(array $arDependencies = array())
+    public function match(array $arDependencies = [])
     {
         /* @var $GLOBALS['TSFE'] \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
         $session = $GLOBALS['TSFE']->fe_user->getKey(

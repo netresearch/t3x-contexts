@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
 class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
@@ -16,13 +17,13 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
     {
         $getm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
+            ['getConfValue']
         );
         $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', '123'),
-        );
+        $retValMap = [
+            ['field_name', null, 'sDEF', 'lDEF', 'vDEF', 'affID'],
+            ['field_values', null, 'sDEF', 'lDEF', 'vDEF', '123'],
+        ];
 
         $getm->expects($this->any())
             ->method('getConfValue')
@@ -37,13 +38,13 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
 
         $getm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
+            ['getConfValue']
         );
         $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', '123'),
-        );
+        $retValMap = [
+            ['field_name', null, 'sDEF', 'lDEF', 'vDEF', 'affID'],
+            ['field_values', null, 'sDEF', 'lDEF', 'vDEF', '123'],
+        ];
 
         $getm->expects($this->any())
             ->method('getConfValue')
@@ -58,13 +59,13 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
 
         $getm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
+            ['getConfValue']
         );
         $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', '123'),
-        );
+        $retValMap = [
+            ['field_name', null, 'sDEF', 'lDEF', 'vDEF', 'affID'],
+            ['field_values', null, 'sDEF', 'lDEF', 'vDEF', '123'],
+        ];
 
         $getm->expects($this->any())
             ->method('getConfValue')
@@ -79,16 +80,16 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
 
         $getm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
+            ['getConfValue']
         );
         $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array(
-                'field_values'     , null, 'sDEF', 'lDEF', 'vDEF',
-                "123\n124\n125\n"
-            ),
-        );
+        $retValMap = [
+            ['field_name', null, 'sDEF', 'lDEF', 'vDEF', 'affID'],
+            [
+                'field_values', null, 'sDEF', 'lDEF', 'vDEF',
+                "123\n124\n125\n",
+            ],
+        ];
 
         $getm->expects($this->any())
             ->method('getConfValue')
@@ -103,16 +104,16 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
 
         $getm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
+            ['getConfValue']
         );
         $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array(
-                'field_values'     , null, 'sDEF', 'lDEF', 'vDEF',
-                "123\n124\n125\n"
-            ),
-        );
+        $retValMap = [
+            ['field_name', null, 'sDEF', 'lDEF', 'vDEF', 'affID'],
+            [
+                'field_values', null, 'sDEF', 'lDEF', 'vDEF',
+                "123\n124\n125\n",
+            ],
+        ];
 
         $getm->expects($this->any())
             ->method('getConfValue')
@@ -127,13 +128,13 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
 
         $getm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
+            ['getConfValue']
         );
         $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', ''),
-        );
+        $retValMap = [
+            ['field_name', null, 'sDEF', 'lDEF', 'vDEF', 'affID'],
+            ['field_values', null, 'sDEF', 'lDEF', 'vDEF', ''],
+        ];
 
         $getm->expects($this->any())
             ->method('getConfValue')
@@ -148,13 +149,13 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
 
         $getm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
+            ['getConfValue']
         );
         $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', ''),
-        );
+        $retValMap = [
+            ['field_name', null, 'sDEF', 'lDEF', 'vDEF', 'affID'],
+            ['field_values', null, 'sDEF', 'lDEF', 'vDEF', ''],
+        ];
 
         $getm->expects($this->any())
             ->method('getConfValue')
@@ -170,13 +171,13 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
     {
         $getm = $this->getMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
+            ['getConfValue']
         );
         $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', ''),
-            array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', ''),
-        );
+        $retValMap = [
+            ['field_name', null, 'sDEF', 'lDEF', 'vDEF', ''],
+            ['field_values', null, 'sDEF', 'lDEF', 'vDEF', ''],
+        ];
 
         $getm->expects($this->any())
             ->method('getConfValue')
@@ -184,6 +185,4 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
 
         $getm->match();
     }
-
 }
-?>
