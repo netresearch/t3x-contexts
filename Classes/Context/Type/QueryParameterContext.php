@@ -52,44 +52,24 @@ class QueryParameterContext extends AbstractContext
                 . ' context configuration'
             );
         }
-        $value = GeneralUtility::_GET($param);
 
-        if ($value === null) {
+        if (!array_key_exists($param, $_GET)) {
             //load from session if no param given
             list($bUseMatch, $bMatch) = $this->getMatchFromSession();
-            if ($bUseMatch) {
-                return $this->invert($bMatch);
-            }
+            return $this->invert($bUseMatch && $bMatch);
         }
+
+        $value = GeneralUtility::_GET($param);
 
         // Register param on TSFE service for cache and linkVars management
         FrontendControllerService::registerQueryParameter(
             $param, $value, !(bool) $this->use_session
         );
 
+        $values = GeneralUtility::trimExplode("\n", $this->getConfValue('field_values'), true);
+
         return $this->invert($this->storeInSession(
-            $this->matchParameters($value)
+            !count($values) || in_array($value, $values, true)
         ));
-    }
-
-    /**
-     * Checks if the given value is one of the configured allowed values
-     *
-     * @param string $value Current parameter value
-     *
-     * @return bool True if the current paramter value is one of the
-     *                 configured values
-     */
-    protected function matchParameters($value)
-    {
-        $arValues = explode("\n", $this->getConfValue('field_values'));
-
-        //empty value list, so we allow any value
-        if (count($arValues) == 1 && $arValues[0] == '') {
-            return $value !== '';
-        }
-
-        $arValues = array_map('trim', $arValues);
-        return in_array($value, $arValues, true);
     }
 }
