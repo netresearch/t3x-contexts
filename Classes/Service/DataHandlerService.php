@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Service;
 
 /***************************************************************
@@ -29,7 +30,7 @@ use TYPO3\CMS\Core\DataHandling\DataHandler;
 
 /**
  * Class for TCEmain-hooks: Capture incoming default and record settings
- * and save them to the settings table and the enabled fields
+ * and save them to the settings table and the enabled fields.
  *
  * @author Christian Opitz <christian.opitz@netresearch.de>
  */
@@ -42,10 +43,11 @@ class DataHandlerService
      * currentSettings. This function is called by TYPO each time a record
      * is saved in the backend.
      *
-     * @param array         &$incomingFieldArray
-     * @param string        $table
-     * @param string        $id
-     * @param DataHandler   &$reference
+     * @param array       &$incomingFieldArray
+     * @param string      $table
+     * @param string      $id
+     * @param DataHandler &$reference
+     *
      * @return void
      */
     public function processDatamap_preProcessFieldArray(
@@ -62,6 +64,7 @@ class DataHandlerService
         ) {
             $this->currentSettings = $incomingFieldArray['default_settings'];
             unset($incomingFieldArray['default_settings']);
+
             return;
         }
 
@@ -72,13 +75,14 @@ class DataHandlerService
     }
 
     /**
-     * Finally save the settings
+     * Finally save the settings.
      *
-     * @param string        $status
-     * @param string        $table
-     * @param string        $id
-     * @param array         $fieldArray
-     * @param DataHandler   $reference
+     * @param string      $status
+     * @param string      $table
+     * @param string      $id
+     * @param array       $fieldArray
+     * @param DataHandler $reference
+     *
      * @return void
      */
     public function processDatamap_afterDatabaseOperations(
@@ -107,6 +111,7 @@ class DataHandlerService
      * @param string $table
      * @param int    $uid
      * @param array  $contextsAndSettings
+     *
      * @return void
      */
     protected function saveRecordSettings($table, $uid, $contextsAndSettings)
@@ -125,25 +130,25 @@ class DataHandlerService
                 $row = $databaseConnection->exec_SELECTgetSingleRow(
                     'uid',
                     'tx_contexts_settings',
-                    'context_uid = ' . (int)$contextId .  ' AND ' .
-                    'foreign_table = ' . $databaseConnection->fullQuoteStr($table, 'tx_contexts_settings') . ' AND ' .
-                    'name = ' . $databaseConnection->fullQuoteStr($field, 'tx_contexts_settings') . ' AND ' .
-                    'foreign_uid = ' . (int)$uid
+                    'context_uid = '.(int) $contextId.' AND '.
+                    'foreign_table = '.$databaseConnection->fullQuoteStr($table, 'tx_contexts_settings').' AND '.
+                    'name = '.$databaseConnection->fullQuoteStr($field, 'tx_contexts_settings').' AND '.
+                    'foreign_uid = '.(int) $uid
                 );
                 if ($setting === '0' || $setting === '1') {
                     if ($row) {
-                        $databaseConnection->exec_UPDATEquery('tx_contexts_settings', 'uid=' . (int)$row['uid'], array('enabled' => $setting));
+                        $databaseConnection->exec_UPDATEquery('tx_contexts_settings', 'uid='.(int) $row['uid'], ['enabled' => $setting]);
                     } else {
-                        $databaseConnection->exec_INSERTquery('tx_contexts_settings', array(
-                            'context_uid' => $contextId,
+                        $databaseConnection->exec_INSERTquery('tx_contexts_settings', [
+                            'context_uid'   => $contextId,
                             'foreign_table' => $table,
-                            'name' => $field,
-                            'foreign_uid' => $uid,
-                            'enabled' => $setting
-                        ));
+                            'name'          => $field,
+                            'foreign_uid'   => $uid,
+                            'enabled'       => $setting,
+                        ]);
                     }
                 } elseif ($row) {
-                    $databaseConnection->exec_DELETEquery('tx_contexts_settings', 'uid=' . (int)$row['uid']);
+                    $databaseConnection->exec_DELETEquery('tx_contexts_settings', 'uid='.(int) $row['uid']);
                 }
             }
         }
@@ -164,17 +169,19 @@ class DataHandlerService
      *                                    tx_contexts_visibility => '',
      *                                    menu_visibility => '0'
      *                                    '' = undecided, 1 - on, 0 - off
+     *
      * @return void
+     *
      * @see FrontendControllerService::enableFields()
      */
     protected function saveFlatSettings($table, $uid, $contextsAndSettings)
     {
-        $values = array();
+        $values = [];
 
         $flatSettingColumns = Configuration::getFlatColumns($table);
         foreach ($flatSettingColumns as $setting => $flatColumns) {
-            $values[$flatColumns[0]] = array();
-            $values[$flatColumns[1]] = array();
+            $values[$flatColumns[0]] = [];
+            $values[$flatColumns[1]] = [];
             foreach ($contextsAndSettings as $contextId => $settings) {
                 if ($settings[$setting] === '0' || $settings[$setting] === '1') {
                     $values[$flatColumns[$settings[$setting]]][] = $contextId;
@@ -187,29 +194,30 @@ class DataHandlerService
                 $val = implode(',', $val);
             }
             $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
-                $table, 'uid=' . (int)$uid, $values
+                $table, 'uid='.(int) $uid, $values
             );
         }
     }
 
     /**
      * Save the default settings to the settings table - default
-     * settings will have a foreign_uid of 0
+     * settings will have a foreign_uid of 0.
      *
-     * @param int $contextId
+     * @param int   $contextId
      * @param array $settings
+     *
      * @return void
      */
     protected function saveDefaultSettings($contextId, $settings)
     {
-        $existingSettings = (array)$GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+        $existingSettings = (array) $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
             '*',
             'tx_contexts_settings',
-            'context_uid = ' . (int)$contextId . ' AND foreign_uid = 0'
+            'context_uid = '.(int) $contextId.' AND foreign_uid = 0'
         );
 
         foreach ($settings as $table => $fields) {
-            $fieldSettings = array();
+            $fieldSettings = [];
             foreach ($existingSettings as $setting) {
                 if ($setting['foreign_table'] == $table) {
                     $fieldSettings[$setting['name']] = $setting['uid'];
@@ -219,19 +227,19 @@ class DataHandlerService
                 if (array_key_exists($field, $fieldSettings)) {
                     $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
                         'tx_contexts_settings',
-                        'uid=' . (int)$fieldSettings[$field],
-                        array('enabled' => (int)$enabled)
+                        'uid='.(int) $fieldSettings[$field],
+                        ['enabled' => (int) $enabled]
                     );
                 } else {
                     $GLOBALS['TYPO3_DB']->exec_INSERTquery(
                         'tx_contexts_settings',
-                        array(
-                            'context_uid' => $contextId,
+                        [
+                            'context_uid'   => $contextId,
                             'foreign_table' => $table,
-                            'name' => $field,
-                            'foreign_uid' => 0,
-                            'enabled' => (int)$enabled
-                        )
+                            'name'          => $field,
+                            'foreign_uid'   => 0,
+                            'enabled'       => (int) $enabled,
+                        ]
                     );
                 }
             }

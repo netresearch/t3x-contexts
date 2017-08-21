@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Context\Type;
 
 /*
@@ -18,7 +19,7 @@ use Netresearch\Contexts\Context\AbstractContext;
 
 class DefaultContext extends AbstractContext
 {
-    public function match(array $arDependencies = array())
+    public function match(array $arDependencies = [])
     {
     }
 }

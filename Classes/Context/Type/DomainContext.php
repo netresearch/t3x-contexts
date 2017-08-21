@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Context\Type;
 
 /*
@@ -17,11 +18,11 @@ namespace Netresearch\Contexts\Context\Type;
 use Netresearch\Contexts\Context\AbstractContext;
 
 /**
- * Matches on the current domain name
+ * Matches on the current domain name.
  */
 class DomainContext extends AbstractContext
 {
-    public function match(array $arDependencies = array())
+    public function match(array $arDependencies = [])
     {
         $curHost = $_SERVER['HTTP_HOST'];
         $arDomains = explode("\n", $this->getConfValue('field_domains'));
@@ -37,10 +38,11 @@ class DomainContext extends AbstractContext
 
     protected function matchDomain($domain, $curHost)
     {
-        if ($domain{0} != '.') {
+        if ($domain[0] != '.') {
             if ($domain == $curHost) {
                 return true;
             }
+
             return false;
         }
 

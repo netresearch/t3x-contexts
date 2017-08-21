@@ -1,4 +1,5 @@
 <?php
+
 namespace Netresearch\Contexts\Form;
 
 /*
@@ -22,17 +23,20 @@ use TYPO3\CMS\Backend\Form\FormEngine;
  * Provides methods used in the backend by flexforms.
  *
  * @category   TYPO3-Extensions
+ *
  * @author     Marian Pollzien <marian.pollzien@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
+ *
  * @link       http://github.com/netresearch/contexts
  */
 class CombinationFormElement
 {
     /**
-     * Display a textarea with validation for the entered aliases and expressions
+     * Display a textarea with validation for the entered aliases and expressions.
      *
-     * @param array          $arFieldInfo Information about the current input field
-     * @param FormEngine     $formEngineObject    Form rendering library object
+     * @param array      $arFieldInfo      Information about the current input field
+     * @param FormEngine $formEngineObject Form rendering library object
+     *
      * @return string HTML code
      */
     public function render($arFieldInfo, FormEngine $formEngineObject)
@@ -44,8 +48,8 @@ class CombinationFormElement
         $evaluator = new LogicalExpressionEvaluator();
         $arTokens = $evaluator->tokenize($arFieldInfo['itemFormElValue']);
 
-        $arNotFound = array();
-        $arUnknownTokens = array();
+        $arNotFound = [];
+        $arUnknownTokens = [];
         foreach ($arTokens as $token) {
             if (is_array($token)
                 && $token[0] === LogicalExpressionEvaluator::T_VAR
@@ -82,7 +86,7 @@ HTM;
             $html .= <<<HTM
 <div>
     {$GLOBALS['LANG']->sL('LLL:EXT:contexts/Resources/Private/Language'
-        . '/flexform.xml:aliasesNotFound')}: $strNotFound
+        .'/flexform.xml:aliasesNotFound')}: $strNotFound
 </div>
 HTM;
         }
@@ -92,12 +96,12 @@ HTM;
             $html .= <<<HTM
 <div>
     {$GLOBALS['LANG']->sL('LLL:EXT:contexts/Resources/Private/Language'
-        . '/flexform.xml:unknownTokensFound')}: $strUnknownTokens
+        .'/flexform.xml:unknownTokensFound')}: $strUnknownTokens
 </div>
 HTM;
         }
 
-        $html .= <<<HTM
+        $html .= <<<'HTM'
     </div>
 </div>
 HTM;

@@ -1,4 +1,5 @@
 <?php
+
 //prevent xml error for new records
 \Netresearch\Contexts\Api\Configuration::registerContextType(
     'default',

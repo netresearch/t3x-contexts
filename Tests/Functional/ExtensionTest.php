@@ -1,10 +1,10 @@
 <?php
+
 namespace Netresearch\Contexts\Tests\Functional;
 
 class ExtensionTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
 {
-    protected $testExtensionsToLoad = array('typo3conf/ext/contexts');
-
+    protected $testExtensionsToLoad = ['typo3conf/ext/contexts'];
 
     public function testIsExtensionLoaded()
     {
@@ -15,4 +15,3 @@ class ExtensionTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
         );
     }
 }
-?>
