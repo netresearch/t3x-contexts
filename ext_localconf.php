@@ -23,9 +23,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/tslib/class.tslib_menu.php']['fil
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][]
     = 'Netresearch\Contexts\Service\PageService->createHashBase';
 
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['checkAlternativeIdMethods-PostProc']['contexts']
-    = 'Netresearch\Contexts\Service\FrontendControllerService->initFEuser';
-
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['TYPO3\CMS\Core\Imaging\IconFactory']['overrideIconOverlay'][]
     = 'Netresearch\Contexts\Service\IconService';
 
