@@ -26,10 +26,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHas
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['checkAlternativeIdMethods-PostProc']['contexts']
     = 'Netresearch\Contexts\Service\FrontendControllerService->initFEuser';
 
-// Add tree icons before TYPO3 7.5
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_iconworks.php']['overrideIconOverlay'][]
-    = 'Netresearch\Contexts\Service\IconService';
-//Add tree icons after TYPO3 7.5
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['TYPO3\CMS\Core\Imaging\IconFactory']['overrideIconOverlay'][]
     = 'Netresearch\Contexts\Service\IconService';
 

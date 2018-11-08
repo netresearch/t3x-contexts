@@ -14,6 +14,7 @@ namespace Netresearch\Contexts\Context;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -75,10 +76,6 @@ class Container extends \ArrayObject
         foreach ($arContexts as $context) {
             $aliases[] = $context->getAlias();
         }
-        GeneralUtility::devLog(
-            count($this) . ' active contexts: ' . implode(', ', $aliases),
-            'tx_contexts', 0
-        );
 
         return $this;
     }
@@ -92,13 +89,17 @@ class Container extends \ArrayObject
      */
     protected function loadAvailable()
     {
-        $arRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-            '*', 'tx_contexts_contexts', 'deleted=0'
-        );
+        $factory = GeneralUtility::makeInstance(Factory::class);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_contexts_contexts');
+        $arRows = $queryBuilder->select('*')
+            ->from('tx_contexts_contexts')
+            ->execute()
+            ->fetchAll();
 
         $contexts = array();
         foreach ($arRows as $arRow) {
-            $context = Factory::createFromDb($arRow);
+            $context = $factory->createFromDb($arRow);
             if ($context !== null) {
                 $contexts[$arRow['uid']] = $context;
             }

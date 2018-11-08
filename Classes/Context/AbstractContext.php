@@ -25,6 +25,7 @@ namespace Netresearch\Contexts\Context;
 ***************************************************************/
 
 use Netresearch\Contexts\Api\Configuration;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
@@ -246,15 +247,26 @@ abstract class AbstractContext
             $uids[] = 0;
         }
 
-        $where = 'context_uid = ' . $this->uid;
-        $where .= " AND foreign_table = '$table'";
-        $where .= " AND foreign_uid IN ('" . implode("','", $uids) . "')";
-
-        $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-            '*',
-            'tx_contexts_settings',
-            $where
-        );
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_contexts_settings');
+        $rows = $queryBuilder->select('*')
+            ->from('tx_contexts_settings')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'uid',
+                    $queryBuilder->createNamedParameter((int)$this->uid, \PDO::PARAM_INT)
+                ),
+                $queryBuilder->expr()->eq(
+                    'foreign_table',
+                    $queryBuilder->createNamedParameter($table)
+                ),
+                $queryBuilder->expr()->in(
+                    'foreign_uid',
+                    $uids
+                )
+            )
+            ->execute()
+            ->fetchAll();
 
         foreach ($uids as $uid) {
             $this->settings[$table . '.' . $uid] = array();
@@ -422,7 +434,7 @@ abstract class AbstractContext
         $GLOBALS['TSFE']->fe_user->setKey(
             'ses', 'contexts-' . $this->uid . '-' . $this->tstamp, $bMatch
         );
-        $GLOBALS['TSFE']->storeSessionData();
+        $GLOBALS['TSFE']->fe_user->storeSessionData();
         return $bMatch;
     }
 

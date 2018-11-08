@@ -26,7 +26,7 @@ namespace Netresearch\Contexts\Api;
 
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Psr\Log\LoggerAwareTrait;
 
 /**
  * API with methods to retrieve context information for records
@@ -34,8 +34,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @author     Christian Opitz <christian.opitz@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  */
-class Record
+class Record implements \Psr\Log\LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * Determines if the specified record is enabled or disabled by the current
      * contexts (means that the records is disabled if one of the enableSettings
@@ -80,12 +82,7 @@ class Record
             }
 
             if (!isset($row['uid'])) {
-                GeneralUtility::devLog(
-                    'Missing uid field in row',
-                    'tx_contexts',
-                    GeneralUtility::SYSLOG_SEVERITY_WARNING,
-                    array('table' => $table, 'row' => $row)
-                );
+                $this->logger->warning('tx_contexts: Missing uid field in row', ['table' => $table, 'row' => $row]);
                 return false;
             }
 
@@ -135,12 +132,7 @@ class Record
 
         foreach ($flatColumns as $i => $flatColumn) {
             if (!array_key_exists($flatColumn, $row)) {
-                GeneralUtility::devLog(
-                    'Missing flat field "' . $flatColumn . '"',
-                    'tx_contexts',
-                    GeneralUtility::SYSLOG_SEVERITY_WARNING,
-                    array('table' => $table, 'row' => $row)
-                );
+                $this->logger->warning('tx_contexts: Missing flat field "' . $flatColumn . '"', ['table' => $table, 'row' => $row]);
                 $rowValid = false;
             } elseif ($row[$flatColumn] !== '') {
                 $flatColumnContents[$i]
