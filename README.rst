@@ -169,6 +169,6 @@ TypoScript implementation
 =========================
 The implementation of a context query in TypoScript looks like::
 
-    [userFunc = user_contexts_matches("mobile")]
+    [contextMatch("mobile")]
         # do something, it's a mobile browser
-    [global]
+    [END]
