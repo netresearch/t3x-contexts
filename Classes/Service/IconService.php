@@ -67,8 +67,8 @@ class IconService implements SingletonInterface
      */
     public function postOverlayPriorityLookup($table, $row, &$status, $iconName)
     {
-        if (isset($row['tx_contexts_enable']) && $row['tx_contexts_enable'] != '' ||
-            isset($row['tx_contexts_disable']) && $row['tx_contexts_disable'] != '') {
+        if ((isset($row['tx_contexts_enable']) && $row['tx_contexts_enable'] != '') ||
+            (isset($row['tx_contexts_disable']) && $row['tx_contexts_disable'] != '')) {
             $status['contexts'] = true;
             return 'extensions-contexts-status-overlay-contexts';
         }
