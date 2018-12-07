@@ -24,8 +24,6 @@ namespace Netresearch\Contexts\Api;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use Netresearch\Contexts\Form\DefaultSettingsFormElement;
-use Netresearch\Contexts\Form\RecordSettingsFormElement;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**

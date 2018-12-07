@@ -19,6 +19,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Netresearch\Contexts\Context\Container;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+use TYPO3\CMS\Frontend\Controller\ErrorController;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageAccessFailureReasons;
 
 
 /**
@@ -28,8 +34,25 @@ use Netresearch\Contexts\Context\Container;
 class ContainerInitialization implements MiddlewareInterface
 {
 
+    const ACCESS_DENIED_CONTEXTS = 'access.context';
+
     /**
-     *  initialize Container Matching
+     * @var TypoScriptFrontendController
+     */
+    protected $controller;
+
+    /**
+     * ContainerInitialization constructor.
+     * @param TypoScriptFrontendController|null $controller
+     */
+    public function __construct(TypoScriptFrontendController $controller = null)
+    {
+        $this->controller = $controller ?? $GLOBALS['TSFE'];
+    }
+
+    /**
+     * initialize Container Matching
+     * and assure page ist accessible after initialization
      *
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
@@ -38,7 +61,39 @@ class ContainerInitialization implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         Container::get()->initMatching();
+        if ($this->fetchPageAfterContainerInitialization() === false) {
+            return GeneralUtility::makeInstance(ErrorController::class)->accessDeniedAction(
+                $request,
+                'EXT:contexts constraints missmatch page id',
+                [
+                    'code' => self::ACCESS_DENIED_CONTEXTS
+                ]
+            );
+        }
         return $handler->handle($request);
+    }
+
+    /**
+     * @return array|boolean
+     */
+    protected function fetchPageAfterContainerInitialization()
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('pages');
+        $queryBuilder
+            ->getRestrictions()
+            ->removeAll();
+        $row = $queryBuilder->select('*')
+            ->from('pages')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'uid',
+                    $queryBuilder->createNamedParameter((int)$this->controller->id, \PDO::PARAM_INT)
+                )
+            )
+            ->execute()
+            ->fetch();
+        return $row;
     }
 
 }
