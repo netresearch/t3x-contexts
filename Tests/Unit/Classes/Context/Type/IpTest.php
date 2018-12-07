@@ -3,13 +3,22 @@ namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
 class IpContextTest extends \Netresearch\Contexts\Tests\Unit\TestBase
 {
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\MockObject|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getMock()
+    {
+        return $this->getAccessibleMock(
+            \Netresearch\Contexts\Context\Type\IpContext::class,
+            ['getConfValue']
+        );
+    }
+
     public function testMatch()
     {
         $_SERVER['REMOTE_ADDR'] = '192.168.1.14';
-        $ipm = $this->getMock(
-            '\Netresearch\Contexts\Context\Type\IpContext',
-            array('getConfValue')
-        );
+        $ipm = $this->getMock();
         $ipm->expects($this->at(0))
             ->method('getConfValue')
             ->with($this->equalTo('field_ip'))
@@ -22,10 +31,7 @@ class IpContextTest extends \Netresearch\Contexts\Tests\Unit\TestBase
     public function testMatchInvert()
     {
         $_SERVER['REMOTE_ADDR'] = '192.168.1.14';
-        $ipm = $this->getMock(
-            '\Netresearch\Contexts\Context\Type\IpContext',
-            array('getConfValue')
-        );
+        $ipm = $this->getMock();
         $ipm->expects($this->at(0))
             ->method('getConfValue')
             ->with($this->equalTo('field_ip'))
@@ -38,10 +44,7 @@ class IpContextTest extends \Netresearch\Contexts\Tests\Unit\TestBase
     public function testMatchNoConfiguration()
     {
         $_SERVER['REMOTE_ADDR'] = '192.168.1.20';
-        $ipm = $this->getMock(
-            '\Netresearch\Contexts\Context\Type\IpContext',
-            array('getConfValue')
-        );
+        $ipm = $this->getMock();
         $ipm->expects($this->any())
             ->method('getConfValue')
             ->will($this->returnValue(''));
@@ -52,10 +55,7 @@ class IpContextTest extends \Netresearch\Contexts\Tests\Unit\TestBase
     public function testMatchInvalidIp()
     {
         $_SERVER['REMOTE_ADDR'] = '';
-        $ipm = $this->getMock(
-            '\Netresearch\Contexts\Context\Type\IpContext',
-            array('getConfValue')
-        );
+        $ipm = $this->getMock();
         $ipm->setInvert(false);
 
         $this->assertFalse($ipm->match());

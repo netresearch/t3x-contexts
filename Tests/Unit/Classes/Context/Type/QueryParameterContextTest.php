@@ -1,7 +1,9 @@
 <?php
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
-class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
+
+class QueryParameterContextTest extends UnitTestCase
 {
     public function setUp()
     {
@@ -14,7 +16,7 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
 
     public function testMatchParameterMissing()
     {
-        $getm = $this->getMock(
+        $getm = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
@@ -35,7 +37,7 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
     {
         $_GET['affID'] = '';
 
-        $getm = $this->getMock(
+        $getm = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
@@ -56,7 +58,7 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
     {
         $_GET['affID'] = 123;
 
-        $getm = $this->getMock(
+        $getm = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
@@ -77,7 +79,7 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
     {
         $_GET['affID'] = 125;
 
-        $getm = $this->getMock(
+        $getm = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
@@ -101,7 +103,7 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
     {
         $_GET['affID'] = 124125;
 
-        $getm = $this->getMock(
+        $getm = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
@@ -125,7 +127,7 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
     {
         $_GET['affID'] = 'aslkfj';
 
-        $getm = $this->getMock(
+        $getm = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
@@ -146,7 +148,7 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
     {
         unset($_GET['affID']);
 
-        $getm = $this->getMock(
+        $getm = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );
@@ -168,7 +170,7 @@ class QueryParameterContextTest extends \PHPUnit_Framework_TestCase
      */
     public function testMatchUnconfiguredNoParameter()
     {
-        $getm = $this->getMock(
+        $getm = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\QueryParameterContext',
             array('getConfValue')
         );

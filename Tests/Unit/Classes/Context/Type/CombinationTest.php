@@ -31,7 +31,7 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
         );
 
 
-        $instance = $this->getMock(
+        $instance = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
@@ -91,7 +91,7 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
         );
 
 
-        $instance = $this->getMock(
+        $instance = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
@@ -127,7 +127,7 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
     public function testGetDependenciesEmpty()
     {
 
-        $instance = $this->getMock(
+        $instance = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
@@ -212,7 +212,7 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
             ->method('match')
             ->will(self::returnValue(true));
 
-        $instance = $this->getMock(
+        $instance = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
@@ -227,7 +227,7 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
                 'hide_in_backend' => false,
             )
         );
-        $container = $this->getMock(
+        $container = $this->createMock(
             '\Netresearch\Contexts\Context\Container',
             array()
         );
@@ -311,7 +311,7 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
             ->method('match')
             ->will(self::returnValue(true));
 
-        $instance = $this->getMock(
+        $instance = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
@@ -325,7 +325,7 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
                 'disabled' => false,
             )
         );
-        $container = $this->getMock(
+        $container = $this->createMock(
             '\Netresearch\Contexts\Context\Container',
             array()
         );
@@ -408,7 +408,7 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
             ->method('match')
             ->will(self::returnValue(true));
 
-        $instance = $this->getMock(
+        $instance = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
@@ -424,7 +424,7 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
                 'hide_in_backend' => false,
             )
         );
-        $container = $this->getMock(
+        $container = $this->createMock(
             '\Netresearch\Contexts\Context\Container',
             array()
         );
@@ -501,7 +501,7 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
             ->method('match')
             ->will(self::returnValue(true));
 
-        $instance = $this->getMock(
+        $instance = $this->getAccessibleMock(
             '\Netresearch\Contexts\Context\Type\CombinationContext',
             array(
                 'getConfValue',
@@ -516,7 +516,7 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
                 'disabled' => false,
             )
         );
-        $container = $this->getMock(
+        $container = $this->createMock(
             '\Netresearch\Contexts\Context\Container',
             array()
         );
