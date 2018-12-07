@@ -24,16 +24,11 @@ namespace Netresearch\Contexts\Service;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\Api\Record;
-use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\Menu\AbstractMenuContentObject;
 use TYPO3\CMS\Frontend\ContentObject\Menu\AbstractMenuFilterPagesHookInterface;
-use TYPO3\CMS\Frontend\Page\PageRepository;
-use TYPO3\CMS\Frontend\Page\PageRepositoryGetPageHookInterface;
 
 /**
  * Hook into enableFields() to hide pages and elements that are
@@ -43,98 +38,8 @@ use TYPO3\CMS\Frontend\Page\PageRepositoryGetPageHookInterface;
  * @license http://opensource.org/licenses/gpl-license GPLv2 or later
  */
 class PageService
-    implements PageRepositoryGetPageHookInterface, AbstractMenuFilterPagesHookInterface, SingletonInterface
+    implements AbstractMenuFilterPagesHookInterface, SingletonInterface
 {
-    /**
-     * Add context filtering to an SQL query
-     *
-     * @param array            $params Array of parameters:
-     *                                 - table        - table name
-     *                                 - show_hidden  - if hidden elements shall
-     *                                                  be shown
-     *                                 - ignore_array - enable field names which
-     *                                                  should not be used
-     *                                 - ctrl         - TCA table control data
-     * @param PageRepository $ref    Object that calls the hook     *
-     * @return string SQL command part that gets added to the query
-     */
-    public function enableFields($params, $ref)
-    {
-        return $this->getFilterSql($params['table']);
-    }
-
-    /**
-     * Add page access restrictions through context settings.
-     *
-     * @param int          &$uid                     The page ID
-     * @param bool          &$disableGroupAccessCheck If set, the check for
-     *                                                   group access is disabled.
-     *                                                   VERY rarely used
-     * @param PageRepository $pObj                     t3lib_pageSelect object
-     * @return void
-     */
-    public function getPage_preProcess(
-        &$uid, &$disableGroupAccessCheck, PageRepository $pObj
-    ) {
-        static $done = false;
-        if ($done) {
-            return;
-        }
-        $pObj->where_groupAccess .= $this->getFilterSql('pages');
-        $done = true;
-    }
-
-    /**
-     * Generates a SQL WHERE statement that filters out records
-     * that may not be accessed with the current context settings
-     *
-     * @param string $table Database table name
-     * @return string SQL filter string beginning with " AND "
-     */
-    protected function getFilterSql($table)
-    {
-        $sql = '';
-
-        foreach (Configuration::getEnableSettings($table) as $setting) {
-            $flatColumns = Configuration::getFlatColumns($table, $setting);
-            if (!$flatColumns) {
-                GeneralUtility::devLog(
-                    'Missing flat columns for setting "' . $setting . '"',
-                    'tx_contexts',
-                    2,
-                    array('table' => $table)
-                );
-                continue;
-            }
-
-            $enableChecks = array(
-                $flatColumns[1] . " IS NULL",
-                $flatColumns[1] . " = ''"
-            );
-            $disableChecks = array();
-
-            foreach (Container::get() as $context) {
-                /* @var $context AbstractContext */
-                $enableChecks[] = $GLOBALS['TYPO3_DB']->listQuery(
-                    $flatColumns[1], $context->getUid(), $table
-                );
-                $disableChecks[] = 'NOT ' . $GLOBALS['TYPO3_DB']->listQuery(
-                    $flatColumns[0], $context->getUid(), $table
-                );
-            }
-
-            $sql = ' AND (' . implode(' OR ', $enableChecks) . ')';
-            if (count($disableChecks)) {
-                $sql .= ' AND ('
-                    . $flatColumns[0] . " IS NULL"
-                    . ' OR ' . $flatColumns[0] . " = ''"
-                    . ' OR (' . implode(' AND ', $disableChecks) . ')' .
-                ')';
-            }
-        }
-
-        return $sql;
-    }
 
     /**
      * Modify the cache hash

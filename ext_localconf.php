@@ -8,17 +8,14 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] .= ',tx_contexts_enable,t
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['contexts']
     = 'Netresearch\Contexts\Service\DataHandlerService';
 
-//override enableFields
-#$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns']['contexts']
-#    = 'Netresearch\Contexts\Service\PageService->enableFields';
-
-//override page access control
-#$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['getPage'][]
-#    = 'Netresearch\Contexts\Service\PageService';
+// contexts query restriction
+if (!isset($GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][\Netresearch\Contexts\Query\Restriction\ContextRestriction::class])) {
+    $GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][\Netresearch\Contexts\Query\Restriction\ContextRestriction::class] = [];
+}
 
 //override page menu visibility
-#$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/tslib/class.tslib_menu.php']['filterMenuPages'][]
-#    = 'Netresearch\Contexts\Service\PageService';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/tslib/class.tslib_menu.php']['filterMenuPages'][]
+    = 'Netresearch\Contexts\Service\PageService';
 
 //override page hash generation
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][]
