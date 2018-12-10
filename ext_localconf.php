@@ -3,6 +3,10 @@ defined('TYPO3_MODE') || die();
 
 $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] .= ',tx_contexts_enable,tx_contexts_disable';
 
+// this is needed for the context fields in the page tree
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Backend\Tree\Repository\PageTreeRepository::class] = [
+    'className' => \Netresearch\Contexts\Xclass\Backend\Tree\Repository\PageTreeRepository::class
+];
 
 //hook into record saving
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['contexts']
