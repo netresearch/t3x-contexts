@@ -61,39 +61,6 @@ class ContainerInitialization implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         Container::get()->initMatching();
-        if ($this->fetchPageAfterContainerInitialization() === false) {
-            return GeneralUtility::makeInstance(ErrorController::class)->accessDeniedAction(
-                $request,
-                'EXT:contexts constraints missmatch page id',
-                [
-                    'code' => self::ACCESS_DENIED_CONTEXTS
-                ]
-            );
-        }
         return $handler->handle($request);
     }
-
-    /**
-     * @return array|boolean
-     */
-    protected function fetchPageAfterContainerInitialization()
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable('pages');
-        $queryBuilder
-            ->getRestrictions()
-            ->removeAll();
-        $row = $queryBuilder->select('*')
-            ->from('pages')
-            ->where(
-                $queryBuilder->expr()->eq(
-                    'uid',
-                    $queryBuilder->createNamedParameter((int)$this->controller->id, \PDO::PARAM_INT)
-                )
-            )
-            ->execute()
-            ->fetch();
-        return $row;
-    }
-
 }

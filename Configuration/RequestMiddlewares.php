@@ -4,10 +4,7 @@ return [
         'netresearch/context/container-initialization' => [
             'target' => \Netresearch\Contexts\Middleware\ContainerInitialization::class,
             'before' => [
-                'typo3/cms-frontend/prepare-tsfe-rendering',
-            ],
-            'after' => [
-                'typo3/cms-frontend/page-resolver'
+                'typo3/cms-frontend/page-resolver',
             ]
         ]
     ]
