@@ -19,12 +19,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Netresearch\Contexts\Context\Container;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
-use TYPO3\CMS\Frontend\Controller\ErrorController;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3\CMS\Frontend\Page\PageAccessFailureReasons;
 
 
 /**
@@ -33,22 +27,6 @@ use TYPO3\CMS\Frontend\Page\PageAccessFailureReasons;
  */
 class ContainerInitialization implements MiddlewareInterface
 {
-
-    const ACCESS_DENIED_CONTEXTS = 'access.context';
-
-    /**
-     * @var TypoScriptFrontendController
-     */
-    protected $controller;
-
-    /**
-     * ContainerInitialization constructor.
-     * @param TypoScriptFrontendController|null $controller
-     */
-    public function __construct(TypoScriptFrontendController $controller = null)
-    {
-        $this->controller = $controller ?? $GLOBALS['TSFE'];
-    }
 
     /**
      * initialize Container Matching
