@@ -8,6 +8,7 @@
     "contexts"
   ],
   "homepage": "https://www.netresearch.de",
+  "version": "2.0.0",
   "support": {
     "issues": "https://github.com/netresearch/t3x-contexts/issues"
   },
