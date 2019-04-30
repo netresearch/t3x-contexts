@@ -22,7 +22,8 @@
   ],
   "license": "GPL-2.0+",
   "require": {
-    "typo3/cms-core": "^9.5"
+    "typo3/cms-core": "^9.5",
+    "php": ">=7.3.0"
   },
   "require-dev": {
     "namelesscoder/typo3-repository-client": "^1.2",
