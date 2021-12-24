@@ -24,8 +24,10 @@ namespace Netresearch\Contexts\Service;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 use Netresearch\Contexts\Api\Configuration;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class for TCEmain-hooks: Capture incoming default and record settings
@@ -114,36 +116,71 @@ class DataHandlerService
         $flatSettingColumns = Configuration::getFlatColumns(
             $table
         );
-        /** @var DatabaseConnection $databaseConnection */
-        $databaseConnection = $GLOBALS['TYPO3_DB'];
+
+        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 
         foreach ($contextsAndSettings as $contextId => $settings) {
             foreach ($settings as $field => $setting) {
                 if (isset($flatSettingColumns[$field])) {
                     continue;
                 }
-                $row = $databaseConnection->exec_SELECTgetSingleRow(
-                    'uid',
-                    'tx_contexts_settings',
-                    'context_uid = ' . (int)$contextId .  ' AND ' .
-                    'foreign_table = ' . $databaseConnection->fullQuoteStr($table, 'tx_contexts_settings') . ' AND ' .
-                    'name = ' . $databaseConnection->fullQuoteStr($field, 'tx_contexts_settings') . ' AND ' .
-                    'foreign_uid = ' . (int)$uid
-                );
-                if ($setting === '0' || $setting === '1') {
+                $queryBuilder = $connectionPool->getQueryBuilderForTable('tx_contexts_contexts');
+                $row = $queryBuilder->select('uid')
+                    ->from('tx_contexts_settings')
+                    ->where(
+                        $queryBuilder->expr()->eq(
+                            'context_uid',
+                            $queryBuilder->createNamedParameter((int)$contextId, \PDO::PARAM_INT)
+                        ),
+                        $queryBuilder->expr()->eq(
+                            'foreign_table',
+                            $queryBuilder->createNamedParameter($table)
+                        ),
+                        $queryBuilder->expr()->eq(
+                            'name',
+                            $queryBuilder->createNamedParameter('tx_contexts_settings')
+                        ),
+                        $queryBuilder->expr()->in(
+                            'foreign_uid',
+                            $queryBuilder->createNamedParameter((int)$uid, \PDO::PARAM_INT)
+                        )
+                    )
+                    ->execute()
+                    ->fetch();
+                $connection = $connectionPool->getConnectionForTable('tx_contexts_settings');
+                if ((int)$setting === 0 || (int)$setting === 1) {
                     if ($row) {
-                        $databaseConnection->exec_UPDATEquery('tx_contexts_settings', 'uid=' . (int)$row['uid'], array('enabled' => $setting));
+                        $connection->update(
+                            'tx_contexts_settings',
+                            ['enabled' => (int)$settings],
+                            ['uid' => (int)$row['uid']],
+                            [\PDO::PARAM_INT]
+                        );
                     } else {
-                        $databaseConnection->exec_INSERTquery('tx_contexts_settings', array(
-                            'context_uid' => $contextId,
-                            'foreign_table' => $table,
-                            'name' => $field,
-                            'foreign_uid' => $uid,
-                            'enabled' => $setting
-                        ));
+                        $connection->insert(
+                            'tx_contexts_settings',
+                            [
+                                'context_uid' => (int)$contextId,
+                                'foreign_table' => $table,
+                                'name' => $field,
+                                'foreign_uid' => (int)$uid,
+                                'enabled' => (int)$setting
+                            ],
+                            [
+                                \PDO::PARAM_INT,
+                                \PDO::PARAM_STR,
+                                \PDO::PARAM_STR,
+                                \PDO::PARAM_INT,
+                                \PDO::PARAM_INT
+                            ]
+                        );
                     }
                 } elseif ($row) {
-                    $databaseConnection->exec_DELETEquery('tx_contexts_settings', 'uid=' . (int)$row['uid']);
+                    $connection->delete(
+                        'tx_contexts_settings',
+                        ['uid' => (int)$row['uid']],
+                        [\PDO::PARAM_INT]
+                    );
                 }
             }
         }
@@ -186,8 +223,12 @@ class DataHandlerService
             foreach ($values as $colname => &$val) {
                 $val = implode(',', $val);
             }
-            $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
-                $table, 'uid=' . (int)$uid, $values
+            $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+                ->getConnectionForTable($table);
+            $connection->update(
+                $table,
+                $values,
+                ['uid' => (int)$uid]
             );
         }
     }
@@ -202,11 +243,22 @@ class DataHandlerService
      */
     protected function saveDefaultSettings($contextId, $settings)
     {
-        $existingSettings = (array)$GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-            '*',
-            'tx_contexts_settings',
-            'context_uid = ' . (int)$contextId . ' AND foreign_uid = 0'
-        );
+        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+        $queryBuilder = $connectionPool->getQueryBuilderForTable('tx_contexts_settings');
+        $existingSettings = $queryBuilder->select('*')
+            ->from('tx_contexts_settings')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'context_uid',
+                    $queryBuilder->createNamedParameter((int)$contextId, \PDO::PARAM_INT)
+                ),
+                $queryBuilder->expr()->eq(
+                    'foreign_uid',
+                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                )
+            )
+            ->execute()
+            ->fetchAll();
 
         foreach ($settings as $table => $fields) {
             $fieldSettings = array();
@@ -215,23 +267,32 @@ class DataHandlerService
                     $fieldSettings[$setting['name']] = $setting['uid'];
                 }
             }
+            $connenction = $connectionPool->getConnectionForTable('tx_contexts_settings');
             foreach ($fields as $field => $enabled) {
                 if (array_key_exists($field, $fieldSettings)) {
-                    $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+                    $connenction->update(
                         'tx_contexts_settings',
-                        'uid=' . (int)$fieldSettings[$field],
-                        array('enabled' => (int)$enabled)
+                        ['enabled' => (int)$enabled],
+                        ['uid' => (int)$fieldSettings[$field]],
+                        [\PDO::PARAM_INT]
                     );
                 } else {
-                    $GLOBALS['TYPO3_DB']->exec_INSERTquery(
+                    $connenction->insert(
                         'tx_contexts_settings',
-                        array(
-                            'context_uid' => $contextId,
+                        [
+                            'context_uid' => (int)$contextId,
                             'foreign_table' => $table,
                             'name' => $field,
                             'foreign_uid' => 0,
                             'enabled' => (int)$enabled
-                        )
+                        ],
+                        [
+                            \PDO::PARAM_INT,
+                            \PDO::PARAM_STR,
+                            \PDO::PARAM_STR,
+                            \PDO::PARAM_INT,
+                            \PDO::PARAM_INT
+                        ]
                     );
                 }
             }

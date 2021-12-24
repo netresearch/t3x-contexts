@@ -2,7 +2,9 @@
 
 namespace Netresearch\Contexts\Tests\Unit;
 
-abstract class TestBase extends \PHPUnit_Framework_TestCase
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
+
+abstract class TestBase extends UnitTestCase
 {
     /**
      * Make a proteced/private method accessible.

@@ -39,18 +39,6 @@ class FrontendControllerService implements SingletonInterface
     protected static $linkVarParams = array();
 
     /**
-     * Initialize the frontend user - contexts are initialized here.
-     *
-     * @param TypoScriptFrontendController $pObj Calling object
-     *
-     * @return void
-     */
-    public function initFEuser($pObj)
-    {
-        Container::get()->initMatching();
-    }
-
-    /**
      * Check subpages for context from rootline
      * method is called from hook "hook_checkEnableFields"
      *

@@ -33,25 +33,6 @@ use TYPO3\CMS\Core\SingletonInterface;
  */
 class IconService implements SingletonInterface
 {
-    /**
-     * Add a "contexts" icon to the standard page/content element item
-     * when we have a configuration.
-     * hook method before TYPO3 7.5
-     *
-     * @param string $table   Name of the table to inspect.
-     * @param array  $row     The row of the actuall element.
-     * @param array  &$status The actually status which already is set.
-     *
-     * @return void
-     */
-    public function overrideIconOverlay($table, $row, &$status)
-    {
-        if (isset($row['tx_contexts_enable']) && $row['tx_contexts_enable'] != '' ||
-            isset($row['tx_contexts_disable']) && $row['tx_contexts_disable'] != '') {
-            $status['contexts'] = true;
-        }
-    }
-
 
     /**
      * Add a "contexts" icon to the standard page/content element item
@@ -67,8 +48,8 @@ class IconService implements SingletonInterface
      */
     public function postOverlayPriorityLookup($table, $row, &$status, $iconName)
     {
-        if (isset($row['tx_contexts_enable']) && $row['tx_contexts_enable'] != '' ||
-            isset($row['tx_contexts_disable']) && $row['tx_contexts_disable'] != '') {
+        if ((isset($row['tx_contexts_enable']) && $row['tx_contexts_enable'] != '') ||
+            (isset($row['tx_contexts_disable']) && $row['tx_contexts_disable'] != '')) {
             $status['contexts'] = true;
             return 'extensions-contexts-status-overlay-contexts';
         }

@@ -27,14 +27,17 @@ use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\ContextException;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Psr\Log\LoggerAwareTrait;
 
 /**
  * Context factory
  *
  * @author Christian Opitz <christian.opitz@netresearch.de>
  */
-class Factory
+class Factory implements \Psr\Log\LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * Find the right class for the context type and instantiate it
      *
@@ -43,17 +46,14 @@ class Factory
      * @return AbstractContext|null
      * @throws \Netresearch\Contexts\ContextException
      */
-    public static function createFromDb($arRow)
+    public function createFromDb($arRow)
     {
         $classMap = Configuration::getContextTypes();
 
         $type     = $arRow['type'];
 
         if (!$type || !array_key_exists($type, $classMap)) {
-            GeneralUtility::devLog(
-                'No class found for context type "' . $type . '"',
-                'tx_contexts', 2
-            );
+            $this->logger->warning('tx_contexts: No class found for context type "' . $type . '"');
             $type = 'default';
         }
 

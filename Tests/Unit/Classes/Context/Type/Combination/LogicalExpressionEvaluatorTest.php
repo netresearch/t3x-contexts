@@ -2,8 +2,9 @@
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-class LogicalExpressionEvaluatorTest extends \PHPUnit_Framework_TestCase
+class LogicalExpressionEvaluatorTest extends UnitTestCase
 {
 
     /**

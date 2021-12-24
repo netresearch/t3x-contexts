@@ -8,6 +8,7 @@
     "contexts"
   ],
   "homepage": "https://www.netresearch.de",
+  "version": "2.0.0",
   "support": {
     "issues": "https://github.com/netresearch/t3x-contexts/issues"
   },
@@ -21,7 +22,8 @@
   ],
   "license": "GPL-2.0+",
   "require": {
-    "typo3/cms-core": "^6.2.14 || ^7.6 || ^8.0"
+    "typo3/cms-core": "^9.5",
+    "php": ">=7.3.0"
   },
   "require-dev": {
     "namelesscoder/typo3-repository-client": "^1.2",
@@ -35,9 +37,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Netresearch\\Contexts\\Tests\\": "Tests",
-      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
-      "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/"
+      "Netresearch\\Contexts\\Tests\\": "Tests"
     }
   },
   "replace": {

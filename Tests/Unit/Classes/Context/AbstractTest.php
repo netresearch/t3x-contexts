@@ -2,6 +2,7 @@
 
 namespace Netresearch\Contexts\Tests\Unit\Context;
 
+
 class AbstractTest extends \Netresearch\Contexts\Tests\Unit\TestBase
 {
     /**
@@ -9,13 +10,10 @@ class AbstractTest extends \Netresearch\Contexts\Tests\Unit\TestBase
      */
     public function testGetMatchFromSession($configRet, $sessionRet, $expected)
     {
-        $stub = $this->getMock(
-            '\Netresearch\Contexts\Tests\Unit\Context\test',
-            array(
-                'getConfValue',
-                'getSession'
-            )
-        );
+        $stub = $this->getAccessibleMock(
+                \Netresearch\Contexts\Tests\Unit\Context\test::class,
+                ['getConfValue', 'getSession']
+            );
 
         $stub->setUseSession($configRet);
 
@@ -81,5 +79,3 @@ class test extends \Netresearch\Contexts\Context\AbstractContext
     {
     }
 }
-
-?>
