@@ -8,7 +8,6 @@
     "contexts"
   ],
   "homepage": "https://www.netresearch.de",
-  "version": "2.0.0",
   "support": {
     "issues": "https://github.com/netresearch/t3x-contexts/issues"
   },
@@ -20,14 +19,14 @@
       "homepage": "https://www.netresearch.de"
     }
   ],
-  "license": "GPL-2.0+",
+  "license": "AGPL-3.0-or-later",
   "require": {
     "typo3/cms-core": "^9.5",
     "php": ">=7.3.0"
   },
   "require-dev": {
     "namelesscoder/typo3-repository-client": "^1.2",
-    "mikey179/vfsStream": "^1.4",
+    "mikey179/vfsstream": "^1.4",
     "phpunit/phpunit": "^4.7 || ^5.0"
   },
   "autoload": {
@@ -41,7 +40,7 @@
     }
   },
   "replace": {
-    "contexts": "self.version",
+    "netresearch/contexts": "self.version",
     "typo3-ter/contexts": "self.version"
   },
   "config": {
