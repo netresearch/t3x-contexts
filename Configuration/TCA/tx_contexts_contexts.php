@@ -59,6 +59,7 @@ return array(
             'label' => $lf . ':tx_contexts_contexts.type',
             'config' => array(
                 'type' => 'select',
+                'renderType' => 'selectSingle',
 //                'items' => array(
 //                    array($lf . ':tx_contexts_contexts.type.select_type', '')
 //                ),
