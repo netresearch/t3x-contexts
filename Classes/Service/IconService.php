@@ -72,5 +72,6 @@ class IconService implements SingletonInterface
             $status['contexts'] = true;
             return 'extensions-contexts-status-overlay-contexts';
         }
+        return $iconName;
     }
 }
