@@ -1,4 +1,12 @@
 <?php
+
+/**
+ * This file is part of the package netresearch/contexts.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
+
 namespace Netresearch\Contexts\Tests\Functional;
 
 class TcaTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase

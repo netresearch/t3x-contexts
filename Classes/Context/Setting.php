@@ -1,31 +1,35 @@
 <?php
-namespace Netresearch\Contexts\Context;
 
-/*
- * This file is part of the TYPO3 CMS project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
+/**
+ * This file is part of the package netresearch/contexts.
  *
  * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
+ * LICENSE file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
+namespace Netresearch\Contexts\Context;
+
+/**
+ * Class Setting
+ */
+
+/**
+ * Class Setting
+ */
 final class Setting
 {
     /**
      * @var AbstractContext
      */
-    protected $context;
+    protected AbstractContext $context;
 
     /**
      * The uid of the setting record
      * @var int
      */
-    protected $uid;
+    protected int $uid;
 
     /**
      * The name of table the setting is for
@@ -38,7 +42,7 @@ final class Setting
      * (0 for default setting)
      * @var int
      */
-    protected $foreignUid;
+    protected int $foreignUid;
 
     /**
      * The name of the setting
@@ -50,8 +54,12 @@ final class Setting
      * Whether the record is enabled by this setting
      * @var bool
      */
-    protected $enabled;
+    protected bool $enabled;
 
+    /**
+     * @param AbstractContext $context
+     * @param array           $row
+     */
     public function __construct(AbstractContext $context, array $row)
     {
         $this->context = $context;
@@ -59,7 +67,7 @@ final class Setting
         $this->foreignTable = $row['foreign_table'];
         $this->name = $row['name'];
         $this->foreignUid = (int) $row['foreign_uid'];
-        $this->enabled = $row['enabled'] ? true : false;
+        $this->enabled = (bool)$row['enabled'];
     }
 
     /**
@@ -70,31 +78,34 @@ final class Setting
     public static function fromFlatData(
         AbstractContext $context,
         $table, $setting, $arFlatColumns, $arRow
-    ) {
-        $bDisabled = strpos(
+    ): ?Setting {
+        $bDisabled = str_contains(
             ',' . $arRow[$arFlatColumns[0]] . ',',
             ',' . $context->getUid() . ','
-        ) !== false;
-        $bEnabled = strpos(
+        );
+        $bEnabled = str_contains(
             ',' . $arRow[$arFlatColumns[1]] . ',',
             ',' . $context->getUid() . ','
-        ) !== false;
+        );
 
         if (!$bEnabled && !$bDisabled) {
             return null;
         }
 
-        $arDummyRow = array(
+        $arDummyRow = [
             'uid'  => null,
             'name' => $setting,
             'foreign_table' => $table,
             'foreign_uid'   => null,
             'enabled' => $bEnabled
-        );
+        ];
         return new self($context, $arDummyRow);
     }
 
-    public function isDefaultSetting()
+    /**
+     * @return bool
+     */
+    public function isDefaultSetting(): bool
     {
         return !$this->uid;
     }
@@ -102,7 +113,7 @@ final class Setting
     /**
      * @return AbstractContext
      */
-    public function getContext()
+    public function getContext(): AbstractContext
     {
         return $this->context;
     }
@@ -110,7 +121,7 @@ final class Setting
     /**
      * @return int
      */
-    public function getUid()
+    public function getUid(): int
     {
         return $this->uid;
     }
@@ -118,7 +129,7 @@ final class Setting
     /**
      * @return string
      */
-    public function getForeignTable()
+    public function getForeignTable(): string
     {
         return $this->foreignTable;
     }
@@ -126,7 +137,7 @@ final class Setting
     /**
      * @return int
      */
-    public function getForeignUid()
+    public function getForeignUid(): int
     {
         return $this->foreignUid;
     }
@@ -134,7 +145,7 @@ final class Setting
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -142,7 +153,7 @@ final class Setting
     /**
      * @return bool
      */
-    public function getEnabled()
+    public function getEnabled(): bool
     {
         return $this->enabled;
     }

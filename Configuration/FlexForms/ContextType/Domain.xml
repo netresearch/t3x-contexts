@@ -3,13 +3,13 @@
     <meta>
         <langDisable>1</langDisable>
     </meta>
-    
+
     <ROOT>
         <type>array</type>
         <el>
             <field_domains>
                 <TCEforms>
-                    <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xml:domain.field_domains</label>
+                    <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:domain.field_domains</label>
                     <config>
                         <type>text</type>
                         <cols>60</cols>

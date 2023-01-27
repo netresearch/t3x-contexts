@@ -1,70 +1,87 @@
 <?php
-namespace Netresearch\Contexts\Form;
 
-/*
- * This file is part of the TYPO3 CMS project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
+/**
+ * This file is part of the package netresearch/contexts.
  *
  * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
+ * LICENSE file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
+namespace Netresearch\Contexts\Form;
+
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
-use TYPO3\CMS\Backend\Form\FormEngine;
+use Netresearch\Contexts\ContextException;
+use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 
 /**
  * USER functions to render the defaults fields
  *
  * @author Christian Opitz <christian.opitz@netresearch.de>
  */
-class DefaultSettingsFormElement
+class DefaultSettingsFormElement extends AbstractFormElement
 {
     /**
-     * Render a checkbox for the default settings of records in
-     * this table
+     * Render a checkbox for the default settings of records in this table
      *
-     * @param array $params
-     * @param FormEngine $formEngineObject
-     * @return string
+     * @return array
+     * @throws ContextException
+     * @throws DBALException
+     * @throws Exception
      */
-    public function render($params, $formEngineObject)
+    public function render(): array
     {
-        $table = $params['fieldConf']['config']['table'];
+        $table = $this->data['parameterArray']['fieldConf']['config']['table'];
 
         $content = '';
 
-        $namePre = str_replace('[default_settings_', '[default_settings][', $params['itemFormElName']);
+        $namePre = str_replace('[default_settings_', '[default_settings][', $this->data['parameterArray']['itemFormElName']);
 
-        /* @var $context AbstractContext */
-        $uid = (int)$params['row']['uid'];
+        // This fails
+//        $namePre  = 'data' . $this->data['elementBaseName'];
+
+        $uid = (int) $this->data['databaseRow']['uid'];
+
+        /* @var null|AbstractContext $context */
         $context = $uid
             ? Container::get()->initAll()->find($uid)
             : null;
 
-        foreach ($params['fieldConf']['config']['settings'] as $setting => $config) {
-            $id = $params['itemFormElID'] . '-' . $setting;
-            $name = $namePre . '[' . $setting . ']';
-            $content .= '<input type="hidden" name="' . $name . '" value="0"/>';
-            $content .= '<input class="checkbox" type="checkbox" name="' . $name . '" ';
-            if (
-                !$context ||
-                !$context->hasSetting($table, $setting, 0) ||
-                $context->getSetting($table, $setting, 0)->getEnabled()
-            ) {
-                $content .= 'checked="checked" ';
+        foreach ($this->data['parameterArray']['fieldConf']['config']['settings'] as $configKey => $config) {
+            $id         = $this->data['parameterArray']['itemFormElID'] . '-' . $configKey;
+            $name       = $namePre . '[' . $configKey . ']';
+            $checked    = '';
+            $setting    = null;
+            $hasSetting = false;
+
+            if ($context !== null) {
+                $setting    = $context->getSetting($table, $configKey, 0);
+                $hasSetting = (bool) $setting;
             }
-            $content .= 'value="1" id="' . $id . '" /> ';
-            $content .= '<label for="' . $id . '">';
-            $content .= $GLOBALS['LANG']->sL($config['label']);
-            $content .= '</label><br/>';
+
+            if (
+                ($context === null)
+                || !$hasSetting
+                || (($setting !== null) && $setting->getEnabled())
+            ) {
+                $checked = 'checked="checked"';
+            }
+
+            $content .= <<<HTML
+<input type="hidden" name="$name" value="0" />
+<input class="checkbox" type="checkbox" name="$name" value="1" id="$id" $checked/>
+<label for="$id">{$GLOBALS['LANG']->sL($config['label'])}</label>
+<br/>
+HTML;
         }
 
-        return $content;
+        $result = $this->initializeResultArray();
+        $result['html'] = $content;
+
+        return $result;
     }
 }

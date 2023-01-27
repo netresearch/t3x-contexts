@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * This file is part of the package netresearch/contexts.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
+
+
 const TYPO3_MODE = 'BE';
 
 //we have E_STRICT all over the place :/

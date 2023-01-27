@@ -9,7 +9,7 @@
         <el>
             <field_variable>
                 <TCEforms>
-                    <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xml:session.field_variable</label>
+                    <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:session.field_variable</label>
                     <config>
                         <type>input</type>
                         <eval>trim</eval>

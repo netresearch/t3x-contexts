@@ -1,31 +1,22 @@
 <?php
+
+/**
+ * This file is part of the package netresearch/contexts.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Netresearch\Contexts\Api;
 
-/***************************************************************
-*  Copyright notice
-*
-*  (c) 2013 Netresearch GmbH & Co. KG <typo3-2013@netresearch.de>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
-
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
+use function array_key_exists;
+use function is_array;
 
 
 /**
@@ -42,12 +33,14 @@ class Record
      * contexts (means that the records is disabled if one of the enableSettings
      * are disabled for one of the current contexts)
      *
-     * @param string        $table Table name
+     * @param string    $table Table name
      * @param array|int $row   Record array or an uid
      *
      * @return bool
+     * @throws DBALException
+     * @throws Exception
      */
-    public static function isEnabled($table, $row)
+    public static function isEnabled(string $table, $row): bool
     {
         $enableSettings = Configuration::getEnableSettings($table);
         if (!$enableSettings) {
@@ -65,13 +58,15 @@ class Record
      * Determines if a setting is enabled or disabled by the current contexts
      * (returns false if the setting is disabled for one of the contexts)
      *
-     * @param string        $table   Table name
-     * @param string        $setting Setting name
+     * @param string    $table   Table name
+     * @param string    $setting Setting name
      * @param array|int $row     Record array or an uid
      *
      * @return bool
+     * @throws DBALException
+     * @throws Exception
      */
-    public static function isSettingEnabled($table, $setting, $row)
+    public static function isSettingEnabled(string $table, string $setting, $row): bool
     {
         if (is_array($row)) {
             $enabledFlat = self::isSettingEnabledFlat($table, $setting, $row);
@@ -89,7 +84,7 @@ class Record
             $uid = (int) $row;
         }
 
-        /* @var $context AbstractContext */
+        /* @var AbstractContext $context */
         foreach (Container::get() as $context) {
             $rowSetting     = $context->getSetting($table, $setting, $uid);
             $defaultSetting = $context->getSetting($table, $setting, 0);
@@ -116,7 +111,7 @@ class Record
      *                      doesn't contain the appropriate flat columns
      *                      boolean otherwise
      */
-    protected static function isSettingEnabledFlat($table, $setting, array $row)
+    protected static function isSettingEnabledFlat(string $table, string $setting, array $row): ?bool
     {
         $flatColumns
             = Configuration::getFlatColumns($table, $setting);
@@ -126,16 +121,15 @@ class Record
         }
 
         $rowValid           = true;
-        $flatColumnContents = array();
+        $flatColumnContents = [];
 
         foreach ($flatColumns as $i => $flatColumn) {
-            if (!array_key_exists($flatColumn, $row)) {
+            if (!array_key_exists($flatColumn, $row) || ($row[$flatColumn] === null)) {
                 $rowValid = false;
             } elseif ($row[$flatColumn] !== '') {
-                $flatColumnContents[$i]
-                    = array_flip(explode(',', $row[$flatColumn]));
+                $flatColumnContents[$i] = array_flip(explode(',', $row[$flatColumn]));
             } else {
-                $flatColumnContents[$i] = array();
+                $flatColumnContents[$i] = [];
             }
         }
 

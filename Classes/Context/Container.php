@@ -1,26 +1,28 @@
 <?php
-namespace Netresearch\Contexts\Context;
 
-/*
- * This file is part of the TYPO3 CMS project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
+/**
+ * This file is part of the package netresearch/contexts.
  *
  * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
+ * LICENSE file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
+namespace Netresearch\Contexts\Context;
+
+use ArrayObject;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Exception;
+use Netresearch\Contexts\ContextException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use function count;
 
 /**
  * Loads contexts and provides access to them
  */
-class Container extends \ArrayObject
+class Container extends ArrayObject
 {
     /**
      * @var Container
@@ -32,11 +34,12 @@ class Container extends \ArrayObject
      *
      * @return Container
      */
-    public static function get()
+    public static function get(): Container
     {
         if (static::$instance === null) {
             static::$instance = new self();
         }
+
         return static::$instance;
     }
 
@@ -44,8 +47,11 @@ class Container extends \ArrayObject
      * Loads all contexts and checks if they match
      *
      * @return Container
+     * @throws ContextException
+     * @throws DBALException
+     * @throws Exception
      */
-    public function initMatching()
+    public function initMatching(): Container
     {
         $this->setActive($this->match($this->loadAvailable()));
         return $this;
@@ -55,8 +61,12 @@ class Container extends \ArrayObject
      * Loads all contexts.
      *
      * @return Container
+     *
+     * @throws ContextException
+     * @throws DBALException
+     * @throws Exception
      */
-    public function initAll()
+    public function initAll(): Container
     {
         $this->setActive($this->loadAvailable());
         return $this;
@@ -69,14 +79,9 @@ class Container extends \ArrayObject
      *
      * @return Container
      */
-    protected function setActive($arContexts)
+    protected function setActive(array $arContexts): Container
     {
         $this->exchangeArray($arContexts);
-        $aliases = array();
-        foreach ($arContexts as $context) {
-            $aliases[] = $context->getAlias();
-        }
-
         return $this;
     }
 
@@ -86,8 +91,12 @@ class Container extends \ArrayObject
      *
      * @return array Array of available Tx_Contexts_Context_Abstract objects,
      *               key is their uid
+     *
+     * @throws ContextException
+     * @throws DBALException
+     * @throws Exception
      */
-    protected function loadAvailable()
+    protected function loadAvailable(): array
     {
         $factory = GeneralUtility::makeInstance(Factory::class);
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -95,9 +104,9 @@ class Container extends \ArrayObject
         $arRows = $queryBuilder->select('*')
             ->from('tx_contexts_contexts')
             ->execute()
-            ->fetchAll();
+            ->fetchAllAssociative();
 
-        $contexts = array();
+        $contexts = [];
         foreach ($arRows as $arRow) {
             $context = $factory->createFromDb($arRow);
             if ($context !== null) {
@@ -116,16 +125,16 @@ class Container extends \ArrayObject
      * @return array Array of matched Tx_Contexts_Context_Abstract objects,
      *               key is their uid
      */
-    protected function match($arContexts)
+    protected function match(array $arContexts): array
     {
-        $matched          = array();
-        $notMatched       = array();
+        $matched          = [];
+        $notMatched       = [];
         $arContextsHelper = $arContexts;
 
         $loops = 0;
         do {
             foreach (array_keys($arContexts) as $uid) {
-                /* @var $context AbstractContext */
+                /* @var AbstractContext $context */
                 $context = $arContexts[$uid];
 
                 if ($context->getDisabled()) {
@@ -138,23 +147,23 @@ class Container extends \ArrayObject
                 foreach ($arDeps as $depUid => $enabled) {
                     if ($enabled) {
                         if (isset($matched[$depUid])) {
-                            $arDeps[$depUid] = (object) array(
+                            $arDeps[$depUid] = (object) [
                                 'context' => $matched[$depUid],
-                                'matched' => true
-                            );
+                                'matched' => true,
+                            ];
                             $unresolvedDeps--;
                         } elseif (isset($notMatched[$depUid])) {
-                            $arDeps[$depUid] = (object) array(
+                            $arDeps[$depUid] = (object) [
                                 'context' => $notMatched[$depUid],
-                                'matched' => false
-                            );
+                                'matched' => false,
+                            ];
                             $unresolvedDeps--;
                         }
                     } else {
-                        $arDeps[$depUid] = (object) array(
+                        $arDeps[$depUid] = (object) [
                             'context' => $arContextsHelper[$depUid],
-                            'matched' => 'disabled'
-                        );
+                            'matched' => 'disabled',
+                        ];
                         $unresolvedDeps--;
                     }
                     // FIXME: what happens when dependency context is not
@@ -185,15 +194,16 @@ class Container extends \ArrayObject
      *
      * @return AbstractContext
      */
-    public function find($uidOrAlias)
+    public function find($uidOrAlias): ?AbstractContext
     {
         if (is_numeric($uidOrAlias) && isset($this[$uidOrAlias])) {
             return $this[$uidOrAlias];
         }
 
+        /** @var AbstractContext $context */
         foreach ($this as $context) {
-            if ($context->getAlias() === strtolower($uidOrAlias)
-                || $context->getUid() == $uidOrAlias
+            if (($context->getUid() === $uidOrAlias)
+                || ($context->getAlias() === strtolower((string) $uidOrAlias))
             ) {
                 return $context;
             }

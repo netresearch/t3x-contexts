@@ -1,33 +1,25 @@
 <?php
+
+/**
+ * This file is part of the package netresearch/contexts.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Netresearch\Contexts\Context;
 
-/***************************************************************
-*  Copyright notice
-*
-*  (c) 2013 Netresearch GmbH & Co. KG <typo3-2013@netresearch.de>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
-
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\Api\Configuration;
+use PDO;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use function array_key_exists;
+use function is_array;
 
 /**
  * Abstract context - must be extended by the context types
@@ -42,21 +34,21 @@ abstract class AbstractContext
      *
      * @var string
      */
-    const HTTP_X_FORWARDED_FOR = 'HTTP_X_FORWARDED_FOR';
+    public const HTTP_X_FORWARDED_FOR = 'HTTP_X_FORWARDED_FOR';
 
     /**
      * Key for the ip remote address
      *
      * @var string
      */
-    const REMOTE_ADDR = 'REMOTE_ADDR';
+    public const REMOTE_ADDR = 'REMOTE_ADDR';
 
     /**
      * Uid of context.
      *
      * @var int
      */
-    protected $uid;
+    protected int $uid;
 
     /**
      * Type of context.
@@ -91,14 +83,14 @@ abstract class AbstractContext
      *
      * @var bool
      */
-    protected $invert = false;
+    protected bool $invert = false;
 
     /**
      * Store match result in user session.
      *
      * @var bool
      */
-    protected $use_session = true;
+    protected bool $use_session = true;
 
     /**
      * Context configuration.
@@ -112,10 +104,11 @@ abstract class AbstractContext
      *
      * @var array
      */
-    private $settings = array();
+    private array $settings = [];
 
     /**
      * Constructor - set the values from database row.
+     *
      * @var bool
      */
     protected $disabled;
@@ -125,31 +118,27 @@ abstract class AbstractContext
      *
      * @var bool
      */
-    protected $bHideInBackend = false;
+    protected bool $bHideInBackend = false;
 
     /**
      * Constructor - set the values from database row.
      *
      * @param array $arRow Database context row
      */
-    public function __construct($arRow = array())
+    public function __construct(array $arRow = [])
     {
-        //check TSFE is set
-        //prevent Exceptions in eID
-        $this->initTsfe();
-
         if (!empty($arRow)) {
             $this->uid            = (int) $arRow['uid'];
             $this->type           = $arRow['type'];
             $this->title          = $arRow['title'];
             $this->alias          = $arRow['alias'];
             $this->tstamp         = $arRow['tstamp'];
-            $this->invert         = $arRow['invert'];
-            $this->use_session    = $arRow['use_session'];
-            $this->disabled       = $arRow['disabled'];
+            $this->invert         = (bool) $arRow['invert'];
+            $this->use_session    = (bool) $arRow['use_session'];
+            $this->disabled       = (bool) $arRow['disabled'];
             $this->bHideInBackend = (bool) $arRow['hide_in_backend'];
 
-            if ($arRow['type_conf'] != '') {
+            if ($arRow['type_conf'] !== '') {
                 $this->conf = GeneralUtility::xml2array($arRow['type_conf']);
             }
         }
@@ -158,58 +147,55 @@ abstract class AbstractContext
     /**
      * Get a configuration value.
      *
-     * @param string $fieldName Name of the field
-     * @param string $default   The value to use when none was found
-     * @param string $sheet     Sheet pointer, eg. "sDEF
-     * @param string $lang      Language pointer, eg. "lDEF
-     * @param string $value     Value pointer, eg. "vDEF
+     * @param string      $fieldName Name of the field
+     * @param null|string $default   The value to use when none was found
+     * @param string      $sheet     Sheet pointer, eg. "sDEF
+     * @param string      $lang      Language pointer, eg. "lDEF
+     * @param string      $value     Value pointer, eg. "vDEF
      *
      * @return string The content
      */
     protected function getConfValue(
-        $fieldName,
-        $default = null,
-        $sheet   = 'sDEF',
-        $lang    = 'lDEF',
-        $value   = 'vDEF'
-    ) {
+        string $fieldName,
+        string $default = null,
+        string $sheet   = 'sDEF',
+        string $lang    = 'lDEF',
+        string $value   = 'vDEF'
+    ): ?string {
         if (!isset($this->conf['data'][$sheet][$lang])) {
             return $default;
         }
 
         $ldata = $this->conf['data'][$sheet][$lang];
 
-        if (!isset($ldata[$fieldName][$value])) {
-            return $default;
-        }
-
-        return $ldata[$fieldName][$value];
+        return $ldata[$fieldName][$value] ?? $default;
     }
 
     /**
      * Query a setting record and retrieve the value object
      * if one was found.
      *
-     * @param string $table   Database table name
-     * @param string $setting Setting name
-     * @param string $uid     Record UID
-     * @param array  $arRow   Database row for the given UID.
-     *                        Useful for flat settings.
+     * @param string     $table   Database table name
+     * @param string     $setting Setting name
+     * @param int        $uid     Record UID
+     * @param null|array $arRow   Database row for the given UID. Useful for flat settings.
      *
-     * @return Setting|null NULL when not enabled
-     *                                          and not disabled
+     * @return null|Setting NULL when not enabled and not disabled
+     *
+     * @throws DBALException
+     * @throws Exception
      */
-    final public function getSetting($table, $setting, $uid, $arRow = null)
+    final public function getSetting(string $table, string $setting, int $uid, array $arRow = null): ?Setting
     {
         if ($arRow !== null) {
-            //if it's a flat column, use the settings directly from the
+            // If it's a flat column, use the settings directly from the
             // database row instead of relying on the tx_contexts_settings
             // table
             $arFlatColumns = Configuration::getFlatColumns(
                 $table, $setting
             );
-            if (isset($arRow[$arFlatColumns[0]])
-                && isset($arRow[$arFlatColumns[1]])
+
+            if (isset($arRow[$arFlatColumns[0]], $arRow[$arFlatColumns[1]])
             ) {
                 return Setting::fromFlatData(
                     $this, $table, $setting, $arFlatColumns, $arRow
@@ -219,9 +205,7 @@ abstract class AbstractContext
 
         $settings = $this->getSettings($table, $uid);
 
-        return array_key_exists($setting, $settings)
-            ? $settings[$setting]
-            : null;
+        return $settings[$setting] ?? null;
     }
 
     /**
@@ -233,8 +217,11 @@ abstract class AbstractContext
      * @return array Array of settings
      *               Key is the context column name (e.g. "tx_contexts_nav")
      *               Value is a Tx_Contexts_Context_Setting object
+     *
+     * @throws DBALException
+     * @throws Exception
      */
-    final public function getSettings($table, $uid)
+    final public function getSettings(string $table, int $uid): array
     {
         $settingsKey = $table . '.' . $uid;
 
@@ -242,19 +229,21 @@ abstract class AbstractContext
             return $this->settings[$settingsKey];
         }
 
-        $uids = array($uid);
+        $uids = [ $uid ];
+
         if ($uid && !array_key_exists($table . '.0', $this->settings)) {
             $uids[] = 0;
         }
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tx_contexts_settings');
+
         $rows = $queryBuilder->select('*')
             ->from('tx_contexts_settings')
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter((int)$this->uid, \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($this->uid, PDO::PARAM_INT)
                 ),
                 $queryBuilder->expr()->eq(
                     'foreign_table',
@@ -266,10 +255,10 @@ abstract class AbstractContext
                 )
             )
             ->execute()
-            ->fetchAll();
+            ->fetchAllAssociative();
 
-        foreach ($uids as $uid) {
-            $this->settings[$table . '.' . $uid] = array();
+        foreach ($uids as $uidValue) {
+            $this->settings[$table . '.' . $uidValue] = [];
         }
 
         if (is_array($rows)) {
@@ -290,10 +279,13 @@ abstract class AbstractContext
      * @param int    $uid     Record UID
      *
      * @return bool
+     *
+     * @throws DBALException
+     * @throws Exception
      */
-    final public function hasSetting($table, $setting, $uid)
+    final public function hasSetting(string $table, string $setting, int $uid): bool
     {
-        return $this->getSetting($table, $setting, $uid) ? true : false;
+        return $this->getSetting($table, $setting, $uid) !== null;
     }
 
     /**
@@ -304,14 +296,14 @@ abstract class AbstractContext
      *
      * @return bool True when your context matches, false if not
      */
-    abstract public function match(array $arDependencies = array());
+    abstract public function match(array $arDependencies = []): bool;
 
     /**
      * Get the uid of this context.
      *
      * @return int
      */
-    public function getUid()
+    public function getUid(): int
     {
         return $this->uid;
     }
@@ -321,7 +313,7 @@ abstract class AbstractContext
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -331,7 +323,7 @@ abstract class AbstractContext
      *
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -341,7 +333,7 @@ abstract class AbstractContext
      *
      * @return string
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return strtolower($this->alias);
     }
@@ -354,9 +346,9 @@ abstract class AbstractContext
      * @return array Array of context uids this context depends on.
      *               Key is the UID, value is "true"
      */
-    public function getDependencies($arContexts)
+    public function getDependencies(array $arContexts): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -364,7 +356,7 @@ abstract class AbstractContext
      *
      * @return bool
      */
-    public function getDisabled()
+    public function getDisabled(): bool
     {
         return $this->disabled;
     }
@@ -374,7 +366,7 @@ abstract class AbstractContext
      *
      * @return bool true if the context not shown in backend
      */
-    public function getHideInBackend()
+    public function getHideInBackend(): bool
     {
         return $this->bHideInBackend;
     }
@@ -387,21 +379,22 @@ abstract class AbstractContext
      *                  false: calculate it
      *               1: Return value when 0 is true
      */
-    protected function getMatchFromSession()
+    protected function getMatchFromSession(): array
     {
-        $bUseSession = (bool) $this->use_session;
+        $bUseSession = $this->use_session;
 
         if (!$bUseSession) {
-            return array(false, null);
+            return [false, null];
         }
 
         $res = $this->getSession();
 
         if ($res === null) {
             //not set yet
-            return array(false, null);
+            return [false, null];
         }
-        return array(true, (bool) $res);
+
+        return [true, (bool) $res];
     }
 
     /**
@@ -424,34 +417,18 @@ abstract class AbstractContext
      *
      * @return bool $bMatch value
      */
-    protected function storeInSession($bMatch)
+    protected function storeInSession(bool $bMatch): bool
     {
-        if (!((bool) $this->use_session)) {
+        if (!($this->use_session)) {
             return $bMatch;
         }
 
-        /* @var $GLOBALS['TSFE'] tslib_feuserauth */
+        /* @var TypoScriptFrontendController $GLOBALS['TSFE'] */
         $GLOBALS['TSFE']->fe_user->setKey(
             'ses', 'contexts-' . $this->uid . '-' . $this->tstamp, $bMatch
         );
         $GLOBALS['TSFE']->fe_user->storeSessionData();
         return $bMatch;
-    }
-
-    /**
-     * Init TSFE with FE user
-     *
-     * @return void
-     */
-    protected function initTsfe()
-    {
-        if (!isset($GLOBALS['TSFE']) && TYPO3_MODE === 'FE') {
-            $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
-                'TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController',
-                $GLOBALS['TYPO3_CONF_VARS'], 0, 0
-            );
-            $GLOBALS['TSFE']->initFEuser();
-        }
     }
 
     /**
@@ -461,9 +438,9 @@ abstract class AbstractContext
      *
      * @return bool
      */
-    protected function invert($bMatch)
+    protected function invert(bool $bMatch): bool
     {
-        if ((bool) $this->invert) {
+        if ($this->invert) {
             return !$bMatch;
         }
 
@@ -477,9 +454,9 @@ abstract class AbstractContext
      *
      * @return void
      */
-    public function setInvert($bInvert)
+    public function setInvert(bool $bInvert): void
     {
-        $this->invert = (bool) $bInvert;
+        $this->invert = $bInvert;
     }
 
     /**
@@ -489,9 +466,9 @@ abstract class AbstractContext
      *
      * @return void
      */
-    public function setUseSession($bUseSession)
+    public function setUseSession(bool $bUseSession): void
     {
-        $this->use_session = (bool) $bUseSession;
+        $this->use_session = $bUseSession;
     }
 
     /**
@@ -501,7 +478,7 @@ abstract class AbstractContext
      *
      * @return string
      */
-    protected function getIndpEnv($strKey)
+    protected function getIndpEnv(string $strKey): string
     {
         return GeneralUtility::getIndpEnv(
             $strKey
@@ -513,7 +490,7 @@ abstract class AbstractContext
      *
      * @return string
      */
-    protected function getRemoteAddress()
+    protected function getRemoteAddress(): string
     {
         return $this->getIndpEnv(
             self::REMOTE_ADDR

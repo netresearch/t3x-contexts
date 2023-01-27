@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="html" original="messages">
+        <header />
+        <body>
+            <trans-unit id="tabname">
+                <source>Contexts</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.general">
+                <source>General</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts">
+                <source>Context</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.title">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.alias">
+                <source>Alias</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.type">
+                <source>Type</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.type.select_type">
+                <source>Select a type</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.type_conf">
+                <source>Configuration</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.invert">
+                <source>Invert the result</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.use_session">
+                <source>Store result in user session</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.defaults">
+                <source>Defaults</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.disable">
+                <source>Disable</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_visibility">
+                <source>Visible</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_menu_visibility">
+                <source>Visible in Menus</source>
+            </trans-unit>
+            <trans-unit id="no_contexts">
+                <source>No contexts found</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.visibility">
+                <source>Visibility</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.hide_in_backend">
+                <source>Not visible in the backend</source>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.iconHookShow">
+                <source>Visible for: </source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

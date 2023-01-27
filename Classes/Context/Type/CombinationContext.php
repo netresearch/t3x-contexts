@@ -1,31 +1,20 @@
 <?php
-namespace Netresearch\Contexts\Context\Type;
 
-/***************************************************************
-*  Copyright notice
-*
-*  (c) 2013 Netresearch GmbH & Co. KG <typo3.org@netresearch.de>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/**
+ * This file is part of the package netresearch/contexts.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
+use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException;
+use function is_array;
 
 /**
  * Matches when a logical expression with other contexts evaluates to true
@@ -38,40 +27,41 @@ class CombinationContext extends AbstractContext
     /**
      * @var LogicalExpressionEvaluator
      */
-    protected $evaluator;
+    protected LogicalExpressionEvaluator $evaluator;
 
     /**
      * @var array
      */
-    protected $tokens;
+    protected array $tokens;
 
     /**
      * Initialize the evaluator, tokenize the expression and create
-     * the depencies from the variable tokens
+     * the dependencies from the variable tokens
      *
      * @param array $arContexts the available contexts
+     *
      * @return array
      */
-    public function getDependencies($arContexts)
+    public function getDependencies(array $arContexts): array
     {
         $this->evaluator = new LogicalExpressionEvaluator();
         $this->tokens = $this->evaluator->tokenize($this->getConfValue('field_expression'));
-        $dependencies = array();
+        $dependencies = [];
         foreach ($this->tokens as $token) {
             if (is_array($token)
                 && $token[0] === LogicalExpressionEvaluator::T_VAR
             ) {
                 foreach ($arContexts as $dependent) {
-                    if ($dependent->getAlias() == $token[1]) {
+                    if ($dependent->getAlias() === $token[1]) {
                         $context = $dependent;
                     }
                 }
 
                 if (isset($context)) {
-                    if (!$context->getDisabled()) {
-                        $dependencies[$context->getUid()] = true;
-                    } else {
+                    if ($context->getDisabled()) {
                         $dependencies[$context->getUid()] = false;
+                    } else {
+                        $dependencies[$context->getUid()] = true;
                     }
                 }
                 // Missing contexts will be detected later in match method
@@ -86,12 +76,14 @@ class CombinationContext extends AbstractContext
      * the parsed expression by those values.
      *
      * @param array $arDependencies
+     *
      * @return bool
+     * @throws LogicalExpressionEvaluatorException
      */
-    public function match(array $arDependencies = array())
+    public function match(array $arDependencies = []): bool
     {
         $this->evaluator->parse($this->tokens);
-        $values = array();
+        $values = [];
         foreach ($arDependencies as $dependency) {
             if ($dependency->context->getAlias()) {
                 $values[$dependency->context->getAlias()] = $dependency->matched;

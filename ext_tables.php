@@ -1,27 +1,32 @@
 <?php
-defined('TYPO3_MODE') || die();
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr(
-    'tx_contexts_contexts.type_conf.combination',
-    'EXT:contexts/Resources/Private/csh/Combination.xml'
-);
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_contexts_contexts');
+/**
+ * This file is part of the package netresearch/contexts.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
 
+declare(strict_types=1);
 
-$iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-    'TYPO3\CMS\Core\Imaging\IconRegistry'
-);
-$iconRegistry->registerIcon(
-    'extensions-contexts-status-overlay-contexts',
-    'TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider',
-    array('source' => 'EXT:contexts/Resources/Public/Icons/overlay-contexts.png')
-);
+defined('TYPO3_MODE') || die('Access denied.');
 
+call_user_func(
+    static function () {
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr(
+            'tx_contexts_contexts.type_conf.combination',
+            'EXT:contexts/Resources/Private/csh/Combination.xml'
+        );
 
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages(
+            'tx_contexts_contexts'
+        );
 
-$GLOBALS['TBE_STYLES']['skins']['contexts'] = array (
-    'name' => 'contexts',
-    'stylesheetDirectories' => array(
-        'css' => 'EXT:contexts/Resources/Public/StyleSheet'
-    )
+        $GLOBALS['TBE_STYLES']['skins']['contexts'] = array (
+            'name' => 'contexts',
+            'stylesheetDirectories' => array(
+                'css' => 'EXT:contexts/Resources/Public/StyleSheet'
+            )
+        );
+    }
 );

@@ -9,7 +9,7 @@
         <el>
             <field_name>
                 <TCEforms>
-                    <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xml:getparam.field_name</label>
+                    <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:getparam.field_name</label>
                     <config>
                         <type>input</type>
                         <size>30</size>
@@ -20,7 +20,7 @@
 
             <field_values>
                 <TCEforms>
-                    <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xml:getparam.field_values</label>
+                    <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:getparam.field_values</label>
                     <config>
                         <type>text</type>
                         <cols>60</cols>

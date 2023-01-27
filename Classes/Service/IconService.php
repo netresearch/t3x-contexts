@@ -1,28 +1,15 @@
 <?php
-namespace Netresearch\Contexts\Service;
 
-/***************************************************************
-*  Copyright notice
-*
-*  (c) 2013 Netresearch GmbH & Co. KG <typo3-2013@netresearch.de>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/**
+ * This file is part of the package netresearch/contexts.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace Netresearch\Contexts\Service;
 
 use TYPO3\CMS\Core\SingletonInterface;
 
@@ -39,17 +26,17 @@ class IconService implements SingletonInterface
      * when we have a configuration.
      * hook method after TYPO3 7.5
      *
-     * @param string $table    Name of the table to inspect.
-     * @param array  $row      The row of the actuall element.
-     * @param array  &$status  The actually status which already is set.
-     * @param string $iconName icon name
+     * @param string  $table    Name of the table to inspect.
+     * @param array   $row      The row of the actuall element.
+     * @param array  &$status   The actual status which already is set.
+     * @param string  $iconName icon name
      *
      * @return string the registered icon name
      */
-    public function postOverlayPriorityLookup($table, $row, &$status, $iconName)
+    public function postOverlayPriorityLookup(string $table, array $row, array &$status, string $iconName): string
     {
-        if ((isset($row['tx_contexts_enable']) && $row['tx_contexts_enable'] != '') ||
-            (isset($row['tx_contexts_disable']) && $row['tx_contexts_disable'] != '')) {
+        if ((isset($row['tx_contexts_enable']) && $row['tx_contexts_enable'] !== '') ||
+            (isset($row['tx_contexts_disable']) && $row['tx_contexts_disable'] !== '')) {
             $status['contexts'] = true;
             return 'extensions-contexts-status-overlay-contexts';
         }

@@ -1,68 +1,52 @@
 {
-  "name": "netresearch/contexts",
-  "type": "typo3-cms-extension",
-  "description": "Contexts for TYPO3 - can be used to modify page behaviour in the frontend based on several conditions",
-  "keywords": [
-    "TYPO3",
-    "extension",
-    "contexts"
-  ],
-  "homepage": "https://www.netresearch.de",
-  "support": {
-    "issues": "https://github.com/netresearch/t3x-contexts/issues"
-  },
-  "authors": [
-    {
-      "name": "Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag, Benni Mack",
-      "email": "typo3.org@netresearch.de",
-      "role": "Developer",
-      "homepage": "https://www.netresearch.de"
-    }
-  ],
-  "license": "AGPL-3.0-or-later",
-  "require": {
-    "typo3/cms-core": "^9.5",
-    "php": ">=7.3.0"
-  },
-  "require-dev": {
-    "namelesscoder/typo3-repository-client": "^1.2",
-    "mikey179/vfsstream": "^1.4",
-    "phpunit/phpunit": "^4.7 || ^5.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Netresearch\\Contexts\\": "Classes"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Netresearch\\Contexts\\Tests\\": "Tests"
-    }
-  },
-  "replace": {
-    "netresearch/contexts": "self.version",
-    "typo3-ter/contexts": "self.version"
-  },
-  "config": {
-    "vendor-dir": ".Build/vendor",
-    "bin-dir": ".Build/bin",
-    "preferred-install": {
-      "typo3/cms": "source"
-    }
-  },
-  "scripts": {
-    "post-autoload-dump": [
-      "mkdir -p .Build/Web/typo3conf/ext/",
-      "[ -L .Build/Web/typo3conf/ext/contexts ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/contexts"
-    ]
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0.x-dev"
+    "name": "netresearch/contexts",
+    "type": "typo3-cms-extension",
+    "description": "Contexts for TYPO3 - can be used to modify page behaviour in the frontend based on several conditions",
+    "homepage": "https://github.com/netresearch/t3x-contexts/",
+    "license": [
+        "AGPL-3.0-or-later"
+    ],
+    "keywords": [
+        "TYPO3",
+        "extension",
+        "contexts"
+    ],
+    "support": {
+        "issues": "https://github.com/netresearch/t3x-contexts/issues"
     },
-    "typo3/cms": {
-      "cms-package-dir": "{$vendor-dir}/typo3/cms",
-      "web-dir": ".Build/Web"
+    "authors": [
+        {
+            "name": "Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag, Benni Mack",
+            "email": "typo3.org@netresearch.de",
+            "role": "Developer",
+            "homepage": "https://www.netresearch.de"
+        }
+    ],
+    "require": {
+        "ext-pdo": "*",
+        "typo3/cms-core": "^11.5"
+    },
+    "require-dev": {
+        "namelesscoder/typo3-repository-client": "^1.2",
+        "mikey179/vfsstream": "^1.4",
+        "phpunit/phpunit": "^4.7 || ^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Netresearch\\Contexts\\": "Classes"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Netresearch\\Contexts\\Tests\\": "Tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        },
+        "typo3/cms": {
+            "extension-key": "contexts"
+        }
     }
-  }
 }

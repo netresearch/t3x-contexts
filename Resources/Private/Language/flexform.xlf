@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="html" original="messages">
+        <header />
+        <body>
+            <trans-unit id="aliasesNotFound">
+                <source>The following aliases could not be found</source>
+            </trans-unit>
+            <trans-unit id="unknownTokensFound">
+                <source>The following expressions are unknown</source>
+            </trans-unit>
+            <trans-unit id="field_invert">
+                <source>Invert the result</source>
+            </trans-unit>
+            <trans-unit id="field_use_session">
+                <source>Store result in user session</source>
+            </trans-unit>
+            <trans-unit id="domain.field_domains">
+                <source>Domains, one per line</source>
+            </trans-unit>
+            <trans-unit id="getparam.field_name">
+                <source>GET parameter name</source>
+            </trans-unit>
+            <trans-unit id="getparam.field_values">
+                <source>Parameter values: one per line, empty for any value</source>
+            </trans-unit>
+            <trans-unit id="ip.field_ip">
+                <source>User IP, one per line. * and partial IPs allowed</source>
+            </trans-unit>
+            <trans-unit id="httpheader.field_name">
+                <source>HTTP header name</source>
+            </trans-unit>
+            <trans-unit id="httpheader.field_values">
+                <source>Header values: one per line, empty for any value</source>
+            </trans-unit>
+            <trans-unit id="combination.field_logicalExpression">
+                <source>Logical expression combination, (use context alias to combine) </source>
+            </trans-unit>
+            <trans-unit id="session.field_variable">
+                <source>Session variable</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

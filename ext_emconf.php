@@ -1,14 +1,13 @@
 <?php
 
-/***************************************************************
- * Extension Manager/Repository config file for ext "contexts".
+/**
+ * This file is part of the package netresearch/contexts.
  *
- * Auto generated 21-04-2016 07:58
- *
- * Manual updates:
- * Only the data in the array - everything else is removed by next
- * writing. "version" and "dependencies" must not be touched!
- ***************************************************************/
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Multi-channel contexts',
@@ -23,7 +22,7 @@ $EM_CONF[$_EXTKEY] = [
     'version' => '2.0.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '9.5.1-9.9.99'
+            'typo3' => '11.0.0-11.5.99',
         ],
         'conflicts' => [
         ],

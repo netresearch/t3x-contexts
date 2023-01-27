@@ -1,29 +1,20 @@
 <?php
+
+/**
+ * This file is part of the package netresearch/contexts.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Netresearch\Contexts\Service;
 
-/***************************************************************
-*  Copyright notice
-*
-*  (c) 2013 Netresearch GmbH & Co. KG <typo3-2013@netresearch.de>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
 use Netresearch\Contexts\Api\Configuration;
+use function array_key_exists;
+use function is_array;
+
 /**
  * Hooks for InstallUtility: Append the necessary field definitions for
  * the enableSettings (tx_contexts_enable, tx_contexts_disable)
@@ -39,38 +30,36 @@ class InstallService
      * respected by the extension manager during installation of an extension.
      *
      * @param array  $arSignalReturn
-     * @param string $strExtKey      extension key
+     * @param string $strExtKey extension key
      *
      * @return array Either empty array or table create array
      */
-    public function appendTableDefinitions($arSignalReturn, $strExtKey)
+    public function appendTableDefinitions(array $arSignalReturn, string $strExtKey): array
     {
-        global $TCA;
-
         $extensionFlatSettings = Configuration::getExtensionFlatSettings($strExtKey);
 
         if (!array_key_exists($strExtKey, $extensionFlatSettings)) {
-            return array();
+            return [];
         }
 
         $sql = '';
         foreach ($extensionFlatSettings[$strExtKey] as $table => $settings) {
             $sql .= "\nCREATE TABLE $table (\n";
 
-            $arSql = array();
+            $arSql = [];
             foreach ($settings as $setting) {
                 if (is_array($setting)) {
                     continue;
                 }
                 $flatColumns = Configuration::getFlatColumns($table, $setting);
-                $arSql[] = $flatColumns[0] . " tinytext";
-                $arSql[] = $flatColumns[1] . " tinytext";
+                $arSql[] = $flatColumns[0] . ' tinytext';
+                $arSql[] = $flatColumns[1] . ' tinytext';
             }
 
             $sql .= implode(",\n", $arSql);
             $sql .= ');';
         }
 
-        return array('sqlString' => array($sql), 'extensionKey' => $strExtKey);
+        return ['sqlString' => [$sql], 'extensionKey' => $strExtKey];
     }
 }

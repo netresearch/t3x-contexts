@@ -1,27 +1,30 @@
 <?php
-namespace Netresearch\Contexts\Context\Type;
 
-/*
- * This file is part of the TYPO3 CMS project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
+/**
+ * This file is part of the package netresearch/contexts.
  *
  * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
+ * LICENSE file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
+namespace Netresearch\Contexts\Context\Type;
+
 use Netresearch\Contexts\Context\AbstractContext;
+use function strlen;
 
 /**
  * Matches on the current domain name
  */
 class DomainContext extends AbstractContext
 {
-    public function match(array $arDependencies = array())
+    /**
+     * @param array $arDependencies
+     *
+     * @return bool
+     */
+    public function match(array $arDependencies = []): bool
     {
         $curHost = $_SERVER['HTTP_HOST'];
         $arDomains = explode("\n", $this->getConfValue('field_domains'));
@@ -35,17 +38,24 @@ class DomainContext extends AbstractContext
         return $this->invert(false);
     }
 
-    protected function matchDomain($domain, $curHost)
+    /**
+     * @param string $domain
+     * @param string $curHost
+     *
+     * @return bool
+     */
+    protected function matchDomain(string $domain, string $curHost): bool
     {
-        if ($domain{0} != '.') {
-            if ($domain == $curHost) {
-                return true;
-            }
+        if ($domain === '') {
             return false;
         }
 
-        if (substr($domain, 1) == $curHost
-            || substr($curHost, -strlen($domain) + 1) == substr($domain, 1)
+        if ($domain[0] !== '.') {
+            return $domain === $curHost;
+        }
+
+        if (substr($domain, 1) === $curHost
+            || substr($curHost, -strlen($domain) + 1) === substr($domain, 1)
         ) {
             return true;
         }

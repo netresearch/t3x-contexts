@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file target-language="de" datatype="html" original="messages">
+        <header />
+        <body>
+            <trans-unit id="tabname">
+                <target>Kontexte</target>
+            </trans-unit>
+            <trans-unit id="tx_contexts_contexts.general">
+                <target>Allgemein</target>
+            </trans-unit>
+                <trans-unit id="tx_contexts_contexts">
+                <target>Kontext</target>
+            </trans-unit>
+                <trans-unit id="tx_contexts_contexts.title">
+                <target>Titel</target>
+            </trans-unit>
+                <trans-unit id="tx_contexts_contexts.alias">
+                <target>Alias</target>
+            </trans-unit>
+                <trans-unit id="tx_contexts_visibility">
+                <target>Sichtbar</target>
+            </trans-unit>
+                <trans-unit id="tx_contexts_menu_visibility">
+                <target>Sichtbar in Menüs</target>
+            </trans-unit>
+                <trans-unit id="tx_contexts_contexts.defaults">
+                <target>Standardwerte</target>
+            </trans-unit>
+                <trans-unit id="no_contexts">
+                <target>Keine Kontexte eingerichtet</target>
+            </trans-unit>
+                <trans-unit id="tx_contexts_contexts.visibility">
+                <target>Sichtbarkeit</target>
+            </trans-unit>
+                <trans-unit id="tx_contexts_contexts.hide_in_backend">
+                <target>Nicht Sichtbar im Backend</target>
+            </trans-unit>
+                <trans-unit id="tx_contexts_contexts.iconHookShow">
+                <target>Sichtbar für: </target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

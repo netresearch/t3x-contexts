@@ -1,4 +1,12 @@
 <?php
+
+/**
+ * This file is part of the package netresearch/contexts.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
+
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
