@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Api;
 
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use function array_key_exists;
 use function count;
@@ -231,7 +232,7 @@ class Configuration
                 'config' => [
                     'type' => 'user',
                     'renderType' => 'recordSettingsFormElement',
-                    'size' => '30',
+                    'size' => 30,
                     'settings' => $settings,
                 ],
             ];
@@ -258,13 +259,20 @@ class Configuration
                     ExtensionManagementUtility::addToAllTCAtypes(
                         $table,
                         self::RECORD_SETTINGS_COLUMN,
-                        '1,4,5',
+                        implode(
+                            ',',
+                            [
+                                PageRepository::DOKTYPE_DEFAULT,
+                                PageRepository::DOKTYPE_SHORTCUT,
+                                PageRepository::DOKTYPE_LINK,
+                            ]
+                        ),
                         'after:fe_group'
                     );
                     ExtensionManagementUtility::addToAllTCAtypes(
                         $table,
                         self::RECORD_SETTINGS_COLUMN,
-                        '254',
+                        PageRepository::DOKTYPE_SYSFOLDER,
                         'after:hidden'
                     );
                     break;
