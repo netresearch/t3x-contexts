@@ -50,7 +50,7 @@ class DefaultSettingsFormElement extends AbstractFormElement
         $uid = (int) $this->data['databaseRow']['uid'];
 
         /* @var null|AbstractContext $context */
-        $context = $uid
+        $context = $uid > 0
             ? Container::get()->initAll()->find($uid)
             : null;
 

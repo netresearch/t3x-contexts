@@ -22,6 +22,8 @@ use function count;
 
 /**
  * Loads contexts and provides access to them
+ *
+ * @extends ArrayObject<int|string, AbstractContext>
  */
 class Container extends ArrayObject
 {
@@ -99,9 +101,12 @@ class Container extends ArrayObject
      */
     protected function loadAvailable(): array
     {
-        $factory = GeneralUtility::makeInstance(Factory::class);
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+        $factory        = GeneralUtility::makeInstance(Factory::class);
+        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+
+        $queryBuilder = $connectionPool
             ->getQueryBuilderForTable('tx_contexts_contexts');
+
         $arRows = $queryBuilder->select('*')
             ->from('tx_contexts_contexts')
             ->execute()
@@ -193,7 +198,7 @@ class Container extends ArrayObject
      *
      * @param int|string $uidOrAlias
      *
-     * @return AbstractContext
+     * @return null|AbstractContext
      */
     public function find($uidOrAlias): ?AbstractContext
     {

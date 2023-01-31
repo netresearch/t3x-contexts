@@ -20,7 +20,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 use function array_key_exists;
+use function count;
 use function is_array;
+use function is_string;
 
 /**
  * Abstract context - must be extended by the context types
@@ -128,7 +130,7 @@ abstract class AbstractContext
      */
     public function __construct(array $arRow = [])
     {
-        if (!empty($arRow)) {
+        if (count($arRow) > 0) {
             $this->uid            = (int) $arRow['uid'];
             $this->type           = $arRow['type'];
             $this->title          = $arRow['title'];
@@ -140,7 +142,7 @@ abstract class AbstractContext
             $this->bHideInBackend = (bool) $arRow['hide_in_backend'];
 
             if ($arRow['type_conf'] !== '') {
-                $this->conf = GeneralUtility::xml2array($arRow['type_conf']);
+                $this->conf = (array) GeneralUtility::xml2array($arRow['type_conf']);
             }
         }
     }
@@ -236,7 +238,7 @@ abstract class AbstractContext
 
         $uids = [ $uid ];
 
-        if ($uid && !array_key_exists($table . '.0', $this->settings)) {
+        if (($uid > 0) && !array_key_exists($table . '.0', $this->settings)) {
             $uids[] = 0;
         }
 
@@ -484,13 +486,11 @@ abstract class AbstractContext
      *
      * @param string $strKey the key, e.g. REMOTE_ADDR
      *
-     * @return string
+     * @return null|string|bool|array<string, string|bool|null>
      */
-    protected function getIndpEnv(string $strKey): string
+    protected function getIndpEnv(string $strKey)
     {
-        return GeneralUtility::getIndpEnv(
-            $strKey
-        );
+        return GeneralUtility::getIndpEnv($strKey);
     }
 
     /**
@@ -500,8 +500,12 @@ abstract class AbstractContext
      */
     protected function getRemoteAddress(): string
     {
-        return $this->getIndpEnv(
-            self::REMOTE_ADDR
-        );
+        $result = $this->getIndpEnv(self::REMOTE_ADDR);
+
+        if (is_string($result)) {
+            return $result;
+        }
+
+        return '';
     }
 }

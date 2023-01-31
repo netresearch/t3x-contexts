@@ -283,7 +283,7 @@ class Configuration
                     ExtensionManagementUtility::addToAllTCAtypes(
                         $table,
                         self::RECORD_SETTINGS_COLUMN,
-                        PageRepository::DOKTYPE_SYSFOLDER,
+                        (string) PageRepository::DOKTYPE_SYSFOLDER,
                         'after:hidden'
                     );
                     break;
@@ -397,7 +397,7 @@ class Configuration
      */
     public static function getFlatColumns(string $table, string $setting = null): array
     {
-        if ($table && isset($GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'])) {
+        if (isset($GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'])) {
             if ($setting !== null) {
                 return $GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'][$setting];
             }
@@ -413,7 +413,7 @@ class Configuration
      *
      * @param string $strExtKey extension key
      *
-     * @return array $extensionFlatSettings
+     * @return array
      */
     public static function getExtensionFlatSettings(string $strExtKey): array
     {

@@ -48,9 +48,11 @@ class ContextRestriction implements QueryRestrictionInterface, EnforceableQueryR
             foreach ($queriedTables as $table) {
                 foreach (Configuration::getEnableSettings($table) as $setting) {
                     $flatColumns = Configuration::getFlatColumns($table, $setting);
-                    if (!$flatColumns) {
+
+                    if (count($flatColumns) === 0) {
                         continue;
                     }
+
                     $enableConstraints = [
                         $expressionBuilder->isNull($flatColumns[1]),
                         $expressionBuilder->eq(
@@ -71,10 +73,12 @@ class ContextRestriction implements QueryRestrictionInterface, EnforceableQueryR
                             (string) $context->getUid()
                         );
                     }
+
                     $constraints[] = $expressionBuilder->orX(
                         ...$enableConstraints
                     );
-                    if (count($disableConstraints)) {
+
+                    if (count($disableConstraints) > 0) {
                         $constraints[] = $expressionBuilder->orX(
                             $expressionBuilder->isNull($flatColumns[0]),
                             $expressionBuilder->eq(
@@ -87,6 +91,7 @@ class ContextRestriction implements QueryRestrictionInterface, EnforceableQueryR
                 }
             }
         }
+
         return $expressionBuilder->andX(...$constraints);
     }
 

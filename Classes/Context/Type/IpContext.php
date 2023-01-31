@@ -51,13 +51,15 @@ class IpContext extends AbstractContext
             return $this->invert(false);
         }
 
-        $arIpRange = explode("\n", trim($this->getConfValue('field_ip')));
+        $configValue = $this->getConfValue('field_ip');
+        $arIpRange   = explode("\n", trim($configValue ?? ''));
 
         if (count($arIpRange) === 1 && $arIpRange[0] === '') {
             return $this->invert(false);
         }
 
         $strRange = implode(',', $arIpRange);
+
         return $this->invert($this->isIpInRange($strCurIp, $bIpv4, $strRange));
     }
 
@@ -72,7 +74,7 @@ class IpContext extends AbstractContext
      *
      * @return bool True if the IP is in the range
      */
-    protected function isIpInRange(string $strIp, bool $bIpv4, string $strRange): ?bool
+    protected function isIpInRange(string $strIp, bool $bIpv4, string $strRange): bool
     {
         if ($bIpv4) {
             return GeneralUtility::cmpIPv4($strIp, $strRange);

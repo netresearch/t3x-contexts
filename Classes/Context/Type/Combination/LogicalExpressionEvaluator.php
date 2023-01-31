@@ -14,6 +14,7 @@ namespace Netresearch\Contexts\Context\Type\Combination;
 use stdClass;
 
 use function array_key_exists;
+use function count;
 use function in_array;
 use function is_array;
 use function is_int;
@@ -101,13 +102,14 @@ class LogicalExpressionEvaluator
     /**
      * Parent scope - set by @see pushScope() (that's NOT the same as getScope())
      *
-     * @var LogicalExpressionEvaluator
+     * @var null|LogicalExpressionEvaluator
      */
     protected $parentScope;
 
     /**
      * Set when a negation token was handled and
      * factored in when the next token gets pushed
+     *
      * @var bool
      */
     protected bool $nextTokenNegated = false;
@@ -180,18 +182,24 @@ class LogicalExpressionEvaluator
             ],
             $expression
         );
+
+        if ($expression === null) {
+            return [];
+        }
+
         $pattern = '/[^\w\-_]/';
 
         /** @var string[][] $operators */
         $operators = [];
 
         preg_match_all($pattern, $expression . ' ', $operators, PREG_OFFSET_CAPTURE);
+
         $nextPosition = 0;
         $tokens = [];
         $lastOperator = '';
         $operatorMap = array_flip(self::$operatorMap);
         foreach ($operators[0] as $operator) {
-            if ($lastOperator) {
+            if ($lastOperator !== '') {
                 if (array_key_exists($lastOperator . $operator[0], $operatorMap)) {
                     $tokens[] = $operatorMap[$lastOperator . $operator[0]];
                 } else {
@@ -203,7 +211,7 @@ class LogicalExpressionEvaluator
                 $operator[0] = '';
             }
 
-            if ($operator[1] && $operator[1] - $nextPosition) {
+            if (($operator[1] !== 0) && (($operator[1] - $nextPosition) !== 0)) {
                 $tokens[] = [
                     self::T_VAR,
                     strtolower(substr($expression, $nextPosition, $operator[1] - $nextPosition))
@@ -215,12 +223,13 @@ class LogicalExpressionEvaluator
             if (array_key_exists($operator[0], $operatorMap)) {
                 $tokens[] = $operatorMap[$operator[0]];
                 $lastOperator = '';
-            } elseif (trim($operator[0])) {
+            } elseif (trim($operator[0]) !== '') {
                 $lastOperator = $operator[0];
             } else {
                 $lastOperator = '';
             }
         }
+
         $tokens[] = self::T_END;
 
         return $tokens;
@@ -240,10 +249,15 @@ class LogicalExpressionEvaluator
         $this->scopeContainer->scopes = [];
         $this->scopeContainer->keys = [];
         $this->pushScope();
-        $this->tokens = [$this->getScope()];
+
+        $this->tokens = [
+            $this->getScope(),
+        ];
+
         foreach ($tokens as $token) {
             $this->getScope()->handleToken($token);
         }
+
         foreach ($this->scopeContainer->scopes as $scope) {
             $scope->precedenceShiftTokens(
                 [self::T_AND, self::T_XOR, self::T_OR]
@@ -301,34 +315,44 @@ class LogicalExpressionEvaluator
             case self::T_NEGATE:
                 $this->nextTokenNegated = !$this->nextTokenNegated;
                 break;
+
             case self::T_PL:
                 $this->pushScope();
                 break;
+
             case self::T_PR:
                 $scope = $this->getScope();
                 $this->popScope();
-                if (!$scope->parentScope->parentScope) {
+
+                if (($scope->parentScope !== null) && ($scope->parentScope->parentScope === null)) {
                     throw new LogicalExpressionEvaluatorException(
                         'Found not opened closing parentheses'
                     );
                 }
+
                 if (is_int(end($this->tokens))) {
                     throw new LogicalExpressionEvaluatorException(
                         'Unexpected )'
                     );
                 }
-                $this->parentScope->pushToken($scope);
+
+                if ($this->parentScope !== null) {
+                    $this->parentScope->pushToken($scope);
+                }
+
                 break;
+
             case self::T_AND:
             case self::T_OR:
             case self::T_XOR:
-                if (!$this->tokens || is_int(end($this->tokens))) {
+                if ((count($this->tokens) === 0) || is_int(end($this->tokens))) {
                     throw new LogicalExpressionEvaluatorException(
                         'Unexpected Operator'
                     );
                 }
                 $this->pushToken($token);
                 break;
+
             case self::T_END:
                 if (is_int(end($this->tokens))) {
                     throw new LogicalExpressionEvaluatorException(
@@ -336,25 +360,31 @@ class LogicalExpressionEvaluator
                     );
                 }
 
-                if ($this->getScope()->parentScope->parentScope) {
+                if (
+                    ($this->getScope()->parentScope !== null)
+                    && ($this->getScope()->parentScope->parentScope !== null)
+                ) {
                     throw new LogicalExpressionEvaluatorException(
                         'Missing closing parentheses'
                     );
                 }
 
                 break;
+
             default:
-                if ($token[0] === self::T_VAR) {
-                    if ($this->tokens && !is_int(end($this->tokens))) {
+                if (is_array($token)) {
+                    if ($token[0] === self::T_VAR) {
+                        if ((count($this->tokens) > 0) && !is_int(end($this->tokens))) {
+                            throw new LogicalExpressionEvaluatorException(
+                                'Unexpected variable'
+                            );
+                        }
+                        $this->pushToken($token);
+                    } else {
                         throw new LogicalExpressionEvaluatorException(
-                            'Unexpected variable'
+                            'Unexpected "' . $token[1] . '"'
                         );
                     }
-                    $this->pushToken($token);
-                } else {
-                    throw new LogicalExpressionEvaluatorException(
-                        'Unexpected "' . $token[1] . '"'
-                    );
                 }
         }
     }
@@ -396,15 +426,18 @@ class LogicalExpressionEvaluator
     protected function precedenceShiftTokens(array $precedences): void
     {
         $operator = array_shift($precedences);
+
         if (!$operator) {
             return;
         }
+
         if (in_array($operator, $this->tokens, true)) {
             $this->operator = $operator;
             $tokens = $this->tokens;
             $this->tokens = [
                 $scope = new self()
             ];
+
             foreach ($tokens as $token) {
                 if ($token === $this->operator) {
                     $scope = new self();
@@ -413,10 +446,12 @@ class LogicalExpressionEvaluator
                     $scope->pushToken($token);
                 }
             }
-            foreach ($this->tokens as $scope) {
-                $scope->precedenceShiftTokens($precedences);
+
+            foreach ($this->tokens as $token) {
+                $token->precedenceShiftTokens($precedences);
             }
         }
+
         $this->precedenceShiftTokens($precedences);
     }
 
@@ -495,7 +530,7 @@ class LogicalExpressionEvaluator
         foreach ($this->tokens as $token) {
             if ($token instanceof self) {
                 $str = $token->rebuild($unshifted);
-                if ($token->parentScope) {
+                if ($token->parentScope !== null) {
                     $str = '(' . $str . ')';
                 }
                 if ($token->negated) {

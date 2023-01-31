@@ -32,9 +32,9 @@ use function is_array;
 class DataHandlerService
 {
     /**
-     * @var array
+     * @var array<int|string, array<string, string>>
      */
-    protected $currentSettings;
+    protected array $currentSettings = [];
 
     /**
      * Extract the context settings from the field array and set them in
@@ -48,7 +48,9 @@ class DataHandlerService
      *
      * @return void
      */
+// @codingStandardsIgnoreStart
     public function processDatamap_preProcessFieldArray(
+// @codingStandardsIgnoreEnd
         array &$incomingFieldArray,
         string $table,
         string $id,
@@ -84,14 +86,16 @@ class DataHandlerService
      * @throws DBALException
      * @throws Exception
      */
+// @codingStandardsIgnoreStart
     public function processDatamap_afterDatabaseOperations(
+// @codingStandardsIgnoreEnd
         string $status,
         string $table,
         string $id,
         array $fieldArray,
         DataHandler $reference
     ): void {
-        if (isset($this->currentSettings) && is_array($this->currentSettings)) {
+        if (count($this->currentSettings) > 0) {
             if (!is_numeric($id)) {
                 $id = $reference->substNEWwithIDs[$id];
             }
@@ -123,11 +127,8 @@ class DataHandlerService
      */
     protected function saveRecordSettings(string $table, int $uid, array $contextsAndSettings): void
     {
-        $flatSettingColumns = Configuration::getFlatColumns(
-            $table
-        );
-
-        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+        $flatSettingColumns = Configuration::getFlatColumns($table);
+        $connectionPool     = GeneralUtility::makeInstance(ConnectionPool::class);
 
         foreach ($contextsAndSettings as $contextId => $settings) {
             foreach ($settings as $field => $setting) {
@@ -220,6 +221,7 @@ class DataHandlerService
         $values = [];
 
         $flatSettingColumns = Configuration::getFlatColumns($table);
+
         foreach ($flatSettingColumns as $setting => $flatColumns) {
             $values[$flatColumns[0]] = [];
             $values[$flatColumns[1]] = [];
@@ -230,12 +232,14 @@ class DataHandlerService
             }
         }
 
-        if (count($values)) {
+        if (count($values) > 0) {
             foreach ($values as $colname => &$val) {
                 $val = implode(',', $val);
             }
+
             $connection = GeneralUtility::makeInstance(ConnectionPool::class)
                 ->getConnectionForTable($table);
+
             $connection->update(
                 $table,
                 $values,
@@ -259,6 +263,7 @@ class DataHandlerService
     protected function saveDefaultSettings(int $contextId, array $settings): void
     {
         $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+
         $queryBuilder = $connectionPool->getQueryBuilderForTable('tx_contexts_settings');
         $existingSettings = $queryBuilder->select('*')
             ->from('tx_contexts_settings')

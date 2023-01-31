@@ -19,7 +19,6 @@ use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\ContextException;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -82,7 +81,7 @@ HTML;
             $bHasSetting = false;
 
             foreach ($settings as $settingName => $config) {
-                $setting = $uid
+                $setting = $uid > 0
                     ? $context->getSetting(
                         $this->data['tableName'],
                         $settingName,
@@ -96,10 +95,10 @@ HTML;
                     . '<select name="' . $namePre . '[' . $context->getUid() . '][' . $settingName . ']">'
                     . '<option value="">n/a</option>'
                     . '<option value="1"'
-                    . ($setting && $setting->getEnabled() ? ' selected="selected"' : '')
+                    . (($setting !== null) && $setting->getEnabled() ? ' selected="selected"' : '')
                     . '>Yes</option>'
                     . '<option value="0"'
-                    . ($setting && !$setting->getEnabled() ? ' selected="selected"' : '')
+                    . (($setting !== null) && !$setting->getEnabled() ? ' selected="selected"' : '')
                     . '>No</option>'
                     . '</select></td>';
             }
@@ -174,15 +173,15 @@ HTML;
      *                          absolute path to the file
      * @param int|string $uid   The uid of the record OR if a file, just blank value.
      *
-     * @return string HTML
+     * @return string
      */
-    protected function getClickMenu(string $str, string $table, $uid = 0): ?string
+    protected function getClickMenu(string $str, string $table, $uid = 0): string
     {
         return BackendUtility::wrapClickMenuOnIcon(
             $str,
             $table,
             $uid,
-            true
+            'true'
         );
     }
 
@@ -196,9 +195,9 @@ HTML;
     protected function getIcon(array $row): string
     {
         if (class_exists(IconFactory::class)) {
-            $iconClass = GeneralUtility::makeInstance(IconFactory::class);
+            $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
 
-            return (string) $iconClass->getIconForRecord(
+            return (string) $iconFactory->getIconForRecord(
                 'tx_contexts_contexts',
                 $row,
                 'small'

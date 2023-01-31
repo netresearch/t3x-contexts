@@ -34,6 +34,7 @@ class PageTreeRepository extends \TYPO3\CMS\Backend\Tree\Repository\PageTreeRepo
     public function __construct(int $workspaceId = 0, array $additionalFieldsToQuery = [])
     {
         $additionalFieldsToQuery = array_merge($this->contextFields, $additionalFieldsToQuery);
+
         parent::__construct($workspaceId, $additionalFieldsToQuery);
     }
 }

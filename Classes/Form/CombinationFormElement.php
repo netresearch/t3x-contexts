@@ -21,6 +21,7 @@ use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\Element\TextElement;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function count;
 use function is_array;
 
 /**
@@ -83,7 +84,7 @@ class CombinationFormElement extends AbstractFormElement
             }
         }
 
-        if (!$notFound && !$unknownTokens) {
+        if ((count($notFound) === 0) && (count($unknownTokens) === 0)) {
             return $text;
         }
 
@@ -91,7 +92,7 @@ class CombinationFormElement extends AbstractFormElement
 {$text['html']}
 <div class="text-danger">
 HTML;
-        if ($notFound) {
+        if (count($notFound) > 0) {
             $notFoundText = implode(', ', $notFound);
             $html .= <<<HTML
 <p>
@@ -102,7 +103,7 @@ HTML;
 HTML;
         }
 
-        if ($unknownTokens) {
+        if (count($unknownTokens) > 0) {
             $unknownTokensText = implode(', ', $unknownTokens);
             $html .= <<<HTML
 <p>

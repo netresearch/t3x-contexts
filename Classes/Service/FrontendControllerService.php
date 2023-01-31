@@ -65,14 +65,14 @@ class FrontendControllerService implements SingletonInterface
             $enable = array_filter(explode(',', $page['tx_contexts_enable']));
 
             foreach ($enable as $contextId) {
-                if (!isset($contexts[$contextId]) && $contextId) {
+                if (!isset($contexts[$contextId])) {
                     return false;
                 }
             }
 
             $disable = array_filter(explode(',', $page['tx_contexts_disable']));
             foreach ($disable as $contextId) {
-                if (isset($contexts[$contextId]) && $contextId) {
+                if (isset($contexts[$contextId])) {
                     return false;
                 }
             }
@@ -120,11 +120,11 @@ class FrontendControllerService implements SingletonInterface
      *
      * @param string $param
      * @param mixed  $value
-     * @param        $addToLinkVars
+     * @param bool   $addToLinkVars
      *
      * @return void
      */
-    public static function registerQueryParameter(string $param, $value, $addToLinkVars): void
+    public static function registerQueryParameter(string $param, $value, bool $addToLinkVars): void
     {
         self::$params[$param] = $value;
 

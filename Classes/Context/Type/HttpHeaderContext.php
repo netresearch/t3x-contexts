@@ -33,10 +33,11 @@ class HttpHeaderContext extends AbstractContext
      */
     public function match(array $arDependencies = []): bool
     {
-        // determine which HTTP header has been configured
-        $httpHeaderName = strtolower(trim($this->getConfValue('field_name')));
+        // Determine which HTTP header has been configured
+        $configValue    = $this->getConfValue('field_name') ?? '';
+        $httpHeaderName = strtolower(trim($configValue));
 
-        // check, if header exists in HTTP request
+        // Check, if header exists in HTTP request
         foreach ($_SERVER as $header => $value) {
             if (strtolower($header) === $httpHeaderName) {
                 // header exists - check if any configured values match
@@ -60,14 +61,16 @@ class HttpHeaderContext extends AbstractContext
      */
     protected function matchValues(string $value): bool
     {
-        $arValues = explode("\n", trim($this->getConfValue('field_values')));
+        $configValue = $this->getConfValue('field_values');
+        $arValues    = explode("\n", trim($configValue ?? ''));
 
-        //empty value list, so we allow any value
+        // Empty value list, so we allow any value
         if (count($arValues) === 1 && $arValues[0] === '') {
             return $value !== '';
         }
 
         $arValues = array_map('trim', $arValues);
+
         return in_array($value, $arValues, true);
     }
 }

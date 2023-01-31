@@ -40,7 +40,8 @@ class QueryParameterContext extends AbstractContext
      */
     public function match(array $arDependencies = []): bool
     {
-        $param = trim($this->getConfValue('field_name'));
+        $configValue = $this->getConfValue('field_name');
+        $param       = trim($configValue ?? '');
 
         if ($param === '') {
             throw new RuntimeException(
@@ -65,12 +66,12 @@ class QueryParameterContext extends AbstractContext
 
         $values = GeneralUtility::trimExplode(
             "\n",
-            $this->getConfValue('field_values'),
+            $this->getConfValue('field_values') ?? '',
             true
         );
 
         return $this->invert($this->storeInSession(
-            !count($values) || in_array($value, $values, true)
+            (count($values) === 0) || in_array($value, $values, true)
         ));
     }
 }

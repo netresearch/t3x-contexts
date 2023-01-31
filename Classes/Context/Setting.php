@@ -14,10 +14,6 @@ namespace Netresearch\Contexts\Context;
 /**
  * Class Setting
  */
-
-/**
- * Class Setting
- */
 final class Setting
 {
     /**
@@ -73,14 +69,20 @@ final class Setting
     /**
      * Create a context settings object from flat data
      *
+     * @param AbstractContext $context
+     * @param string          $table         Database table name
+     * @param string          $setting       Setting name
+     * @param array           $arFlatColumns
+     * @param array           $arRow         Database row
+     *
      * @return Setting|null NULL when not enabled/disabled
      */
     public static function fromFlatData(
         AbstractContext $context,
-        $table,
-        $setting,
-        $arFlatColumns,
-        $arRow
+        string $table,
+        string $setting,
+        array $arFlatColumns,
+        array $arRow
     ): ?Setting {
         $bDisabled = str_contains(
             ',' . $arRow[$arFlatColumns[0]] . ',',
@@ -102,6 +104,7 @@ final class Setting
             'foreign_uid'   => null,
             'enabled' => $bEnabled
         ];
+
         return new self($context, $arDummyRow);
     }
 
@@ -110,7 +113,7 @@ final class Setting
      */
     public function isDefaultSetting(): bool
     {
-        return !$this->uid;
+        return $this->uid === 0;
     }
 
     /**

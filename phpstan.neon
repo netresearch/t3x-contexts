@@ -1,0 +1,31 @@
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+
+parameters:
+    # You can currently choose from 10 levels (0 is the loosest and 9 is the strictest).
+    level: 9
+
+    paths:
+        - Classes/
+        - Configuration/
+        - Resources/
+        - ext_localconf.php
+        - ext_tables.php
+
+    excludePaths:
+        - Tests/*
+        - vendor/*
+        - ext_emconf.php
+
+    checkMissingIterableValueType: false
+
+    # Ignore error, mainly due invalid PHP in TYPO3
+    ignoreErrors:
+        # Return type mismatch in TYPO3\\CMS\\Core\\Database\\Query\\Expression\\ExpressionBuilder
+        - '#^Parameter (.*) of method TYPO3\\CMS\\Core\\Database\\Query\\Expression\\ExpressionBuilder(.*) expects string, TYPO3\\CMS\\Core\\Database\\Query\\Expression\\CompositeExpression given.$#'
+
+        # https://review.typo3.org/c/Packages/TYPO3.CMS/+/74340
+        - '#^Call to an undefined method object\:\:(.*).$#'
+
+        # Return type mismatch in call to \TYPO3\CMS\Backend\Utility\BackendUtility::wrapClickMenuOnIcon
+        - '#^Method Netresearch\\Contexts\\Form\\RecordSettingsFormElement\:\:getClickMenu\(\) should return string but returns array\|string.$#'

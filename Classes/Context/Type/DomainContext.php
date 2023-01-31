@@ -27,8 +27,9 @@ class DomainContext extends AbstractContext
      */
     public function match(array $arDependencies = []): bool
     {
-        $curHost = $_SERVER['HTTP_HOST'];
-        $arDomains = explode("\n", $this->getConfValue('field_domains'));
+        $curHost     = $_SERVER['HTTP_HOST'];
+        $configValue = $this->getConfValue('field_domains');
+        $arDomains   = $configValue !== null ? explode("\n", $configValue) : [];
 
         foreach ($arDomains as $domain) {
             if ($this->matchDomain($domain, $curHost)) {

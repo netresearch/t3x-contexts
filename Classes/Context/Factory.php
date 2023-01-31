@@ -43,27 +43,35 @@ class Factory implements LoggerAwareInterface
         $type     = $arRow['type'];
 
         if (!$type || !array_key_exists($type, $classMap)) {
-            $this->logger->warning('tx_contexts: No class found for context type "' . $type . '"');
+            if ($this->logger !== null) {
+                $this->logger->warning('tx_contexts: No class found for context type "' . $type . '"');
+            }
+
             $type = 'default';
         }
 
         if (!isset($classMap[$type]['class'])) {
             return null;
         }
+
         $class = $classMap[$type]['class'];
+
         if (!$class) {
             return null;
         }
 
         $instance = GeneralUtility::makeInstance($class, $arRow);
+
         if ($instance instanceof SingletonInterface) {
             throw new ContextException($class . ' may not be singleton');
         }
+
         if (!$instance instanceof AbstractContext) {
             throw new ContextException(
                 $class . ' must extend Tx_Contexts_Context_Abstract'
             );
         }
+
         return $instance;
     }
 }

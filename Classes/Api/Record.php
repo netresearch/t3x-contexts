@@ -17,7 +17,7 @@ use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 
 use function array_key_exists;
-use function is_array;
+use function count;
 
 /**
  * API with methods to retrieve context information for records
@@ -32,18 +32,18 @@ class Record
      * contexts (means that the records is disabled if one of the enableSettings
      * are disabled for one of the current contexts)
      *
-     * @param string    $table Table name
-     * @param array|int $row   Record array or an uid
+     * @param string $table Table name
+     * @param array  $row   Record array or an uid
      *
      * @return bool
      * @throws DBALException
      * @throws Exception
      */
-    public static function isEnabled(string $table, $row): bool
+    public static function isEnabled(string $table, array $row): bool
     {
         $enableSettings = Configuration::getEnableSettings($table);
 
-        if (!$enableSettings) {
+        if (count($enableSettings) === 0) {
             return true;
         }
 
@@ -60,31 +60,27 @@ class Record
      * Determines if a setting is enabled or disabled by the current contexts
      * (returns false if the setting is disabled for one of the contexts)
      *
-     * @param string    $table   Table name
-     * @param string    $setting Setting name
-     * @param array|int $row     Record array or an uid
+     * @param string $table   Table name
+     * @param string $setting Setting name
+     * @param array  $row     Record array
      *
      * @return bool
      * @throws DBALException
      * @throws Exception
      */
-    public static function isSettingEnabled(string $table, string $setting, $row): bool
+    public static function isSettingEnabled(string $table, string $setting, array $row): bool
     {
-        if (is_array($row)) {
-            $enabledFlat = self::isSettingEnabledFlat($table, $setting, $row);
+        $enabledFlat = self::isSettingEnabledFlat($table, $setting, $row);
 
-            if ($enabledFlat !== null) {
-                return $enabledFlat;
-            }
-
-            if (!isset($row['uid'])) {
-                return false;
-            }
-
-            $uid = (int) $row['uid'];
-        } else {
-            $uid = (int) $row;
+        if ($enabledFlat !== null) {
+            return $enabledFlat;
         }
+
+        if (!isset($row['uid'])) {
+            return false;
+        }
+
+        $uid = (int) $row['uid'];
 
         /* @var AbstractContext $context */
         foreach (Container::get() as $context) {
@@ -92,8 +88,8 @@ class Record
             $defaultSetting = $context->getSetting($table, $setting, 0);
 
             if (
-                ($rowSetting && !$rowSetting->getEnabled())
-                || ($defaultSetting && !$defaultSetting->getEnabled())
+                (($rowSetting !== null) && !$rowSetting->getEnabled())
+                || (($defaultSetting !== null) && !$defaultSetting->getEnabled())
             ) {
                 return false;
             }
@@ -116,10 +112,9 @@ class Record
      */
     protected static function isSettingEnabledFlat(string $table, string $setting, array $row): ?bool
     {
-        $flatColumns
-            = Configuration::getFlatColumns($table, $setting);
+        $flatColumns = Configuration::getFlatColumns($table, $setting);
 
-        if (!$flatColumns) {
+        if (count($flatColumns) === 0) {
             return null;
         }
 

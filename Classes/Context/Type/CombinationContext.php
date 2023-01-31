@@ -45,9 +45,14 @@ class CombinationContext extends AbstractContext
      */
     public function getDependencies(array $arContexts): array
     {
+        $configValue = $this->getConfValue('field_expression') ?? '';
+
+
         $this->evaluator = new LogicalExpressionEvaluator();
-        $this->tokens = $this->evaluator->tokenize($this->getConfValue('field_expression'));
+        $this->tokens    = $this->evaluator->tokenize($configValue);
+
         $dependencies = [];
+
         foreach ($this->tokens as $token) {
             if (
                 is_array($token)
@@ -66,9 +71,11 @@ class CombinationContext extends AbstractContext
                         $dependencies[$context->getUid()] = true;
                     }
                 }
+
                 // Missing contexts will be detected later in match method
             }
         }
+
         return $dependencies;
     }
 
