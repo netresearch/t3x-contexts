@@ -15,14 +15,12 @@ use Netresearch\Contexts\Api\ContextMatcher;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
-
 /**
  * Class ContextConditionProvider
  * @package Netresearch\Contexts\ExpressionLanguage
  */
 class ContextFunctionsProvider implements ExpressionFunctionProviderInterface
 {
-
     /**
      * @return ExpressionFunction[] An array of Function instances
      */
@@ -45,5 +43,4 @@ class ContextFunctionsProvider implements ExpressionFunctionProviderInterface
                 ->matches($strContext);
         });
     }
-
 }

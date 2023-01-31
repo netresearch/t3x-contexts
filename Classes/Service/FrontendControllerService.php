@@ -41,7 +41,11 @@ class FrontendControllerService implements SingletonInterface
     /**
      * Check subpages for context from rootline. Method is called from hook "hook_checkEnableFields".
      *
-     * @param array{pObj: TypoScriptFrontendController, row: array<string, null|int|string>, bypassGroupCheck: bool} $data
+     * @param array{
+     *     pObj: TypoScriptFrontendController,
+     *     row: array<string, null|int|string>,
+     *     bypassGroupCheck: bool
+     *  } $data
      *
      * @return bool FALSE if context from root does not match
      */

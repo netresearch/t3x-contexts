@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Context\Type\Combination;
 
 use stdClass;
+
 use function array_key_exists;
 use function in_array;
 use function is_array;

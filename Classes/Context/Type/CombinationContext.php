@@ -14,6 +14,7 @@ namespace Netresearch\Contexts\Context\Type;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException;
+
 use function is_array;
 
 /**
@@ -48,7 +49,8 @@ class CombinationContext extends AbstractContext
         $this->tokens = $this->evaluator->tokenize($this->getConfValue('field_expression'));
         $dependencies = [];
         foreach ($this->tokens as $token) {
-            if (is_array($token)
+            if (
+                is_array($token)
                 && $token[0] === LogicalExpressionEvaluator::T_VAR
             ) {
                 foreach ($arContexts as $dependent) {

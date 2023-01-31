@@ -13,6 +13,7 @@ namespace Netresearch\Contexts\Api;
 
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 use function array_key_exists;
 use function count;
 use function in_array;
@@ -81,7 +82,10 @@ class Configuration
      *
      */
     public static function enableContextsForTable(
-        string $extKey, string $table, array $settings = null, bool $addDefaults = true
+        string $extKey,
+        string $table,
+        array $settings = null,
+        bool $addDefaults = true
     ): void {
         $defaultSettings = [
             'tx_contexts' => [
@@ -154,7 +158,9 @@ class Configuration
      * @return void
      */
     protected static function addToExtensionFlatSettings(
-        string $extKey, string $table, array $settings
+        string $extKey,
+        string $table,
+        array $settings
     ): void {
         $flatSettings = [];
 
@@ -164,16 +170,20 @@ class Configuration
             }
         }
 
-        if (!array_key_exists($extKey, $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'] ?? [])) {
-            $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'][$extKey]
-                = [$table => $flatSettings];
-        } elseif (array_key_exists($table, $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'][$extKey] ?? [])) {
-            $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'][$extKey][$table] = array_unique(
-                array_merge(
-                    $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'][$extKey][$table],
-                    $settings
-                )
-            );
+        $extensionFlatSettings = $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'] ?? [];
+
+        if (!array_key_exists($extKey, $extensionFlatSettings)) {
+            $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'][$extKey] = [
+                $table => $flatSettings,
+            ];
+        } elseif (array_key_exists($table, $extensionFlatSettings[$extKey] ?? [])) {
+            $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'][$extKey][$table]
+                = array_unique(
+                    array_merge(
+                        $extensionFlatSettings[$extKey][$table],
+                        $settings
+                    )
+                );
         } else {
             $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'][$extKey][$table] = $flatSettings;
         }
@@ -193,7 +203,8 @@ class Configuration
         $enableSettings = $GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['enableSettings'] ?? [];
 
         foreach ($settings as $setting => $config) {
-            if (isset($config['enables'])
+            if (
+                isset($config['enables'])
                 && !in_array($setting, $enableSettings, true)
             ) {
                 $enableSettings = $setting;
@@ -337,7 +348,10 @@ class Configuration
      * @return void
      */
     public static function registerContextType(
-        string $key, string $title, string $class, string $flexFile
+        string $key,
+        string $title,
+        string $class,
+        string $flexFile
     ): void {
 
         $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes'][$key] = [

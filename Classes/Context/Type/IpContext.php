@@ -13,6 +13,7 @@ namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 use function count;
 
 /**
@@ -35,10 +36,14 @@ class IpContext extends AbstractContext
         $strCurIp = $_SERVER['REMOTE_ADDR'];
 
         $bIpv4 = filter_var(
-            $strCurIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4
+            $strCurIp,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_IPV4
         ) !== false;
         $bIpv6 = filter_var(
-            $strCurIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6
+            $strCurIp,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_IPV6
         ) !== false;
 
         if (!$bIpv4 && !$bIpv6) {

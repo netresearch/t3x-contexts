@@ -7,7 +7,7 @@
  * LICENSE file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Netresearch\Contexts\Xclass\Backend\Tree\Repository;
 
@@ -36,5 +36,4 @@ class PageTreeRepository extends \TYPO3\CMS\Backend\Tree\Repository\PageTreeRepo
         $additionalFieldsToQuery = array_merge($this->contextFields, $additionalFieldsToQuery);
         parent::__construct($workspaceId, $additionalFieldsToQuery);
     }
-
 }

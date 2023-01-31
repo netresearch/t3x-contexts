@@ -15,9 +15,9 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
+
 use function array_key_exists;
 use function is_array;
-
 
 /**
  * API with methods to retrieve context information for records
@@ -27,7 +27,6 @@ use function is_array;
  */
 class Record
 {
-
     /**
      * Determines if the specified record is enabled or disabled by the current
      * contexts (means that the records is disabled if one of the enableSettings
@@ -43,14 +42,17 @@ class Record
     public static function isEnabled(string $table, $row): bool
     {
         $enableSettings = Configuration::getEnableSettings($table);
+
         if (!$enableSettings) {
             return true;
         }
+
         foreach ($enableSettings as $setting) {
             if (!self::isSettingEnabled($table, $setting, $row)) {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -89,7 +91,8 @@ class Record
             $rowSetting     = $context->getSetting($table, $setting, $uid);
             $defaultSetting = $context->getSetting($table, $setting, 0);
 
-            if (($rowSetting && !$rowSetting->getEnabled())
+            if (
+                ($rowSetting && !$rowSetting->getEnabled())
                 || ($defaultSetting && !$defaultSetting->getEnabled())
             ) {
                 return false;

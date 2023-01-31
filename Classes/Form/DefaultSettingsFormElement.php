@@ -35,14 +35,17 @@ class DefaultSettingsFormElement extends AbstractFormElement
      */
     public function render(): array
     {
-        $table = $this->data['parameterArray']['fieldConf']['config']['table'];
-
+        $table   = $this->data['parameterArray']['fieldConf']['config']['table'];
         $content = '';
 
-        $namePre = str_replace('[default_settings_', '[default_settings][', $this->data['parameterArray']['itemFormElName']);
+        $namePre = str_replace(
+            '[default_settings_',
+            '[default_settings][',
+            $this->data['parameterArray']['itemFormElName']
+        );
 
         // This fails
-//        $namePre  = 'data' . $this->data['elementBaseName'];
+        // $namePre  = 'data' . $this->data['elementBaseName'];
 
         $uid = (int) $this->data['databaseRow']['uid'];
 

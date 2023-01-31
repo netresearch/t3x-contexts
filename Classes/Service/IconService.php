@@ -20,7 +20,6 @@ use TYPO3\CMS\Core\SingletonInterface;
  */
 class IconService implements SingletonInterface
 {
-
     /**
      * Add a "contexts" icon to the standard page/content element item
      * when we have a configuration.
@@ -35,8 +34,10 @@ class IconService implements SingletonInterface
      */
     public function postOverlayPriorityLookup(string $table, array $row, array &$status, string $iconName): string
     {
-        if ((isset($row['tx_contexts_enable']) && $row['tx_contexts_enable'] !== '') ||
-            (isset($row['tx_contexts_disable']) && $row['tx_contexts_disable'] !== '')) {
+        if (
+            (isset($row['tx_contexts_enable']) && $row['tx_contexts_enable'] !== '') ||
+            (isset($row['tx_contexts_disable']) && $row['tx_contexts_disable'] !== '')
+        ) {
             $status['contexts'] = true;
             return 'extensions-contexts-status-overlay-contexts';
         }

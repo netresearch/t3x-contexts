@@ -20,6 +20,7 @@ use Netresearch\Contexts\ContextException;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\Element\TextElement;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 use function is_array;
 
 /**
@@ -57,7 +58,8 @@ class CombinationFormElement extends AbstractFormElement
         $unknownTokens = [];
 
         foreach ($tokens as $token) {
-            if (is_array($token)
+            if (
+                is_array($token)
                 && $token[0] === LogicalExpressionEvaluator::T_VAR
             ) {
                 $contexts = Container::get()->initAll();
@@ -73,7 +75,8 @@ class CombinationFormElement extends AbstractFormElement
                 if (!$found) {
                     $notFound[] = $token[1];
                 }
-            } elseif (is_array($token)
+            } elseif (
+                is_array($token)
                 && ($token[0] === LogicalExpressionEvaluator::T_UNKNOWN)
             ) {
                 $unknownTokens[] = $token[1];
@@ -92,7 +95,9 @@ HTML;
             $notFoundText = implode(', ', $notFound);
             $html .= <<<HTML
 <p>
-    {$GLOBALS['LANG']->sL('LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:aliasesNotFound')}: $notFoundText
+    {$GLOBALS['LANG']->sL(
+        'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:aliasesNotFound'
+    )}: $notFoundText
 </p>
 HTML;
         }
@@ -101,7 +106,9 @@ HTML;
             $unknownTokensText = implode(', ', $unknownTokens);
             $html .= <<<HTML
 <p>
-    {$GLOBALS['LANG']->sL('LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:unknownTokensFound')}: $unknownTokensText
+    {$GLOBALS['LANG']->sL(
+        'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:unknownTokensFound'
+    )}: $unknownTokensText
 </p>
 HTML;
         }

@@ -18,6 +18,7 @@ use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\EnforceableQueryRestrictionInterface;
 use TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionInterface;
+
 use function count;
 use function defined;
 
@@ -66,9 +67,9 @@ class ContextRestriction implements QueryRestrictionInterface, EnforceableQueryR
                             (string) $context->getUid()
                         );
                         $disableConstraints[] = 'NOT ' . $expressionBuilder->inSet(
-                                $flatColumns[0],
-                                (string) $context->getUid()
-                            );
+                            $flatColumns[0],
+                            (string) $context->getUid()
+                        );
                     }
                     $constraints[] = $expressionBuilder->orX(
                         ...$enableConstraints

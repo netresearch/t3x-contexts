@@ -20,7 +20,6 @@ use TYPO3\CMS\Core\ExpressionLanguage\AbstractProvider;
  */
 class ContextConditionProvider extends AbstractProvider
 {
-
     /**
      * ContextConditionProvider constructor.
      * @return void
@@ -29,5 +28,4 @@ class ContextConditionProvider extends AbstractProvider
     {
         $this->expressionLanguageProviders[] = ContextFunctionsProvider::class;
     }
-
 }

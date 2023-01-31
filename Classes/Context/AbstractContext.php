@@ -18,6 +18,7 @@ use PDO;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+
 use function array_key_exists;
 use function is_array;
 
@@ -158,9 +159,9 @@ abstract class AbstractContext
     protected function getConfValue(
         string $fieldName,
         string $default = null,
-        string $sheet   = 'sDEF',
-        string $lang    = 'lDEF',
-        string $value   = 'vDEF'
+        string $sheet = 'sDEF',
+        string $lang = 'lDEF',
+        string $value = 'vDEF'
     ): ?string {
         if (!isset($this->conf['data'][$sheet][$lang])) {
             return $default;
@@ -192,13 +193,17 @@ abstract class AbstractContext
             // database row instead of relying on the tx_contexts_settings
             // table
             $arFlatColumns = Configuration::getFlatColumns(
-                $table, $setting
+                $table,
+                $setting
             );
 
-            if (isset($arRow[$arFlatColumns[0]], $arRow[$arFlatColumns[1]])
-            ) {
+            if (isset($arRow[$arFlatColumns[0]], $arRow[$arFlatColumns[1]])) {
                 return Setting::fromFlatData(
-                    $this, $table, $setting, $arFlatColumns, $arRow
+                    $this,
+                    $table,
+                    $setting,
+                    $arFlatColumns,
+                    $arRow
                 );
             }
         }
@@ -405,7 +410,8 @@ abstract class AbstractContext
     protected function getSession()
     {
         return $GLOBALS['TSFE']->fe_user->getKey(
-            'ses', 'contexts-' . $this->uid . '-' . $this->tstamp
+            'ses',
+            'contexts-' . $this->uid . '-' . $this->tstamp
         );
     }
 
@@ -425,7 +431,9 @@ abstract class AbstractContext
 
         /* @var TypoScriptFrontendController $GLOBALS['TSFE'] */
         $GLOBALS['TSFE']->fe_user->setKey(
-            'ses', 'contexts-' . $this->uid . '-' . $this->tstamp, $bMatch
+            'ses',
+            'contexts-' . $this->uid . '-' . $this->tstamp,
+            $bMatch
         );
         $GLOBALS['TSFE']->fe_user->storeSessionData();
         return $bMatch;

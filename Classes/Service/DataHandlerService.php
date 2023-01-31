@@ -18,6 +18,7 @@ use PDO;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 use function array_key_exists;
 use function count;
 use function is_array;
@@ -53,7 +54,8 @@ class DataHandlerService
         string $id,
         DataHandler $reference
     ): void {
-        if ($table === 'tx_contexts_contexts'
+        if (
+            $table === 'tx_contexts_contexts'
             && isset($incomingFieldArray['default_settings'])
             && is_array($incomingFieldArray['default_settings'])
         ) {

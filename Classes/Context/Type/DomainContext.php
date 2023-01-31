@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
+
 use function strlen;
 
 /**
@@ -54,7 +55,8 @@ class DomainContext extends AbstractContext
             return $domain === $curHost;
         }
 
-        if (substr($domain, 1) === $curHost
+        if (
+            substr($domain, 1) === $curHost
             || substr($curHost, -strlen($domain) + 1) === substr($domain, 1)
         ) {
             return true;

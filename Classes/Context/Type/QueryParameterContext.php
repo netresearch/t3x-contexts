@@ -15,6 +15,7 @@ use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Service\FrontendControllerService;
 use RuntimeException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 use function array_key_exists;
 use function count;
 use function in_array;

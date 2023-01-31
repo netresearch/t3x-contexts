@@ -70,8 +70,9 @@ HTML;
         $uid = (int) $this->data['databaseRow']['uid'];
 
         $visibleContexts = 0;
+
+        /* @var AbstractContext $context */
         foreach ($contexts as $context) {
-            /* @var AbstractContext $context */
             if ($context->getDisabled() || $context->getHideInBackend()) {
                 continue;
             }
@@ -79,17 +80,27 @@ HTML;
             ++$visibleContexts;
             $contSettings = '';
             $bHasSetting = false;
+
             foreach ($settings as $settingName => $config) {
                 $setting = $uid
-                    ? $context->getSetting($this->data['tableName'], $settingName, $uid, $this->data['databaseRow'])
+                    ? $context->getSetting(
+                        $this->data['tableName'],
+                        $settingName,
+                        $uid,
+                        $this->data['databaseRow']
+                    )
                     : null;
 
                 $bHasSetting = $bHasSetting || ($setting !== null);
                 $contSettings .= '<td class="tx_contexts_setting">'
                     . '<select name="' . $namePre . '[' . $context->getUid() . '][' . $settingName . ']">'
-                        . '<option value="">n/a</option>'
-                        . '<option value="1"' . ($setting && $setting->getEnabled() ? ' selected="selected"' : '') . '>Yes</option>'
-                        . '<option value="0"' . ($setting && !$setting->getEnabled() ? ' selected="selected"' : '') . '>No</option>'
+                    . '<option value="">n/a</option>'
+                    . '<option value="1"'
+                    . ($setting && $setting->getEnabled() ? ' selected="selected"' : '')
+                    . '>Yes</option>'
+                    . '<option value="0"'
+                    . ($setting && !$setting->getEnabled() ? ' selected="selected"' : '')
+                    . '>No</option>'
                     . '</select></td>';
             }
 
@@ -168,7 +179,10 @@ HTML;
     protected function getClickMenu(string $str, string $table, $uid = 0): ?string
     {
         return BackendUtility::wrapClickMenuOnIcon(
-            $str, $table, $uid, true
+            $str,
+            $table,
+            $uid,
+            true
         );
     }
 

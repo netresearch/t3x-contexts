@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
+
 use function count;
 use function in_array;
 
@@ -38,7 +39,6 @@ class HttpHeaderContext extends AbstractContext
         // check, if header exists in HTTP request
         foreach ($_SERVER as $header => $value) {
             if (strtolower($header) === $httpHeaderName) {
-
                 // header exists - check if any configured values match
                 return $this->invert($this->storeInSession(
                     $this->matchValues($value)

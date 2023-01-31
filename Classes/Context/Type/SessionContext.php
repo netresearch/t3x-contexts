@@ -33,7 +33,8 @@ class SessionContext extends AbstractContext
     {
         /* @var TypoScriptFrontendController $GLOBALS['TSFE'] */
         $session = $GLOBALS['TSFE']->fe_user->getKey(
-            'ses', $this->getConfValue('field_variable')
+            'ses',
+            $this->getConfValue('field_variable')
         );
 
         return $this->invert($session !== null);

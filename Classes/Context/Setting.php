@@ -77,7 +77,10 @@ final class Setting
      */
     public static function fromFlatData(
         AbstractContext $context,
-        $table, $setting, $arFlatColumns, $arRow
+        $table,
+        $setting,
+        $arFlatColumns,
+        $arRow
     ): ?Setting {
         $bDisabled = str_contains(
             ',' . $arRow[$arFlatColumns[0]] . ',',

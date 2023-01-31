@@ -30,10 +30,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @author     André Hähnel <andre.haehnel@netresearch.de>
  */
-class MatchesViewHelper
-    extends AbstractViewHelper
+class MatchesViewHelper extends AbstractViewHelper
 {
-
     /**
      * Initializes arguments (attributes)
      *
@@ -42,7 +40,10 @@ class MatchesViewHelper
     public function initializeArguments(): void
     {
         $this->registerArgument(
-            'alias', 'string', 'Context alias name', true
+            'alias',
+            'string',
+            'Context alias name',
+            true
         );
     }
 

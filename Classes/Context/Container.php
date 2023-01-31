@@ -17,6 +17,7 @@ use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\ContextException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 use function count;
 
 /**
@@ -202,7 +203,8 @@ class Container extends ArrayObject
 
         /** @var AbstractContext $context */
         foreach ($this as $context) {
-            if (($context->getUid() === $uidOrAlias)
+            if (
+                ($context->getUid() === $uidOrAlias)
                 || ($context->getAlias() === strtolower((string) $uidOrAlias))
             ) {
                 return $context;
