@@ -7,8 +7,15 @@
  * LICENSE file that was distributed with this source code.
  */
 
+declare(strict_types=1);
 
-//prevent xml error for new records
+defined('TYPO3_MODE') || die();
+
+/**
+ * TCA override for tx_contexts_contexts table
+ */
+
+// Prevent xml error for new records
 
 \Netresearch\Contexts\Api\Configuration::registerContextType(
     'default',
@@ -23,24 +30,28 @@
     \Netresearch\Contexts\Context\Type\DomainContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Domain.xml'
 );
+
 \Netresearch\Contexts\Api\Configuration::registerContextType(
     'getparam',
     'GET parameter',
     \Netresearch\Contexts\Context\Type\QueryParameterContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/GetParam.xml'
 );
+
 \Netresearch\Contexts\Api\Configuration::registerContextType(
     'ip',
     'IP',
     \Netresearch\Contexts\Context\Type\IpContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Ip.xml'
 );
+
 \Netresearch\Contexts\Api\Configuration::registerContextType(
     'httpheader',
     'HTTP header',
     \Netresearch\Contexts\Context\Type\HttpHeaderContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/HttpHeader.xml'
 );
+
 \Netresearch\Contexts\Api\Configuration::registerContextType(
     'combination',
     'Logical context combination',

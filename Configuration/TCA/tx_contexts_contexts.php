@@ -7,17 +7,15 @@
  * LICENSE file that was distributed with this source code.
  */
 
-
-/**
- * TCA for tx_contexts_contexts table
- */
-
 declare(strict_types=1);
 
 defined('TYPO3_MODE') or die();
 
 $lf = 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf';
 
+/**
+ * TCA for tx_contexts_contexts table
+ */
 return [
     'ctrl' => [
         'title'     => $lf . ':tx_contexts_contexts',

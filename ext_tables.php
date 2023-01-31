@@ -22,11 +22,11 @@ call_user_func(
             'tx_contexts_contexts'
         );
 
-        $GLOBALS['TBE_STYLES']['skins']['contexts'] = array (
+        $GLOBALS['TBE_STYLES']['skins']['contexts'] = [
             'name' => 'contexts',
-            'stylesheetDirectories' => array(
+            'stylesheetDirectories' => [
                 'css' => 'EXT:contexts/Resources/Public/StyleSheet'
-            )
-        );
+            ]
+        ];
     }
 );

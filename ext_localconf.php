@@ -40,18 +40,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Core\Imaging\IconFactory::c
     = \Netresearch\Contexts\Service\IconService::class;
 
 
-// Register icons
-$iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-    \TYPO3\CMS\Core\Imaging\IconRegistry::class
-);
-
-$iconRegistry->registerIcon(
-    'extensions-contexts-status-overlay-contexts',
-    \TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider::class,
-    ['source' => 'EXT:contexts/Resources/Public/Icons/overlay-contexts.png']
-);
-
-
 // Register custom form elements
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][12345] = [
     'nodeName' => 'defaultSettingsFormElement',
