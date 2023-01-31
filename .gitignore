@@ -1,3 +1,5 @@
-.idea
-
-README.html
+composer.lock
+.idea/
+vendor/
+public/
+.phpunit.result.cache
