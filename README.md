@@ -1,3 +1,10 @@
+![Latest version](https://img.shields.io/github/v/release/netresearch/t3x-contexts?sort=semver)
+![License](https://img.shields.io/github/license/netresearch/t3x-contexts)
+![PHPStan](https://github.com/netresearch/t3x-contexts/actions/workflows/phpstan.yml/badge.svg)
+![PHPCodeSniffer](https://github.com/netresearch/t3x-contexts/actions/workflows/phpcs.yml/badge.svg)
+![CodeQL](https://github.com/netresearch/t3x-contexts/actions/workflows/codeql-analysis.yml/badge.svg)
+
+
 # Multi-channel contexts
 
 Show and hide pages and content elements based on configurable "contexts".
