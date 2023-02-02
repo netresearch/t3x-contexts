@@ -19,7 +19,6 @@
 - Michael Schams
 - Rico Sonntag
 - Sebastian Mendel
-- Sebastian Mendel
 - Thomas Schöne
 - Tobias Hein
 - copitz
