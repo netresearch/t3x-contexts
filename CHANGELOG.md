@@ -1,0 +1,269 @@
+# 3.0.0
+
+## FEATURE
+
+- 1fbebbd [FEATURE] Backport TSFE createHashBase hook to TYPO3 CMS 4.5
+
+## TASK
+
+- f9ecc97 [TASK] PHP 7.3
+- 62b83a0 [TASK] increase version
+- b466da8 [TASK] rm logger in static methods
+- 402031d [TASK] run tests
+- 93b706f [TASK] Context Icons in PageTree
+- 4bda071 [TASK] run Unit Tests
+- f0b1801 [TASK] ContextRestriction
+- 07fd463 [TASK] rm unused method
+- 4cfd4d7 [TASK] Be more specific with ands and ors
+- 3537cb3 [TASK] TS Condition Documentation
+- 1ab03a8 [TASK] replace TS user_function with ExpressionLanguage
+- 60678bd [TASK] mv checkAlternativeIdMethods-PostProc to middleware
+- b2c1cd5 [TASK] TYPO3 v9 logging and dbal
+- 1a72e90 [TASK] Add "renderType" to contexts "type"
+- d9c9dd4 [TASK] set stability to stable, cleanup dependencies
+- 7fb5b33 [TASK] add functional tests
+- d81ef48 [TASK] Increase number of context settings
+- 9586aa2 [TASK] set version number
+- 93aac4d [TASK] Make code PSR-2 compatible
+- 7579e42 [TASK] Refactored code to be fully namespace compatible
+- 6aa05e1 [TASK] Remove PHP declare construct from files
+- eb0853f [TASK] Add overlay icon on disabled contexts
+- 4990837 [TASK] Allow context creation on any page
+- ebfe1ed [TASK] Match contexts after URI path mapping
+- f9f44f7 [TASK] Remove PHP declare construct from files
+- 6f08662 [TASK] Add overlay icon on disabled contexts
+- 3dab57d [TASK] Update documentation
+- d197383 [TASK] Implement new context type: HTTP header
+
+## BUGFIX
+
+- 4cbbf3c [BUGFIX] return  for non contexts icons
+- 506bab0 [BUGFIX] container initialization
+- 47089e2 [BUGFIX] Return the initial icon instead of nothing
+- f320112 [BUGFIX] Rename travis build folder to actual extension key
+- 8c2b778 [BUGFIX] Make context fields null by default
+- 7b80770 [BUGFIX] Allow for context registration independent of extension loading order
+
+## MISC
+
+- fa043b7 Add github workflows
+- 6161132 Fix phpstan issues
+- 1a102c4 CS
+- 0f3852e Update composer.json and .gitignore
+- 5a201c2 Move icons into Icons.php
+- cbb7eb0 Fixes #23: Wrong doktype usage
+- 61dd188 Rework code for TYPO v11
+- f6157fa fix composer.json
+- d5bda5b Create LICENSE
+- 4784d32 [CLEANUP] rm unsed code
+- a0604b0 [CLEANUP] rm debug stuff
+- 91f2b03 [WIP] disable PageService
+- a933ddf Fixed wrong tests for QueryParameterContext
+- 3b88d1a Reworked get parameter context
+- 21d7bea Remove obsolete inclusion of TCA file (fixes #14)
+- fd5fbd7 Set empty context type key to default (fixes #12)
+- 0879f67 [FIX] show content in TYPO3 7/8
+- 8802b96 [FIX] remove backslash from class name
+- 5cd9d64 [Improvement] refactor unittests
+- 5d87aa3 refactor configuration class from static variables to tca arrays
+- 6b2cf46 fix InstallService
+- 620fb6c fix context icon overlay
+- 098a849 resolve errors during the installation process
+- e105169 fix enableContextsForTable
+- b39a29a set required typo3/php version
+- e9979ce fix click menu  in RecordSettingsFormElement
+- 6469d0f register contexts class map
+- 3fe3685 fix namespace vendor to netresearch, mark todos
+- c56106b Version: 0.5.1
+- 613d42b Switched to typo3-repository-client 1.2.0
+- add83a1 Restore TRAVIS_BUILD_DIR after moving its contents to typo3conf/ext/contexts
+- 715ee36 Moved phpunit.xml to root dir, install typo3-repository-client before TER upload
+- 2eeda1e Added deployment to TER to travis
+- 1e9ace6 Version: 0.5.0
+- 1df4272 TYPO-4217: pay attention on additionalCacheHashParams when calculating the cache hash
+- d5f5400 MYC-869: use getIndpEnv to determine REMOTE_ADDR, allow reverse proxys to work
+- b4041ef Added build status image
+- c4a5a9a Made unit tests run again
+- 25bfa9b Lower T_VAR token values because aliases are lowered as well
+- 503d024 Set zend.multibyte and fixed wrong symlink source
+- 07fde59 Added typo3 sources before running tests
+- 8844b6e Create .travis.yml
+- a02f1e0 mark test classes as internal
+- b6a77b4 TYPOC-93: prepare release of 0.4.3
+- a7945ae TYPOC-93: do not save flat settings into tx_contexts_settings
+- f3f12af TYPOC-93: read flat setting values from record, not from settings table
+- 5dde307 TYPOC-93: Add flat settings as passthrough TCA fields
+- 696962c Version: 0.4.2
+- f40e637 TYPO-3419: Fix bug. Check if tfse is a instance of tslib_fe.
+- e7a0a86 add buidl.xml
+- 9cb821e AGP-703: release version 0.4.1
+- d6287f1 AGP-703: add changelog entry
+- ea05dfa AGP-703: Fix context negation
+- bf98268 AGP-703: fix CS
+- 10a9a7f AGP-497: add context icon to page/content elements
+- 976b604 AGP-485: aliases are lowercase now
+- 0c8e756 AGP-484: allow create contexts in any page
+- 062d9e1 AGP-420: fix CS
+- 6a9d04c AGP-420: allow - and _ in alias names; fix tests
+- 895e00c AGP-422: Allow hiding contexts in the backend
+- f6dcd27 AGP-418: Fix logical context combinations used in typoscript
+- 7e30289 AGP-307: prevent fe_user exception on eid calls
+- 1c72cbb show which contexts are active in devlog
+- a97d4a7 AGP-342: add context to check existance of a session variable
+- ae782a8 AGP-287: remove empty line before contexts table
+- 0d508cc AGP-287: display contexts in access tab
+- 235b517 AGP-273: TypoScript connector to check if a context matches
+- 3429d5e AGP-269: fluid view helper to check if a context matches
+- 4db2b2e Fix PHP warning when saving content element
+- a3f6920 TYPOC-90: release 0.4.0
+- daf3b02 TYPOC-88: Show message when no contexts defined
+- d947560 TYPOC-88: Prettify contexts list in TCA (page/content records)
+- fc171ab TYPOC-74: contexts is compatible with 4.5 now
+- 32d60af TYPOC-75: GET parameters get appended to all URLs even when they are stored in session
+- 8a951a8 TYPOC-89: update changelog
+- 4465071 TYPOC-83: release of 0.3.1
+- 3ac6ef4 TYPOC-83: prepare release 0.3.1
+- 70a7207 fix test, remove fileinclude
+- f499009 TYPOC-80: TER does not need manual.sxw anymore
+- ad32fb6 TYPOC-73 make contexts compatible with typo3 4.5
+- 186d3b1 TYPOC-77, #49536: No need to use enablecolumns
+- 6909278 TYPOC-72: Release contexts 0.3.0
+- e163246 TYPOC-71: rename extension title to "Multi-channel contexts"
+- 81dc8c4 TYPOC-34: Support "extend to subpages" in 4.7, 6.0, 6.1 and 6.2
+- 2ec865a TYPOC-57: load interface only for TYPO3 < 6.2
+- 81a3408 TYPOC-60: mention multi-channel support
+- 3b72857 TYPOC-60: add Settings.yml for custom typo3.org documentation rendering
+- 7eca259 Revert "TYPOC-60: move README.rst to Documentation/Index.rst for typo3.org compatibility"
+- bbcc830 TYPOC-60: version 0.2.2
+- 875e17d TYPOC-60: old manual.sxw that links to the new documentation
+- 38d42d2 TYPOC-60: move README.rst to Documentation/Index.rst for typo3.org compatibility
+- 1e32fd1 TYPOC-58: release version 0.2.0
+- 1ff1205 TYPOC-53: make abstract test use testbase
+- 965d93f TYPOC-53: switched from windows to unix line endings
+- a661d5c TYPOC-53: adjusted the tests to no longer use the callback for getConfValue
+- c51f2fb TYPOC-53: - added the parameter $arContexts to Tx_Contexts_Context_Abstract::getDependencies() - removed the unittest Tx_Contexts_Context_Type_LogicalExpressionEvaluatorTest::testRunWithExceptionUnknownVariable - added the getConfValueCallback to IpTest.php
+- eaf44df TYPOC-53: CS
+- 1d50bb6 TYPOC-53: use disabled as disabled-field
+- 907660e TYPOC-53: fixed the check for an existing dependend context
+- c2e32ff TYPOC-53: added tests for the match method of the combination type
+- c6a438f TYPOC-53: added a disable checkbox for the contexts
+- 3efbbef TYPOC-56: CSH text for combination
+- d5a9d78 TYPOC-48: Add missing brackets
+- d74278d TYPOC-48: Use constsnts
+- 50d88c4 TYPOC-48: Fix CS and missing phpdoc
+- b1736be TYPOC-48: Fix missing type hints
+- f0b8572 TYPOC-48: Fix CS and missing phpdoc
+- 0771b38 TYPOC-48: Fix missing commata in SQL
+- 05ab101 TYPOC-48: CS
+- 90ce1eb TYPOC-48: Add missing phpdocs, CS
+- b16a837 TYPOC-48: move use_session and invert options to TCA
+- 35da825 TYPOC-55: allow any value in GetParam
+- 67c050d TYPOC-15: use timestamp in session variable name
+- ad2c50d TYPOC-15 rename session name
+- 5494d5d TYPOC-15 add tests for getSession
+- feb1103 TYPOC-28: fix ip tests
+- 280e509 CS
+- 5e577f6 TYPOC-21: - the expression field is now required - extended the check to proof for unknown tokens
+- e7a5500 TYPOC-21: prevented the front end from crashing
+- 62a4f77 TYPOC-21: adjusted style for the info message
+- 7d56c2f TYPOC-21: added a check for the combinations showing non existant aliases
+- f83f98f TYPOC-21: removed unnecessary method findInContainer
+- 23a5557 TYPOC-21: fixed the problem with the context combinations not working
+- fc4dc29 TYPOC-12: talk about admin and mobile
+- 5bfb0cf TYPOC-48: added generic invert option for the different context types
+- f0fff06 TYPOC-14: highlight rules that are active
+- 28f1443 TYPOC-20: remove usergroup label
+- 7ec341e TYPOC-20 remove UserGroup files from  context
+- e2e5479 TYPOC-12: fixed a typo
+- 2fc5fd1 TYPOC-12: documentation for contexts extension
+- 9e56e46 TYPOC-21: fix docblock, CS
+- 91e4fce TYPOC-21: fix expression field association
+- ae59449 TYPOC-15: CS
+- 7d9895d TYPOC-15: load and store context match in session for GetParam
+- 57d2ccf TYPOC-42: Rewrote data provider to also provide the expected rebuilt expressions
+- a1fe752 TYPOC-20  unregister context usergroup because currently no fe user initialized
+- 32ede74 TYPOC-20  add functionality
+- 2e48032 TYPOC-28: talk about wildcards
+- 1a8ff3c TYPOC-28: add *-IP tests
+- e6aadd1 TYPOC-28: add tests for match() and fix match()
+- 6b8efff add phpunit.xml so we get proper local coverage only
+- fe7b28e TYPOC-28: filter IP only once, not repeatedly
+- 5bfa231 TYPOC-28: docblocks
+- bf41f83 TYPOC-28: CS
+- 0768e2d TYPOC-22: make test run on TYPO3 6.0+
+- 5907095 TYPOC-20 add initial usergroup to context
+- a2ef7a9 Fix parameter of abstract method "match"
+- 89a8799 TYPOC-42 add rebuild test
+- 1adbeaf TYPOC-21 register logical expression combiner
+- 03d4f44 TYPOC-42 add tests for evaluator
+- dfff925 TYPOC-42 add tests for evaluator
+- 7e2ff1e TYPOC-42 add tests for evaluator
+- c6d2e43 TYPOC-42 add Dependencies test
+- 4ae83a4 TYPOC-41: Removed session storage and use linkVars to transport params and values across requests
+- 1a5c23e TYPOC-39: Changed Ext-Icon
+- 3cf979c TYPOC-37: Several refactorings to make code easier to understand (fi. fields to settings)
+- 6be6287 TYPOC-38: Implemented records API
+- 6187ba5 TYPOC-37: Introduced flat settings feature for all settings and changed the configuration API accordingly
+- ecf785c TYPOC-35: add "new" icon to context menu; get rid of singular label (records have to be singular anyway)
+- 70a5f3e TYPOC-35: make clickmenu work
+- 1c4c750 TYPOC-28 add docblock
+- 98a9ed2 TYPOC-28 fix flexform fields
+- dec65b5 TYPOC-28 add tests
+- 65ac75d TYPOC-28 add ip configuration to context
+- ae2be48 TYPOC-35: show context ID and icon
+- 073504c TYPOC-36: fix disable rules when user has no context
+- 5385b9f TYPOC-36: move column registration to ext_contexts.php so it works on 4.7, too
+- 03a6c5e TYPOC-36: get rid of column constants, they are too long and not often used #2
+- ab4ade4 TYPOC-36: get rid of column constants, they are too long and not often used
+- b27d3ca TYPOC-36: create clean SQL when no contexts exist
+- 6e23818 TYPOC-21: Added combination type with LogicalExpressionEvaluator
+- 7c3abde TYPOC-16: CS and wrapped the dependent contexts in an object along with the matching result
+- 9b2a61e TYPOC-36: fix 4.7 interface include error
+- 90bb666 TYPOC-4: enable/disable menu items based on context settings
+- d322aac Fix for TYPO3 4.7
+- 9b5d16b TYPOC-32, TYPOC-31: serialize menu visibility, fix serialization bug
+- 1226bea TYPOC-32: CS
+- 0f649d5 TYPOC-27: let contexts influence cache hash calculation
+- f0ed83f TYPOC-29: restrict access to pages via contexts
+- 89a31f2 TYPOC-3: remove NULL values to make queries simpler
+- 040203d TYPOC-3: enableFields-Support
+- dbc52e5 TYPOC-19: add GetParam context
+- 020da8b TYPOC-19: rename language label key
+- dba14cd TYPOC-16: load contexts and match them when initializing the frontend user
+- b0364fe TYPOC-16: register types differently in frontend and backend
+- ca65a55 TYPOC-16: move db getter to configuration class
+- 4d457dc TYPOC-16: CS
+- 97811eb TYPOC-16: load context definitions in frontend and backend
+- 9601276 TYPOC-24: load context configuration
+- 4d78d91 TYPOC-11: Added method that saves the enableFields settings to the correspondent tables
+- 991b668 TYPOC-24: Moved default context type to Type package TYPOC-24: Made factory load class files when specified TYPOC-12: Added documentation/CS for Classes/Context/Abstract.php and Classes/Context/Factory.php
+- a3b2c7a TYPOC-11: Changed behaviour to have optional but fixed enableFields (including an EM hook to add those to the DB if necessary)
+- ca32af3 TYPOC-24: add type_conf field to db
+- 169e675 TYPOC-24: CS
+- 41ca073 TYPOC-24: reload form when context type changed
+- 64e42d0 TYPOC-24: CS
+- 360a6dc TYPOC-24: make compatible with TYPO3 6.0
+- 940982c TYPOC-24: registering context types with first dummy type
+- f185db2 TYPOC-17: Refactored rules to settings
+- 180d09b TYPOC-18: description of contexts in README
+- 353342f Initial import
+
+## Contributors
+
+- Achim Fritz
+- Andre Hähnel
+- Axel Kummer
+- Benni Mack
+- Christian Opitz
+- Christian Weiske
+- David Steeb
+- Marian Pollzien
+- Mathias Brodala
+- Michael Schams
+- Rico Sonntag
+- Sebastian Mendel
+- Sebastian Mendel
+- Thomas Schöne
+- Tobias Hein
+- copitz
+
