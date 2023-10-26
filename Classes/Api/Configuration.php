@@ -240,13 +240,13 @@ class Configuration
                 );
         } else {
             $recordSettingsConf = [
-                'exclude' => 1,
-                'label' => 'LLL:' . self::LANG_FILE . ':tabname',
-                'config' => [
-                    'type' => 'user',
+                'exclude' => true,
+                'label'   => 'LLL:' . self::LANG_FILE . ':tabname',
+                'config'  => [
+                    'type'       => 'user',
                     'renderType' => 'recordSettingsFormElement',
-                    'size' => 30,
-                    'settings' => $settings,
+                    'size'       => 30,
+                    'settings'   => $settings,
                 ],
             ];
             $arColumns = [
@@ -271,7 +271,7 @@ class Configuration
                 case 'pages':
                     ExtensionManagementUtility::addToAllTCAtypes(
                         $table,
-                        self::RECORD_SETTINGS_COLUMN,
+                        '--div--;LLL:' . self::LANG_FILE . ':tabname,' . self::RECORD_SETTINGS_COLUMN,
                         implode(
                             ',',
                             [
@@ -282,20 +282,23 @@ class Configuration
                         ),
                         'after:fe_group'
                     );
+
                     ExtensionManagementUtility::addToAllTCAtypes(
                         $table,
-                        self::RECORD_SETTINGS_COLUMN,
+                        '--div--;LLL:' . self::LANG_FILE . ':tabname,' . self::RECORD_SETTINGS_COLUMN,
                         (string) PageRepository::DOKTYPE_SYSFOLDER,
-                        'after:hidden'
+                        'after:editlock'
                     );
+
                     break;
                 case 'tt_content':
                     ExtensionManagementUtility::addToAllTCAtypes(
                         $table,
-                        self::RECORD_SETTINGS_COLUMN,
+                        '--div--;LLL:' . self::LANG_FILE . ':tabname,' . self::RECORD_SETTINGS_COLUMN,
                         '',
                         'after:fe_group'
                     );
+
                     break;
             }
         }
@@ -311,15 +314,15 @@ class Configuration
                 );
         } else {
             $defaultSettingsConf = [
-                'exclude' => 1,
-                'label' => $GLOBALS['TCA'][$table]['ctrl']['title'],
-                'config' => [
-                    'type' => 'user',
-                    'size' => 30,
+                'exclude' => true,
+                'label'   => $GLOBALS['TCA'][$table]['ctrl']['title'],
+                'config'  => [
+                    'type'       => 'user',
+                    'size'       => 30,
                     'renderType' => 'defaultSettingsFormElement',
-                    'table' => $table,
-                    'settings' => $settings
-                ]
+                    'table'      => $table,
+                    'settings'   => $settings,
+                ],
             ];
 
             ExtensionManagementUtility::addTCAcolumns(
