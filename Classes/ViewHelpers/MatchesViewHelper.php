@@ -15,7 +15,7 @@ use Netresearch\Contexts\Api\ContextMatcher;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * context match view helper class.
+ * Context match view helper class.
  *
  * Example:
  *
@@ -28,7 +28,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *         </f:if>
  *     </div>
  *
- * @author     André Hähnel <andre.haehnel@netresearch.de>
+ * @author  André Hähnel <andre.haehnel@netresearch.de>
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class MatchesViewHelper extends AbstractViewHelper
 {
@@ -39,6 +42,8 @@ class MatchesViewHelper extends AbstractViewHelper
      */
     public function initializeArguments(): void
     {
+        parent::initializeArguments();
+
         $this->registerArgument(
             'alias',
             'string',
@@ -54,9 +59,11 @@ class MatchesViewHelper extends AbstractViewHelper
      */
     public function render(): int
     {
-        if (isset($this->arguments['alias'])) {
-            return (int) ContextMatcher::getInstance()
-                ->matches($this->arguments['alias']);
+        /** @var null|string $alias */
+        $alias = $this->arguments['alias'] ?? null;
+
+        if ($alias !== null) {
+            return (int) ContextMatcher::getInstance()->matches($alias);
         }
         return 0;
     }

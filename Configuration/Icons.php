@@ -9,9 +9,11 @@
 
 declare(strict_types=1);
 
+use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
+
 return [
     'extensions-contexts-status-overlay-contexts' => [
-        'provider' => \TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider::class,
+        'provider' => BitmapIconProvider::class,
         'source'   => 'EXT:contexts/Resources/Public/Icons/overlay-contexts.png',
     ],
 ];

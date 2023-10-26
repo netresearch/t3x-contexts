@@ -22,8 +22,10 @@ use function count;
 /**
  * API with methods to retrieve context information for records
  *
- * @author     Christian Opitz <christian.opitz@netresearch.de>
- * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
+ * @author  Christian Opitz <christian.opitz@netresearch.de>
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class Record
 {
@@ -36,6 +38,7 @@ class Record
      * @param array  $row   Record array or an uid
      *
      * @return bool
+     *
      * @throws DBALException
      * @throws Exception
      */
@@ -65,6 +68,7 @@ class Record
      * @param array  $row     Record array
      *
      * @return bool
+     *
      * @throws DBALException
      * @throws Exception
      */
@@ -82,7 +86,7 @@ class Record
 
         $uid = (int) $row['uid'];
 
-        /* @var AbstractContext $context */
+        /** @var AbstractContext $context */
         foreach (Container::get() as $context) {
             $rowSetting     = $context->getSetting($table, $setting, $uid);
             $defaultSetting = $context->getSetting($table, $setting, 0);
@@ -107,8 +111,8 @@ class Record
      * @param array  $row     Record array
      *
      * @return null|bool NULL when table has no flat settings or the record
-     *                      doesn't contain the appropriate flat columns
-     *                      boolean otherwise
+     *                   doesn't contain the appropriate flat columns
+     *                   boolean otherwise
      */
     protected static function isSettingEnabledFlat(string $table, string $setting, array $row): ?bool
     {

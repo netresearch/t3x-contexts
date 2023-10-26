@@ -12,11 +12,16 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use function strlen;
 
 /**
  * Matches on the current domain name
+ *
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class DomainContext extends AbstractContext
 {
@@ -27,9 +32,12 @@ class DomainContext extends AbstractContext
      */
     public function match(array $arDependencies = []): bool
     {
-        $curHost     = $_SERVER['HTTP_HOST'];
-        $configValue = $this->getConfValue('field_domains');
-        $arDomains   = $configValue !== null ? explode("\n", $configValue) : [];
+        $curHost   = $_SERVER['HTTP_HOST'];
+        $arDomains = GeneralUtility::trimExplode(
+            "\n",
+            $this->getConfValue('field_domains'),
+            true
+        );
 
         foreach ($arDomains as $domain) {
             if ($this->matchDomain($domain, $curHost)) {

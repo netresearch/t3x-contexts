@@ -23,7 +23,9 @@ use function is_int;
  * An evaluator that tokenizes, parses and evaluates logical expressions
  *
  * @author  Christian Opitz <christian.opitz@netresearch.de>
- * @license http://opensource.org/licenses/gpl-license GPLv2 or later
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class LogicalExpressionEvaluator
 {
@@ -85,9 +87,9 @@ class LogicalExpressionEvaluator
      * Scope container - required to share the scope array
      * between all current scope instances
      *
-     * @var stdClass
+     * @var null|stdClass
      */
-    protected $scopeContainer;
+    protected ?stdClass $scopeContainer = null;
 
     /**
      * Token array: Can contain
@@ -104,7 +106,7 @@ class LogicalExpressionEvaluator
      *
      * @var null|LogicalExpressionEvaluator
      */
-    protected $parentScope;
+    protected ?LogicalExpressionEvaluator $parentScope = null;
 
     /**
      * Set when a negation token was handled and
@@ -126,7 +128,7 @@ class LogicalExpressionEvaluator
      *
      * @var int
      */
-    protected $operator;
+    protected int $operator = self::T_UNKNOWN;
 
     /**
      * Token identifier to token map
@@ -259,9 +261,11 @@ class LogicalExpressionEvaluator
         }
 
         foreach ($this->scopeContainer->scopes as $scope) {
-            $scope->precedenceShiftTokens(
-                [self::T_AND, self::T_XOR, self::T_OR]
-            );
+            $scope->precedenceShiftTokens([
+                self::T_AND,
+                self::T_XOR,
+                self::T_OR,
+            ]);
         }
     }
 
@@ -276,9 +280,9 @@ class LogicalExpressionEvaluator
         $scope = new self();
         $scope->parentScope = $this;
         $scope->scopeContainer = $this->scopeContainer;
+
         $this->scopeContainer->scopes[] = $scope;
-        end($this->scopeContainer->scopes);
-        $this->scopeContainer->keys[] = key($this->scopeContainer->scopes);
+        $this->scopeContainer->keys[] = array_key_last($this->scopeContainer->scopes);
     }
 
     /**

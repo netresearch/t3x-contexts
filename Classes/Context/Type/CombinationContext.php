@@ -21,7 +21,9 @@ use function is_array;
  * Matches when a logical expression with other contexts evaluates to true
  *
  * @author  Christian Opitz <christian.opitz@netresearch.de>
- * @license http://opensource.org/licenses/gpl-license GPLv2 or later
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class CombinationContext extends AbstractContext
 {
@@ -39,14 +41,13 @@ class CombinationContext extends AbstractContext
      * Initialize the evaluator, tokenize the expression and create
      * the dependencies from the variable tokens
      *
-     * @param array $arContexts the available contexts
+     * @param AbstractContext[] $arContexts the available contexts
      *
-     * @return array
+     * @return array<int, bool>
      */
     public function getDependencies(array $arContexts): array
     {
-        $configValue = $this->getConfValue('field_expression') ?? '';
-
+        $configValue = $this->getConfValue('field_expression');
 
         $this->evaluator = new LogicalExpressionEvaluator();
         $this->tokens    = $this->evaluator->tokenize($configValue);

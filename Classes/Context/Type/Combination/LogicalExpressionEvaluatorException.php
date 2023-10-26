@@ -17,7 +17,9 @@ use Exception;
  * Exception for parsing and evaluation errors
  *
  * @author  Christian Opitz <christian.opitz@netresearch.de>
- * @license http://opensource.org/licenses/gpl-license GPLv2 or later
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class LogicalExpressionEvaluatorException extends Exception
 {

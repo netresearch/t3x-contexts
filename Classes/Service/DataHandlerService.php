@@ -27,7 +27,10 @@ use function is_array;
  * Class for TCEmain-hooks: Capture incoming default and record settings
  * and save them to the settings table and the enabled fields
  *
- * @author Christian Opitz <christian.opitz@netresearch.de>
+ * @author  Christian Opitz <christian.opitz@netresearch.de>
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class DataHandlerService
 {

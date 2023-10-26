@@ -9,123 +9,121 @@
 
 declare(strict_types=1);
 
-defined('TYPO3_MODE') or die();
-
-$lf = 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf';
+defined('TYPO3') || die('Access denied.');
 
 /**
  * TCA for tx_contexts_contexts table
  */
 return [
-    'ctrl' => [
-        'title'     => $lf . ':tx_contexts_contexts',
-        'label'     => 'title',
-        'tstamp'    => 'tstamp',
-        'crdate'    => 'crdate',
-        'cruser_id' => 'cruser_id',
+    'ctrl'     => [
+        'title'          => 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts',
+        'label'          => 'title',
+        'tstamp'         => 'tstamp',
+        'crdate'         => 'crdate',
+        'cruser_id'      => 'cruser_id',
         'default_sortby' => 'ORDER BY title',
-        'delete' => 'deleted',
-        'enablecolumns' => [
-            'disabled' => 'disabled'
+        'delete'         => 'deleted',
+        'enablecolumns'  => [
+            'disabled' => 'disabled',
         ],
-        'requestUpdate' => 'type',
-        'adminOnly' => 1,
-        'rootLevel' => -1,
-        'iconfile'  => 'EXT:contexts/Resources/Public/Icons/tx_contexts_contexts.gif',
+        'adminOnly'      => 1,
+        'rootLevel'      => -1,
+        'iconfile'       => 'EXT:contexts/Resources/Public/Icons/tx_contexts_contexts.gif',
     ],
-    'interface' => [
-        'showRecordFieldList' => 'title,alias,type,invert,use_session,disabled,hide_in_backend'
-    ],
-    'columns' => [
-        'title' => [
-            'exclude' => 0,
-            'label' => $lf . ':tx_contexts_contexts.title',
-            'config' => [
+    'columns'  => [
+        'title'            => [
+            'exclude' => false,
+            'label'   => 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.title',
+            'config'  => [
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'required',
-            ]
+            ],
         ],
-        'disabled' => [
-            'exclude' => 0,
-            'label' => $lf . ':tx_contexts_contexts.disable',
-            'config' => [
+        'disabled'         => [
+            'exclude' => false,
+            'label'   => 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.disable',
+            'config'  => [
                 'type' => 'check',
-            ]
+            ],
         ],
-        'hide_in_backend' => [
-            'exclude' => 0,
-            'label' => $lf . ':tx_contexts_contexts.hide_in_backend',
-            'config' => [
+        'hide_in_backend'  => [
+            'exclude' => false,
+            'label'   => 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.hide_in_backend',
+            'config'  => [
                 'type' => 'check',
-            ]
+            ],
         ],
-        'alias' => [
-            'exclude' => 0,
-            'label' => $lf . ':tx_contexts_contexts.alias',
-            'config' => [
+        'alias'            => [
+            'exclude' => false,
+            'label'   => 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.alias',
+            'config'  => [
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'alphanum_x,nospace,unique,lower',
-            ]
+            ],
         ],
-        'type' => [
-            'exclude' => 0,
-            'label' => $lf . ':tx_contexts_contexts.type',
-            'config' => [
-                'type' => 'select',
+        'type'             => [
+            'exclude'  => false,
+            'label'    => 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.type',
+            'config'   => [
+                'type'       => 'select',
                 'renderType' => 'selectSingle',
-//                'items' => array(
-//                    array($lf . ':tx_contexts_contexts.type.select_type', '')
-//                ),
-                'size' => 1,
-                'maxitems' => 1,
-            ]
+                //                'items' => [
+                //                    ['LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.type.select_type', '']
+                //                ],
+                'size'       => 1,
+                'maxitems'   => 1,
+            ],
+            'onChange' => 'reload',
         ],
-        'type_conf' => [
-            'exclude' => 0,
+        'type_conf'        => [
+            'exclude'     => false,
             'displayCond' => 'FIELD:type:REQ:true',
-            'label' => $lf . ':tx_contexts_contexts.type_conf',
-            'config' => [
-                'type' => 'flex',
+            'label'       => 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.type_conf',
+            'config'      => [
+                'type'            => 'flex',
                 'ds_pointerField' => 'type',
-                'ds' => []
-            ]
+                'ds'              => [],
+            ],
         ],
-        'invert' => [
-            'exclude' => 0,
-            'label'   => $lf . ':tx_contexts_contexts.invert',
+        'invert'           => [
+            'exclude' => false,
+            'label'   => 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.invert',
             'config'  => [
                 'type'    => 'check',
-                'default' => 0
-            ]
+                'default' => 0,
+            ],
         ],
-        'use_session' => [
-            'exclude' => 0,
-            'label'   => $lf . ':tx_contexts_contexts.use_session',
+        'use_session'      => [
+            'exclude' => false,
+            'label'   => 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.use_session',
             'config'  => [
                 'type'    => 'check',
-                'default' => 1
-            ]
+                'default' => 1,
+            ],
         ],
         'default_settings' => [
             'config' => [
-                'type' => 'passthrough'
-            ]
-        ]
+                'type' => 'passthrough',
+            ],
+        ],
     ],
-    'types' => [
+    'types'    => [
         '0' => [
             'showitem'
-                => '--div--;' . $lf . ':tx_contexts_contexts.general'
+            => '--div--;' . 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.general'
                 . ',title'
-                . ',--palette--;' . $lf . ':tx_contexts_contexts.visibility;visibility'
+                . ',--palette--;' . 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.visibility;visibility'
                 . ',alias,type,type_conf,invert,'
                 . 'use_session'
-                . ',--div--;' . $lf . ':tx_contexts_contexts.defaults'
-        ]
+                . ',--div--;' . 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.defaults',
+        ],
     ],
     'palettes' => [
-        'visibility' => ['showitem' => 'disabled,hide_in_backend', 'canNotCollapse' => 1]
-    ]
+        'visibility' => [
+            'showitem'       => 'disabled,hide_in_backend',
+            'canNotCollapse' => 1,
+        ],
+    ],
 ];

@@ -19,8 +19,10 @@ use function count;
 /**
  * Matches on the current frontend user IP
  *
- * @author     Andre Hähnel <andre.haehnel@netresearch.de>
- * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
+ * @author  Andre Hähnel <andre.haehnel@netresearch.de>
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class IpContext extends AbstractContext
 {
@@ -51,8 +53,11 @@ class IpContext extends AbstractContext
             return $this->invert(false);
         }
 
-        $configValue = $this->getConfValue('field_ip');
-        $arIpRange   = explode("\n", trim($configValue ?? ''));
+        $arIpRange = GeneralUtility::trimExplode(
+            "\n",
+            $this->getConfValue('field_ip'),
+            true
+        );
 
         if (count($arIpRange) === 1 && $arIpRange[0] === '') {
             return $this->invert(false);

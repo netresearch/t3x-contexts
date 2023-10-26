@@ -174,3 +174,13 @@ The implementation of a context query in TypoScript looks like::
     # do something, it's a mobile browser
 [END]
 ```
+
+
+
+# Testing
+```bash
+composer update
+vendor/bin/phpcs Classes/ --standard=PSR12
+vendor/bin/phpstan analyse --configuration phpstan.neon
+vendor/bin/rector --dry-run
+```

@@ -12,13 +12,14 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Check if a session variable is set or not
  *
- * @author     Andre Hähnel <andre.haehnel@netresearch.de>
- * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
+ * @author  Andre Hähnel <andre.haehnel@netresearch.de>
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class SessionContext extends AbstractContext
 {
@@ -31,11 +32,16 @@ class SessionContext extends AbstractContext
      */
     public function match(array $arDependencies = []): bool
     {
-        /* @var TypoScriptFrontendController $GLOBALS['TSFE'] */
-        $session = $GLOBALS['TSFE']->fe_user->getKey(
-            'ses',
-            $this->getConfValue('field_variable')
-        );
+        if ($this->getTypoScriptFrontendController() === null) {
+            return false;
+        }
+
+        $session = $this->getTypoScriptFrontendController()
+            ->fe_user
+            ->getKey(
+                'ses',
+                $this->getConfValue('field_variable')
+            );
 
         return $this->invert($session !== null);
     }

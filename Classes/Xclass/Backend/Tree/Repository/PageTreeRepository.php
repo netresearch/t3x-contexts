@@ -12,10 +12,11 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Xclass\Backend\Tree\Repository;
 
 /**
- * need the context fields in the page tree
+ * Need the context fields in the page tree
  *
- * Class PageTreeRepository
- * @package Netresearch\Contexts\Xclass\Backend\Tree\Repository
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class PageTreeRepository extends \TYPO3\CMS\Backend\Tree\Repository\PageTreeRepository
 {

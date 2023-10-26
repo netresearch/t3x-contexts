@@ -9,59 +9,64 @@
 
 declare(strict_types=1);
 
-defined('TYPO3_MODE') || die();
+use Netresearch\Contexts\Api\Configuration;
+use Netresearch\Contexts\Context\Type\CombinationContext;
+use Netresearch\Contexts\Context\Type\DomainContext;
+use Netresearch\Contexts\Context\Type\HttpHeaderContext;
+use Netresearch\Contexts\Context\Type\IpContext;
+use Netresearch\Contexts\Context\Type\QueryParameterContext;
+use Netresearch\Contexts\Context\Type\SessionContext;
+
+defined('TYPO3') || die('Access denied.');
 
 /**
  * TCA override for tx_contexts_contexts table
  */
-
-// Prevent xml error for new records
-
-\Netresearch\Contexts\Api\Configuration::registerContextType(
+Configuration::registerContextType(
     'default',
     'Select a type',
     '',
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Empty.xml'
 );
 
-\Netresearch\Contexts\Api\Configuration::registerContextType(
+Configuration::registerContextType(
     'domain',
     'Domain',
-    \Netresearch\Contexts\Context\Type\DomainContext::class,
+    DomainContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Domain.xml'
 );
 
-\Netresearch\Contexts\Api\Configuration::registerContextType(
+Configuration::registerContextType(
     'getparam',
     'GET parameter',
-    \Netresearch\Contexts\Context\Type\QueryParameterContext::class,
+    QueryParameterContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/GetParam.xml'
 );
 
-\Netresearch\Contexts\Api\Configuration::registerContextType(
+Configuration::registerContextType(
     'ip',
     'IP',
-    \Netresearch\Contexts\Context\Type\IpContext::class,
+    IpContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Ip.xml'
 );
 
-\Netresearch\Contexts\Api\Configuration::registerContextType(
+Configuration::registerContextType(
     'httpheader',
     'HTTP header',
-    \Netresearch\Contexts\Context\Type\HttpHeaderContext::class,
+    HttpHeaderContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/HttpHeader.xml'
 );
 
-\Netresearch\Contexts\Api\Configuration::registerContextType(
+Configuration::registerContextType(
     'combination',
     'Logical context combination',
-    \Netresearch\Contexts\Context\Type\CombinationContext::class,
+    CombinationContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Combination.xml'
 );
 
-\Netresearch\Contexts\Api\Configuration::registerContextType(
+Configuration::registerContextType(
     'session',
     'Session variable',
-    \Netresearch\Contexts\Context\Type\SessionContext::class,
+    SessionContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Session.xml'
 );

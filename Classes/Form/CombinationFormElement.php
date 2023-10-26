@@ -28,8 +28,9 @@ use function is_array;
  * Provides methods used in the backend by flexforms.
  *
  * @author  Marian Pollzien <marian.pollzien@netresearch.de>
- * @license http://opensource.org/licenses/gpl-license GPLv2 or later
- * @link    http://github.com/netresearch/contexts
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class CombinationFormElement extends AbstractFormElement
 {

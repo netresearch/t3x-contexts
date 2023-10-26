@@ -9,22 +9,22 @@
 
 declare(strict_types=1);
 
-defined('TYPO3_MODE') || die();
+use Netresearch\Contexts\Api\Configuration;
+
+defined('TYPO3') || die('Access denied.');
 
 /**
  * TCA override for pages table
  */
-call_user_func(
-    static function () {
-        \Netresearch\Contexts\Api\Configuration::enableContextsForTable(
-            'contexts',
-            'pages',
-            [
-                'tx_contexts_nav' => [
-                    'label' => 'LLL:' . \Netresearch\Contexts\Api\Configuration::LANG_FILE . ':tx_contexts_menu_visibility',
-                    'flatten' => true
-                ]
-            ]
-        );
-    }
-);
+call_user_func(static function () {
+    Configuration::enableContextsForTable(
+        'contexts',
+        'pages',
+        [
+            'tx_contexts_nav' => [
+                'label'   => 'LLL:' . Configuration::LANG_FILE . ':tx_contexts_menu_visibility',
+                'flatten' => true,
+            ],
+        ]
+    );
+});

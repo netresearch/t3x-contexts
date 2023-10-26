@@ -17,7 +17,10 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 /**
  * Class ContextConditionProvider
- * @package Netresearch\Contexts\ExpressionLanguage
+ *
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class ContextFunctionsProvider implements ExpressionFunctionProviderInterface
 {
@@ -36,11 +39,12 @@ class ContextFunctionsProvider implements ExpressionFunctionProviderInterface
      */
     protected function getContextMatch(): ExpressionFunction
     {
-        return new ExpressionFunction('contextMatch', static function () {
-            // Not implemented, we only use the evaluator
-        }, function ($arguments, $strContext) {
-            return ContextMatcher::getInstance()
-                ->matches($strContext);
-        });
+        return new ExpressionFunction(
+            'contextMatch',
+            static function () {
+                // Not implemented, we only use the evaluators
+            },
+            fn($arguments, $strContext) => ContextMatcher::getInstance()->matches($strContext)
+        );
     }
 }

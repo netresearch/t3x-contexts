@@ -21,7 +21,10 @@ use function is_array;
  * the enableSettings (tx_contexts_enable, tx_contexts_disable)
  * to the tables they were registered for
  *
- * @author Christian Opitz <christian.opitz@netresearch.de>
+ * @author  Christian Opitz <christian.opitz@netresearch.de>
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class InstallService
 {

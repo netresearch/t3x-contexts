@@ -17,7 +17,10 @@ use Netresearch\Contexts\Context\Container;
  * Load context by alias.
  * Caches results.
  *
- * @author     André Hähnel <andre.haehnel@netresearch.de>
+ * @author  André Hähnel <andre.haehnel@netresearch.de>
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class ContextMatcher
 {
@@ -26,7 +29,7 @@ class ContextMatcher
      *
      * @var null|ContextMatcher
      */
-    protected static ?ContextMatcher $instance;
+    protected static ?ContextMatcher $instance = null;
 
     /**
      * Match results. Alias => boolean match result

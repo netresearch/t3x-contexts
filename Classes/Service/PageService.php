@@ -24,7 +24,9 @@ use TYPO3\CMS\Frontend\ContentObject\Menu\AbstractMenuFilterPagesHookInterface;
  * may not be shown for the current contexts.
  *
  * @author  Christian Weiske <christian.weiske@netresearch.de>
- * @license http://opensource.org/licenses/gpl-license GPLv2 or later
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class PageService implements
     AbstractMenuFilterPagesHookInterface,

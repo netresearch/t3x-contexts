@@ -16,7 +16,10 @@ use TYPO3\CMS\Core\ExpressionLanguage\AbstractProvider;
 
 /**
  * Class ContextConditionProvider
- * @package Netresearch\Contexts\ExpressionLanguage
+ *
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class ContextConditionProvider extends AbstractProvider
 {

@@ -9,8 +9,10 @@
 
 declare(strict_types=1);
 
+use Netresearch\Contexts\ExpressionLanguage\ContextConditionProvider;
+
 return [
     'typoscript' => [
-        \Netresearch\Contexts\ExpressionLanguage\ContextConditionProvider::class
-    ]
+        ContextConditionProvider::class,
+    ],
 ];

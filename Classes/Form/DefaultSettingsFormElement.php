@@ -13,7 +13,6 @@ namespace Netresearch\Contexts\Form;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
-use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\ContextException;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
@@ -21,14 +20,18 @@ use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 /**
  * USER functions to render the defaults fields
  *
- * @author Christian Opitz <christian.opitz@netresearch.de>
+ * @author  Christian Opitz <christian.opitz@netresearch.de>
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class DefaultSettingsFormElement extends AbstractFormElement
 {
     /**
      * Render a checkbox for the default settings of records in this table
      *
-     * @return array
+     * @return array<string, mixed>
+     *
      * @throws ContextException
      * @throws DBALException
      * @throws Exception
@@ -49,7 +52,6 @@ class DefaultSettingsFormElement extends AbstractFormElement
 
         $uid = (int) $this->data['databaseRow']['uid'];
 
-        /* @var null|AbstractContext $context */
         $context = $uid > 0
             ? Container::get()->initAll()->find($uid)
             : null;

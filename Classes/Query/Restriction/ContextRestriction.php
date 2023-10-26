@@ -14,17 +14,22 @@ namespace Netresearch\Contexts\Query\Restriction;
 use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\EnforceableQueryRestrictionInterface;
 use TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionInterface;
+use TYPO3\CMS\Core\Http\ApplicationType;
 
 use function count;
 use function defined;
 
 /**
  * Class ContextRestriction
- * @package Netresearch\Contexts\Query\Restrictio
+ *
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class ContextRestriction implements QueryRestrictionInterface, EnforceableQueryRestrictionInterface
 {
@@ -39,11 +44,13 @@ class ContextRestriction implements QueryRestrictionInterface, EnforceableQueryR
     /**
      * @param array $queriedTables
      * @param ExpressionBuilder $expressionBuilder
+     *
      * @return CompositeExpression
      */
     public function buildExpression(array $queriedTables, ExpressionBuilder $expressionBuilder): CompositeExpression
     {
         $constraints = [];
+
         if ($this->isEnvironmentInFrontendMode()) {
             foreach ($queriedTables as $table) {
                 foreach (Configuration::getEnableSettings($table) as $setting) {
@@ -100,6 +107,8 @@ class ContextRestriction implements QueryRestrictionInterface, EnforceableQueryR
      */
     protected function isEnvironmentInFrontendMode(): bool
     {
-        return defined('TYPO3_MODE') && TYPO3_MODE === 'FE';
+        return defined('TYPO3')
+            && (($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface)
+            && ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend();
     }
 }

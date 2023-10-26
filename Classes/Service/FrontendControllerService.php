@@ -17,6 +17,10 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Class FrontendControllerService
+ *
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class FrontendControllerService implements SingletonInterface
 {
@@ -97,7 +101,7 @@ class FrontendControllerService implements SingletonInterface
     {
         ksort(self::$params);
 
-        $params['hashParameters'][strtolower(__CLASS__)] = serialize(self::$params);
+        $params['hashParameters'][strtolower(self::class)] = serialize(self::$params);
     }
 
     /**
@@ -141,11 +145,11 @@ class FrontendControllerService implements SingletonInterface
         $conf = &$GLOBALS['TYPO3_CONF_VARS'];
 
         // Hook for postProcessing the configuration array
-        $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'][__CLASS__] =
-            __CLASS__ . '->configArrayPostProc';
+        $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'][self::class] =
+            self::class . '->configArrayPostProc';
 
         // Hook to influence the page hash calculation
-        $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][__CLASS__] =
-            __CLASS__ . '->createHashBase';
+        $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][self::class] =
+            self::class . '->createHashBase';
     }
 }

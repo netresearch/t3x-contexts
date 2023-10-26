@@ -23,9 +23,11 @@ use function in_array;
 /**
  * Matches on a GET parameter with a certain value
  *
- * @author     Christian Weiske <christian.weiske@netresearch.de>
- * @author     Christian Opitz <christian.opitz@netresearch.de>
- * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
+ * @author  Christian Weiske <christian.weiske@netresearch.de>
+ * @author  Christian Opitz <christian.opitz@netresearch.de>
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class QueryParameterContext extends AbstractContext
 {
@@ -41,7 +43,7 @@ class QueryParameterContext extends AbstractContext
     public function match(array $arDependencies = []): bool
     {
         $configValue = $this->getConfValue('field_name');
-        $param       = trim($configValue ?? '');
+        $param       = trim($configValue);
 
         if ($param === '') {
             throw new RuntimeException(
@@ -66,7 +68,7 @@ class QueryParameterContext extends AbstractContext
 
         $values = GeneralUtility::trimExplode(
             "\n",
-            $this->getConfValue('field_values') ?? '',
+            $this->getConfValue('field_values'),
             true
         );
 

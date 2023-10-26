@@ -25,7 +25,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * USER function to render the record settings fields
  *
- * @author Christian Opitz <christian.opitz@netresearch.de>
+ * @author  Christian Opitz <christian.opitz@netresearch.de>
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class RecordSettingsFormElement extends AbstractFormElement
 {

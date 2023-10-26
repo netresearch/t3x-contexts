@@ -23,14 +23,18 @@ use function count;
 /**
  * Loads contexts and provides access to them
  *
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
+ *
  * @extends ArrayObject<int|string, AbstractContext>
  */
 class Container extends ArrayObject
 {
     /**
-     * @var Container
+     * @var null|Container
      */
-    protected static $instance;
+    protected static ?Container $instance = null;
 
     /**
      * Singleton accessor
@@ -50,6 +54,7 @@ class Container extends ArrayObject
      * Loads all contexts and checks if they match
      *
      * @return Container
+     *
      * @throws ContextException
      * @throws DBALException
      * @throws Exception
@@ -78,7 +83,7 @@ class Container extends ArrayObject
     /**
      * Make the given contexts active (available in this container)
      *
-     * @param array $arContexts Array of context objects
+     * @param AbstractContext[] $arContexts Array of context objects
      *
      * @return Container
      */
@@ -92,8 +97,8 @@ class Container extends ArrayObject
      * Loads all available contexts from database and instantiates them
      * and checks if they match.
      *
-     * @return array Array of available Tx_Contexts_Context_Abstract objects,
-     *               key is their uid
+     * @return AbstractContext[] Array of available Tx_Contexts_Context_Abstract objects,
+     *                           key is their uid
      *
      * @throws ContextException
      * @throws DBALException
@@ -107,7 +112,8 @@ class Container extends ArrayObject
         $queryBuilder = $connectionPool
             ->getQueryBuilderForTable('tx_contexts_contexts');
 
-        $arRows = $queryBuilder->select('*')
+        $arRows = $queryBuilder
+            ->select('*')
             ->from('tx_contexts_contexts')
             ->execute()
             ->fetchAllAssociative();
@@ -115,6 +121,7 @@ class Container extends ArrayObject
         $contexts = [];
         foreach ($arRows as $arRow) {
             $context = $factory->createFromDb($arRow);
+
             if ($context !== null) {
                 $contexts[$arRow['uid']] = $context;
             }
@@ -126,10 +133,9 @@ class Container extends ArrayObject
     /**
      * Matches all context objects. Resolves dependencies.
      *
-     * @param array $arContexts Array of available context objects
+     * @param AbstractContext[] $arContexts Array of available context objects
      *
-     * @return array Array of matched Tx_Contexts_Context_Abstract objects,
-     *               key is their uid
+     * @return AbstractContext[] Array of matched AbstractContext objects, key is their uid
      */
     protected function match(array $arContexts): array
     {
@@ -140,7 +146,6 @@ class Container extends ArrayObject
         $loops = 0;
         do {
             foreach (array_keys($arContexts) as $uid) {
-                /* @var AbstractContext $context */
                 $context = $arContexts[$uid];
 
                 if ($context->getDisabled()) {
@@ -186,6 +191,7 @@ class Container extends ArrayObject
                 } else {
                     $notMatched[$uid] = $context;
                 }
+
                 unset($arContexts[$uid]);
             }
         } while (count($arContexts) > 0 && ++$loops < 10);

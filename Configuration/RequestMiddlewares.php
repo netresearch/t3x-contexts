@@ -9,10 +9,12 @@
 
 declare(strict_types=1);
 
+use Netresearch\Contexts\Middleware\ContainerInitialization;
+
 return [
     'frontend' => [
         'netresearch/context/container-initialization' => [
-            'target' => \Netresearch\Contexts\Middleware\ContainerInitialization::class,
+            'target' => ContainerInitialization::class,
             'before' => [
                 'typo3/cms-frontend/page-resolver',
             ],

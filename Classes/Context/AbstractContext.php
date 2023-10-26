@@ -17,6 +17,7 @@ use Netresearch\Contexts\Api\Configuration;
 use PDO;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 use function array_key_exists;
@@ -27,8 +28,10 @@ use function is_string;
 /**
  * Abstract context - must be extended by the context types
  *
- * @author     Christian Opitz <christian.opitz@netresearch.de>
- * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
+ * @author  Christian Opitz <christian.opitz@netresearch.de>
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 abstract class AbstractContext
 {
@@ -51,35 +54,35 @@ abstract class AbstractContext
      *
      * @var int
      */
-    protected int $uid;
+    protected int $uid = 0;
 
     /**
      * Type of context.
      *
      * @var string
      */
-    protected $type;
+    protected string $type = '';
 
     /**
      * Title of context.
      *
      * @var string
      */
-    protected $title;
+    protected string $title = '';
 
     /**
      * Alias of context.
      *
      * @var string
      */
-    protected $alias;
+    protected string $alias = '';
 
     /**
      * Unix timestamp of last record modification.
      *
      * @var int
      */
-    protected $tstamp;
+    protected int $tstamp = 0;
 
     /**
      * Invert the match result.
@@ -100,7 +103,7 @@ abstract class AbstractContext
      *
      * @var array
      */
-    protected $conf;
+    protected array $conf = [];
 
     /**
      * List of all context settings.
@@ -114,7 +117,7 @@ abstract class AbstractContext
      *
      * @var bool
      */
-    protected $disabled;
+    protected bool $disabled = false;
 
     /**
      * Hide Context in backend
@@ -150,28 +153,26 @@ abstract class AbstractContext
     /**
      * Get a configuration value.
      *
-     * @param string      $fieldName Name of the field
-     * @param null|string $default   The value to use when none was found
-     * @param string      $sheet     Sheet pointer, eg. "sDEF
-     * @param string      $lang      Language pointer, eg. "lDEF
-     * @param string      $value     Value pointer, eg. "vDEF
+     * @param string $fieldName Name of the field
+     * @param string $default   The value to use when none was found
+     * @param string $sheet     Sheet pointer, eg. "sDEF
+     * @param string $lang      Language pointer, eg. "lDEF
+     * @param string $value     Value pointer, eg. "vDEF
      *
-     * @return string The content
+     * @return string The configuration content
      */
     protected function getConfValue(
         string $fieldName,
-        string $default = null,
+        string $default = '',
         string $sheet = 'sDEF',
         string $lang = 'lDEF',
         string $value = 'vDEF'
-    ): ?string {
+    ): string {
         if (!isset($this->conf['data'][$sheet][$lang])) {
             return $default;
         }
 
-        $ldata = $this->conf['data'][$sheet][$lang];
-
-        return $ldata[$fieldName][$value] ?? $default;
+        return $this->conf['data'][$sheet][$lang][$fieldName][$value] ?? $default;
     }
 
     /**
@@ -348,10 +349,9 @@ abstract class AbstractContext
     /**
      * Return all context UIDs this context depends on.
      *
-     * @param array $arContexts the available contexts
+     * @param AbstractContext[] $arContexts the available contexts
      *
-     * @return array Array of context uids this context depends on.
-     *               Key is the UID, value is "true"
+     * @return array<int, bool> Array of context uids this context depends on. Key is the UID, value is "true"
      */
     public function getDependencies(array $arContexts): array
     {
@@ -405,16 +405,30 @@ abstract class AbstractContext
     }
 
     /**
+     * @return TypoScriptFrontendController|null
+     */
+    protected function getTypoScriptFrontendController(): ?TypoScriptFrontendController
+    {
+        return $GLOBALS['TSFE'];
+    }
+
+    /**
      * Get the contextsession.
      *
      * @return mixed boolean match or null
      */
     protected function getSession()
     {
-        return $GLOBALS['TSFE']->fe_user->getKey(
-            'ses',
-            'contexts-' . $this->uid . '-' . $this->tstamp
-        );
+        if ($this->getTypoScriptFrontendController() === null) {
+            return null;
+        }
+
+        return $this->getTypoScriptFrontendController()
+            ->fe_user
+            ->getKey(
+                'ses',
+                'contexts-' . $this->uid . '-' . $this->tstamp
+            );
     }
 
     /**
@@ -431,13 +445,22 @@ abstract class AbstractContext
             return $bMatch;
         }
 
-        /* @var TypoScriptFrontendController $GLOBALS['TSFE'] */
-        $GLOBALS['TSFE']->fe_user->setKey(
-            'ses',
-            'contexts-' . $this->uid . '-' . $this->tstamp,
-            $bMatch
-        );
-        $GLOBALS['TSFE']->fe_user->storeSessionData();
+        if ($this->getTypoScriptFrontendController() === null) {
+            return $bMatch;
+        }
+
+        $this->getTypoScriptFrontendController()
+            ->fe_user
+            ->setKey(
+                'ses',
+                'contexts-' . $this->uid . '-' . $this->tstamp,
+                $bMatch
+            );
+
+        $this->getTypoScriptFrontendController()
+            ->fe_user
+            ->storeSessionData();
+
         return $bMatch;
     }
 

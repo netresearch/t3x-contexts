@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use function count;
 use function in_array;
@@ -19,8 +20,10 @@ use function in_array;
 /**
  * Matches on an HTTP header with a certain value
  *
- * @author     Michael Schams <schams.net>
- * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
+ * @author  Michael Schams <schams.net>
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class HttpHeaderContext extends AbstractContext
 {
@@ -34,7 +37,7 @@ class HttpHeaderContext extends AbstractContext
     public function match(array $arDependencies = []): bool
     {
         // Determine which HTTP header has been configured
-        $configValue    = $this->getConfValue('field_name') ?? '';
+        $configValue    = $this->getConfValue('field_name');
         $httpHeaderName = strtolower(trim($configValue));
 
         // Check, if header exists in HTTP request
@@ -61,8 +64,11 @@ class HttpHeaderContext extends AbstractContext
      */
     protected function matchValues(string $value): bool
     {
-        $configValue = $this->getConfValue('field_values');
-        $arValues    = explode("\n", trim($configValue ?? ''));
+        $arValues = GeneralUtility::trimExplode(
+            "\n",
+            $this->getConfValue('field_values'),
+            true
+        );
 
         // Empty value list, so we allow any value
         if (count($arValues) === 1 && $arValues[0] === '') {

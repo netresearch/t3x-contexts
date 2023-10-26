@@ -22,8 +22,10 @@ use function is_array;
 /**
  * General configuration API
  *
- * @author     Christian Opitz <christian.opitz@netresearch.de>
- * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
+ * @author  Christian Opitz <christian.opitz@netresearch.de>
+ * @author  Rico Sonntag <rico.sonntag@netresearch.de>
+ * @license Netresearch https://www.netresearch.de
+ * @link    https://www.netresearch.de
  */
 class Configuration
 {
@@ -399,10 +401,10 @@ class Configuration
     {
         if (isset($GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'])) {
             if ($setting !== null) {
-                return $GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'][$setting];
+                return (array) $GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'][$setting];
             }
 
-            return $GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'];
+            return (array) $GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'];
         }
 
         return [];
@@ -421,7 +423,7 @@ class Configuration
             return [];
         }
 
-        return $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'];
+        return (array) $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'];
     }
 
     /**
@@ -429,7 +431,7 @@ class Configuration
      *
      * @param string $table Table name
      *
-     * @return array $tcaCtrlEnablecolumns
+     * @return array
      */
     public static function getEnableSettings(string $table): array
     {
