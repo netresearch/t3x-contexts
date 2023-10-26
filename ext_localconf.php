@@ -41,7 +41,7 @@ GeneralUtility::makeInstance(Container::class)
 
 
 // Hook into record saving
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['contexts']
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][]
     = DataHandlerService::class;
 
 // Contexts query restriction

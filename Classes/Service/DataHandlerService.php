@@ -98,7 +98,9 @@ class DataHandlerService
         array $fieldArray,
         DataHandler $reference
     ): void {
-        if (count($this->currentSettings) > 0) {
+        if (isset($this->currentSettings)
+            && (count($this->currentSettings) > 0)
+        ) {
             if (!is_numeric($id)) {
                 $id = $reference->substNEWwithIDs[$id];
             }

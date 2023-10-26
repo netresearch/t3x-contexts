@@ -42,6 +42,7 @@ class IconService implements SingletonInterface
             (isset($row['tx_contexts_disable']) && $row['tx_contexts_disable'] !== '')
         ) {
             $status['contexts'] = true;
+
             return 'extensions-contexts-status-overlay-contexts';
         }
         return $iconName;
