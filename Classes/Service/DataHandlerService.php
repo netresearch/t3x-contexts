@@ -98,7 +98,8 @@ class DataHandlerService
         array $fieldArray,
         DataHandler $reference
     ): void {
-        if (isset($this->currentSettings)
+        if (
+            isset($this->currentSettings)
             && (count($this->currentSettings) > 0)
         ) {
             if (!is_numeric($id)) {
