@@ -260,12 +260,14 @@ class LogicalExpressionEvaluator
             $this->getScope()->handleToken($token);
         }
 
-        foreach ($this->scopeContainer->scopes as $scope) {
-            $scope->precedenceShiftTokens([
-                self::T_AND,
-                self::T_XOR,
-                self::T_OR,
-            ]);
+        if ($this->scopeContainer !== null) {
+            foreach ($this->scopeContainer->scopes as $scope) {
+                $scope->precedenceShiftTokens([
+                    self::T_AND,
+                    self::T_XOR,
+                    self::T_OR,
+                ]);
+            }
         }
     }
 
@@ -277,6 +279,10 @@ class LogicalExpressionEvaluator
      */
     protected function pushScope(): void
     {
+        if ($this->scopeContainer === null) {
+            return;
+        }
+        
         $scope = new self();
         $scope->parentScope = $this;
         $scope->scopeContainer = $this->scopeContainer;
@@ -292,7 +298,9 @@ class LogicalExpressionEvaluator
      */
     protected function popScope(): void
     {
-        array_pop($this->scopeContainer->keys);
+        if ($this->scopeContainer !== null && !empty($this->scopeContainer->keys)) {
+            array_pop($this->scopeContainer->keys);
+        }
     }
 
     /**
@@ -302,6 +310,10 @@ class LogicalExpressionEvaluator
      */
     protected function getScope(): LogicalExpressionEvaluator
     {
+        if ($this->scopeContainer === null || empty($this->scopeContainer->keys)) {
+            return $this;
+        }
+        
         return $this->scopeContainer->scopes[end($this->scopeContainer->keys)];
     }
 
