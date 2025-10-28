@@ -14,7 +14,7 @@ jobs:
     name: Testing PHP ${{ matrix.php-version }} on ${{ matrix.operating-system }}
 
     steps:
-      - uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e # v2
         with:
           php-version: ${{ matrix.php-version }}
           extensions: json,intl,mbstring
