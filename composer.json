@@ -67,5 +67,11 @@
         "typo3/cms": {
             "extension-key": "contexts"
         }
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.org"
+        }
     }
 }
