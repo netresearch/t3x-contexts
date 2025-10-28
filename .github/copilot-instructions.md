@@ -163,3 +163,119 @@ declare(strict_types=1);
 - Consider backwards compatibility when making changes
 
 When making changes, always run the full quality suite and ensure all tests pass before submitting code.
+
+## Tool Usage and Efficiency
+
+### Parallel Tool Calling
+- When performing multiple independent operations, ALWAYS call tools simultaneously rather than sequentially
+- Examples: reading multiple files, running git status + git diff, viewing different directories
+- Only call tools sequentially when later calls depend on results from earlier calls
+
+### Repository Exploration
+- Use parallel tool calls when exploring codebase: view multiple directories and files simultaneously
+- Batch file operations when possible to improve efficiency
+- Use command chains for dependent bash operations: `command1 && command2`
+
+## Agent Workflow Integration
+
+### Issue Assignment and Handling
+- When assigned an issue, start by exploring the repository structure and understanding the current state
+- Create an implementation plan using **report_progress** before making changes
+- Make small, incremental changes with frequent progress reports
+- Use the existing quality tools (PHPStan, PHPCS, PHPUnit) to validate changes
+
+### Code Review Process
+- Run **code_review** tool before finalizing changes to get automated feedback
+- Address valid review comments and re-run if significant changes are made
+- Use **codeql_checker** for security analysis after code reviews
+- Include a Security Summary for any vulnerabilities discovered
+
+### Git and Branch Management
+- Work on feature branches (never directly on main/master)
+- Use meaningful commit messages that follow conventional commit patterns
+- Keep commits focused and atomic
+- Use **report_progress** for committing and pushing changes
+
+## Environment and Limitations
+
+### Sandboxed Environment
+- Repository is cloned locally in a sandboxed environment
+- Can read, edit, and create files within the repository
+- Can run local commands and tools via bash
+- Cannot directly push to GitHub (use **report_progress** instead)
+
+### Quality Gates
+- All quality checks must pass before finalizing work
+- PHPStan level 9 analysis is enforced
+- PSR-12 coding standards are mandatory
+- GrumPHP hooks ensure code quality on commits
+- Address any failing tests or quality issues
+
+### Testing Requirements
+- Unit tests for new public methods and classes
+- Functional tests for TYPO3 integration and database operations
+- Test both success and failure scenarios
+- Follow existing test patterns and extend appropriate base classes
+
+### Common Patterns and Examples
+
+#### File Header Template
+```php
+<?php
+
+/**
+ * This file is part of the package netresearch/contexts.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace Netresearch\Contexts\[Subnamespace];
+
+// imports...
+```
+
+#### Context Implementation Pattern
+```php
+// Context classes extend AbstractContext
+class MyContext extends AbstractContext
+{
+    // Implement required abstract methods
+    // Use proper type hints and return types
+    // Include comprehensive PHPDoc
+}
+```
+
+#### Database Query Pattern
+```php
+try {
+    $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+        ->getQueryBuilderForTable('tx_contexts_contexts');
+    
+    $result = $queryBuilder
+        ->select('*')
+        ->from('tx_contexts_contexts')
+        ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)))
+        ->execute();
+} catch (DBALException | Exception $e) {
+    // Handle database exceptions appropriately
+    $this->logger->error('Database error: ' . $e->getMessage());
+}
+```
+
+## Repository Specific Guidance
+
+### Key Extension Points
+- **New Context Types**: Extend `AbstractContext` and register in `Configuration::getContextTypes()`
+- **ViewHelpers**: Create Fluid helpers in `Classes/ViewHelpers/` for template integration
+- **Middleware**: Add HTTP middleware in `Classes/Middleware/` for request processing
+- **Services**: Implement business logic in `Classes/Service/` with proper dependency injection
+
+### TYPO3 Integration Patterns
+- Use TYPO3's dependency injection container for service registration
+- Implement `SingletonInterface` for stateless services
+- Use `LoggerAwareInterface` and inject PSR-3 loggers
+- Follow TYPO3 v11 patterns and deprecation guidelines
+- Register services in `Configuration/Services.yaml` when needed
