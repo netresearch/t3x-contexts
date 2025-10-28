@@ -257,8 +257,8 @@ try {
     $result = $queryBuilder
         ->select('*')
         ->from('tx_contexts_contexts')
-        ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)))
-        ->execute();
+        ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($contextUid, PDO::PARAM_INT)))
+        ->executeQuery();
 } catch (DBALException | Exception $e) {
     // Handle database exceptions appropriately
     $this->logger->error('Database error: ' . $e->getMessage());
