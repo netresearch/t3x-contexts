@@ -282,7 +282,7 @@ class LogicalExpressionEvaluator
         if ($this->scopeContainer === null) {
             return;
         }
-        
+
         $scope = new self();
         $scope->parentScope = $this;
         $scope->scopeContainer = $this->scopeContainer;
@@ -313,7 +313,7 @@ class LogicalExpressionEvaluator
         if ($this->scopeContainer === null || empty($this->scopeContainer->keys)) {
             return $this;
         }
-        
+
         return $this->scopeContainer->scopes[end($this->scopeContainer->keys)];
     }
 
