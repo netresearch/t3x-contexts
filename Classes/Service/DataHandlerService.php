@@ -51,9 +51,8 @@ class DataHandlerService
      *
      * @return void
      */
-// @codingStandardsIgnoreStart
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function processDatamap_preProcessFieldArray(
-// @codingStandardsIgnoreEnd
         array &$incomingFieldArray,
         string $table,
         string $id,
@@ -89,9 +88,8 @@ class DataHandlerService
      * @throws DBALException
      * @throws Exception
      */
-// @codingStandardsIgnoreStart
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function processDatamap_afterDatabaseOperations(
-// @codingStandardsIgnoreEnd
         string $status,
         string $table,
         string $id,

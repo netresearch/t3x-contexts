@@ -7,9 +7,7 @@
  * LICENSE file that was distributed with this source code.
  */
 
-
 namespace Netresearch\Contexts\Tests\Unit\Context;
-
 
 class AbstractTest extends \Netresearch\Contexts\Tests\Unit\TestBase
 {
@@ -19,9 +17,9 @@ class AbstractTest extends \Netresearch\Contexts\Tests\Unit\TestBase
     public function testGetMatchFromSession($configRet, $sessionRet, $expected)
     {
         $stub = $this->getAccessibleMock(
-                \Netresearch\Contexts\Tests\Unit\Context\test::class,
-                ['getConfValue', 'getSession']
-            );
+            \Netresearch\Contexts\Tests\Unit\Context\test::class,
+            ['getConfValue', 'getSession']
+        );
 
         $stub->setUseSession($configRet);
 
@@ -31,11 +29,10 @@ class AbstractTest extends \Netresearch\Contexts\Tests\Unit\TestBase
 
         $test = $this->callProtected($stub, 'getMatchFromSession');
         $this->assertSame($expected, $test);
-
     }
 
 
-    public static function SessionProvider()
+    public static function sessionProvider()
     {
         return array(
             //no use no session
@@ -60,7 +57,7 @@ class AbstractTest extends \Netresearch\Contexts\Tests\Unit\TestBase
      */
     public function testGetRemoteAddressWithProxyGetFirst()
     {
-        $test = new test();
+        $test = new TestContext();
         global $TYPO3_CONF_VARS;
         $TYPO3_CONF_VARS = array(
             'SYS' => array(
@@ -81,7 +78,8 @@ class AbstractTest extends \Netresearch\Contexts\Tests\Unit\TestBase
     }
 }
 
-class test extends \Netresearch\Contexts\Context\AbstractContext
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MultipleClasses
+class TestContext extends \Netresearch\Contexts\Context\AbstractContext
 {
     public function match(array $arDependencies = array())
     {

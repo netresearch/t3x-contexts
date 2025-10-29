@@ -7,7 +7,6 @@
  * LICENSE file that was distributed with this source code.
  */
 
-
 namespace Netresearch\Contexts\Tests\Unit;
 
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -53,4 +52,3 @@ abstract class TestBase extends UnitTestCase
         return $m->invokeArgs($obj, $params);
     }
 }
-?>

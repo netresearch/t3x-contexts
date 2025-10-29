@@ -11,7 +11,6 @@ namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
 class IpContextTest extends \Netresearch\Contexts\Tests\Unit\TestBase
 {
-
     /**
      * @return \PHPUnit\Framework\MockObject\MockObject|\PHPUnit_Framework_MockObject_MockObject
      */
@@ -83,7 +82,9 @@ class IpContextTest extends \Netresearch\Contexts\Tests\Unit\TestBase
                 'isIpInRange',
                 $ip,
                 filter_var(
-                    $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4
+                    $ip,
+                    FILTER_VALIDATE_IP,
+                    FILTER_FLAG_IPV4
                 ) !== false,
                 $range
             )
@@ -108,5 +109,3 @@ class IpContextTest extends \Netresearch\Contexts\Tests\Unit\TestBase
         );
     }
 }
-
-?>

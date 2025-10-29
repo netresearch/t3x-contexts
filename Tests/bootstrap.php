@@ -7,7 +7,6 @@
  * LICENSE file that was distributed with this source code.
  */
 
-
 const TYPO3_MODE = 'BE';
 
 //we have E_STRICT all over the place :/
@@ -16,7 +15,7 @@ error_reporting(error_reporting() & ~E_STRICT);
 define('TEST_PATH', __DIR__ . '/');
 
 define(
-    'PATH_site',
+    'PATH_SITE',
     realpath(TEST_PATH . '../../../../') . '/'
 );
 
@@ -30,5 +29,3 @@ require_once TEST_PATH . '../../../../typo3/sysext/core/Classes/Core/Bootstrap.p
     ->applyAdditionalConfigurationSettings()
     ->initializeTypo3DbGlobal()
     ->loadExtensionTables();
-
-?>

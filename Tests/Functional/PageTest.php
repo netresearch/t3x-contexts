@@ -7,7 +7,6 @@
  * LICENSE file that was distributed with this source code.
  */
 
-
 namespace Netresearch\Contexts\Tests\Functional;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -15,11 +14,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use TYPO3\CMS\Frontend\Tests\Functional\SiteHandling\AbstractTestCase;
 
-
 class PageTest extends AbstractTestCase
 {
     protected $testExtensionsToLoad = ['typo3conf/ext/contexts'];
-    
+
     public function setUp()
     {
         parent::setUp();
@@ -40,7 +38,6 @@ class PageTest extends AbstractTestCase
                 $this->buildDefaultLanguageConfiguration('EN', '/')
             ]
         );
-
     }
 
     /**
@@ -90,8 +87,10 @@ class PageTest extends AbstractTestCase
                 'id' => 1
             ])
         );
-        $this->assertContains("<p>Hello world!</p>",
-            (string)$response->getBody());
+        $this->assertContains(
+            "<p>Hello world!</p>",
+            (string)$response->getBody()
+        );
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -107,8 +106,10 @@ class PageTest extends AbstractTestCase
                 'test' => 1
             ])
         );
-        $this->assertContains("<p>Hello world!</p>",
-            (string)$response->getBody());
+        $this->assertContains(
+            "<p>Hello world!</p>",
+            (string)$response->getBody()
+        );
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -138,9 +139,10 @@ class PageTest extends AbstractTestCase
                 'id' => 1
             ])
         );
-        $this->assertContains("<p>Hello world!</p>",
-            (string)$response->getBody());
+        $this->assertContains(
+            "<p>Hello world!</p>",
+            (string)$response->getBody()
+        );
         $this->assertEquals(200, $response->getStatusCode());
     }
-
 }
