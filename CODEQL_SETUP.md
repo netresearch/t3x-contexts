@@ -48,6 +48,10 @@ If you prefer to use GitHub's default setup instead of the advanced configuratio
    - The default setup will automatically scan JavaScript/TypeScript files
    - It requires no additional configuration
 
+**Trade-offs of Default vs Advanced Setup**:
+- **Default Setup**: Simpler, zero-configuration, automatic updates
+- **Advanced Setup**: Custom scheduling, specific language configurations, custom queries, more control over scan triggers
+
 ## Current Workflow Features
 
 The advanced configuration (`.github/workflows/codeql-analysis.yml`) provides:
@@ -56,11 +60,12 @@ The advanced configuration (`.github/workflows/codeql-analysis.yml`) provides:
 - Trigger on pushes and pull requests to master branch
 - Custom configuration options
 
-## Files Fixed
+## Files Fixed in This PR
 
 - **Renamed**: `Tests/Functional/Fixtures/page.ts` → `Tests/Functional/Fixtures/page.typoscript`
   - This file contained TypoScript configuration, not TypeScript code
   - The incorrect extension was causing parsing errors in CodeQL
+  - This change was completed in this pull request
 
 ## Next Steps
 
