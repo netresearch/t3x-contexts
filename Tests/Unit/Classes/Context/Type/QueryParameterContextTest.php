@@ -194,6 +194,4 @@ class QueryParameterContextTest extends UnitTestCase
 
         $getm->match();
     }
-
 }
-?>

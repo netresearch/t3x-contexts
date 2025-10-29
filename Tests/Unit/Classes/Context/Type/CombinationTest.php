@@ -7,18 +7,20 @@
  * LICENSE file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
+namespace Netresearch\Contexts\Tests\Unit\Classes\Context\Type;
 
 class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
 {
-
     public function testGetDependenciesSucces()
     {
         $abstractMock = $this->getMockForAbstractClass(
             '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
-                    'uid'=>123,
-                    'type'=>'ip',
+                    'uid' => 123,
+                    'type' => 'ip',
                     'title' => 'UNITTEST',
                     'alias' => 'UNITTEST',
                     'tstamp' => 1234567,
@@ -45,8 +47,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
                 'getConfValue',
             ),
             array(
-                'uid'=>125,
-                'type'=>'combination',
+                'uid' => 125,
+                'type' => 'combination',
                 'title' => 'combiUNITTEST',
                 'alias' => 'combiUNITTEST',
                 'type_conf' => '',
@@ -77,8 +79,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
             '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
-                    'uid'=>123,
-                    'type'=>'ip',
+                    'uid' => 123,
+                    'type' => 'ip',
                     'title' => 'UNITTEST',
                     'alias' => 'UNITTEST',
                     'tstamp' => 1234567,
@@ -105,8 +107,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
                 'getConfValue',
             ),
             array(
-                'uid'=>125,
-                'type'=>'combination',
+                'uid' => 125,
+                'type' => 'combination',
                 'title' => 'combiUNITTEST',
                 'alias' => 'combiUNITTEST',
                 'type_conf' => '',
@@ -141,8 +143,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
                 'getConfValue',
             ),
             array(
-                'uid'=>125,
-                'type'=>'combination',
+                'uid' => 125,
+                'type' => 'combination',
                 'title' => 'combiUNITTEST',
                 'alias' => 'combiUNITTEST',
                 'type_conf' => '',
@@ -169,8 +171,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
             '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
-                    'uid'=>123,
-                    'type'=>'ip',
+                    'uid' => 123,
+                    'type' => 'ip',
                     'title' => 'UNITTEST',
                     'alias' => 'UNITTEST',
                     'tstamp' => 1234567,
@@ -196,8 +198,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
             '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
-                    'uid'=>124,
-                    'type'=>'getparam',
+                    'uid' => 124,
+                    'type' => 'getparam',
                     'title' => 'getUNITTEST',
                     'alias' => 'getUNITTEST',
                     'tstamp' => 1234567,
@@ -226,8 +228,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
                 'getConfValue',
             ),
             array(
-                'uid'=>125,
-                'type'=>'combination',
+                'uid' => 125,
+                'type' => 'combination',
                 'title' => 'combiUNITTEST',
                 'alias' => 'combiUNITTEST',
                 'type_conf' => '',
@@ -268,8 +270,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
             '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
-                    'uid'=>123,
-                    'type'=>'ip',
+                    'uid' => 123,
+                    'type' => 'ip',
                     'title' => 'UNITTEST',
                     'alias' => 'UNITTEST',
                     'tstamp' => 1234567,
@@ -295,8 +297,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
             '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
-                    'uid'=>124,
-                    'type'=>'getparam',
+                    'uid' => 124,
+                    'type' => 'getparam',
                     'title' => 'getUNITTEST',
                     'alias' => 'getUNITTEST',
                     'tstamp' => 1234567,
@@ -325,8 +327,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
                 'getConfValue',
             ),
             array(
-                'uid'=>125,
-                'type'=>'combination',
+                'uid' => 125,
+                'type' => 'combination',
                 'title' => 'combiUNITTEST',
                 'alias' => 'combiUNITTEST',
                 'type_conf' => '',
@@ -365,8 +367,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
             '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
-                    'uid'=>123,
-                    'type'=>'ip',
+                    'uid' => 123,
+                    'type' => 'ip',
                     'title' => 'UNITTEST',
                     'alias' => 'UNITTEST',
                     'tstamp' => 1234567,
@@ -392,8 +394,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
             '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
-                    'uid'=>124,
-                    'type'=>'getparam',
+                    'uid' => 124,
+                    'type' => 'getparam',
                     'title' => 'getUNITTEST',
                     'alias' => 'getUNITTEST',
                     'tstamp' => 1234567,
@@ -423,8 +425,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
                 'findInContainer',
             ),
             array(
-                'uid'=>125,
-                'type'=>'combination',
+                'uid' => 125,
+                'type' => 'combination',
                 'title' => 'combiUNITTEST',
                 'alias' => 'combiUNITTEST',
                 'type_conf' => '',
@@ -458,8 +460,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
             '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
-                    'uid'=>123,
-                    'type'=>'ip',
+                    'uid' => 123,
+                    'type' => 'ip',
                     'title' => 'UNITTEST',
                     'alias' => 'UNITTEST',
                     'tstamp' => 1234567,
@@ -485,8 +487,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
             '\Netresearch\Contexts\Context\AbstractContext',
             array(
                 array(
-                    'uid'=>124,
-                    'type'=>'getparam',
+                    'uid' => 124,
+                    'type' => 'getparam',
                     'title' => 'getUNITTEST',
                     'alias' => 'getUNITTEST',
                     'tstamp' => 1234567,
@@ -516,8 +518,8 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
                 'findInContainer',
             ),
             array(
-                'uid'=>125,
-                'type'=>'combination',
+                'uid' => 125,
+                'type' => 'combination',
                 'title' => 'combiUNITTEST',
                 'alias' => 'combiUNITTEST',
                 'type_conf' => '',
@@ -544,5 +546,3 @@ class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
         self::assertEquals(array(), $matched);
     }
 }
-
-?>

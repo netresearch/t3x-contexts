@@ -14,7 +14,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 class LogicalExpressionEvaluatorTest extends UnitTestCase
 {
-
     /**
      * @dataProvider expressionValueProvider
      */
@@ -38,7 +37,7 @@ class LogicalExpressionEvaluatorTest extends UnitTestCase
         self::assertSame(
             // Rebuilt expression is always wrapped within parenthesis
             // because parser always pushs a scope first
-            '('.$rebuiltExpression.')',
+            '(' . $rebuiltExpression . ')',
             $evaluator->rebuild(),
             'Rebuild must be revised'
         );
@@ -104,7 +103,8 @@ class LogicalExpressionEvaluatorTest extends UnitTestCase
         );
         $this->assertFalse(
             LogicalExpressionEvaluator::run(
-                $strExpression, $arValues
+                $strExpression,
+                $arValues
             )
         );
     }
@@ -118,7 +118,8 @@ class LogicalExpressionEvaluatorTest extends UnitTestCase
         );
         $this->assertFalse(
             LogicalExpressionEvaluator::run(
-                $strExpression, $arValues
+                $strExpression,
+                $arValues
             )
         );
     }
@@ -138,52 +139,52 @@ class LogicalExpressionEvaluatorTest extends UnitTestCase
             array(
                 $e = 'context1 || context2',
                 $e,
-                array('context1'=>true, 'context2'=>false),
+                array('context1' => true, 'context2' => false),
             ),
             array(
                 'context1 or context2',
                 $e,
-                array('context1'=>true, 'context2'=>true)
+                array('context1' => true, 'context2' => true)
             ),
             array(
                 $e = 'context1 && context2',
                 $e,
-                array('context1'=>true, 'context2'=>true)
+                array('context1' => true, 'context2' => true)
             ),
             array(
                 'context1 and context2',
                 $e,
-                array('context1'=>true, 'context2'=>false)
+                array('context1' => true, 'context2' => false)
             ),
             array(
                 $e = 'context1 >< context2',
                 $e,
-                array('context1'=>true, 'context2'=>false)
+                array('context1' => true, 'context2' => false)
             ),
             array(
                 'context1 xor context2',
                 $e,
-                array('context1'=>true, 'context2'=>true)
+                array('context1' => true, 'context2' => true)
             ),
             array(
                 'context1 && !(context2 || !!context3)',
                 'context1 && !(context2 || context3)',
-                array('context1'=>true, 'context2'=>false, 'context3' => false)
+                array('context1' => true, 'context2' => false, 'context3' => false)
             ),
             array(
                 'context1 xor (context2 && !context3)',
                 'context1 >< (context2 && !context3)',
-                array('context1'=>true, 'context2'=>true, 'context3'=>false)
+                array('context1' => true, 'context2' => true, 'context3' => false)
             ),
             array(
                 $e = 'context1-hyphen && context2',
                 $e,
-                array('context1-hyphen'=>true, 'context2'=>true)
+                array('context1-hyphen' => true, 'context2' => true)
             ),
             array(
                 $e = 'context1_underscore && context2',
                 $e,
-                array('context1_underscore'=>true, 'context2'=>true)
+                array('context1_underscore' => true, 'context2' => true)
             ),
         );
     }
@@ -194,9 +195,6 @@ class LogicalExpressionEvaluatorTest extends UnitTestCase
         foreach ($values as $key => $value) {
             $string = str_replace($key, $value ? 'true' : 'false', $string);
         }
-        return eval("return (".$string.");");
+        return eval("return (" . $string . ");");
     }
-
 }
-
-?>
