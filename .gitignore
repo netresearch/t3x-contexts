@@ -1,5 +1,9 @@
 composer.lock
 .idea/
 vendor/
-public/
 .phpunit.result.cache
+
+# Do not ignore the Icons folder
+public/*
+!public/Icons/
+!public/Icons/**
