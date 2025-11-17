@@ -7,8 +7,6 @@
  * LICENSE file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 $EM_CONF['contexts'] = [
     'title'          => 'Multi-channel contexts',
     'description'    => 'Contexts for TYPO3 - can be used to modify page behaviour in the frontend based on several conditions',
