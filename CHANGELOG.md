@@ -1,3 +1,8 @@
+# 3.1.1
+
+- Add github action for publishing to TER
+- Add extension icon
+
 # 3.0.0
 
 ## FEATURE
