@@ -35,7 +35,7 @@
     "require": {
         "ext-pdo": "*",
         "typo3/cms-core": "^11.5",
-        "typo3/cms-frontend": "^11.5",
+        "typo3/cms-frontend": "^11.5 || ^14.0",
         "typo3/cms-backend": "^11.5",
         "typo3/cms-extbase": "^11.5",
         "typo3/cms-extensionmanager": "^11.5"
