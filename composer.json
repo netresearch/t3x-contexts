@@ -30,6 +30,10 @@
             "typo3/cms-composer-installers": true,
             "typo3/class-alias-loader": true,
             "phpro/grumphp": true
+        },
+        "audit": {
+            "abandoned": "ignore",
+            "block-insecure": false
         }
     },
     "require": {
