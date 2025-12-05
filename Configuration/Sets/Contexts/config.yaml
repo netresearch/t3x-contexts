@@ -1,0 +1,15 @@
+# TYPO3 Site Set configuration for contexts extension
+# This Site Set provides context-based content visibility features
+name: netresearch/contexts
+label: Contexts - Multi-channel content visibility
+dependencies: []
+
+# Settings that can be overridden per site
+settings:
+    contexts:
+        # Enable context debugging in frontend (development only)
+        debug: false
+        # Default context matching mode: 'all' (AND) or 'any' (OR)
+        matchMode: 'all'
+        # Cache lifetime modifier based on contexts (in seconds, 0 = no modification)
+        cacheLifetimeModifier: 0
