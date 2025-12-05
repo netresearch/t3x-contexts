@@ -11,40 +11,64 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Service;
 
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\Api\Record;
 use Netresearch\Contexts\Context\Container;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Frontend\ContentObject\Menu\AbstractMenuContentObject;
-use TYPO3\CMS\Frontend\ContentObject\Menu\AbstractMenuFilterPagesHookInterface;
 
 /**
- * Hook into enableFields() to hide pages and elements that are
- * may not be shown for the current contexts.
+ * Service for page-related context operations.
+ * Provides methods for cache hash modification and page filtering.
+ *
+ * Note: In TYPO3 v12+, menu filtering is handled via PSR-14 events
+ * (see MenuItemFilterEventListener) rather than hook interfaces.
  *
  * @author  Christian Weiske <christian.weiske@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
  * @link    https://www.netresearch.de
  */
-class PageService implements
-    AbstractMenuFilterPagesHookInterface,
-    SingletonInterface
+class PageService implements SingletonInterface
 {
     /**
      * Modify the cache hash
      *
-     * @param array &$params Array of parameters: hashParameters,
-     *                       createLockHashBase
-     * @param null   $ref    Reference object
-     *
-     * @return void
+     * @param array<string, mixed> $params Array of parameters: hashParameters, createLockHashBase
+     * @param object|null          $ref    Reference object
      */
-    public function createHashBase(array &$params, $ref): void
+    public function createHashBase(array &$params, ?object $ref = null): void
     {
         $params['hashParameters']['tx_contexts-contexts']
             = $this->getHashString();
+    }
+
+    /**
+     * Checks if a page record should be visible in the current context.
+     * Used by MenuItemFilterEventListener for PSR-14 event handling.
+     *
+     * @param array<string, mixed> $pageRecord The page record data
+     *
+     * @return bool Returns TRUE if the page can be safely included.
+     */
+    public function isPageVisibleInContext(array $pageRecord): bool
+    {
+        return Record::isEnabled('pages', $pageRecord)
+            && Record::isSettingEnabled('pages', 'tx_contexts_nav', $pageRecord);
+    }
+
+    /**
+     * Filter menu items based on context visibility.
+     * Called from MenuItemFilterEventListener.
+     *
+     * @param array<int, array<string, mixed>> $menuItems Array of menu item data
+     *
+     * @return array<int, array<string, mixed>> Filtered menu items
+     */
+    public function filterMenuItems(array $menuItems): array
+    {
+        return array_filter(
+            $menuItems,
+            fn (array $menuItem): bool => $this->isPageVisibleInContext($menuItem),
+        );
     }
 
     /**
@@ -57,32 +81,9 @@ class PageService implements
     protected function getHashString(): string
     {
         $keys = array_keys(
-            Container::get()->getArrayCopy()
+            Container::get()->getArrayCopy(),
         );
-        sort($keys, SORT_NUMERIC);
+        sort($keys, \SORT_NUMERIC);
         return implode(',', $keys);
-    }
-
-    /**
-     * Checks if a page is OK to include in the final menu item array.
-     *
-     * @param array                     &$data       Array of menu items
-     * @param array                     $banUidArray Array of page uids which are to be excluded
-     * @param bool                      $spacer      If set, then the page is a spacer.
-     * @param AbstractMenuContentObject $obj         The menu object
-     *
-     * @return bool Returns TRUE if the page can be safely included.
-     *
-     * @throws DBALException
-     * @throws Exception
-     */
-    public function processFilter(
-        array &$data,
-        array $banUidArray,
-        $spacer,
-        AbstractMenuContentObject $obj
-    ): bool {
-        return Record::isEnabled('pages', $data)
-            && Record::isSettingEnabled('pages', 'tx_contexts_nav', $data);
     }
 }

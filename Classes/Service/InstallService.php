@@ -13,9 +13,6 @@ namespace Netresearch\Contexts\Service;
 
 use Netresearch\Contexts\Api\Configuration;
 
-use function array_key_exists;
-use function is_array;
-
 /**
  * Hooks for InstallUtility: Append the necessary field definitions for
  * the enableSettings (tx_contexts_enable, tx_contexts_disable)
@@ -33,7 +30,6 @@ class InstallService
      * caches. The hook implementation may return table create strings that will be
      * respected by the extension manager during installation of an extension.
      *
-     * @param array  $arSignalReturn
      * @param string $strExtKey extension key
      *
      * @return array Either empty array or table create array
@@ -42,17 +38,17 @@ class InstallService
     {
         $extensionFlatSettings = Configuration::getExtensionFlatSettings($strExtKey);
 
-        if (!array_key_exists($strExtKey, $extensionFlatSettings)) {
+        if (!\array_key_exists($strExtKey, $extensionFlatSettings)) {
             return [];
         }
 
         $sql = '';
         foreach ($extensionFlatSettings[$strExtKey] as $table => $settings) {
-            $sql .= "\nCREATE TABLE $table (\n";
+            $sql .= "\nCREATE TABLE {$table} (\n";
 
             $arSql = [];
             foreach ($settings as $setting) {
-                if (is_array($setting)) {
+                if (\is_array($setting)) {
                     continue;
                 }
                 $flatColumns = Configuration::getFlatColumns($table, $setting);
