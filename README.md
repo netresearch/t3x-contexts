@@ -1,14 +1,19 @@
 ![Latest version](https://img.shields.io/github/v/release/netresearch/t3x-contexts?sort=semver)
 ![License](https://img.shields.io/github/license/netresearch/t3x-contexts)
+![CI](https://github.com/netresearch/t3x-contexts/actions/workflows/ci.yml/badge.svg)
 ![PHPStan](https://github.com/netresearch/t3x-contexts/actions/workflows/phpstan.yml/badge.svg)
-![PHPCodeSniffer](https://github.com/netresearch/t3x-contexts/actions/workflows/phpcs.yml/badge.svg)
-![CodeQL](https://github.com/netresearch/t3x-contexts/actions/workflows/codeql-analysis.yml/badge.svg)
-
 
 # Multi-channel contexts
 
 Show and hide pages and content elements based on configurable "contexts".
 With the use of contexts, TYPO3 is able to do multichannel output.
+
+## Requirements
+
+| Version | TYPO3       | PHP        |
+|---------|-------------|------------|
+| 4.x     | 12.4, 13.4  | 8.2 - 8.4  |
+| 3.x     | 11.5        | 7.4 - 8.1  |
 
 Examples for contexts:
 
@@ -177,10 +182,17 @@ The implementation of a context query in TypoScript looks like::
 
 
 
-# Testing
+## Development
+
+### Testing
 ```bash
-composer update
-vendor/bin/phpcs Classes/ --standard=PSR12
-vendor/bin/phpstan analyse --configuration phpstan.neon
-vendor/bin/rector --dry-run
+composer install
+vendor/bin/phpunit -c phpunit.xml
+vendor/bin/phpstan analyse
+vendor/bin/php-cs-fixer fix --dry-run --diff
 ```
+
+### Code Quality Tools
+- **PHPUnit**: Unit and functional tests
+- **PHPStan**: Static analysis (level 8)
+- **PHP-CS-Fixer**: Code style enforcement (PSR-12)

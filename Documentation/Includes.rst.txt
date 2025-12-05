@@ -1,0 +1,21 @@
+.. This is included by all .rst files
+
+.. |extension_key| replace:: contexts
+.. |extension_name| replace:: Contexts
+.. |vendor_name| replace:: Netresearch
+
+.. role:: aspect(emphasis)
+.. role:: bash(code)
+   :language: bash
+.. role:: html(code)
+   :language: html
+.. role:: php(code)
+   :language: php
+.. role:: sql(code)
+   :language: sql
+.. role:: typoscript(code)
+   :language: typoscript
+.. role:: xml(code)
+   :language: xml
+.. role:: yaml(code)
+   :language: yaml
