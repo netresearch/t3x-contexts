@@ -15,10 +15,11 @@ $EM_CONF['contexts'] = [
     'author_email'   => 'typo3.org@netresearch.de',
     'author_company' => 'Netresearch DTT GmbH',
     'state'          => 'stable',
-    'version'        => '3.1.1',
+    'version'        => '4.0.0',
     'constraints'    => [
         'depends'   => [
-            'typo3' => '11.5.0-11.99.99',
+            'php'   => '8.2.0-8.4.99',
+            'typo3' => '12.4.0-13.4.99',
         ],
         'conflicts' => [
         ],
