@@ -38,13 +38,13 @@ class DefaultSettingsFormElement extends AbstractFormElement
      */
     public function render(): array
     {
-        $table   = $this->data['parameterArray']['fieldConf']['config']['table'];
+        $table = $this->data['parameterArray']['fieldConf']['config']['table'];
         $content = '';
 
         $namePre = str_replace(
             '[default_settings_',
             '[default_settings][',
-            $this->data['parameterArray']['itemFormElName']
+            $this->data['parameterArray']['itemFormElName'],
         );
 
         // This fails
@@ -57,14 +57,14 @@ class DefaultSettingsFormElement extends AbstractFormElement
             : null;
 
         foreach ($this->data['parameterArray']['fieldConf']['config']['settings'] as $configKey => $config) {
-            $id         = $this->data['parameterArray']['itemFormElID'] . '-' . $configKey;
-            $name       = $namePre . '[' . $configKey . ']';
-            $checked    = '';
-            $setting    = null;
+            $id = $this->data['parameterArray']['itemFormElID'] . '-' . $configKey;
+            $name = $namePre . '[' . $configKey . ']';
+            $checked = '';
+            $setting = null;
             $hasSetting = false;
 
             if ($context !== null) {
-                $setting    = $context->getSetting($table, $configKey, 0);
+                $setting = $context->getSetting($table, $configKey, 0);
                 $hasSetting = (bool) $setting;
             }
 
@@ -77,11 +77,11 @@ class DefaultSettingsFormElement extends AbstractFormElement
             }
 
             $content .= <<<HTML
-<input type="hidden" name="$name" value="0" />
-<input class="checkbox" type="checkbox" name="$name" value="1" id="$id" $checked/>
-<label for="$id">{$GLOBALS['LANG']->sL($config['label'])}</label>
-<br/>
-HTML;
+                <input type="hidden" name="{$name}" value="0" />
+                <input class="checkbox" type="checkbox" name="{$name}" value="1" id="{$id}" {$checked}/>
+                <label for="{$id}">{$GLOBALS['LANG']->sL($config['label'])}</label>
+                <br/>
+                HTML;
         }
 
         $result = $this->initializeResultArray();
