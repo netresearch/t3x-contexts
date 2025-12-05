@@ -56,8 +56,12 @@ class DefaultSettingsFormElement extends AbstractFormElement
             ? Container::get()->initAll()->find($uid)
             : null;
 
+        // Generate base ID from itemFormElName (itemFormElID removed in TYPO3 v12)
+        $baseId = str_replace(['[', ']'], '_', $this->data['parameterArray']['itemFormElName']);
+        $baseId = trim($baseId, '_');
+
         foreach ($this->data['parameterArray']['fieldConf']['config']['settings'] as $configKey => $config) {
-            $id = $this->data['parameterArray']['itemFormElID'] . '-' . $configKey;
+            $id = $baseId . '-' . $configKey;
             $name = $namePre . '[' . $configKey . ']';
             $checked = '';
             $setting = null;
