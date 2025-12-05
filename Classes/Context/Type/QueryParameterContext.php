@@ -82,6 +82,7 @@ class QueryParameterContext extends AbstractContext
      */
     protected function getQueryParameter(string $param): mixed
     {
-        return GeneralUtility::_GET($param);
+        // Use $_GET directly as GeneralUtility::_GET() is deprecated in TYPO3 v12+
+        return $_GET[$param] ?? null;
     }
 }
