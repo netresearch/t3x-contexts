@@ -21,11 +21,10 @@ namespace Netresearch\Contexts\Xclass\Backend\Tree\Repository;
 class PageTreeRepository extends \TYPO3\CMS\Backend\Tree\Repository\PageTreeRepository
 {
     /**
-     * @var array
      */
     protected array $contextFields = [
         'tx_contexts_enable',
-        'tx_contexts_disable'
+        'tx_contexts_disable',
     ];
 
     /**
