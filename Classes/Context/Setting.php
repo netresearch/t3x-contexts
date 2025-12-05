@@ -21,13 +21,11 @@ namespace Netresearch\Contexts\Context;
 final class Setting
 {
     /**
-     * @var AbstractContext
      */
     protected AbstractContext $context;
 
     /**
      * The uid of the setting record
-     * @var int
      */
     protected int $uid;
 
@@ -40,7 +38,6 @@ final class Setting
     /**
      * The uid of the record the setting is for
      * (0 for default setting)
-     * @var int
      */
     protected int $foreignUid;
 
@@ -52,13 +49,10 @@ final class Setting
 
     /**
      * Whether the record is enabled by this setting
-     * @var bool
      */
     protected bool $enabled;
 
     /**
-     * @param AbstractContext $context
-     * @param array           $row
      */
     public function __construct(AbstractContext $context, array $row)
     {
@@ -67,16 +61,14 @@ final class Setting
         $this->foreignTable = $row['foreign_table'];
         $this->name = $row['name'];
         $this->foreignUid = (int) $row['foreign_uid'];
-        $this->enabled = (bool)$row['enabled'];
+        $this->enabled = (bool) $row['enabled'];
     }
 
     /**
      * Create a context settings object from flat data
      *
-     * @param AbstractContext $context
      * @param string          $table         Database table name
      * @param string          $setting       Setting name
-     * @param array           $arFlatColumns
      * @param array           $arRow         Database row
      *
      * @return Setting|null NULL when not enabled/disabled
@@ -86,15 +78,15 @@ final class Setting
         string $table,
         string $setting,
         array $arFlatColumns,
-        array $arRow
+        array $arRow,
     ): ?Setting {
         $bDisabled = str_contains(
             ',' . $arRow[$arFlatColumns[0]] . ',',
-            ',' . $context->getUid() . ','
+            ',' . $context->getUid() . ',',
         );
         $bEnabled = str_contains(
             ',' . $arRow[$arFlatColumns[1]] . ',',
-            ',' . $context->getUid() . ','
+            ',' . $context->getUid() . ',',
         );
 
         if (!$bEnabled && !$bDisabled) {
@@ -102,18 +94,17 @@ final class Setting
         }
 
         $arDummyRow = [
-            'uid'  => null,
+            'uid' => null,
             'name' => $setting,
             'foreign_table' => $table,
-            'foreign_uid'   => null,
-            'enabled' => $bEnabled
+            'foreign_uid' => null,
+            'enabled' => $bEnabled,
         ];
 
         return new self($context, $arDummyRow);
     }
 
     /**
-     * @return bool
      */
     public function isDefaultSetting(): bool
     {
@@ -121,7 +112,6 @@ final class Setting
     }
 
     /**
-     * @return AbstractContext
      */
     public function getContext(): AbstractContext
     {
@@ -129,7 +119,6 @@ final class Setting
     }
 
     /**
-     * @return int
      */
     public function getUid(): int
     {
@@ -137,7 +126,6 @@ final class Setting
     }
 
     /**
-     * @return string
      */
     public function getForeignTable(): string
     {
@@ -145,7 +133,6 @@ final class Setting
     }
 
     /**
-     * @return int
      */
     public function getForeignUid(): int
     {
@@ -153,7 +140,6 @@ final class Setting
     }
 
     /**
-     * @return string
      */
     public function getName(): string
     {
@@ -161,7 +147,6 @@ final class Setting
     }
 
     /**
-     * @return bool
      */
     public function getEnabled(): bool
     {
