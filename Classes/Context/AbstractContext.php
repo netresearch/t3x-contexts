@@ -127,8 +127,8 @@ abstract class AbstractContext
             $this->disabled = (bool) $arRow['disabled'];
             $this->bHideInBackend = (bool) $arRow['hide_in_backend'];
 
-            if ($arRow['type_conf'] !== '') {
-                $this->conf = (array) GeneralUtility::xml2array($arRow['type_conf']);
+            if (!empty($arRow['type_conf'])) {
+                $this->conf = (array) GeneralUtility::xml2array((string) $arRow['type_conf']);
             }
         }
     }
