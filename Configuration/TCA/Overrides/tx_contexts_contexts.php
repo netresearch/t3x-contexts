@@ -26,47 +26,47 @@ Configuration::registerContextType(
     'default',
     'Select a type',
     '',
-    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Empty.xml'
+    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Empty.xml',
 );
 
 Configuration::registerContextType(
     'domain',
     'Domain',
     DomainContext::class,
-    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Domain.xml'
+    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Domain.xml',
 );
 
 Configuration::registerContextType(
     'getparam',
     'GET parameter',
     QueryParameterContext::class,
-    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/GetParam.xml'
+    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/GetParam.xml',
 );
 
 Configuration::registerContextType(
     'ip',
     'IP',
     IpContext::class,
-    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Ip.xml'
+    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Ip.xml',
 );
 
 Configuration::registerContextType(
     'httpheader',
     'HTTP header',
     HttpHeaderContext::class,
-    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/HttpHeader.xml'
+    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/HttpHeader.xml',
 );
 
 Configuration::registerContextType(
     'combination',
     'Logical context combination',
     CombinationContext::class,
-    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Combination.xml'
+    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Combination.xml',
 );
 
 Configuration::registerContextType(
     'session',
     'Session variable',
     SessionContext::class,
-    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Session.xml'
+    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/Session.xml',
 );
