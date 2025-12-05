@@ -30,7 +30,6 @@ final class FrontendControllerServiceTest extends TestCase
         // Reset the singleton container for each test
         $reflection = new ReflectionClass(Container::class);
         $property = $reflection->getProperty('instance');
-        $property->setAccessible(true);
         $property->setValue(null, null);
     }
 
@@ -125,15 +124,12 @@ final class FrontendControllerServiceTest extends TestCase
         $reflection = new ReflectionClass(FrontendControllerService::class);
 
         $paramsProperty = $reflection->getProperty('params');
-        $paramsProperty->setAccessible(true);
         $paramsProperty->setValue(null, []);
 
         $linkVarParamsProperty = $reflection->getProperty('linkVarParams');
-        $linkVarParamsProperty->setAccessible(true);
         $linkVarParamsProperty->setValue(null, []);
 
         $hooksProperty = $reflection->getProperty('hooksRegistered');
-        $hooksProperty->setAccessible(true);
         $hooksProperty->setValue(null, false);
 
         // Call the method

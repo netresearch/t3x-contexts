@@ -26,10 +26,10 @@ use TYPO3\CMS\Frontend\Event\AfterPageAndLanguageIsResolvedEvent;
     identifier: 'contexts/page-access-check',
     event: AfterPageAndLanguageIsResolvedEvent::class,
 )]
-final class PageAccessEventListener
+final readonly class PageAccessEventListener
 {
     public function __construct(
-        private readonly FrontendControllerService $frontendControllerService,
+        private FrontendControllerService $frontendControllerService,
     ) {
     }
 
@@ -54,7 +54,7 @@ final class PageAccessEventListener
                     $event->getRequest(),
                     'Page is not accessible in current context',
                 );
-            throw new ImmediateResponseException($response);
+            throw new ImmediateResponseException($response, 7536329338);
         }
     }
 }

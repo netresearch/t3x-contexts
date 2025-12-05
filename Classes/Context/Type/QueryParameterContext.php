@@ -44,6 +44,7 @@ class QueryParameterContext extends AbstractContext
         if ($param === '') {
             throw new RuntimeException(
                 'Parameter name missing from GET Parameter context configuration',
+                3404190205,
             );
         }
 

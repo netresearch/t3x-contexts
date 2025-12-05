@@ -127,9 +127,9 @@ final class QueryParameterContextTest extends UnitTestCase
         }
 
         return new class ($fieldName, $fieldValues, $getParams) extends QueryParameterContext {
-            private string $mockFieldName;
+            private readonly string $mockFieldName;
 
-            private string $mockFieldValues;
+            private readonly string $mockFieldValues;
 
             /** @var array<string, mixed> */
             private array $mockGetParams;

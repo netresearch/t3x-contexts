@@ -244,7 +244,7 @@ final class CombinationTest extends TestBase
         ?bool $matchResult = null,
     ): AbstractContext {
         return new class ($uid, $alias, $disabled, $matchResult) extends AbstractContext {
-            private ?bool $matchResult;
+            private readonly ?bool $matchResult;
 
             public function __construct(int $uid, string $alias, bool $disabled, ?bool $matchResult)
             {
@@ -268,7 +268,7 @@ final class CombinationTest extends TestBase
     private function createCombinationContext(int $uid, string $alias, string $expression): CombinationContext
     {
         return new class ($uid, $alias, $expression) extends CombinationContext {
-            private string $expression;
+            private readonly string $expression;
 
             public function __construct(int $uid, string $alias, string $expression)
             {

@@ -67,7 +67,7 @@ class PageService implements SingletonInterface
     {
         return array_filter(
             $menuItems,
-            fn (array $menuItem): bool => $this->isPageVisibleInContext($menuItem),
+            $this->isPageVisibleInContext(...),
         );
     }
 

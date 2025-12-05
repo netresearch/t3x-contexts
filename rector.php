@@ -38,15 +38,13 @@ return static function (RectorConfig $rectorConfig): void {
         // PHP level upgrades
         LevelSetList::UP_TO_PHP_82,
 
-        // TYPO3 v12 migrations (applies all v11 → v12 changes)
+        // TYPO3 v12 migrations only (extension supports ^12.4 || ^13.4)
+        // Note: Don't use UP_TO_TYPO3_13 as it introduces v13-only APIs
         Typo3LevelSetList::UP_TO_TYPO3_12,
 
-        // TYPO3 v13 migrations (applies all v12 → v13 changes)
-        Typo3LevelSetList::UP_TO_TYPO3_13,
-
-        // Additional TYPO3-specific transformations
-        Typo3SetList::UNDERSCORE_TO_NAMESPACE,
-        Typo3SetList::DATABASE_TO_DBAL,
+        // TYPO3 code quality and general improvements
+        Typo3SetList::CODE_QUALITY,
+        Typo3SetList::GENERAL,
     ]);
 
     // Skip some rules that may cause issues or require manual review

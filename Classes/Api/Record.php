@@ -124,7 +124,7 @@ class Record
             if (!\array_key_exists($flatColumn, $row) || ($row[$flatColumn] === null)) {
                 $rowValid = false;
             } elseif ($row[$flatColumn] !== '') {
-                $flatColumnContents[$i] = array_flip(explode(',', $row[$flatColumn]));
+                $flatColumnContents[$i] = array_flip(explode(',', (string) $row[$flatColumn]));
             } else {
                 $flatColumnContents[$i] = [];
             }

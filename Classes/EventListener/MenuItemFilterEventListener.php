@@ -23,10 +23,10 @@ use TYPO3\CMS\Frontend\Event\FilterMenuItemsEvent;
     identifier: 'contexts/menu-item-filter',
     event: FilterMenuItemsEvent::class,
 )]
-final class MenuItemFilterEventListener
+final readonly class MenuItemFilterEventListener
 {
     public function __construct(
-        private readonly PageService $pageService,
+        private PageService $pageService,
     ) {
     }
 

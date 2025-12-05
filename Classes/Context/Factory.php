@@ -63,12 +63,13 @@ class Factory implements LoggerAwareInterface
         $instance = GeneralUtility::makeInstance($class, $arRow);
 
         if ($instance instanceof SingletonInterface) {
-            throw new ContextException($class . ' may not be singleton');
+            throw new ContextException($class . ' may not be singleton', 7787129296);
         }
 
         if (!$instance instanceof AbstractContext) {
             throw new ContextException(
                 $class . ' must extend Tx_Contexts_Context_Abstract',
+                7017624821,
             );
         }
 
