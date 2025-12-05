@@ -14,7 +14,7 @@ namespace Netresearch\Contexts\Service;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\Api\Configuration;
-use PDO;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -126,7 +126,7 @@ class DataHandlerService
                     ->where(
                         $queryBuilder->expr()->eq(
                             'context_uid',
-                            $queryBuilder->createNamedParameter((int) $contextId, PDO::PARAM_INT),
+                            $queryBuilder->createNamedParameter((int) $contextId, Connection::PARAM_INT),
                         ),
                         $queryBuilder->expr()->eq(
                             'foreign_table',
@@ -138,7 +138,7 @@ class DataHandlerService
                         ),
                         $queryBuilder->expr()->in(
                             'foreign_uid',
-                            $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT),
+                            $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT),
                         ),
                     )
                     ->executeQuery()
@@ -150,7 +150,7 @@ class DataHandlerService
                             'tx_contexts_settings',
                             ['enabled' => (int) $setting],
                             ['uid' => (int) $row['uid']],
-                            [PDO::PARAM_INT],
+                            [Connection::PARAM_INT],
                         );
                     } else {
                         $connection->insert(
@@ -163,11 +163,11 @@ class DataHandlerService
                                 'enabled' => (int) $setting,
                             ],
                             [
-                                PDO::PARAM_INT,
-                                PDO::PARAM_STR,
-                                PDO::PARAM_STR,
-                                PDO::PARAM_INT,
-                                PDO::PARAM_INT,
+                                Connection::PARAM_INT,
+                                Connection::PARAM_STR,
+                                Connection::PARAM_STR,
+                                Connection::PARAM_INT,
+                                Connection::PARAM_INT,
                             ],
                         );
                     }
@@ -175,7 +175,7 @@ class DataHandlerService
                     $connection->delete(
                         'tx_contexts_settings',
                         ['uid' => (int) $row['uid']],
-                        [PDO::PARAM_INT],
+                        [Connection::PARAM_INT],
                     );
                 }
             }
@@ -249,11 +249,11 @@ class DataHandlerService
             ->where(
                 $queryBuilder->expr()->eq(
                     'context_uid',
-                    $queryBuilder->createNamedParameter($contextId, PDO::PARAM_INT),
+                    $queryBuilder->createNamedParameter($contextId, Connection::PARAM_INT),
                 ),
                 $queryBuilder->expr()->eq(
                     'foreign_uid',
-                    $queryBuilder->createNamedParameter(0, PDO::PARAM_INT),
+                    $queryBuilder->createNamedParameter(0, Connection::PARAM_INT),
                 ),
             )
             ->executeQuery()
@@ -273,7 +273,7 @@ class DataHandlerService
                         'tx_contexts_settings',
                         ['enabled' => (int) $enabled],
                         ['uid' => (int) $fieldSettings[$field]],
-                        [PDO::PARAM_INT],
+                        [Connection::PARAM_INT],
                     );
                 } else {
                     $connenction->insert(
@@ -286,11 +286,11 @@ class DataHandlerService
                             'enabled' => (int) $enabled,
                         ],
                         [
-                            PDO::PARAM_INT,
-                            PDO::PARAM_STR,
-                            PDO::PARAM_STR,
-                            PDO::PARAM_INT,
-                            PDO::PARAM_INT,
+                            Connection::PARAM_INT,
+                            Connection::PARAM_STR,
+                            Connection::PARAM_STR,
+                            Connection::PARAM_INT,
+                            Connection::PARAM_INT,
                         ],
                     );
                 }
