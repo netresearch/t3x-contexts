@@ -1,0 +1,63 @@
+#!/bin/bash
+
+## Description: Run extension tests against specified TYPO3 version
+## Usage: run-tests [version]
+## Example: ddev run-tests v12
+## Example: ddev run-tests v13
+## Example: ddev run-tests all
+
+set -e
+
+EXTENSION_DIR="/var/www/html/extension"
+VERSION="${1:-all}"
+
+run_tests_for_version() {
+    local ver="$1"
+    local install_dir="/var/www/html/${ver}"
+
+    if [ ! -d "${install_dir}/vendor" ]; then
+        echo "ERROR: TYPO3 ${ver} not installed. Run 'ddev install-${ver}' first."
+        return 1
+    fi
+
+    echo "=== Running tests for TYPO3 ${ver} ==="
+    cd "${install_dir}"
+
+    # Run PHPUnit tests
+    if [ -f "${EXTENSION_DIR}/Build/phpunit/UnitTests.xml" ]; then
+        echo "Running unit tests..."
+        ./vendor/bin/phpunit -c "${EXTENSION_DIR}/Build/phpunit/UnitTests.xml" || true
+    elif [ -f "${EXTENSION_DIR}/phpunit.xml" ]; then
+        echo "Running unit tests (legacy config)..."
+        ./vendor/bin/phpunit -c "${EXTENSION_DIR}/phpunit.xml" || true
+    fi
+
+    if [ -f "${EXTENSION_DIR}/Build/phpunit/FunctionalTests.xml" ]; then
+        echo "Running functional tests..."
+        ./vendor/bin/phpunit -c "${EXTENSION_DIR}/Build/phpunit/FunctionalTests.xml" || true
+    fi
+
+    echo ""
+}
+
+case "${VERSION}" in
+    v12|12)
+        run_tests_for_version "v12"
+        ;;
+    v13|13)
+        run_tests_for_version "v13"
+        ;;
+    all|both)
+        run_tests_for_version "v12"
+        run_tests_for_version "v13"
+        ;;
+    *)
+        echo "Usage: ddev run-tests [v12|v13|all]"
+        echo "  v12  - Run tests against TYPO3 v12"
+        echo "  v13  - Run tests against TYPO3 v13"
+        echo "  all  - Run tests against both versions"
+        exit 1
+        ;;
+esac
+
+echo "=== Tests Complete ==="

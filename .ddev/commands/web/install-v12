@@ -1,0 +1,102 @@
+#!/bin/bash
+
+## Description: Install TYPO3 v12 with the contexts extension
+## Usage: install-v12
+## Example: ddev install-v12
+
+set -e
+
+TYPO3_VERSION="^12.4"
+INSTALL_DIR="/var/www/html/v12"
+EXTENSION_DIR="/var/www/html/extension"
+
+echo "=== Installing TYPO3 ${TYPO3_VERSION} ==="
+
+# Create installation directory if needed
+mkdir -p "${INSTALL_DIR}"
+cd "${INSTALL_DIR}"
+
+# Check if already installed
+if [ -f "${INSTALL_DIR}/composer.json" ] && [ -d "${INSTALL_DIR}/vendor" ]; then
+    echo "TYPO3 v12 already installed. Use 'ddev composer update' in v12 directory to update."
+    echo "Or remove ${INSTALL_DIR} and run this command again for fresh install."
+    exit 0
+fi
+
+# Create TYPO3 project
+echo "Creating TYPO3 ${TYPO3_VERSION} project..."
+composer create-project "typo3/cms-base-distribution:${TYPO3_VERSION}" . --no-interaction
+
+# Add path repository for local extension
+echo "Configuring local extension repository..."
+composer config repositories.local path "${EXTENSION_DIR}"
+composer config minimum-stability dev
+composer config prefer-stable true
+
+# Require the extension
+echo "Installing contexts extension..."
+composer require "netresearch/contexts:@dev" --no-interaction
+
+# Create necessary directories
+mkdir -p public/typo3conf public/fileadmin public/uploads var/log var/cache
+
+# Database configuration
+DB_NAME="db_v12"
+DB_USER="db"
+DB_PASS="db"
+DB_HOST="db"
+
+# Create database if it doesn't exist
+mysql -h "${DB_HOST}" -u "${DB_USER}" -p"${DB_PASS}" -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
+
+# Create AdditionalConfiguration.php
+cat > config/system/additional.php << 'ADDITIONAL_CONFIG'
+<?php
+$GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default'] = [
+    'charset' => 'utf8mb4',
+    'driver' => 'mysqli',
+    'host' => 'db',
+    'port' => 3306,
+    'dbname' => 'db_v12',
+    'user' => 'db',
+    'password' => 'db',
+    'tableoptions' => [
+        'charset' => 'utf8mb4',
+        'collate' => 'utf8mb4_unicode_ci',
+    ],
+];
+
+// Development settings
+$GLOBALS['TYPO3_CONF_VARS']['BE']['debug'] = true;
+$GLOBALS['TYPO3_CONF_VARS']['FE']['debug'] = true;
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['devIPmask'] = '*';
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors'] = 1;
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['exceptionalErrors'] = E_ALL;
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = '.*';
+
+// Caching - use database for development
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['hash']['backend'] = \TYPO3\CMS\Core\Cache\Backend\Typo3DatabaseBackend::class;
+
+// Install tool password: 'password'
+$GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '$argon2i$v=19$m=65536,t=16,p=1$QnRJTjVGWjNaN2o4Y1BIMg$EQ0x8K6FUfLIkGv3F5k0t0ncj7pdBoZSEfjEGYlb7TA';
+
+// Graphics
+$GLOBALS['TYPO3_CONF_VARS']['GFX']['processor'] = 'ImageMagick';
+$GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_path'] = '/usr/bin/';
+ADDITIONAL_CONFIG
+
+# Setup TYPO3
+echo "Setting up TYPO3..."
+./vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db_v12 --username=db --password=db --admin-username=admin --admin-password=Password123! --admin-email=admin@example.com --project-name="Contexts v12" --no-interaction --force
+
+# Activate extension
+echo "Activating contexts extension..."
+./vendor/bin/typo3 extension:activate contexts || true
+
+echo ""
+echo "=== TYPO3 v12 Installation Complete ==="
+echo "URL: https://v12.contexts.ddev.site"
+echo "Backend: https://v12.contexts.ddev.site/typo3"
+echo "Admin: admin / Password123!"
+echo "Install Tool Password: password"
+echo ""
