@@ -17,7 +17,6 @@ use Netresearch\Contexts\Api\Configuration;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class for TCEmain-hooks: Capture incoming default and record settings
@@ -34,6 +33,10 @@ class DataHandlerService
      * @var array<int|string, array<string, string>>
      */
     protected array $currentSettings = [];
+
+    public function __construct(private readonly ConnectionPool $connectionPool)
+    {
+    }
 
     /**
      * Extract the context settings from the field array and set them in
@@ -113,7 +116,7 @@ class DataHandlerService
     protected function saveRecordSettings(string $table, int $uid, array $contextsAndSettings): void
     {
         $flatSettingColumns = Configuration::getFlatColumns($table);
-        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+        $connectionPool = $this->connectionPool;
 
         foreach ($contextsAndSettings as $contextId => $settings) {
             foreach ($settings as $field => $setting) {
@@ -219,7 +222,7 @@ class DataHandlerService
                 $val = implode(',', $val);
             }
 
-            $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            $connection = $this->connectionPool
                 ->getConnectionForTable($table);
 
             $connection->update(
@@ -241,7 +244,7 @@ class DataHandlerService
      */
     protected function saveDefaultSettings(int $contextId, array $settings): void
     {
-        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+        $connectionPool = $this->connectionPool;
 
         $queryBuilder = $connectionPool->getQueryBuilderForTable('tx_contexts_settings');
         $existingSettings = $queryBuilder->select('*')

@@ -23,10 +23,10 @@ use TYPO3\CMS\Core\Imaging\Event\ModifyRecordOverlayIconIdentifierEvent;
     identifier: 'contexts/icon-overlay-modifier',
     event: ModifyRecordOverlayIconIdentifierEvent::class,
 )]
-final class IconOverlayEventListener
+final readonly class IconOverlayEventListener
 {
     public function __construct(
-        private readonly IconService $iconService,
+        private IconService $iconService,
     ) {
     }
 

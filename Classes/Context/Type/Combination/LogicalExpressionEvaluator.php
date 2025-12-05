@@ -293,6 +293,7 @@ class LogicalExpressionEvaluator
                     if ($i > 1) {
                         throw new LogicalExpressionEvaluatorException(
                             'Can\'t evaluate more than two items by xor',
+                            3563712913,
                         );
                     }
                     if ($i === 0) {
@@ -414,12 +415,14 @@ class LogicalExpressionEvaluator
                 if (($scope->parentScope !== null) && ($scope->parentScope->parentScope === null)) {
                     throw new LogicalExpressionEvaluatorException(
                         'Found not opened closing parentheses',
+                        6590670096,
                     );
                 }
 
                 if (\is_int(end($this->tokens))) {
                     throw new LogicalExpressionEvaluatorException(
                         'Unexpected )',
+                        9855977305,
                     );
                 }
 
@@ -435,6 +438,7 @@ class LogicalExpressionEvaluator
                 if ((\count($this->tokens) === 0) || \is_int(end($this->tokens))) {
                     throw new LogicalExpressionEvaluatorException(
                         'Unexpected Operator',
+                        1651471071,
                     );
                 }
                 $this->pushToken($token);
@@ -444,6 +448,7 @@ class LogicalExpressionEvaluator
                 if (\is_int(end($this->tokens))) {
                     throw new LogicalExpressionEvaluatorException(
                         'Unexpected end',
+                        8606073221,
                     );
                 }
 
@@ -453,6 +458,7 @@ class LogicalExpressionEvaluator
                 ) {
                     throw new LogicalExpressionEvaluatorException(
                         'Missing closing parentheses',
+                        3681365195,
                     );
                 }
 
@@ -464,12 +470,14 @@ class LogicalExpressionEvaluator
                         if ((\count($this->tokens) > 0) && !\is_int(end($this->tokens))) {
                             throw new LogicalExpressionEvaluatorException(
                                 'Unexpected variable',
+                                7706253055,
                             );
                         }
                         $this->pushToken($token);
                     } else {
                         throw new LogicalExpressionEvaluatorException(
                             'Unexpected "' . $token[1] . '"',
+                            1064266885,
                         );
                     }
                 }
@@ -492,6 +500,7 @@ class LogicalExpressionEvaluator
             } else {
                 throw new LogicalExpressionEvaluatorException(
                     '! can\'t preceded operators',
+                    4778280443,
                 );
             }
             $this->nextTokenNegated = false;

@@ -39,7 +39,7 @@ class HttpHeaderContext extends AbstractContext
 
         // Check, if header exists in HTTP request
         foreach ($_SERVER as $header => $value) {
-            if (strtolower($header) === $httpHeaderName) {
+            if (strtolower((string) $header) === $httpHeaderName) {
                 // header exists - check if any configured values match
                 return $this->invert($this->storeInSession(
                     $this->matchValues($value),
@@ -72,7 +72,7 @@ class HttpHeaderContext extends AbstractContext
             return $value !== '';
         }
 
-        $arValues = array_map('trim', $arValues);
+        $arValues = array_map(trim(...), $arValues);
 
         return \in_array($value, $arValues, true);
     }

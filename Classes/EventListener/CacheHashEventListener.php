@@ -27,7 +27,7 @@ use TYPO3\CMS\Frontend\Event\ModifyCacheLifetimeForPageEvent;
     identifier: 'contexts/cache-hash-modifier',
     event: ModifyCacheLifetimeForPageEvent::class,
 )]
-final class CacheHashEventListener
+final readonly class CacheHashEventListener
 {
     private PageService $pageService;
 
