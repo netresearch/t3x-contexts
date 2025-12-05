@@ -1,19 +1,26 @@
-<phpunit
-    backupGlobals="false"
-    colors="true"
-    verbose="true"
-    strict="true"
-    bootstrap="Tests/bootstrap.php"
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    This is a convenience configuration for running tests locally.
+    For CI/CD, use Build/phpunit/UnitTests.xml and Build/phpunit/FunctionalTests.xml
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/typo3/testing-framework/Resources/Core/Build/UnitTestsBootstrap.php"
+         cacheResult="false"
+         colors="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         failOnWarning="true"
 >
     <testsuites>
-        <testsuite name="Full Test Suite">
-            <directory>./Tests/</directory>
+        <testsuite name="Unit Tests">
+            <directory>Tests/Unit/</directory>
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist>
+    <source>
+        <include>
             <directory suffix=".php">Classes/</directory>
-        </whitelist>
-    </filter>
+        </include>
+    </source>
 </phpunit>
