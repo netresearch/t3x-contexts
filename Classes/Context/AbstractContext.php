@@ -407,7 +407,7 @@ abstract class AbstractContext
      */
     protected function getTypoScriptFrontendController(): ?TypoScriptFrontendController
     {
-        return $GLOBALS['TSFE'];
+        return $GLOBALS['TSFE'] ?? null;
     }
 
     /**
