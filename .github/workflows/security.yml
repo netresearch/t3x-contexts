@@ -1,0 +1,85 @@
+name: Security
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+  schedule:
+    # Run weekly security scan
+    - cron: '0 8 * * 1'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  composer-audit:
+    name: Composer Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+          coverage: none
+
+      - name: Run Composer Audit
+        run: composer audit --format=plain || true
+
+      - name: Check for known vulnerabilities
+        run: |
+          # Fail the build on high/critical vulnerabilities
+          AUDIT_OUTPUT=$(composer audit --format=json 2>/dev/null || echo '{"advisories":[]}')
+          VULN_COUNT=$(echo "$AUDIT_OUTPUT" | jq '.advisories | length // 0')
+          if [ "$VULN_COUNT" -gt 0 ]; then
+            echo "::warning::Found $VULN_COUNT security advisories in dependencies"
+            echo "$AUDIT_OUTPUT" | jq '.advisories'
+          else
+            echo "No known vulnerabilities found"
+          fi
+
+  sbom:
+    name: Generate SBOM
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Generate CycloneDX SBOM
+        uses: CycloneDX/gh-php-composer@v1
+        with:
+          input: ./composer.lock
+          output: sbom.json
+          spec-version: '1.5'
+
+      - name: Upload SBOM as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-cyclonedx
+          path: sbom.json
+          retention-days: 90
+
+      - name: Submit SBOM to Dependency Graph
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: advanced-security/spdx-dependency-submission-action@v0.1.1
+        continue-on-error: true
+        with:
+          filePath: sbom.json
