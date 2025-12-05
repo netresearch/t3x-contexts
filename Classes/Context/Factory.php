@@ -18,8 +18,6 @@ use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-use function array_key_exists;
-
 /**
  * Context factory
  *
@@ -37,15 +35,14 @@ class Factory implements LoggerAwareInterface
      *
      * @param array $arRow Database context row
      *
-     * @return AbstractContext|null
      * @throws ContextException
      */
     public function createFromDb(array $arRow): ?AbstractContext
     {
         $classMap = Configuration::getContextTypes();
-        $type     = $arRow['type'];
+        $type = $arRow['type'];
 
-        if (!$type || !array_key_exists($type, $classMap)) {
+        if (!$type || !\array_key_exists($type, $classMap)) {
             if ($this->logger !== null) {
                 $this->logger->warning('tx_contexts: No class found for context type "' . $type . '"');
             }
@@ -71,7 +68,7 @@ class Factory implements LoggerAwareInterface
 
         if (!$instance instanceof AbstractContext) {
             throw new ContextException(
-                $class . ' must extend Tx_Contexts_Context_Abstract'
+                $class . ' must extend Tx_Contexts_Context_Abstract',
             );
         }
 
