@@ -1,0 +1,37 @@
+#!/bin/bash
+
+## Description: Install both TYPO3 v12 and v13 with the contexts extension
+## Usage: install-all
+## Example: ddev install-all
+
+set -e
+
+echo "=============================================="
+echo "  Installing TYPO3 v12 and v13 Environments"
+echo "=============================================="
+echo ""
+
+# Install v12
+echo ">>> Starting TYPO3 v12 installation..."
+/var/www/html/.ddev/commands/web/install-v12
+echo ""
+
+# Install v13
+echo ">>> Starting TYPO3 v13 installation..."
+/var/www/html/.ddev/commands/web/install-v13
+echo ""
+
+echo "=============================================="
+echo "  All Installations Complete!"
+echo "=============================================="
+echo ""
+echo "Available environments:"
+echo "  - TYPO3 v12: https://v12.contexts.ddev.site/typo3"
+echo "  - TYPO3 v13: https://v13.contexts.ddev.site/typo3"
+echo "  - Extension: https://contexts.ddev.site"
+echo "  - Docs:      https://docs.contexts.ddev.site"
+echo ""
+echo "Credentials:"
+echo "  - Backend: admin / Password123!"
+echo "  - Install Tool: password"
+echo ""

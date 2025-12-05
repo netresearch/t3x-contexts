@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contexts Extension - Development Environment</title>
+    <style>
+        :root {
+            --primary: #ff8700;
+            --secondary: #1a1a2e;
+            --accent: #4a9eff;
+            --bg: #f5f5f5;
+            --card-bg: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg);
+            color: var(--secondary);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--secondary) 0%, #2d2d44 100%);
+            border-radius: 16px;
+            color: white;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        header p { opacity: 0.9; font-size: 1.1rem; }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--primary);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .card p { color: #666; margin-bottom: 1rem; }
+        .card a {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .card a:hover { background: #e67a00; }
+        .card a.secondary {
+            background: var(--secondary);
+        }
+        .card a.secondary:hover { background: #2d2d44; }
+        .version-tag {
+            font-size: 0.75rem;
+            padding: 0.15rem 0.5rem;
+            background: #e0e0e0;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .version-tag.v12 { background: #c5e1a5; color: #33691e; }
+        .version-tag.v13 { background: #b3e5fc; color: #01579b; }
+        .commands {
+            background: var(--secondary);
+            color: #e0e0e0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'Fira Code', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+        .commands h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-family: inherit;
+        }
+        .commands code {
+            display: block;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #333;
+        }
+        .commands code:last-child { border-bottom: none; }
+        .commands .cmd { color: var(--accent); }
+        .commands .comment { color: #888; }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #888;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Contexts Extension</h1>
+            <p>TYPO3 Multi-Version Development Environment</p>
+            <span class="badge">netresearch/contexts v4.0.0-dev</span>
+        </header>
+
+        <div class="grid">
+            <div class="card">
+                <h2>
+                    <span>TYPO3 v12</span>
+                    <span class="version-tag v12">LTS</span>
+                </h2>
+                <p>TYPO3 12.4 LTS development instance with the contexts extension installed.</p>
+                <a href="https://v12.contexts.ddev.site/typo3" target="_blank">Open Backend</a>
+            </div>
+
+            <div class="card">
+                <h2>
+                    <span>TYPO3 v13</span>
+                    <span class="version-tag v13">LTS</span>
+                </h2>
+                <p>TYPO3 13.4 LTS development instance with the contexts extension installed.</p>
+                <a href="https://v13.contexts.ddev.site/typo3" target="_blank">Open Backend</a>
+            </div>
+
+            <div class="card">
+                <h2>Documentation</h2>
+                <p>Rendered extension documentation in RST format.</p>
+                <a href="https://docs.contexts.ddev.site" target="_blank" class="secondary">View Docs</a>
+            </div>
+
+            <div class="card">
+                <h2>Extension Source</h2>
+                <p>Direct access to the extension source code mounted at /var/www/html/extension.</p>
+                <a href="https://github.com/netresearch/t3x-contexts" target="_blank" class="secondary">GitHub</a>
+            </div>
+        </div>
+
+        <div class="commands">
+            <h3>Quick Commands</h3>
+            <code><span class="cmd">ddev start</span> <span class="comment"># Start the development environment</span></code>
+            <code><span class="cmd">ddev install-all</span> <span class="comment"># Install TYPO3 v12 and v13</span></code>
+            <code><span class="cmd">ddev install-v12</span> <span class="comment"># Install only TYPO3 v12</span></code>
+            <code><span class="cmd">ddev install-v13</span> <span class="comment"># Install only TYPO3 v13</span></code>
+            <code><span class="cmd">ddev run-tests all</span> <span class="comment"># Run tests against both versions</span></code>
+            <code><span class="cmd">ddev lint</span> <span class="comment"># Run PHPStan, PHP-CS-Fixer, Rector</span></code>
+            <code><span class="cmd">ddev ssh</span> <span class="comment"># SSH into the web container</span></code>
+            <code><span class="cmd">ddev describe</span> <span class="comment"># Show all URLs and info</span></code>
+        </div>
+
+        <footer>
+            <p>Contexts Extension &copy; Netresearch DTT GmbH | PHP 8.2+ | TYPO3 12.4-13.4 LTS</p>
+        </footer>
+    </div>
+</body>
+</html>
