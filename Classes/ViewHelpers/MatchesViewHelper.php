@@ -38,7 +38,6 @@ class MatchesViewHelper extends AbstractViewHelper
     /**
      * Initializes arguments (attributes)
      *
-     * @return void
      */
     public function initializeArguments(): void
     {
@@ -48,7 +47,7 @@ class MatchesViewHelper extends AbstractViewHelper
             'alias',
             'string',
             'Context alias name',
-            true
+            true,
         );
     }
 
@@ -59,7 +58,7 @@ class MatchesViewHelper extends AbstractViewHelper
      */
     public function render(): int
     {
-        /** @var null|string $alias */
+        /** @var string|null $alias */
         $alias = $this->arguments['alias'] ?? null;
 
         if ($alias !== null) {

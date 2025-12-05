@@ -21,9 +21,6 @@ use TYPO3\CMS\Core\Database\Query\Restriction\EnforceableQueryRestrictionInterfa
 use TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionInterface;
 use TYPO3\CMS\Core\Http\ApplicationType;
 
-use function count;
-use function defined;
-
 /**
  * Class ContextRestriction
  *
@@ -31,10 +28,9 @@ use function defined;
  * @license Netresearch https://www.netresearch.de
  * @link    https://www.netresearch.de
  */
-class ContextRestriction implements QueryRestrictionInterface, EnforceableQueryRestrictionInterface
+class ContextRestriction implements EnforceableQueryRestrictionInterface, QueryRestrictionInterface
 {
     /**
-     * @return bool
      */
     public function isEnforced(): bool
     {
@@ -42,10 +38,7 @@ class ContextRestriction implements QueryRestrictionInterface, EnforceableQueryR
     }
 
     /**
-     * @param array $queriedTables
-     * @param ExpressionBuilder $expressionBuilder
      *
-     * @return CompositeExpression
      */
     public function buildExpression(array $queriedTables, ExpressionBuilder $expressionBuilder): CompositeExpression
     {
@@ -56,7 +49,7 @@ class ContextRestriction implements QueryRestrictionInterface, EnforceableQueryR
                 foreach (Configuration::getEnableSettings($table) as $setting) {
                     $flatColumns = Configuration::getFlatColumns($table, $setting);
 
-                    if (count($flatColumns) === 0) {
+                    if (\count($flatColumns) === 0) {
                         continue;
                     }
 
@@ -64,7 +57,7 @@ class ContextRestriction implements QueryRestrictionInterface, EnforceableQueryR
                         $expressionBuilder->isNull($flatColumns[1]),
                         $expressionBuilder->eq(
                             $flatColumns[1],
-                            $expressionBuilder->literal('')
+                            $expressionBuilder->literal(''),
                         ),
                     ];
                     $disableConstraints = [];
@@ -73,41 +66,40 @@ class ContextRestriction implements QueryRestrictionInterface, EnforceableQueryR
                     foreach (Container::get() as $context) {
                         $enableConstraints[] = $expressionBuilder->inSet(
                             $flatColumns[1],
-                            (string) $context->getUid()
+                            (string) $context->getUid(),
                         );
                         $disableConstraints[] = 'NOT ' . $expressionBuilder->inSet(
                             $flatColumns[0],
-                            (string) $context->getUid()
+                            (string) $context->getUid(),
                         );
                     }
 
-                    $constraints[] = $expressionBuilder->orX(
-                        ...$enableConstraints
+                    $constraints[] = $expressionBuilder->or(
+                        ...$enableConstraints,
                     );
 
-                    if (count($disableConstraints) > 0) {
-                        $constraints[] = $expressionBuilder->orX(
+                    if (\count($disableConstraints) > 0) {
+                        $constraints[] = $expressionBuilder->or(
                             $expressionBuilder->isNull($flatColumns[0]),
                             $expressionBuilder->eq(
                                 $flatColumns[0],
-                                $expressionBuilder->literal('')
+                                $expressionBuilder->literal(''),
                             ),
-                            $expressionBuilder->andX(...$disableConstraints)
+                            $expressionBuilder->and(...$disableConstraints),
                         );
                     }
                 }
             }
         }
 
-        return $expressionBuilder->andX(...$constraints);
+        return $expressionBuilder->and(...$constraints);
     }
 
     /**
-     * @return bool
      */
     protected function isEnvironmentInFrontendMode(): bool
     {
-        return defined('TYPO3')
+        return \defined('TYPO3')
             && (($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface)
             && ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend();
     }
