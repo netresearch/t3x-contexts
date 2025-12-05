@@ -14,7 +14,7 @@ namespace Netresearch\Contexts\Context;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\Api\Configuration;
-use PDO;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
@@ -209,7 +209,7 @@ abstract class AbstractContext
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($this->uid, PDO::PARAM_INT),
+                    $queryBuilder->createNamedParameter($this->uid, Connection::PARAM_INT),
                 ),
                 $queryBuilder->expr()->eq(
                     'foreign_table',
