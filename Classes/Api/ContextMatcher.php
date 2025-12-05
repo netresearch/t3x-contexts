@@ -27,14 +27,12 @@ class ContextMatcher
     /**
      * Singleton instance
      *
-     * @var null|ContextMatcher
      */
     protected static ?ContextMatcher $instance = null;
 
     /**
      * Match results. Alias => boolean match result
      *
-     * @var array
      */
     protected array $arMatches = [];
 
@@ -54,7 +52,6 @@ class ContextMatcher
     /**
      * Unsets this instance
      *
-     * @return void
      */
     public static function clearInstance(): void
     {
