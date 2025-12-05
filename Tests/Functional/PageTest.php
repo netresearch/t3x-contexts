@@ -7,142 +7,150 @@
  * LICENSE file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Netresearch\Contexts\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
-use TYPO3\CMS\Frontend\Tests\Functional\SiteHandling\AbstractTestCase;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-class PageTest extends AbstractTestCase
+/**
+ * Functional tests for page context visibility.
+ */
+final class PageTest extends FunctionalTestCase
 {
-    protected $testExtensionsToLoad = ['typo3conf/ext/contexts'];
+    protected array $testExtensionsToLoad = [
+        'netresearch/contexts',
+    ];
 
-    public function setUp()
+    protected array $coreExtensionsToLoad = [
+        'frontend',
+    ];
+
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->importDataSet('EXT:contexts/Tests/Functional/Fixtures/tx_contexts_contexts.xml');
-        $this->importDataSet('EXT:contexts/Tests/Functional/Fixtures/tx_contexts_settings.xml');
-        $this->importDataSet('EXT:contexts/Tests/Functional/Fixtures/pages.xml');
-        $this->setUpFrontendRootPage(
-            1,
-            [
-                'setup' => ['EXT:contexts/Tests/Functional/Fixtures/page.ts']
-            ]
-        );
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/tx_contexts_contexts.csv');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/tx_contexts_settings.csv');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/pages.csv');
+
         $this->writeSiteConfiguration(
             'website-local',
-            $this->buildSiteConfiguration(1, 'http://localhost/'),
             [
-                $this->buildDefaultLanguageConfiguration('EN', '/')
-            ]
+                'rootPageId' => 1,
+                'base' => 'http://localhost/',
+            ],
+            [
+                [
+                    'languageId' => 0,
+                    'title' => 'English',
+                    'locale' => 'en_US.UTF-8',
+                    'base' => '/',
+                ],
+            ],
         );
     }
 
-    /**
-     * @return void
-     */
-    protected function activateEnableContext()
-    {
-        $conntection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('pages');
-        $conntection->update('pages', ['tx_contexts_enable' => 1], ['uid' => 1]);
-    }
-
-    /**
-     * @return void
-     */
-    protected function activateDisableContext()
-    {
-        $conntection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('pages');
-        $conntection->update('pages', ['tx_contexts_disable' => 1], ['uid' => 1]);
-    }
-
-    /**
-     * Test Page with QueryParam Context parameter given
-     *
-     * @expectedException        \TYPO3\CMS\Core\Error\Http\PageNotFoundException
-     * @expectedExceptionMessage  The requested page does not exist
-     */
-    public function testPageWithDisabledContext()
+    #[Test]
+    public function pageWithDisabledContextThrowsException(): void
     {
         $this->activateDisableContext();
-        $response = $this->executeFrontendRequest(
+
+        $this->expectException(PageNotFoundException::class);
+        $this->expectExceptionMessage('The requested page does not exist');
+
+        $this->executeFrontendSubRequest(
             (new InternalRequest('http://localhost/'))->withQueryParameters([
                 'id' => 1,
-                'test' => 1
-            ])
+                'test' => 1,
+            ]),
         );
     }
 
-    /**
-     * Test Page with QueryParam Context no parameter given
-     *
-     */
-    public function testPageWithDisbledContextNoParameter()
+    #[Test]
+    public function pageWithDisabledContextNoParameterReturnsPage(): void
     {
         $this->activateDisableContext();
-        $response = $this->executeFrontendRequest(
-            (new InternalRequest('http://localhost/'))->withQueryParameters([
-                'id' => 1
-            ])
-        );
-        $this->assertContains(
-            "<p>Hello world!</p>",
-            (string)$response->getBody()
-        );
-        $this->assertEquals(200, $response->getStatusCode());
-    }
 
-    /**
-     * Test Page with QueryParam Context parameter given
-     */
-    public function testPageWithEnabledContext()
-    {
-        $this->activateEnableContext();
-        $response = $this->executeFrontendRequest(
+        $response = $this->executeFrontendSubRequest(
             (new InternalRequest('http://localhost/'))->withQueryParameters([
                 'id' => 1,
-                'test' => 1
-            ])
+            ]),
         );
-        $this->assertContains(
-            "<p>Hello world!</p>",
-            (string)$response->getBody()
+
+        self::assertStringContainsString(
+            '<p>Hello world!</p>',
+            (string) $response->getBody(),
         );
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
     }
 
-    /**
-     * Test Page with QueryParam Context no parameter given
-     *
-     * @expectedException        \TYPO3\CMS\Core\Error\Http\PageNotFoundException
-     * @expectedExceptionMessage  The requested page does not exist
-     */
-    public function testPageWithEnabledContextNoParameter()
+    #[Test]
+    public function pageWithEnabledContextReturnsPage(): void
     {
         $this->activateEnableContext();
-        $response = $this->executeFrontendRequest(
+
+        $response = $this->executeFrontendSubRequest(
             (new InternalRequest('http://localhost/'))->withQueryParameters([
-                'id' => 1
-            ])
+                'id' => 1,
+                'test' => 1,
+            ]),
+        );
+
+        self::assertStringContainsString(
+            '<p>Hello world!</p>',
+            (string) $response->getBody(),
+        );
+        self::assertSame(200, $response->getStatusCode());
+    }
+
+    #[Test]
+    public function pageWithEnabledContextNoParameterThrowsException(): void
+    {
+        $this->activateEnableContext();
+
+        $this->expectException(PageNotFoundException::class);
+        $this->expectExceptionMessage('The requested page does not exist');
+
+        $this->executeFrontendSubRequest(
+            (new InternalRequest('http://localhost/'))->withQueryParameters([
+                'id' => 1,
+            ]),
         );
     }
 
-    /**
-     * Test Page without Context
-     */
-    public function testPageWithOutContext()
+    #[Test]
+    public function pageWithoutContextReturnsPage(): void
     {
-        $response = $this->executeFrontendRequest(
+        $response = $this->executeFrontendSubRequest(
             (new InternalRequest('http://localhost/'))->withQueryParameters([
-                'id' => 1
-            ])
+                'id' => 1,
+            ]),
         );
-        $this->assertContains(
-            "<p>Hello world!</p>",
-            (string)$response->getBody()
+
+        self::assertStringContainsString(
+            '<p>Hello world!</p>',
+            (string) $response->getBody(),
         );
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
+    }
+
+    protected function activateEnableContext(): void
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('pages');
+        $connection->update('pages', ['tx_contexts_enable' => 1], ['uid' => 1]);
+    }
+
+    protected function activateDisableContext(): void
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('pages');
+        $connection->update('pages', ['tx_contexts_disable' => 1], ['uid' => 1]);
     }
 }
