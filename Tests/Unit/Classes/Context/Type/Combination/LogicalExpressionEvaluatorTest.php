@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the package netresearch/contexts.
  *
@@ -10,191 +12,243 @@
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
+use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-class LogicalExpressionEvaluatorTest extends UnitTestCase
+/**
+ * Tests for LogicalExpressionEvaluator.
+ */
+final class LogicalExpressionEvaluatorTest extends UnitTestCase
 {
     /**
-     * @dataProvider expressionValueProvider
+     * Provide data for several tests.
+     *
+     * @return array<int, array{0: string, 1: string, 2: array<string, bool>}>
+     *               Array of arguments where:
+     *               1st is the expression
+     *               2nd is the expected rebuilt expression
+     *               3rd are the values
      */
-    public function testRunWithoutException($expression, $rebuiltExpression, $values)
+    public static function expressionValueProvider(): array
     {
-        LogicalExpressionEvaluator::run($expression, $values);
-        self::assertSame(
-            self::getEval($expression, $values),
-            LogicalExpressionEvaluator::run($expression, $values)
-        );
+        return [
+            [
+                $e = 'context1 || context2',
+                $e,
+                ['context1' => true, 'context2' => false],
+            ],
+            [
+                'context1 or context2',
+                $e,
+                ['context1' => true, 'context2' => true],
+            ],
+            [
+                $e = 'context1 && context2',
+                $e,
+                ['context1' => true, 'context2' => true],
+            ],
+            [
+                'context1 and context2',
+                $e,
+                ['context1' => true, 'context2' => false],
+            ],
+            [
+                $e = 'context1 >< context2',
+                $e,
+                ['context1' => true, 'context2' => false],
+            ],
+            [
+                'context1 xor context2',
+                $e,
+                ['context1' => true, 'context2' => true],
+            ],
+            [
+                'context1 && !(context2 || !!context3)',
+                'context1 && !(context2 || context3)',
+                ['context1' => true, 'context2' => false, 'context3' => false],
+            ],
+            [
+                'context1 xor (context2 && !context3)',
+                'context1 >< (context2 && !context3)',
+                ['context1' => true, 'context2' => true, 'context3' => false],
+            ],
+            [
+                $e = 'context1-hyphen && context2',
+                $e,
+                ['context1-hyphen' => true, 'context2' => true],
+            ],
+            [
+                $e = 'context1_underscore && context2',
+                $e,
+                ['context1_underscore' => true, 'context2' => true],
+            ],
+        ];
     }
 
     /**
-     * @dataProvider expressionValueProvider
+     * Helper to evaluate expression using PHP's native evaluation for comparison.
+     *
+     * @param string              $expression Expression string
+     * @param array<string, bool> $values     Variable values
      */
-    public function testRebuild($expression, $rebuiltExpression, $values)
+    protected static function getExpressionResult(string $expression, array $values): bool
+    {
+        // Normalize operators first
+        $expression = str_replace('><', 'xor', $expression);
+        $expression = (string) preg_replace('/\bor\b/i', '||', $expression);
+        $expression = (string) preg_replace('/\band\b/i', '&&', $expression);
+
+        foreach ($values as $key => $value) {
+            $expression = str_replace($key, $value ? 'true' : 'false', $expression);
+        }
+
+        // Use a safer approach to evaluate the boolean expression
+        // by replacing operators and evaluating step by step
+        return self::evaluateBooleanExpression($expression);
+    }
+
+    /**
+     * Safely evaluate a boolean expression string.
+     */
+    protected static function evaluateBooleanExpression(string $expression): bool
+    {
+        // Normalize the expression
+        $expression = strtolower(trim($expression));
+
+        // Handle parentheses recursively
+        while (preg_match('/\(([^()]+)\)/', $expression, $matches) === 1) {
+            $inner = self::evaluateBooleanExpression($matches[1]);
+            $replacement = $inner ? 'true' : 'false';
+            $expression = str_replace($matches[0], $replacement, $expression);
+        }
+
+        // Handle NOT operator
+        while (preg_match('/!(\s*)(true|false)/', $expression, $matches) === 1) {
+            $value = $matches[2] === 'true';
+            $replacement = $value === false ? 'true' : 'false';
+            $expression = (string) preg_replace('/!\s*(true|false)/', $replacement, $expression, 1);
+        }
+
+        // Handle XOR (lowest precedence)
+        if (preg_match('/^(true|false)\s*xor\s*(true|false)$/', $expression, $matches) === 1) {
+            return ($matches[1] === 'true') xor ($matches[2] === 'true');
+        }
+
+        // Handle OR
+        if (preg_match('/^(true|false)\s*\|\|\s*(true|false)$/', $expression, $matches) === 1) {
+            return ($matches[1] === 'true') || ($matches[2] === 'true');
+        }
+
+        // Handle AND
+        if (preg_match('/^(true|false)\s*&&\s*(true|false)$/', $expression, $matches) === 1) {
+            return ($matches[1] === 'true') && ($matches[2] === 'true');
+        }
+
+        // Simple value
+        return $expression === 'true';
+    }
+
+    #[Test]
+    #[DataProvider('expressionValueProvider')]
+    public function runWithoutException(string $expression, string $rebuiltExpression, array $values): void
+    {
+        LogicalExpressionEvaluator::run($expression, $values);
+        self::assertSame(
+            self::getExpressionResult($expression, $values),
+            LogicalExpressionEvaluator::run($expression, $values),
+        );
+    }
+
+    #[Test]
+    #[DataProvider('expressionValueProvider')]
+    public function rebuild(string $expression, string $rebuiltExpression, array $values): void
     {
         $evaluator = new LogicalExpressionEvaluator();
         $evaluator->parse($evaluator->tokenize($expression));
 
         self::assertSame(
             // Rebuilt expression is always wrapped within parenthesis
-            // because parser always pushs a scope first
+            // because parser always pushes a scope first
             '(' . $rebuiltExpression . ')',
             $evaluator->rebuild(),
-            'Rebuild must be revised'
+            'Rebuild must be revised',
         );
     }
 
-    /**
-     * @expectedException \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException
-     * @expectedExceptionMessage Unexpected end
-     */
-    public function testRunWithExceptionUnexpectedEnd()
+    #[Test]
+    public function runWithExceptionUnexpectedEnd(): void
     {
+        $this->expectException(LogicalExpressionEvaluatorException::class);
+        $this->expectExceptionMessage('Unexpected end');
 
         $strExpression = '(context1 ||';
-        $arValues = array('context1' => true);
+        $arValues = ['context1' => true];
         LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
-    /**
-     *
-     * @expectedException \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException
-     * @expectedExceptionMessage Missing closing parentheses
-     */
-    public function testRunWithExceptionMissingClosingParentheses()
+    #[Test]
+    public function runWithExceptionMissingClosingParentheses(): void
     {
+        $this->expectException(LogicalExpressionEvaluatorException::class);
+        $this->expectExceptionMessage('Missing closing parentheses');
 
         $strExpression = '(context1 ';
-        $arValues = array('context1' => true);
+        $arValues = ['context1' => true];
         LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
-     /**
-     *
-     * @expectedException \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException
-     * @expectedExceptionMessage Unexpected variable
-     */
-    public function testRunWithExceptionMissingOperator()
+    #[Test]
+    public function runWithExceptionMissingOperator(): void
     {
+        $this->expectException(LogicalExpressionEvaluatorException::class);
+        $this->expectExceptionMessage('Unexpected variable');
 
         $strExpression = '(context1 context2)';
-        $arValues = array('context1' => true);
+        $arValues = ['context1' => true];
         LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
-    /**
-     *
-     *
-     * @expectedException \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException
-     * @expectedExceptionMessage Can't evaluate more than two items by xor
-     */
-    public function testRunWithExceptionTwoXor()
+    #[Test]
+    public function runWithExceptionTwoXor(): void
     {
+        $this->expectException(LogicalExpressionEvaluatorException::class);
+        $this->expectExceptionMessage("Can't evaluate more than two items by xor");
 
         $strExpression = 'context1 xor context2 xor context3';
-        $arValues = array('context1' => true, 'context2' => true, 'context3' => true);
+        $arValues = ['context1' => true, 'context2' => true, 'context3' => true];
         LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
-    public function testNot()
+    #[Test]
+    public function not(): void
     {
         $strExpression = '!a';
-        $arValues = array(
+        $arValues = [
             'a' => true,
-        );
-        $this->assertFalse(
+        ];
+        self::assertFalse(
             LogicalExpressionEvaluator::run(
                 $strExpression,
-                $arValues
-            )
+                $arValues,
+            ),
         );
     }
 
-    public function testAndNot()
+    #[Test]
+    public function andNot(): void
     {
         $strExpression = 'a && !b';
-        $arValues = array(
+        $arValues = [
             'a' => true,
             'b' => true,
-        );
-        $this->assertFalse(
+        ];
+        self::assertFalse(
             LogicalExpressionEvaluator::run(
                 $strExpression,
-                $arValues
-            )
-        );
-    }
-
-
-
-    /**
-     * Provide data for several tests
-     * @return array Array of arguments where
-     *               1st is the expression
-     *               2nd is the expected rebuilt expression
-     *               3rd are the values
-     */
-    public static function expressionValueProvider()
-    {
-        return array(
-            array(
-                $e = 'context1 || context2',
-                $e,
-                array('context1' => true, 'context2' => false),
-            ),
-            array(
-                'context1 or context2',
-                $e,
-                array('context1' => true, 'context2' => true)
-            ),
-            array(
-                $e = 'context1 && context2',
-                $e,
-                array('context1' => true, 'context2' => true)
-            ),
-            array(
-                'context1 and context2',
-                $e,
-                array('context1' => true, 'context2' => false)
-            ),
-            array(
-                $e = 'context1 >< context2',
-                $e,
-                array('context1' => true, 'context2' => false)
-            ),
-            array(
-                'context1 xor context2',
-                $e,
-                array('context1' => true, 'context2' => true)
-            ),
-            array(
-                'context1 && !(context2 || !!context3)',
-                'context1 && !(context2 || context3)',
-                array('context1' => true, 'context2' => false, 'context3' => false)
-            ),
-            array(
-                'context1 xor (context2 && !context3)',
-                'context1 >< (context2 && !context3)',
-                array('context1' => true, 'context2' => true, 'context3' => false)
-            ),
-            array(
-                $e = 'context1-hyphen && context2',
-                $e,
-                array('context1-hyphen' => true, 'context2' => true)
-            ),
-            array(
-                $e = 'context1_underscore && context2',
-                $e,
-                array('context1_underscore' => true, 'context2' => true)
+                $arValues,
             ),
         );
-    }
-
-    protected static function getEval($string, $values)
-    {
-        $string = str_replace('><', 'xor', $string);
-        foreach ($values as $key => $value) {
-            $string = str_replace($key, $value ? 'true' : 'false', $string);
-        }
-        return eval("return (" . $string . ");");
     }
 }

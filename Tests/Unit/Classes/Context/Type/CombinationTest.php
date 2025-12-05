@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the package netresearch/contexts.
  *
@@ -7,542 +9,289 @@
  * LICENSE file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace Netresearch\Contexts\Tests\Unit\Classes\Context\Type;
 
-class CombinationTest extends \Netresearch\Contexts\Tests\Unit\TestBase
+use Netresearch\Contexts\Context\AbstractContext;
+use Netresearch\Contexts\Context\Container;
+use Netresearch\Contexts\Context\Type\CombinationContext;
+use Netresearch\Contexts\Tests\Unit\TestBase;
+use PHPUnit\Framework\Attributes\Test;
+
+/**
+ * Tests for CombinationContext.
+ */
+final class CombinationTest extends TestBase
 {
-    public function testGetDependenciesSucces()
+    #[Test]
+    public function getDependenciesSuccess(): void
     {
-        $abstractMock = $this->getMockForAbstractClass(
-            '\Netresearch\Contexts\Context\AbstractContext',
-            array(
-                array(
-                    'uid' => 123,
-                    'type' => 'ip',
-                    'title' => 'UNITTEST',
-                    'alias' => 'UNITTEST',
-                    'tstamp' => 1234567,
-                    'invert' => 0,
-                    'use_session' => 0,
-                    'type_conf' => '',
-                    'disabled' => false,
-                    'hide_in_backend' => false,
-                )
-            ),
-            '',
-            true,
-            true,
-            true,
-            array(
-                '__construct',
-            )
+        $testContext = $this->createTestContext(123, 'UNITTEST', false);
+
+        $combinationContext = $this->createCombinationContext(
+            125,
+            'combiUNITTEST',
+            '(UNITTEST && UNITTEST || UNITTEST) xor >< UNITTEST',
         );
 
+        $arContexts = [
+            123 => $testContext,
+            125 => $combinationContext,
+        ];
 
-        $instance = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\CombinationContext',
-            array(
-                'getConfValue',
-            ),
-            array(
-                'uid' => 125,
-                'type' => 'combination',
-                'title' => 'combiUNITTEST',
-                'alias' => 'combiUNITTEST',
-                'type_conf' => '',
-                'disabled' => false,
-                'hide_in_backend' => false,
-            )
-        );
+        $dependencies = $combinationContext->getDependencies($arContexts);
 
-
-        $instance->expects(self::once())
-            ->method('getConfValue')
-            ->will(self::returnValue('(UNITTEST && UNITTEST || UNITTEST) xor >< UNITTEST '));
-
-        $arTest = $instance->getDependencies(
-            array(
-                123 => $abstractMock,
-                125 => $instance,
-            )
-        );
-
-        self::assertArrayHasKey(123, $arTest);
-        self::assertEquals(array(123 => true), $arTest);
+        self::assertArrayHasKey(123, $dependencies);
+        self::assertSame([123 => true], $dependencies);
     }
 
-    public function testGetDependenciesSuccesWithDisabled()
+    #[Test]
+    public function getDependenciesSuccessWithDisabled(): void
     {
-        $abstractMock = $this->getMockForAbstractClass(
-            '\Netresearch\Contexts\Context\AbstractContext',
-            array(
-                array(
-                    'uid' => 123,
-                    'type' => 'ip',
-                    'title' => 'UNITTEST',
-                    'alias' => 'UNITTEST',
-                    'tstamp' => 1234567,
-                    'invert' => 0,
-                    'use_session' => 0,
-                    'type_conf' => '',
-                    'disabled' => true,
-                    'hide_in_backend' => false,
-                )
-            ),
-            '',
-            true,
-            true,
-            true,
-            array(
-                '__construct',
-            )
+        $testContext = $this->createTestContext(123, 'UNITTEST', true);
+
+        $combinationContext = $this->createCombinationContext(
+            125,
+            'combiUNITTEST',
+            '(UNITTEST && UNITTEST || UNITTEST) xor >< UNITTEST',
         );
 
+        $arContexts = [
+            123 => $testContext,
+            125 => $combinationContext,
+        ];
 
-        $instance = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\CombinationContext',
-            array(
-                'getConfValue',
-            ),
-            array(
-                'uid' => 125,
-                'type' => 'combination',
-                'title' => 'combiUNITTEST',
-                'alias' => 'combiUNITTEST',
-                'type_conf' => '',
-                'disabled' => false,
-                'hide_in_backend' => false,
-            )
-        );
+        $dependencies = $combinationContext->getDependencies($arContexts);
 
-
-        $instance->expects(self::once())
-            ->method('getConfValue')
-            ->will(self::returnValue('(UNITTEST && UNITTEST || UNITTEST) xor >< UNITTEST '));
-
-        $arTest = $instance->getDependencies(
-            array(
-                123 => $abstractMock,
-                125 => $instance,
-            )
-        );
-
-        self::assertArrayHasKey(123, $arTest);
-        self::assertEquals(array(123 => false), $arTest);
+        self::assertArrayHasKey(123, $dependencies);
+        self::assertSame([123 => false], $dependencies);
     }
 
-
-    public function testGetDependenciesEmpty()
+    #[Test]
+    public function getDependenciesEmpty(): void
     {
-
-        $instance = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\CombinationContext',
-            array(
-                'getConfValue',
-            ),
-            array(
-                'uid' => 125,
-                'type' => 'combination',
-                'title' => 'combiUNITTEST',
-                'alias' => 'combiUNITTEST',
-                'type_conf' => '',
-                'disabled' => false,
-                'hide_in_backend' => false,
-            )
+        $combinationContext = $this->createCombinationContext(
+            125,
+            'combiUNITTEST',
+            '(context1 && context2 || context3) xor >< context5',
         );
 
+        $arContexts = [
+            125 => $combinationContext,
+        ];
 
-        $instance->expects(self::once())
-            ->method('getConfValue')
-            ->will(self::returnValue('(context1 && context2 || context3) xor >< context5 '));
+        $dependencies = $combinationContext->getDependencies($arContexts);
 
-        $arTest = $instance->getDependencies(
-            array(125 => $instance)
-        );
-
-        self::assertEmpty($arTest);
+        self::assertEmpty($dependencies);
     }
 
-    public function testMatchSuccess()
+    #[Test]
+    public function matchSuccess(): void
     {
-        $ipContextMock = $this->getMockForAbstractClass(
-            '\Netresearch\Contexts\Context\AbstractContext',
-            array(
-                array(
-                    'uid' => 123,
-                    'type' => 'ip',
-                    'title' => 'UNITTEST',
-                    'alias' => 'UNITTEST',
-                    'tstamp' => 1234567,
-                    'invert' => 0,
-                    'use_session' => 0,
-                    'type_conf' => '',
-                    'disabled' => false,
-                    'hide_in_backend' => false,
-                )
-            ),
-            '',
-            true,
-            true,
-            true,
-            array(
-                '__construct',
-            )
-        );
-        $ipContextMock->expects(self::any())
-            ->method('match')
-            ->will(self::returnValue(true));
-        $getContextMock = $this->getMockForAbstractClass(
-            '\Netresearch\Contexts\Context\AbstractContext',
-            array(
-                array(
-                    'uid' => 124,
-                    'type' => 'getparam',
-                    'title' => 'getUNITTEST',
-                    'alias' => 'getUNITTEST',
-                    'tstamp' => 1234567,
-                    'invert' => 0,
-                    'use_session' => 0,
-                    'type_conf' => '',
-                    'disabled' => false,
-                    'hide_in_backend' => false,
-                )
-            ),
-            '',
-            true,
-            true,
-            true,
-            array(
-                '__construct',
-            )
-        );
-        $getContextMock->expects(self::any())
-            ->method('match')
-            ->will(self::returnValue(true));
+        $ipContext = $this->createTestContext(123, 'UNITTEST', false, true);
+        $getContext = $this->createTestContext(124, 'getUNITTEST', false, true);
 
-        $instance = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\CombinationContext',
-            array(
-                'getConfValue',
-            ),
-            array(
-                'uid' => 125,
-                'type' => 'combination',
-                'title' => 'combiUNITTEST',
-                'alias' => 'combiUNITTEST',
-                'type_conf' => '',
-                'disabled' => false,
-                'hide_in_backend' => false,
-            )
-        );
-        $container = $this->createMock(
-            '\Netresearch\Contexts\Context\Container',
-            array()
+        $combinationContext = $this->createCombinationContext(
+            125,
+            'combiUNITTEST',
+            'UNITTEST && getUNITTEST',
         );
 
-        $arContexts = array(
-            123 => $ipContextMock,
-            124 => $getContextMock,
-            125 => $instance,
-        );
+        $arContexts = [
+            123 => $ipContext,
+            124 => $getContext,
+            125 => $combinationContext,
+        ];
 
-        $instance->expects(self::any())
-            ->method('getConfValue')
-            ->with(self::equalTo('field_expression'))
-            ->will(self::returnValue('UNITTEST && getUNITTEST'));
+        $container = new class ($arContexts) extends Container {
+            public function __construct(array $contexts)
+            {
+                parent::__construct($contexts);
+            }
 
-        $matched = $this->callProtected($container, 'match', $arContexts);
-        self::assertEquals(
-            array(
-                123 => $ipContextMock,
-                124 => $getContextMock,
-                125 => $instance,
-            ),
-            $matched
-        );
+            public function invokeMatch(array $arContexts): array
+            {
+                return $this->match($arContexts);
+            }
+        };
+
+        $matched = $container->invokeMatch($arContexts);
+
+        self::assertCount(3, $matched);
+        self::assertArrayHasKey(123, $matched);
+        self::assertArrayHasKey(124, $matched);
+        self::assertArrayHasKey(125, $matched);
     }
 
-    public function testMatchSuccessWithDisabled()
+    #[Test]
+    public function matchSuccessWithDisabled(): void
     {
-        $ipContextMock = $this->getMockForAbstractClass(
-            '\Netresearch\Contexts\Context\AbstractContext',
-            array(
-                array(
-                    'uid' => 123,
-                    'type' => 'ip',
-                    'title' => 'UNITTEST',
-                    'alias' => 'UNITTEST',
-                    'tstamp' => 1234567,
-                    'invert' => 0,
-                    'use_session' => 0,
-                    'type_conf' => '',
-                    'disabled' => false,
-                    'hide_in_backend' => false,
-                )
-            ),
-            '',
-            true,
-            true,
-            true,
-            array(
-                '__construct',
-            )
-        );
-        $ipContextMock->expects(self::any())
-            ->method('match')
-            ->will(self::returnValue(true));
-        $getContextMock = $this->getMockForAbstractClass(
-            '\Netresearch\Contexts\Context\AbstractContext',
-            array(
-                array(
-                    'uid' => 124,
-                    'type' => 'getparam',
-                    'title' => 'getUNITTEST',
-                    'alias' => 'getUNITTEST',
-                    'tstamp' => 1234567,
-                    'invert' => 0,
-                    'use_session' => 0,
-                    'type_conf' => '',
-                    'disabled' => true,
-                    'hide_in_backend' => false,
-                )
-            ),
-            '',
-            true,
-            true,
-            true,
-            array(
-                '__construct',
-            )
-        );
-        $getContextMock->expects(self::any())
-            ->method('match')
-            ->will(self::returnValue(true));
+        $ipContext = $this->createTestContext(123, 'UNITTEST', false, true);
+        $getContext = $this->createTestContext(124, 'getUNITTEST', true, true);
 
-        $instance = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\CombinationContext',
-            array(
-                'getConfValue',
-            ),
-            array(
-                'uid' => 125,
-                'type' => 'combination',
-                'title' => 'combiUNITTEST',
-                'alias' => 'combiUNITTEST',
-                'type_conf' => '',
-                'disabled' => false,
-            )
-        );
-        $container = $this->createMock(
-            '\Netresearch\Contexts\Context\Container',
-            array()
+        $combinationContext = $this->createCombinationContext(
+            125,
+            'combiUNITTEST',
+            'UNITTEST && getUNITTEST',
         );
 
-        $arContexts = array(
-            123 => $ipContextMock,
-            124 => $getContextMock,
-            125 => $instance,
-        );
+        $arContexts = [
+            123 => $ipContext,
+            124 => $getContext,
+            125 => $combinationContext,
+        ];
 
-        $instance->expects(self::any())
-            ->method('getConfValue')
-            ->with(self::equalTo('field_expression'))
-            ->will(self::returnValue('UNITTEST && getUNITTEST'));
+        $container = new class ($arContexts) extends Container {
+            public function __construct(array $contexts)
+            {
+                parent::__construct($contexts);
+            }
 
-        $matched = $this->callProtected($container, 'match', $arContexts);
-        self::assertEquals(
-            array(
-                123 => $ipContextMock,
-                125 => $instance,
-            ),
-            $matched
-        );
+            public function invokeMatch(array $arContexts): array
+            {
+                return $this->match($arContexts);
+            }
+        };
+
+        $matched = $container->invokeMatch($arContexts);
+
+        // Disabled context (124) should be excluded
+        self::assertCount(2, $matched);
+        self::assertArrayHasKey(123, $matched);
+        self::assertArrayHasKey(125, $matched);
+        self::assertArrayNotHasKey(124, $matched);
     }
 
-    public function testMatchFailed()
+    #[Test]
+    public function matchFailed(): void
     {
-        $ipContextMock = $this->getMockForAbstractClass(
-            '\Netresearch\Contexts\Context\AbstractContext',
-            array(
-                array(
-                    'uid' => 123,
-                    'type' => 'ip',
-                    'title' => 'UNITTEST',
-                    'alias' => 'UNITTEST',
-                    'tstamp' => 1234567,
-                    'invert' => 0,
-                    'use_session' => 0,
-                    'type_conf' => '',
-                    'disabled' => false,
-                    'hide_in_backend' => false,
-                )
-            ),
-            '',
-            true,
-            true,
-            true,
-            array(
-                '__construct',
-            )
-        );
-        $ipContextMock->expects(self::any())
-            ->method('match')
-            ->will(self::returnValue(false));
-        $getContextMock = $this->getMockForAbstractClass(
-            '\Netresearch\Contexts\Context\AbstractContext',
-            array(
-                array(
-                    'uid' => 124,
-                    'type' => 'getparam',
-                    'title' => 'getUNITTEST',
-                    'alias' => 'getUNITTEST',
-                    'tstamp' => 1234567,
-                    'invert' => 0,
-                    'use_session' => 0,
-                    'type_conf' => '',
-                    'disabled' => false,
-                    'hide_in_backend' => false,
-                )
-            ),
-            '',
-            true,
-            true,
-            true,
-            array(
-                '__construct',
-            )
-        );
-        $getContextMock->expects(self::any())
-            ->method('match')
-            ->will(self::returnValue(true));
+        $ipContext = $this->createTestContext(123, 'UNITTEST', false, false);
+        $getContext = $this->createTestContext(124, 'getUNITTEST', false, true);
 
-        $instance = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\CombinationContext',
-            array(
-                'getConfValue',
-                'findInContainer',
-            ),
-            array(
-                'uid' => 125,
-                'type' => 'combination',
-                'title' => 'combiUNITTEST',
-                'alias' => 'combiUNITTEST',
-                'type_conf' => '',
-                'disabled' => false,
-                'hide_in_backend' => false,
-            )
-        );
-        $container = $this->createMock(
-            '\Netresearch\Contexts\Context\Container',
-            array()
+        $combinationContext = $this->createCombinationContext(
+            125,
+            'combiUNITTEST',
+            'UNITTEST && getUNITTEST',
         );
 
-        $arContexts = array(
-            123 => $ipContextMock,
-            124 => $getContextMock,
-            125 => $instance,
-        );
+        $arContexts = [
+            123 => $ipContext,
+            124 => $getContext,
+            125 => $combinationContext,
+        ];
 
-        $instance->expects(self::any())
-            ->method('getConfValue')
-            ->with(self::equalTo('field_expression'))
-            ->will(self::returnValue('UNITTEST && getUNITTEST'));
+        $container = new class ($arContexts) extends Container {
+            public function __construct(array $contexts)
+            {
+                parent::__construct($contexts);
+            }
 
-        $matched = $this->callProtected($container, 'match', $arContexts);
-        self::assertEquals(array(124 => $getContextMock), $matched);
+            public function invokeMatch(array $arContexts): array
+            {
+                return $this->match($arContexts);
+            }
+        };
+
+        $matched = $container->invokeMatch($arContexts);
+
+        // ipContext (123) didn't match, so combination also fails
+        self::assertCount(1, $matched);
+        self::assertArrayHasKey(124, $matched);
     }
 
-    public function testMatchFailedWithDisabled()
+    #[Test]
+    public function matchFailedWithDisabled(): void
     {
-        $ipContextMock = $this->getMockForAbstractClass(
-            '\Netresearch\Contexts\Context\AbstractContext',
-            array(
-                array(
-                    'uid' => 123,
-                    'type' => 'ip',
-                    'title' => 'UNITTEST',
-                    'alias' => 'UNITTEST',
-                    'tstamp' => 1234567,
-                    'invert' => 0,
-                    'use_session' => 0,
-                    'type_conf' => '',
-                    'disabled' => false,
-                    'hide_in_backend' => false,
-                )
-            ),
-            '',
-            true,
-            true,
-            true,
-            array(
-                '__construct',
-            )
-        );
-        $ipContextMock->expects(self::any())
-            ->method('match')
-            ->will(self::returnValue(false));
-        $getContextMock = $this->getMockForAbstractClass(
-            '\Netresearch\Contexts\Context\AbstractContext',
-            array(
-                array(
-                    'uid' => 124,
-                    'type' => 'getparam',
-                    'title' => 'getUNITTEST',
-                    'alias' => 'getUNITTEST',
-                    'tstamp' => 1234567,
-                    'invert' => 0,
-                    'use_session' => 0,
-                    'type_conf' => '',
-                    'disabled' => true,
-                    'hide_in_backend' => false,
-                )
-            ),
-            '',
-            true,
-            true,
-            true,
-            array(
-                '__construct',
-            )
-        );
-        $getContextMock->expects(self::any())
-            ->method('match')
-            ->will(self::returnValue(true));
+        $ipContext = $this->createTestContext(123, 'UNITTEST', false, false);
+        $getContext = $this->createTestContext(124, 'getUNITTEST', true, true);
 
-        $instance = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\CombinationContext',
-            array(
-                'getConfValue',
-                'findInContainer',
-            ),
-            array(
-                'uid' => 125,
-                'type' => 'combination',
-                'title' => 'combiUNITTEST',
-                'alias' => 'combiUNITTEST',
-                'type_conf' => '',
-                'disabled' => false,
-            )
-        );
-        $container = $this->createMock(
-            '\Netresearch\Contexts\Context\Container',
-            array()
+        $combinationContext = $this->createCombinationContext(
+            125,
+            'combiUNITTEST',
+            'UNITTEST && getUNITTEST',
         );
 
-        $arContexts = array(
-            123 => $ipContextMock,
-            124 => $getContextMock,
-            125 => $instance,
-        );
+        $arContexts = [
+            123 => $ipContext,
+            124 => $getContext,
+            125 => $combinationContext,
+        ];
 
-        $instance->expects(self::any())
-            ->method('getConfValue')
-            ->with(self::equalTo('field_expression'))
-            ->will(self::returnValue('UNITTEST && getUNITTEST'));
+        $container = new class ($arContexts) extends Container {
+            public function __construct(array $contexts)
+            {
+                parent::__construct($contexts);
+            }
 
-        $matched = $this->callProtected($container, 'match', $arContexts);
-        self::assertEquals(array(), $matched);
+            public function invokeMatch(array $arContexts): array
+            {
+                return $this->match($arContexts);
+            }
+        };
+
+        $matched = $container->invokeMatch($arContexts);
+
+        // Both failed (ip didn't match, get is disabled)
+        self::assertEmpty($matched);
+    }
+
+    /**
+     * Create a test context with specified properties.
+     */
+    private function createTestContext(
+        int $uid,
+        string $alias,
+        bool $disabled = false,
+        ?bool $matchResult = null,
+    ): AbstractContext {
+        return new class ($uid, $alias, $disabled, $matchResult) extends AbstractContext {
+            private ?bool $matchResult;
+
+            public function __construct(int $uid, string $alias, bool $disabled, ?bool $matchResult)
+            {
+                parent::__construct([]);
+                $this->uid = $uid;
+                $this->alias = $alias;
+                $this->disabled = $disabled;
+                $this->matchResult = $matchResult;
+            }
+
+            public function match(array $arDependencies = []): bool
+            {
+                return $this->matchResult ?? false;
+            }
+        };
+    }
+
+    /**
+     * Create a CombinationContext with mocked expression.
+     */
+    private function createCombinationContext(int $uid, string $alias, string $expression): CombinationContext
+    {
+        return new class ($uid, $alias, $expression) extends CombinationContext {
+            private string $expression;
+
+            public function __construct(int $uid, string $alias, string $expression)
+            {
+                parent::__construct([]);
+                $this->uid = $uid;
+                $this->alias = $alias;
+                $this->expression = $expression;
+                $this->disabled = false;
+            }
+
+            protected function getConfValue(
+                string $fieldName,
+                string $default = '',
+                string $sheet = 'sDEF',
+                string $lang = 'lDEF',
+                string $value = 'vDEF',
+            ): string {
+                if ($fieldName === 'field_expression') {
+                    return $this->expression;
+                }
+
+                return $default;
+            }
+        };
     }
 }

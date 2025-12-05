@@ -7,48 +7,62 @@
  * LICENSE file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Netresearch\Contexts\Tests\Unit;
 
-use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
+use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+use ReflectionMethod;
 
-abstract class TestBase extends UnitTestCase
+/**
+ * Base class for unit tests.
+ *
+ * Provides utility methods for testing protected/private methods
+ * and creating accessible mock objects.
+ */
+abstract class TestBase extends TestCase
 {
     /**
-     * Make a proteced/private method accessible.
+     * Make a protected/private method accessible.
      *
-     * @param string $strClass      Class name
-     * @param string $strMethodName Method name
-     *
-     * @return ReflectionMethod
+     * @param class-string $className Class name
+     * @param string $methodName Method name
      */
-    public function getAccessibleMethod($strClass, $strMethodName)
+    protected function getAccessibleMethod(string $className, string $methodName): ReflectionMethod
     {
-        $reflectedClass = new \ReflectionClass($strClass);
-
-        /* @var $method ReflectionMethod */
-        $method = $reflectedClass->getMethod($strMethodName);
-        $method->setAccessible(true);
+        $reflectedClass = new ReflectionClass($className);
+        $method = $reflectedClass->getMethod($methodName);
 
         return $method;
     }
 
     /**
-     * Call a protected method on an object and return the result
+     * Call a protected method on an object and return the result.
      *
-     * @param object $obj           Object the method should be called on
-     * @param string $strMethodName Method to be called
-     * @param mixed  $param1        First method parameter
-     * @param mixed  $param2        Second method parameter
-     * @param mixed  ...            ...
-     *
+     * @param object $object Object the method should be called on
+     * @param string $methodName Method to be called
+     * @param mixed ...$params Method parameters
      * @return mixed Whatever the method returns
      */
-    public function callProtected($obj, $strMethodName)
+    protected function callProtected(object $object, string $methodName, mixed ...$params): mixed
     {
-        $params = func_get_args();
-        array_shift($params);
-        array_shift($params);
-        $m = $this->getAccessibleMethod(get_class($obj), $strMethodName);
-        return $m->invokeArgs($obj, $params);
+        $method = $this->getAccessibleMethod($object::class, $methodName);
+
+        return $method->invokeArgs($object, $params);
+    }
+
+    /**
+     * Get an accessible mock for a class.
+     *
+     * @param class-string           $className The class to mock
+     * @param list<non-empty-string> $methods   Methods to mock
+     */
+    protected function getAccessibleMock(string $className, array $methods = []): \PHPUnit\Framework\MockObject\MockObject
+    {
+        return $this->getMockBuilder($className)
+            ->disableOriginalConstructor()
+            ->onlyMethods($methods)
+            ->getMock();
     }
 }
