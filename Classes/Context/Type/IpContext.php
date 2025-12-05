@@ -14,8 +14,6 @@ namespace Netresearch\Contexts\Context\Type;
 use Netresearch\Contexts\Context\AbstractContext;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-use function count;
-
 /**
  * Matches on the current frontend user IP
  *
@@ -39,27 +37,27 @@ class IpContext extends AbstractContext
 
         $bIpv4 = filter_var(
             $strCurIp,
-            FILTER_VALIDATE_IP,
-            FILTER_FLAG_IPV4
+            \FILTER_VALIDATE_IP,
+            \FILTER_FLAG_IPV4,
         ) !== false;
         $bIpv6 = filter_var(
             $strCurIp,
-            FILTER_VALIDATE_IP,
-            FILTER_FLAG_IPV6
+            \FILTER_VALIDATE_IP,
+            \FILTER_FLAG_IPV6,
         ) !== false;
 
         if (!$bIpv4 && !$bIpv6) {
-            //invalid IP
+            // invalid IP
             return $this->invert(false);
         }
 
         $arIpRange = GeneralUtility::trimExplode(
             "\n",
             $this->getConfValue('field_ip'),
-            true
+            true,
         );
 
-        if (count($arIpRange) === 1 && $arIpRange[0] === '') {
+        if (\count($arIpRange) === 1 && $arIpRange[0] === '') {
             return $this->invert(false);
         }
 

@@ -14,8 +14,6 @@ namespace Netresearch\Contexts\Context\Type;
 use Netresearch\Contexts\Context\AbstractContext;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-use function strlen;
-
 /**
  * Matches on the current domain name
  *
@@ -26,17 +24,15 @@ use function strlen;
 class DomainContext extends AbstractContext
 {
     /**
-     * @param array $arDependencies
      *
-     * @return bool
      */
     public function match(array $arDependencies = []): bool
     {
-        $curHost   = $_SERVER['HTTP_HOST'];
+        $curHost = $_SERVER['HTTP_HOST'];
         $arDomains = GeneralUtility::trimExplode(
             "\n",
             $this->getConfValue('field_domains'),
-            true
+            true,
         );
 
         foreach ($arDomains as $domain) {
@@ -49,10 +45,7 @@ class DomainContext extends AbstractContext
     }
 
     /**
-     * @param string $domain
-     * @param string $curHost
      *
-     * @return bool
      */
     protected function matchDomain(string $domain, string $curHost): bool
     {
@@ -64,13 +57,7 @@ class DomainContext extends AbstractContext
             return $domain === $curHost;
         }
 
-        if (
-            substr($domain, 1) === $curHost
-            || substr($curHost, -strlen($domain) + 1) === substr($domain, 1)
-        ) {
-            return true;
-        }
-
-        return false;
+        return substr($domain, 1) === $curHost
+            || substr($curHost, -\strlen($domain) + 1) === substr($domain, 1);
     }
 }
