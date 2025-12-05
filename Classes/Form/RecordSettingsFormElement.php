@@ -181,7 +181,6 @@ class RecordSettingsFormElement extends AbstractFormElement
             $str,
             $table,
             $uid,
-            'true',
         );
     }
 

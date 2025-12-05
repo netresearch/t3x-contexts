@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
@@ -58,7 +59,7 @@ abstract class TestBase extends TestCase
      * @param class-string           $className The class to mock
      * @param list<non-empty-string> $methods   Methods to mock
      */
-    protected function getAccessibleMock(string $className, array $methods = []): \PHPUnit\Framework\MockObject\MockObject
+    protected function getAccessibleMock(string $className, array $methods = []): MockObject
     {
         return $this->getMockBuilder($className)
             ->disableOriginalConstructor()
