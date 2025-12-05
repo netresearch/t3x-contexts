@@ -16,9 +16,6 @@ use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 
-use function array_key_exists;
-use function count;
-
 /**
  * API with methods to retrieve context information for records
  *
@@ -37,7 +34,6 @@ class Record
      * @param string $table Table name
      * @param array  $row   Record array or an uid
      *
-     * @return bool
      *
      * @throws DBALException
      * @throws Exception
@@ -46,7 +42,7 @@ class Record
     {
         $enableSettings = Configuration::getEnableSettings($table);
 
-        if (count($enableSettings) === 0) {
+        if (\count($enableSettings) === 0) {
             return true;
         }
 
@@ -67,7 +63,6 @@ class Record
      * @param string $setting Setting name
      * @param array  $row     Record array
      *
-     * @return bool
      *
      * @throws DBALException
      * @throws Exception
@@ -88,7 +83,7 @@ class Record
 
         /** @var AbstractContext $context */
         foreach (Container::get() as $context) {
-            $rowSetting     = $context->getSetting($table, $setting, $uid);
+            $rowSetting = $context->getSetting($table, $setting, $uid);
             $defaultSetting = $context->getSetting($table, $setting, 0);
 
             if (
@@ -110,7 +105,7 @@ class Record
      * @param string $setting Setting name
      * @param array  $row     Record array
      *
-     * @return null|bool NULL when table has no flat settings or the record
+     * @return bool|null NULL when table has no flat settings or the record
      *                   doesn't contain the appropriate flat columns
      *                   boolean otherwise
      */
@@ -118,15 +113,15 @@ class Record
     {
         $flatColumns = Configuration::getFlatColumns($table, $setting);
 
-        if (count($flatColumns) === 0) {
+        if (\count($flatColumns) === 0) {
             return null;
         }
 
-        $rowValid           = true;
+        $rowValid = true;
         $flatColumnContents = [];
 
         foreach ($flatColumns as $i => $flatColumn) {
-            if (!array_key_exists($flatColumn, $row) || ($row[$flatColumn] === null)) {
+            if (!\array_key_exists($flatColumn, $row) || ($row[$flatColumn] === null)) {
                 $rowValid = false;
             } elseif ($row[$flatColumn] !== '') {
                 $flatColumnContents[$i] = array_flip(explode(',', $row[$flatColumn]));
@@ -140,7 +135,7 @@ class Record
         }
 
         foreach (Container::get() as $context) {
-            if (array_key_exists($context->getUid(), $flatColumnContents[0])) {
+            if (\array_key_exists($context->getUid(), $flatColumnContents[0])) {
                 return false;
             }
         }
