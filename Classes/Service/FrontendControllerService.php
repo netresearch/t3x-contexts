@@ -30,7 +30,6 @@ class FrontendControllerService implements SingletonInterface
      * Parameters that modify the page hash.
      * Key is the parameter name, value its value.
      *
-     * @var array
      */
     protected static array $params = [];
 
@@ -38,95 +37,15 @@ class FrontendControllerService implements SingletonInterface
      * GET parameters that are carried across all URLs.
      * Key is the parameter name, value is ignored
      *
-     * @var array
      */
     protected static array $linkVarParams = [];
-
-    /**
-     * Check subpages for context from rootline. Method is called from hook "hook_checkEnableFields".
-     *
-     * @param array{
-     *     pObj: TypoScriptFrontendController,
-     *     row: array<string, null|int|string>,
-     *     bypassGroupCheck: bool
-     *  } $data
-     *
-     * @return bool FALSE if context from root does not match
-     */
-    public function checkEnableFields(array $data): bool
-    {
-        $contexts = Container::get();
-        $findExtendSubPage = false;
-
-        foreach (array_reverse($data['pObj']->rootLine) as $page) {
-            // Check extendToSubpages
-            if (($page['extendToSubpages'] === 0) && !$findExtendSubPage) {
-                continue;
-            }
-
-            $findExtendSubPage = true;
-
-            $enable = array_filter(explode(',', $page['tx_contexts_enable']));
-
-            foreach ($enable as $contextId) {
-                if (!isset($contexts[$contextId])) {
-                    return false;
-                }
-            }
-
-            $disable = array_filter(explode(',', $page['tx_contexts_disable']));
-            foreach ($disable as $contextId) {
-                if (isset($contexts[$contextId])) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * methods related to the QueryParameterContext
-     */
-
-    /**
-     * Add a parameter to cHash so that caches are specific to the current context combination.
-     *
-     * @param array                        $params Array of parameters
-     * @param TypoScriptFrontendController $tsfe
-     *
-     * @return void
-     */
-    public function createHashBase(array &$params, TypoScriptFrontendController $tsfe): void
-    {
-        ksort(self::$params);
-
-        $params['hashParameters'][strtolower(self::class)] = serialize(self::$params);
-    }
-
-    /**
-     * Add current param names to config.linkVars.
-     *
-     * @param array                        $params Array of parameters
-     * @param TypoScriptFrontendController $tsfe
-     *
-     * @return void
-     */
-    public function configArrayPostProc(array &$params, TypoScriptFrontendController $tsfe): void
-    {
-        $linkVars = $params['config']['linkVars'] . ',' . implode(',', array_keys(self::$linkVarParams));
-        $params['config']['linkVars'] = trim($linkVars, ',');
-    }
 
     /**
      * Register a param, it's value and hook into configArrayPostProc and
      * createHashBase/cHashParamsHook
      *
-     * @param string $param
      * @param mixed  $value
-     * @param bool   $addToLinkVars
      *
-     * @return void
      */
     public static function registerQueryParameter(string $param, $value, bool $addToLinkVars): void
     {
@@ -151,5 +70,91 @@ class FrontendControllerService implements SingletonInterface
         // Hook to influence the page hash calculation
         $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][self::class] =
             self::class . '->createHashBase';
+    }
+
+    /**
+     * Check subpages for context from rootline. Method is called from hook "hook_checkEnableFields".
+     *
+     * @param array{
+     *     pObj: TypoScriptFrontendController,
+     *     row: array<string, int|string|null>,
+     *     bypassGroupCheck: bool
+     *  } $data
+     *
+     * @return bool FALSE if context from root does not match
+     *
+     * @deprecated Use checkEnableFieldsForRootLine() instead. Will be removed in v4.0.
+     */
+    public function checkEnableFields(array $data): bool
+    {
+        return $this->checkEnableFieldsForRootLine($data['pObj']->rootLine);
+    }
+
+    /**
+     * Check if page is accessible based on context settings in rootline.
+     *
+     * @param array<int, array<string, mixed>> $rootLine The page rootline
+     *
+     * @return bool FALSE if context restrictions deny access
+     */
+    public function checkEnableFieldsForRootLine(array $rootLine): bool
+    {
+        $contexts = Container::get();
+        $findExtendSubPage = false;
+
+        foreach (array_reverse($rootLine) as $page) {
+            // Check extendToSubpages
+            if (($page['extendToSubpages'] ?? 0) === 0 && !$findExtendSubPage) {
+                continue;
+            }
+
+            $findExtendSubPage = true;
+
+            $enable = array_filter(explode(',', (string) ($page['tx_contexts_enable'] ?? '')));
+
+            foreach ($enable as $contextId) {
+                if (!isset($contexts[$contextId])) {
+                    return false;
+                }
+            }
+
+            $disable = array_filter(explode(',', (string) ($page['tx_contexts_disable'] ?? '')));
+            foreach ($disable as $contextId) {
+                if (isset($contexts[$contextId])) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * methods related to the QueryParameterContext
+     */
+
+    /**
+     * Add a parameter to cHash so that caches are specific to the current context combination.
+     *
+     * @param array                        $params Array of parameters
+     *
+     */
+    public function createHashBase(array &$params, TypoScriptFrontendController $tsfe): void
+    {
+        ksort(self::$params);
+
+        $params['hashParameters'][strtolower(self::class)] = serialize(self::$params);
+    }
+
+    /**
+     * Add current param names to config.linkVars.
+     *
+     * @param array                        $params Array of parameters
+     *
+     */
+    public function configArrayPostProc(array &$params, TypoScriptFrontendController $tsfe): void
+    {
+        $linkVars = $params['config']['linkVars'] . ',' . implode(',', array_keys(self::$linkVarParams));
+        $params['config']['linkVars'] = trim($linkVars, ',');
     }
 }
