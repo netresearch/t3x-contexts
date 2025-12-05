@@ -21,9 +21,6 @@ use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\Element\TextElement;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-use function count;
-use function is_array;
-
 /**
  * Provides methods used in the backend by flexforms.
  *
@@ -37,7 +34,6 @@ class CombinationFormElement extends AbstractFormElement
     /**
      * Display a textarea with validation for the entered aliases and expressions
      *
-     * @return array
      *
      * @throws ContextException
      * @throws DBALException
@@ -48,20 +44,20 @@ class CombinationFormElement extends AbstractFormElement
         $textElement = GeneralUtility::makeInstance(
             TextElement::class,
             $this->nodeFactory,
-            $this->data
+            $this->data,
         );
 
         $text = $textElement->render();
 
         $evaluator = new LogicalExpressionEvaluator();
-        $tokens    = $evaluator->tokenize($this->data['parameterArray']['itemFormElValue']);
+        $tokens = $evaluator->tokenize($this->data['parameterArray']['itemFormElValue']);
 
-        $notFound      = [];
+        $notFound = [];
         $unknownTokens = [];
 
         foreach ($tokens as $token) {
             if (
-                is_array($token)
+                \is_array($token)
                 && $token[0] === LogicalExpressionEvaluator::T_VAR
             ) {
                 $contexts = Container::get()->initAll();
@@ -78,46 +74,46 @@ class CombinationFormElement extends AbstractFormElement
                     $notFound[] = $token[1];
                 }
             } elseif (
-                is_array($token)
+                \is_array($token)
                 && ($token[0] === LogicalExpressionEvaluator::T_UNKNOWN)
             ) {
                 $unknownTokens[] = $token[1];
             }
         }
 
-        if ((count($notFound) === 0) && (count($unknownTokens) === 0)) {
+        if ((\count($notFound) === 0) && (\count($unknownTokens) === 0)) {
             return $text;
         }
 
         $html = <<<HTML
-{$text['html']}
-<div class="text-danger">
-HTML;
-        if (count($notFound) > 0) {
+            {$text['html']}
+            <div class="text-danger">
+            HTML;
+        if (\count($notFound) > 0) {
             $notFoundText = implode(', ', $notFound);
             $html .= <<<HTML
-<p>
-    {$GLOBALS['LANG']->sL(
-        'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:aliasesNotFound'
-    )}: $notFoundText
-</p>
-HTML;
+                <p>
+                    {$GLOBALS['LANG']->sL(
+                                'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:aliasesNotFound',
+                            )}: {$notFoundText}
+                </p>
+                HTML;
         }
 
-        if (count($unknownTokens) > 0) {
+        if (\count($unknownTokens) > 0) {
             $unknownTokensText = implode(', ', $unknownTokens);
             $html .= <<<HTML
-<p>
-    {$GLOBALS['LANG']->sL(
-        'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:unknownTokensFound'
-    )}: $unknownTokensText
-</p>
-HTML;
+                <p>
+                    {$GLOBALS['LANG']->sL(
+                                'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:unknownTokensFound',
+                            )}: {$unknownTokensText}
+                </p>
+                HTML;
         }
 
         $html .= <<<HTML
-</div>
-HTML;
+            </div>
+            HTML;
 
         $result = $this->initializeResultArray();
         $result['html'] = $html;
