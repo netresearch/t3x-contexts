@@ -3,24 +3,23 @@
     <meta>
         <langDisable>1</langDisable>
     </meta>
-
-    <ROOT>
-        <type>array</type>
-        <el>
-            <field_expression>
-                <TCEforms>
-                    <label>
-                        LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:combination.field_logicalExpression
-                    </label>
-                    <config>
-                        <cols>60</cols>
-                        <rows>5</rows>
-                        <eval>trim,required</eval>
-                        <type>user</type>
-                        <renderType>combinationFormElement</renderType>
-                    </config>
-                </TCEforms>
-            </field_expression>
-        </el>
-    </ROOT>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <type>array</type>
+                <el>
+                    <field_expression>
+                        <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:combination.field_logicalExpression</label>
+                        <config>
+                            <type>user</type>
+                            <renderType>combinationFormElement</renderType>
+                            <cols>60</cols>
+                            <rows>5</rows>
+                            <eval>trim,required</eval>
+                        </config>
+                    </field_expression>
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
 </T3DataStructure>

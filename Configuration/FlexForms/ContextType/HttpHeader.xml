@@ -3,32 +3,30 @@
     <meta>
         <langDisable>1</langDisable>
     </meta>
-
-    <ROOT>
-        <type>array</type>
-        <el>
-            <field_name>
-                <TCEforms>
-                    <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:httpheader.field_name</label>
-                    <config>
-                        <type>input</type>
-                        <size>30</size>
-                        <eval>trim</eval>
-                    </config>
-                </TCEforms>
-            </field_name>
-
-            <field_values>
-                <TCEforms>
-                    <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:httpheader.field_values</label>
-                    <config>
-                        <type>text</type>
-                        <cols>60</cols>
-                        <rows>5</rows>
-                        <eval>trim</eval>
-                    </config>
-                </TCEforms>
-            </field_values>
-        </el>
-    </ROOT>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <type>array</type>
+                <el>
+                    <field_name>
+                        <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:httpheader.field_name</label>
+                        <config>
+                            <type>input</type>
+                            <size>30</size>
+                            <eval>trim</eval>
+                        </config>
+                    </field_name>
+                    <field_values>
+                        <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:httpheader.field_values</label>
+                        <config>
+                            <type>text</type>
+                            <cols>60</cols>
+                            <rows>5</rows>
+                            <eval>trim</eval>
+                        </config>
+                    </field_values>
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
 </T3DataStructure>

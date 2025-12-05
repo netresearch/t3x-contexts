@@ -3,19 +3,20 @@
     <meta>
         <langDisable>1</langDisable>
     </meta>
-
-    <ROOT>
-        <type>array</type>
-        <el>
-            <field_variable>
-                <TCEforms>
-                    <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:session.field_variable</label>
-                    <config>
-                        <type>input</type>
-                        <eval>trim</eval>
-                    </config>
-                </TCEforms>
-            </field_variable>
-        </el>
-    </ROOT>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <type>array</type>
+                <el>
+                    <field_variable>
+                        <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:session.field_variable</label>
+                        <config>
+                            <type>input</type>
+                            <eval>trim</eval>
+                        </config>
+                    </field_variable>
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
 </T3DataStructure>
