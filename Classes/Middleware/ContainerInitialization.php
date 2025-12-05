@@ -32,10 +32,7 @@ class ContainerInitialization implements MiddlewareInterface
     /**
      * Initialize container matching and assure page is accessible after initialization.
      *
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
      *
-     * @return ResponseInterface
      *
      * @throws ContextException
      * @throws DBALException

@@ -30,21 +30,20 @@ class ContextFunctionsProvider implements ExpressionFunctionProviderInterface
     public function getFunctions(): array
     {
         return [
-            $this->getContextMatch()
+            $this->getContextMatch(),
         ];
     }
 
     /**
-     * @return ExpressionFunction
      */
     protected function getContextMatch(): ExpressionFunction
     {
         return new ExpressionFunction(
             'contextMatch',
-            static function () {
+            static function (): void {
                 // Not implemented, we only use the evaluators
             },
-            fn($arguments, $strContext) => ContextMatcher::getInstance()->matches($strContext)
+            fn ($arguments, $strContext) => ContextMatcher::getInstance()->matches($strContext),
         );
     }
 }
