@@ -16,10 +16,6 @@ use Netresearch\Contexts\Service\FrontendControllerService;
 use RuntimeException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-use function array_key_exists;
-use function count;
-use function in_array;
-
 /**
  * Matches on a GET parameter with a certain value
  *
@@ -43,37 +39,49 @@ class QueryParameterContext extends AbstractContext
     public function match(array $arDependencies = []): bool
     {
         $configValue = $this->getConfValue('field_name');
-        $param       = trim($configValue);
+        $param = trim($configValue);
 
         if ($param === '') {
             throw new RuntimeException(
-                'Parameter name missing from GET Parameter context configuration'
+                'Parameter name missing from GET Parameter context configuration',
             );
         }
 
-        if (!array_key_exists($param, $_GET)) {
-            //load from session if no param given
+        if (!\array_key_exists($param, $_GET)) {
+            // load from session if no param given
             [$bUseMatch, $bMatch] = $this->getMatchFromSession();
             return $this->invert($bUseMatch && $bMatch);
         }
 
-        $value = GeneralUtility::_GET($param);
+        $value = $this->getQueryParameter($param);
 
         // Register param on TSFE service for cache and linkVars management
         FrontendControllerService::registerQueryParameter(
             $param,
             $value,
-            !$this->use_session
+            !$this->use_session,
         );
 
         $values = GeneralUtility::trimExplode(
             "\n",
             $this->getConfValue('field_values'),
-            true
+            true,
         );
 
         return $this->invert($this->storeInSession(
-            (count($values) === 0) || in_array($value, $values, true)
+            (\count($values) === 0) || \in_array($value, $values, true),
         ));
+    }
+
+    /**
+     * Get a query parameter value.
+     *
+     * @param string $param Parameter name
+     *
+     * @return mixed Parameter value or null if not set
+     */
+    protected function getQueryParameter(string $param): mixed
+    {
+        return GeneralUtility::_GET($param);
     }
 }

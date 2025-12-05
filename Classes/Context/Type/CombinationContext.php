@@ -15,8 +15,6 @@ use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException;
 
-use function is_array;
-
 /**
  * Matches when a logical expression with other contexts evaluates to true
  *
@@ -28,12 +26,10 @@ use function is_array;
 class CombinationContext extends AbstractContext
 {
     /**
-     * @var LogicalExpressionEvaluator
      */
     protected LogicalExpressionEvaluator $evaluator;
 
     /**
-     * @var array
      */
     protected array $tokens;
 
@@ -50,13 +46,13 @@ class CombinationContext extends AbstractContext
         $configValue = $this->getConfValue('field_expression');
 
         $this->evaluator = new LogicalExpressionEvaluator();
-        $this->tokens    = $this->evaluator->tokenize($configValue);
+        $this->tokens = $this->evaluator->tokenize($configValue);
 
         $dependencies = [];
 
         foreach ($this->tokens as $token) {
             if (
-                is_array($token)
+                \is_array($token)
                 && $token[0] === LogicalExpressionEvaluator::T_VAR
             ) {
                 foreach ($arContexts as $dependent) {
@@ -85,9 +81,7 @@ class CombinationContext extends AbstractContext
      * matching result as values and let the evaluator evaluate
      * the parsed expression by those values.
      *
-     * @param array $arDependencies
      *
-     * @return bool
      * @throws LogicalExpressionEvaluatorException
      */
     public function match(array $arDependencies = []): bool
