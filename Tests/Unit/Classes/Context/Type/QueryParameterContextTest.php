@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the package netresearch/contexts.
  *
@@ -9,189 +11,167 @@
 
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
+use Netresearch\Contexts\Context\Type\QueryParameterContext;
+use PHPUnit\Framework\Attributes\Test;
+use RuntimeException;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-class QueryParameterContextTest extends UnitTestCase
+/**
+ * Tests for QueryParameterContext.
+ */
+final class QueryParameterContextTest extends UnitTestCase
 {
-    public function setUp()
-    {
-        error_reporting(error_reporting() & ~E_NOTICE);
+    /**
+     * Simulated GET parameters for testing.
+     *
+     * @var array<string, mixed>
+     */
+    private array $mockGetParams = [];
 
-        foreach ($_GET as $key => $dummy) {
-            unset($_GET[$key]);
-        }
+    protected function setUp(): void
+    {
+        parent::setUp();
+        error_reporting(error_reporting() & ~\E_NOTICE);
+        $this->mockGetParams = [];
     }
 
-    public function testMatchParameterMissing()
+    #[Test]
+    public function matchParameterMissing(): void
     {
-        $getm = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
-        );
-        $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', '123'),
-        );
+        $context = $this->createContext('affID', '123', []);
+        $context->setUseSession(false);
 
-        $getm->expects($this->any())
-            ->method('getConfValue')
-            ->will($this->returnValueMap($retValMap));
-
-        $this->assertFalse($getm->match(), 'No parameter means no match');
+        self::assertFalse($context->match(), 'No parameter means no match');
     }
 
-    public function testMatchParameterNoValue()
+    #[Test]
+    public function matchParameterNoValue(): void
     {
-        $_GET['affID'] = '';
+        $context = $this->createContext('affID', '123', ['affID' => '']);
+        $context->setUseSession(false);
 
-        $getm = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
-        );
-        $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', '123'),
-        );
-
-        $getm->expects($this->any())
-            ->method('getConfValue')
-            ->will($this->returnValueMap($retValMap));
-
-        $this->assertFalse($getm->match(), 'No value means no match');
+        self::assertFalse($context->match(), 'Empty value means no match');
     }
 
-    public function testMatchParameterCorrectValue()
+    #[Test]
+    public function matchParameterCorrectValue(): void
     {
-        $_GET['affID'] = 123;
+        $context = $this->createContext('affID', '123', ['affID' => '123']);
+        $context->setUseSession(false);
 
-        $getm = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
-        );
-        $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', '123'),
-        );
-
-        $getm->expects($this->any())
-            ->method('getConfValue')
-            ->will($this->returnValueMap($retValMap));
-
-        $this->assertTrue($getm->match(), 'Correct value');
+        self::assertTrue($context->match(), 'Correct value should match');
     }
 
-    public function testMatchParameterCorrectValueOfMany()
+    #[Test]
+    public function matchParameterCorrectValueOfMany(): void
     {
-        $_GET['affID'] = 125;
+        $context = $this->createContext('affID', "123\n124\n125\n", ['affID' => '125']);
+        $context->setUseSession(false);
 
-        $getm = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
-        );
-        $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array(
-                'field_values'     , null, 'sDEF', 'lDEF', 'vDEF',
-                "123\n124\n125\n"
-            ),
-        );
-
-        $getm->expects($this->any())
-            ->method('getConfValue')
-            ->will($this->returnValueMap($retValMap));
-
-        $this->assertTrue($getm->match(), 'Correct value');
+        self::assertTrue($context->match(), 'Value in list should match');
     }
 
-    public function testMatchParameterWrongValueOfMany()
+    #[Test]
+    public function matchParameterWrongValueOfMany(): void
     {
-        $_GET['affID'] = 124125;
+        $context = $this->createContext('affID', "123\n124\n125\n", ['affID' => '124125']);
+        $context->setUseSession(false);
 
-        $getm = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
-        );
-        $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array(
-                'field_values'     , null, 'sDEF', 'lDEF', 'vDEF',
-                "123\n124\n125\n"
-            ),
-        );
-
-        $getm->expects($this->any())
-            ->method('getConfValue')
-            ->will($this->returnValueMap($retValMap));
-
-        $this->assertFalse($getm->match(), 'value is not allowed');
+        self::assertFalse($context->match(), 'Value not in list should not match');
     }
 
-    public function testMatchParameterAnyValue()
+    #[Test]
+    public function matchParameterAnyValue(): void
     {
-        $_GET['affID'] = 'aslkfj';
+        $context = $this->createContext('affID', '', ['affID' => 'aslkfj']);
+        $context->setUseSession(false);
 
-        $getm = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
-        );
-        $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', ''),
-        );
-
-        $getm->expects($this->any())
-            ->method('getConfValue')
-            ->will($this->returnValueMap($retValMap));
-
-        $this->assertTrue($getm->match(), 'Any value is correct');
+        self::assertTrue($context->match(), 'Any value should match when no values configured');
     }
 
-    public function testMatchParameterAnyValueMissing()
+    #[Test]
+    public function matchParameterAnyValueMissing(): void
     {
-        unset($_GET['affID']);
+        $context = $this->createContext('affID', '', []);
+        $context->setUseSession(false);
 
-        $getm = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
-        );
-        $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', 'affID'),
-            array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', ''),
-        );
+        self::assertFalse($context->match(), 'Missing parameter should not match');
+    }
 
-        $getm->expects($this->any())
-            ->method('getConfValue')
-            ->will($this->returnValueMap($retValMap));
+    #[Test]
+    public function matchUnconfiguredNoParameter(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Parameter name missing');
 
-        $this->assertFalse($getm->match(), 'Any value is missing');
+        $context = $this->createContext('', '', []);
+        $context->setUseSession(false);
+
+        $context->match();
     }
 
     /**
-     * @expectedException Exception
+     * Create a QueryParameterContext with mocked configuration values.
+     *
+     * @param array<string, mixed> $getParams Simulated GET parameters
      */
-    public function testMatchUnconfiguredNoParameter()
+    private function createContext(string $fieldName, string $fieldValues, array $getParams = []): QueryParameterContext
     {
-        $getm = $this->getAccessibleMock(
-            '\Netresearch\Contexts\Context\Type\QueryParameterContext',
-            array('getConfValue')
-        );
-        $getm->setUseSession(false);
-        $retValMap = array(
-            array('field_name'       , null, 'sDEF', 'lDEF', 'vDEF', ''),
-            array('field_values'     , null, 'sDEF', 'lDEF', 'vDEF', ''),
-        );
+        // Update $_GET for the array_key_exists check in match()
+        foreach (array_keys($_GET) as $key) {
+            unset($_GET[$key]);
+        }
 
-        $getm->expects($this->any())
-            ->method('getConfValue')
-            ->will($this->returnValueMap($retValMap));
+        foreach ($getParams as $key => $value) {
+            $_GET[$key] = $value;
+        }
 
-        $getm->match();
+        return new class ($fieldName, $fieldValues, $getParams) extends QueryParameterContext {
+            private string $mockFieldName;
+
+            private string $mockFieldValues;
+
+            /** @var array<string, mixed> */
+            private array $mockGetParams;
+
+            /**
+             * @param array<string, mixed> $getParams
+             */
+            public function __construct(string $fieldName, string $fieldValues, array $getParams)
+            {
+                $this->mockFieldName = $fieldName;
+                $this->mockFieldValues = $fieldValues;
+                $this->mockGetParams = $getParams;
+            }
+
+            protected function getConfValue(
+                string $fieldNameArg,
+                string $default = '',
+                string $sheet = 'sDEF',
+                string $lang = 'lDEF',
+                string $value = 'vDEF',
+            ): string {
+                return match ($fieldNameArg) {
+                    'field_name' => $this->mockFieldName,
+                    'field_values' => $this->mockFieldValues,
+                    default => $default,
+                };
+            }
+
+            protected function getMatchFromSession(): array
+            {
+                return [false, null];
+            }
+
+            protected function storeInSession(bool $bMatch): bool
+            {
+                return $bMatch;
+            }
+
+            protected function getQueryParameter(string $param): mixed
+            {
+                return $this->mockGetParams[$param] ?? null;
+            }
+        };
     }
 }
