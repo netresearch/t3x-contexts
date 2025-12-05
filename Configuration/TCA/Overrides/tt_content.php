@@ -16,9 +16,9 @@ defined('TYPO3') || die('Access denied.');
 /**
  * TCA override for tt_content table
  */
-call_user_func(static function () {
+call_user_func(static function (): void {
     Configuration::enableContextsForTable(
         'contexts',
-        'tt_content'
+        'tt_content',
     );
 });
