@@ -3,9 +3,9 @@
 
 # Context debugging output (only when enabled via Site Set settings)
 [{$contexts.debug} == 1]
-    page.headerData.1700000001 = TEXT
-    page.headerData.1700000001 {
-        value = <!-- Contexts Extension Debug Mode Active -->
-        wrap = |
-    }
-[end]
+page.headerData.1700000001 = TEXT
+page.headerData.1700000001 {
+    value = <!-- Contexts Extension Debug Mode Active -->
+    wrap = |
+}
+[global]
