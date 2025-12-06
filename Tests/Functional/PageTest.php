@@ -208,6 +208,9 @@ final class PageTest extends FunctionalTestCase
     #[Test]
     public function contextMatchesWithQueryParameter(): void
     {
+        // Ensure clean state before testing Container directly
+        Container::reset();
+
         // Create a mock request with the query parameter using withQueryParams()
         $request = (new ServerRequest('http://localhost/', 'GET'))
             ->withQueryParams(['test' => '1']);
@@ -227,6 +230,9 @@ final class PageTest extends FunctionalTestCase
     #[Test]
     public function contextDoesNotMatchWithoutQueryParameter(): void
     {
+        // Ensure clean state before testing Container directly
+        Container::reset();
+
         // Create a mock request without the query parameter
         $request = new ServerRequest(
             'http://localhost/',
