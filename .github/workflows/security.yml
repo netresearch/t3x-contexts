@@ -64,7 +64,9 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Install CycloneDX Composer Plugin
-        run: composer global require cyclonedx/cyclonedx-php-composer --no-interaction
+        run: |
+          composer global config allow-plugins.cyclonedx/cyclonedx-php-composer true
+          composer global require cyclonedx/cyclonedx-php-composer --no-interaction
 
       - name: Generate CycloneDX SBOM
         run: composer CycloneDX:make-sbom --output-file=sbom.json --spec-version=1.5
