@@ -63,12 +63,11 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
+      - name: Install CycloneDX Composer Plugin
+        run: composer global require cyclonedx/cyclonedx-php-composer --no-interaction
+
       - name: Generate CycloneDX SBOM
-        uses: CycloneDX/gh-php-composer@v1
-        with:
-          input: ./composer.lock
-          output: sbom.json
-          spec-version: '1.5'
+        run: composer CycloneDX:make-sbom --output-file=sbom.json --spec-version=1.5
 
       - name: Upload SBOM as artifact
         uses: actions/upload-artifact@v4
