@@ -109,7 +109,7 @@ jobs:
           if [ "${COVERAGE}" = "true" ]; then
             vendor/bin/phpunit -c Build/phpunit/UnitTests.xml --coverage-clover=coverage.xml
           else
-            vendor/bin/phpunit -c Build/phpunit/UnitTests.xml
+            vendor/bin/phpunit -c Build/phpunit/UnitTests.xml --no-coverage
           fi
 
       - name: Upload coverage to Codecov
