@@ -15,7 +15,8 @@
                             <renderType>combinationFormElement</renderType>
                             <cols>60</cols>
                             <rows>5</rows>
-                            <eval>trim,required</eval>
+                            <eval>trim</eval>
+                            <required>1</required>
                         </config>
                     </field_expression>
                 </el>
