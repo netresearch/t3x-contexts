@@ -108,6 +108,23 @@ echo -e "${GREEN}Running suite: ${SUITE}${NC}"
 echo -e "PHP: ${PHP_VERSION}, TYPO3: ${TYPO3_VERSION}"
 echo ""
 
+# Set database credentials for functional tests (DDEV or CI environment)
+setup_database_env() {
+    if [[ -z "${typo3DatabaseDriver:-}" ]]; then
+        # Check if running in DDEV
+        if [[ -n "${DDEV_PROJECT:-}" ]] || [[ -f /.dockerenv && -n "${DDEV_HOSTNAME:-}" ]]; then
+            export typo3DatabaseDriver="pdo_mysql"
+            export typo3DatabaseHost="db"
+            export typo3DatabaseUsername="db"
+            export typo3DatabasePassword="db"
+            export typo3DatabaseName="db"
+        # Check for GitHub Actions or other CI
+        elif [[ -n "${CI:-}" ]]; then
+            export typo3DatabaseDriver="pdo_sqlite"
+        fi
+    fi
+}
+
 case ${SUITE} in
     unit)
         echo -e "${GREEN}>>> Running Unit Tests${NC}"
@@ -115,6 +132,7 @@ case ${SUITE} in
         ;;
     functional)
         echo -e "${GREEN}>>> Running Functional Tests${NC}"
+        setup_database_env
         php ${XDEBUG} vendor/bin/phpunit -c Build/phpunit/FunctionalTests.xml ${VERBOSE}
         ;;
     lint)
@@ -161,6 +179,7 @@ case ${SUITE} in
         echo ""
 
         echo -e "${GREEN}>>> 4/4 Functional Tests${NC}"
+        setup_database_env
         php vendor/bin/phpunit -c Build/phpunit/FunctionalTests.xml || true
         echo ""
 
