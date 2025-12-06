@@ -2,6 +2,8 @@ composer.lock
 .idea/
 vendor/
 .phpunit.result.cache
+.php-cs-fixer.cache
+.Build/
 
 # Do not ignore the Icons folder
 public/*
