@@ -12,12 +12,15 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Tests\Functional;
 
 use Error;
+use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\Context\Container;
+use Netresearch\Contexts\Query\Restriction\ContextRestriction;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Configuration\SiteWriter;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
+use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -190,7 +193,7 @@ final class PageTest extends FunctionalTestCase
     public function contextMatchesWithQueryParameter(): void
     {
         // Create a mock request with the query parameter using withQueryParams()
-        $request = (new \TYPO3\CMS\Core\Http\ServerRequest('http://localhost/', 'GET'))
+        $request = (new ServerRequest('http://localhost/', 'GET'))
             ->withQueryParams(['test' => '1']);
 
         // Set the request and initialize context matching
@@ -209,7 +212,7 @@ final class PageTest extends FunctionalTestCase
     public function contextDoesNotMatchWithoutQueryParameter(): void
     {
         // Create a mock request without the query parameter
-        $request = new \TYPO3\CMS\Core\Http\ServerRequest(
+        $request = new ServerRequest(
             'http://localhost/',
             'GET',
         );
@@ -230,14 +233,14 @@ final class PageTest extends FunctionalTestCase
     public function tcaConfigurationIsCorrect(): void
     {
         // Verify TCA configuration for context settings
-        $enableSettings = \Netresearch\Contexts\Api\Configuration::getEnableSettings('pages');
+        $enableSettings = Configuration::getEnableSettings('pages');
         self::assertContains(
             'tx_contexts',
             $enableSettings,
             'pages table should have tx_contexts in enableSettings',
         );
 
-        $flatColumns = \Netresearch\Contexts\Api\Configuration::getFlatColumns('pages', 'tx_contexts');
+        $flatColumns = Configuration::getFlatColumns('pages', 'tx_contexts');
         self::assertCount(
             2,
             $flatColumns,
@@ -252,7 +255,7 @@ final class PageTest extends FunctionalTestCase
     {
         // Verify the ContextRestriction is registered in TYPO3 config
         self::assertArrayHasKey(
-            \Netresearch\Contexts\Query\Restriction\ContextRestriction::class,
+            ContextRestriction::class,
             $GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'] ?? [],
             'ContextRestriction should be registered in additionalQueryRestrictions',
         );
