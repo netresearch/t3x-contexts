@@ -16,15 +16,15 @@ defined('TYPO3') || die('Access denied.');
 /**
  * TCA override for pages table
  */
-call_user_func(static function () {
+call_user_func(static function (): void {
     Configuration::enableContextsForTable(
         'contexts',
         'pages',
         [
             'tx_contexts_nav' => [
-                'label'   => 'LLL:' . Configuration::LANG_FILE . ':tx_contexts_menu_visibility',
+                'label' => 'LLL:' . Configuration::LANG_FILE . ':tx_contexts_menu_visibility',
                 'flatten' => true,
             ],
-        ]
+        ],
     );
 });

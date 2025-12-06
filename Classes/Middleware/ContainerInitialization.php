@@ -32,10 +32,7 @@ class ContainerInitialization implements MiddlewareInterface
     /**
      * Initialize container matching and assure page is accessible after initialization.
      *
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
      *
-     * @return ResponseInterface
      *
      * @throws ContextException
      * @throws DBALException
@@ -43,7 +40,9 @@ class ContainerInitialization implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        Container::get()->initMatching();
+        Container::get()
+            ->setRequest($request)
+            ->initMatching();
 
         return $handler->handle($request);
     }

@@ -40,7 +40,7 @@ class SessionContext extends AbstractContext
             ->fe_user
             ->getKey(
                 'ses',
-                $this->getConfValue('field_variable')
+                $this->getConfValue('field_variable'),
             );
 
         return $this->invert($session !== null);

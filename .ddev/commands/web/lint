@@ -1,0 +1,71 @@
+#!/bin/bash
+
+## Description: Run code quality checks on the extension
+## Usage: lint [tool]
+## Example: ddev lint
+## Example: ddev lint phpstan
+## Example: ddev lint cs
+
+set -e
+
+EXTENSION_DIR="/var/www/html/extension"
+TOOL="${1:-all}"
+
+cd "${EXTENSION_DIR}"
+
+run_phpstan() {
+    echo "=== Running PHPStan ==="
+    if [ -f "phpstan.neon" ]; then
+        ./vendor/bin/phpstan analyse -c phpstan.neon || true
+    else
+        echo "No phpstan.neon found, skipping..."
+    fi
+    echo ""
+}
+
+run_cs_fixer() {
+    echo "=== Running PHP-CS-Fixer ==="
+    if [ -f ".php-cs-fixer.php" ]; then
+        ./vendor/bin/php-cs-fixer fix --dry-run --diff || true
+    else
+        echo "No .php-cs-fixer.php found, skipping..."
+    fi
+    echo ""
+}
+
+run_rector() {
+    echo "=== Running Rector (dry-run) ==="
+    if [ -f "rector.php" ]; then
+        ./vendor/bin/rector process --dry-run || true
+    else
+        echo "No rector.php found, skipping..."
+    fi
+    echo ""
+}
+
+case "${TOOL}" in
+    phpstan|stan)
+        run_phpstan
+        ;;
+    cs|csfixer|php-cs-fixer)
+        run_cs_fixer
+        ;;
+    rector)
+        run_rector
+        ;;
+    all)
+        run_phpstan
+        run_cs_fixer
+        run_rector
+        ;;
+    *)
+        echo "Usage: ddev lint [phpstan|cs|rector|all]"
+        echo "  phpstan - Run PHPStan static analysis"
+        echo "  cs      - Run PHP-CS-Fixer"
+        echo "  rector  - Run Rector (dry-run)"
+        echo "  all     - Run all tools (default)"
+        exit 1
+        ;;
+esac
+
+echo "=== Lint Complete ==="

@@ -15,10 +15,9 @@ use ArrayObject;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\ContextException;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-
-use function count;
 
 /**
  * Loads contexts and provides access to them
@@ -32,14 +31,17 @@ use function count;
 class Container extends ArrayObject
 {
     /**
-     * @var null|Container
      */
     protected static ?Container $instance = null;
 
     /**
+     * The current server request.
+     */
+    protected ?ServerRequestInterface $request = null;
+
+    /**
      * Singleton accessor
      *
-     * @return Container
      */
     public static function get(): Container
     {
@@ -51,9 +53,34 @@ class Container extends ArrayObject
     }
 
     /**
+     * Reset the singleton instance.
+     * Useful for testing to ensure a fresh state between tests.
+     */
+    public static function reset(): void
+    {
+        static::$instance = null;
+    }
+
+    /**
+     * Set the current server request.
+     */
+    public function setRequest(?ServerRequestInterface $request): Container
+    {
+        $this->request = $request;
+        return $this;
+    }
+
+    /**
+     * Get the current server request.
+     */
+    public function getRequest(): ?ServerRequestInterface
+    {
+        return $this->request;
+    }
+
+    /**
      * Loads all contexts and checks if they match
      *
-     * @return Container
      *
      * @throws ContextException
      * @throws DBALException
@@ -68,7 +95,6 @@ class Container extends ArrayObject
     /**
      * Loads all contexts.
      *
-     * @return Container
      *
      * @throws ContextException
      * @throws DBALException
@@ -81,11 +107,35 @@ class Container extends ArrayObject
     }
 
     /**
+     * Find context by uid or alias
+     *
+     * @param int|string $uidOrAlias
+     *
+     */
+    public function find($uidOrAlias): ?AbstractContext
+    {
+        if (is_numeric($uidOrAlias) && isset($this[$uidOrAlias])) {
+            return $this[$uidOrAlias];
+        }
+
+        /** @var AbstractContext $context */
+        foreach ($this as $context) {
+            if (
+                ($context->getUid() === $uidOrAlias)
+                || ($context->getAlias() === strtolower((string) $uidOrAlias))
+            ) {
+                return $context;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Make the given contexts active (available in this container)
      *
      * @param AbstractContext[] $arContexts Array of context objects
      *
-     * @return Container
      */
     protected function setActive(array $arContexts): Container
     {
@@ -106,7 +156,7 @@ class Container extends ArrayObject
      */
     protected function loadAvailable(): array
     {
-        $factory        = GeneralUtility::makeInstance(Factory::class);
+        $factory = GeneralUtility::makeInstance(Factory::class);
         $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 
         $queryBuilder = $connectionPool
@@ -115,7 +165,7 @@ class Container extends ArrayObject
         $arRows = $queryBuilder
             ->select('*')
             ->from('tx_contexts_contexts')
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative();
 
         $contexts = [];
@@ -139,8 +189,8 @@ class Container extends ArrayObject
      */
     protected function match(array $arContexts): array
     {
-        $matched          = [];
-        $notMatched       = [];
+        $matched = [];
+        $notMatched = [];
         $arContextsHelper = $arContexts;
 
         $loops = 0;
@@ -154,7 +204,7 @@ class Container extends ArrayObject
 
                 // resolve dependencies
                 $arDeps = $context->getDependencies($arContextsHelper);
-                $unresolvedDeps = count($arDeps);
+                $unresolvedDeps = \count($arDeps);
                 foreach ($arDeps as $depUid => $enabled) {
                     if ($enabled) {
                         if (isset($matched[$depUid])) {
@@ -194,34 +244,8 @@ class Container extends ArrayObject
 
                 unset($arContexts[$uid]);
             }
-        } while (count($arContexts) > 0 && ++$loops < 10);
+        } while (\count($arContexts) > 0 && ++$loops < 10);
 
         return $matched;
-    }
-
-    /**
-     * Find context by uid or alias
-     *
-     * @param int|string $uidOrAlias
-     *
-     * @return null|AbstractContext
-     */
-    public function find($uidOrAlias): ?AbstractContext
-    {
-        if (is_numeric($uidOrAlias) && isset($this[$uidOrAlias])) {
-            return $this[$uidOrAlias];
-        }
-
-        /** @var AbstractContext $context */
-        foreach ($this as $context) {
-            if (
-                ($context->getUid() === $uidOrAlias)
-                || ($context->getAlias() === strtolower((string) $uidOrAlias))
-            ) {
-                return $context;
-            }
-        }
-
-        return null;
     }
 }

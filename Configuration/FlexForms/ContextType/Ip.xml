@@ -3,21 +3,22 @@
     <meta>
         <langDisable>1</langDisable>
     </meta>
-
-    <ROOT>
-        <type>array</type>
-        <el>
-            <field_ip>
-                <TCEforms>
-                    <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:ip.field_ip</label>
-                    <config>
-                        <type>text</type>
-                        <cols>60</cols>
-                        <rows>5</rows>
-                        <eval>trim</eval>
-                    </config>
-                </TCEforms>
-            </field_ip>
-        </el>
-    </ROOT>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <type>array</type>
+                <el>
+                    <field_ip>
+                        <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:ip.field_ip</label>
+                        <config>
+                            <type>text</type>
+                            <cols>60</cols>
+                            <rows>5</rows>
+                            <eval>trim</eval>
+                        </config>
+                    </field_ip>
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
 </T3DataStructure>

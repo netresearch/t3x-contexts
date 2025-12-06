@@ -1,0 +1,11 @@
+# TypoScript setup for contexts extension Site Set
+# This file is automatically included when the Site Set is activated
+
+# Context debugging output (only when enabled via Site Set settings)
+[{$contexts.debug} == 1]
+page.headerData.1700000001 = TEXT
+page.headerData.1700000001 {
+    value = <!-- Contexts Extension Debug Mode Active -->
+    wrap = |
+}
+[global]

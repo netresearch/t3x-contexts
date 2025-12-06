@@ -35,7 +35,6 @@ class RecordSettingsFormElement extends AbstractFormElement
     /**
      * Render the context settings field for a certain table
      *
-     * @return array
      *
      * @throws ContextException
      * @throws DBALException
@@ -46,28 +45,30 @@ class RecordSettingsFormElement extends AbstractFormElement
         $contexts = new Container();
         $contexts->initAll();
 
-        $namePre  = 'data' . $this->data['elementBaseName'];
+        $namePre = 'data' . $this->data['elementBaseName'];
         $settings = $this->data['parameterArray']['fieldConf']['config']['settings'];
 
+        $contextsLabel = $this->getLanguageService()->sL('LLL:' . Configuration::LANG_FILE . ':tx_contexts_contexts');
         $content = <<<HTML
-<table class="tx_contexts_table_settings typo3-dblist" style="width: auto; min-width: 50%;">
-    <tbody>
-        <tr class="t3-row-header">
-            <td></td>
-            <td class="tx_contexts_context">
-                {$GLOBALS['LANG']->sL('LLL:' . Configuration::LANG_FILE . ':tx_contexts_contexts')}
-            </td>
-HTML;
+            <table class="tx_contexts_table_settings typo3-dblist" style="width: auto; min-width: 50%;">
+                <tbody>
+                    <tr class="t3-row-header">
+                        <td></td>
+                        <td class="tx_contexts_context">
+                            {$contextsLabel}
+                        </td>
+            HTML;
 
         foreach ($settings as $config) {
+            $settingLabel = $this->getLanguageService()->sL($config['label']);
             $content .= <<<HTML
-<td class="tx_contexts_setting">{$GLOBALS['LANG']->sL($config['label'])}</td>
-HTML;
+                <td class="tx_contexts_setting">{$settingLabel}</td>
+                HTML;
         }
 
         $content .= <<<HTML
-</tr>
-HTML;
+            </tr>
+            HTML;
 
         $uid = (int) $this->data['databaseRow']['uid'];
 
@@ -89,7 +90,7 @@ HTML;
                         $this->data['tableName'],
                         $settingName,
                         $uid,
-                        $this->data['databaseRow']
+                        $this->data['databaseRow'],
                     )
                     : null;
 
@@ -118,19 +119,20 @@ HTML;
                 . '</tr>';
         }
         if ($visibleContexts === 0) {
+            $noContextsLabel = $this->getLanguageService()->sL('LLL:' . Configuration::LANG_FILE . ':no_contexts');
             $content .= <<<HTML
-<tr>
-    <td colspan="4" style="text-align: center;">
-        {$GLOBALS['LANG']->sL('LLL:' . Configuration::LANG_FILE . ':no_contexts')}
-    </td>
-</tr>
-HTML;
+                <tr>
+                    <td colspan="4" style="text-align: center;">
+                        {$noContextsLabel}
+                    </td>
+                </tr>
+                HTML;
         }
 
         $content .= <<<HTML
-    </tbody>
-</table>
-HTML;
+                </tbody>
+            </table>
+            HTML;
 
         $result = $this->initializeResultArray();
         $result['html'] = $content;
@@ -141,27 +143,26 @@ HTML;
     /**
      * Get the standard record view for context records
      *
-     * @param AbstractContext $context
      *
      * @return array First value is click icon, second is title
      */
     protected function getRecordPreview(AbstractContext $context): array
     {
         $row = [
-            'uid'   => $context->getUid(),
-            'pid'   => 0,
-            'type'  => $context->getType(),
-            'alias' => $context->getAlias()
+            'uid' => $context->getUid(),
+            'pid' => 0,
+            'type' => $context->getType(),
+            'alias' => $context->getAlias(),
         ];
 
         return [
             $this->getClickMenu(
                 $this->getIcon($row),
                 'tx_contexts_contexts',
-                $row['uid']
+                $row['uid'],
             ),
             htmlspecialchars($context->getTitle())
-            . ' <span class="typo3-dimmed"><em>[' . $row['uid'] . ']</em></span>'
+            . ' <span class="typo3-dimmed"><em>[' . $row['uid'] . ']</em></span>',
         ];
     }
 
@@ -176,7 +177,6 @@ HTML;
      *                          absolute path to the file
      * @param int|string $uid   The uid of the record OR if a file, just blank value.
      *
-     * @return string
      */
     protected function getClickMenu(string $str, string $table, $uid = 0): string
     {
@@ -184,16 +184,13 @@ HTML;
             $str,
             $table,
             $uid,
-            'true'
         );
     }
 
     /**
      * Get the icon HTML.
      *
-     * @param array $row
    *
-     * @return string
      */
     protected function getIcon(array $row): string
     {
@@ -203,7 +200,7 @@ HTML;
             return (string) $iconFactory->getIconForRecord(
                 'tx_contexts_contexts',
                 $row,
-                'small'
+                'small',
             );
         }
 

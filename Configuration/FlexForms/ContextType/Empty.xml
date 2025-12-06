@@ -3,11 +3,19 @@
     <meta>
         <langDisable>1</langDisable>
     </meta>
-    
-    <ROOT>
-        <type>array</type>
-        <el>
-
-        </el>
-    </ROOT>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <type>array</type>
+                <el>
+                    <placeholder>
+                        <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:empty.placeholder</label>
+                        <config>
+                            <type>none</type>
+                        </config>
+                    </placeholder>
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
 </T3DataStructure>

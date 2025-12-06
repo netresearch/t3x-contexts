@@ -6,3 +6,24 @@ services:
 
     Netresearch\Contexts\:
         resource: '../Classes/*'
+        exclude:
+            - '../Classes/Domain/Model/*'
+
+    # Event Listeners are auto-configured via #[AsEventListener] attributes
+    # See Classes/EventListener/*.php for PSR-14 event listener implementations
+
+    # Services that need to be public for TYPO3's service locator
+    Netresearch\Contexts\Service\DataHandlerService:
+        public: true
+
+    Netresearch\Contexts\Service\PageService:
+        public: true
+
+    Netresearch\Contexts\Service\IconService:
+        public: true
+
+    Netresearch\Contexts\Service\FrontendControllerService:
+        public: true
+
+    Netresearch\Contexts\Service\ContextService:
+        public: true

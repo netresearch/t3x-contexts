@@ -1,0 +1,24 @@
+# Site Set settings definitions for contexts extension
+# These settings can be configured in the TYPO3 Site Configuration
+
+settings:
+    contexts.debug:
+        type: bool
+        default: false
+        label: 'Enable context debugging'
+        description: 'When enabled, shows active contexts in frontend. Only use in development.'
+
+    contexts.matchMode:
+        type: select
+        default: 'all'
+        options:
+            all: 'All contexts must match (AND)'
+            any: 'Any context must match (OR)'
+        label: 'Context matching mode'
+        description: 'How multiple contexts are evaluated when checking visibility.'
+
+    contexts.cacheLifetimeModifier:
+        type: int
+        default: 0
+        label: 'Cache lifetime modifier'
+        description: 'Modify cache lifetime when contexts are active (in seconds, 0 = no modification).'

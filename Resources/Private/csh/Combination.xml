@@ -1,21 +1,20 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <T3locallang>
     <meta type="array">
         <description>CSH for contexts</description>
         <type>CSH</type>
-        <csh_table></csh_table>
+        <csh_table/>
         <fileId>EXT:contexts/Resources/Private/csh/Combination.xml</fileId>
-        <labelContext type="array"></labelContext>
+        <labelContext type="array"/>
     </meta>
     <data type="array">
         <languageKey index="default" type="array">
-
             <label index="field_expression.alttitle">Combine existing contexts</label>
             <label index="field_expression.description">Use the context aliases and logical operators like &amp;&amp;, || and !</label>
             <label index="field_expression.syntax">foo &amp;&amp; bar
-foo || bar
-foo &amp;&amp; !bar
-foo &amp;&amp; (!bar || baz)</label>
+            foo || bar
+            foo &amp;&amp; !bar
+            foo &amp;&amp; (!bar || baz)</label>
         </languageKey>
     </data>
 </T3locallang>

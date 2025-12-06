@@ -14,6 +14,6 @@ use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
 return [
     'extensions-contexts-status-overlay-contexts' => [
         'provider' => BitmapIconProvider::class,
-        'source'   => 'EXT:contexts/Resources/Public/Icons/overlay-contexts.png',
+        'source' => 'EXT:contexts/Resources/Public/Icons/overlay-contexts.png',
     ],
 ];
