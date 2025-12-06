@@ -1,0 +1,5 @@
+"tx_contexts_contexts"
+,"uid","pid","title","alias","type","type_conf","invert","use_session","disabled","hide_in_backend"
+,600,1,"Level 1","level1","getparam","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_name""><value index=""vDEF"">level1</value></field><field index=""field_values""><value index=""vDEF"">1</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
+,601,1,"Level 2","level2","combination","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_expression""><value index=""vDEF"">level1 &amp;&amp; domainlvl2</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
+,602,1,"Domain Level 2","domainlvl2","domain","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_domains""><value index=""vDEF"">localhost</value></field></language></sheet></data></T3FlexForms>",0,0,0,0

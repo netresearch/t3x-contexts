@@ -1,0 +1,5 @@
+"tx_contexts_contexts"
+,"uid","pid","title","alias","type","type_conf","invert","use_session","disabled","hide_in_backend"
+,201,1,"Valid Context 1","valid1","getparam","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_name""><value index=""vDEF"">test</value></field><field index=""field_values""><value index=""vDEF"">1</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
+,202,1,"Valid Context 2","valid2","domain","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_domains""><value index=""vDEF"">localhost</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
+,203,1,"Invalid Type Context","invalid","invalid_type_that_does_not_exist","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data></data></T3FlexForms>",0,0,0,0

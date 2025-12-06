@@ -21,6 +21,8 @@
 #   phpstan       Run PHPStan static analysis
 #   rector        Run Rector (dry-run)
 #   rectorfix     Run Rector (apply changes)
+#   mutation      Run mutation testing with Infection
+#   fuzz          Run fuzz testing with php-fuzzer
 #   all           Run all test suites
 #
 
@@ -63,6 +65,8 @@ print_help() {
     echo "  phpstan       Run PHPStan static analysis"
     echo "  rector        Run Rector (dry-run)"
     echo "  rectorfix     Run Rector (apply changes)"
+    echo "  mutation      Run mutation testing with Infection"
+    echo "  fuzz          Run fuzz testing with php-fuzzer"
     echo "  all           Run all test suites"
     echo ""
 }
@@ -161,6 +165,34 @@ case ${SUITE} in
     rectorfix)
         echo -e "${GREEN}>>> Running Rector (apply)${NC}"
         vendor/bin/rector process ${VERBOSE}
+        ;;
+    mutation)
+        echo -e "${GREEN}>>> Running Mutation Testing${NC}"
+        vendor/bin/infection --threads=4 --min-msi=75 --min-covered-msi=80
+        ;;
+    fuzz)
+        FUZZ_TARGET="${2:-all}"
+        FUZZ_MAX_RUNS="${3:-10000}"
+        echo -e "${GREEN}>>> Running Fuzz Testing${NC}"
+        if [[ "${FUZZ_TARGET}" == "all" ]]; then
+            echo -e "${YELLOW}Running all fuzz targets...${NC}"
+            for target in Tests/Fuzz/*Target.php; do
+                if [[ -f "${target}" ]]; then
+                    target_name=$(basename "${target}" .php)
+                    corpus_name=$(echo "${target_name}" | sed 's/Target$//' | tr '[:upper:]' '[:lower:]')
+                    corpus_dir="Tests/Fuzz/corpus/${corpus_name}"
+                    if [[ -d "${corpus_dir}" ]]; then
+                        echo -e "${GREEN}>>> Fuzzing: ${target_name}${NC}"
+                        vendor/bin/php-fuzzer fuzz "${target}" "${corpus_dir}" --max-runs "${FUZZ_MAX_RUNS}" || true
+                    else
+                        echo -e "${YELLOW}Skipping ${target_name}: no corpus at ${corpus_dir}${NC}"
+                    fi
+                fi
+            done
+        else
+            corpus_dir="Tests/Fuzz/corpus/$(basename "${FUZZ_TARGET}" Target.php | tr '[:upper:]' '[:lower:]')"
+            vendor/bin/php-fuzzer fuzz "${FUZZ_TARGET}" "${corpus_dir}" --max-runs "${FUZZ_MAX_RUNS}"
+        fi
         ;;
     all)
         echo -e "${GREEN}>>> Running All Suites${NC}"

@@ -1,13 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * This file is part of the package netresearch/contexts.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
@@ -250,5 +250,263 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
                 $arValues,
             ),
         );
+    }
+
+    #[Test]
+    public function tokenizeReturnsEmptyTokensForEmptyExpression(): void
+    {
+        $evaluator = new LogicalExpressionEvaluator();
+        $tokens = $evaluator->tokenize('');
+
+        // Empty expression should return only the end token
+        self::assertCount(1, $tokens);
+        self::assertSame(LogicalExpressionEvaluator::T_END, $tokens[0]);
+    }
+
+    #[Test]
+    public function tokenizeSingleVariable(): void
+    {
+        $evaluator = new LogicalExpressionEvaluator();
+        $tokens = $evaluator->tokenize('context1');
+
+        self::assertCount(2, $tokens);
+        self::assertSame([LogicalExpressionEvaluator::T_VAR, 'context1'], $tokens[0]);
+        self::assertSame(LogicalExpressionEvaluator::T_END, $tokens[1]);
+    }
+
+    #[Test]
+    public function tokenizeVariableAtStartOfExpression(): void
+    {
+        $evaluator = new LogicalExpressionEvaluator();
+        $tokens = $evaluator->tokenize('a && b');
+
+        // Token at position 0 (start) should be properly parsed
+        self::assertSame([LogicalExpressionEvaluator::T_VAR, 'a'], $tokens[0]);
+        self::assertSame(LogicalExpressionEvaluator::T_AND, $tokens[1]);
+        self::assertSame([LogicalExpressionEvaluator::T_VAR, 'b'], $tokens[2]);
+    }
+
+    #[Test]
+    public function tokenizeHandlesOperatorsCorrectly(): void
+    {
+        $evaluator = new LogicalExpressionEvaluator();
+
+        // Test && operator
+        $andTokens = $evaluator->tokenize('a && b');
+        self::assertSame(LogicalExpressionEvaluator::T_AND, $andTokens[1]);
+
+        // Test || operator
+        $orTokens = $evaluator->tokenize('a || b');
+        self::assertSame(LogicalExpressionEvaluator::T_OR, $orTokens[1]);
+
+        // Test >< operator (XOR)
+        $xorTokens = $evaluator->tokenize('a >< b');
+        self::assertSame(LogicalExpressionEvaluator::T_XOR, $xorTokens[1]);
+
+        // Test ! operator
+        $negTokens = $evaluator->tokenize('!a');
+        self::assertSame(LogicalExpressionEvaluator::T_NEGATE, $negTokens[0]);
+    }
+
+    #[Test]
+    public function tokenizeHandlesParentheses(): void
+    {
+        $evaluator = new LogicalExpressionEvaluator();
+        $tokens = $evaluator->tokenize('(a)');
+
+        self::assertSame(LogicalExpressionEvaluator::T_PL, $tokens[0]);
+        self::assertSame([LogicalExpressionEvaluator::T_VAR, 'a'], $tokens[1]);
+        self::assertSame(LogicalExpressionEvaluator::T_PR, $tokens[2]);
+    }
+
+    #[Test]
+    public function evaluateDefaultValueWhenVariableNotProvided(): void
+    {
+        // When a variable is not in values array, it defaults to true
+        $result = LogicalExpressionEvaluator::run('missing_var', []);
+        self::assertTrue($result);
+    }
+
+    #[Test]
+    public function evaluateDisabledContextTreatedAsMatching(): void
+    {
+        // Special case: 'disabled' value is treated as true (matching)
+        $result = LogicalExpressionEvaluator::run('context1', ['context1' => 'disabled']);
+        self::assertTrue($result);
+    }
+
+    #[Test]
+    public function evaluateAndReturnsFalseOnFirstFalse(): void
+    {
+        // AND short-circuits on first false
+        $result = LogicalExpressionEvaluator::run('a && b', ['a' => false, 'b' => true]);
+        self::assertFalse($result);
+    }
+
+    #[Test]
+    public function evaluateOrReturnsTrueOnFirstTrue(): void
+    {
+        // OR short-circuits on first true
+        $result = LogicalExpressionEvaluator::run('a || b', ['a' => true, 'b' => false]);
+        self::assertTrue($result);
+    }
+
+    #[Test]
+    public function evaluateXorWithTwoItems(): void
+    {
+        // XOR: true when exactly one is true
+        self::assertTrue(LogicalExpressionEvaluator::run('a >< b', ['a' => true, 'b' => false]));
+        self::assertTrue(LogicalExpressionEvaluator::run('a >< b', ['a' => false, 'b' => true]));
+        self::assertFalse(LogicalExpressionEvaluator::run('a >< b', ['a' => true, 'b' => true]));
+        self::assertFalse(LogicalExpressionEvaluator::run('a >< b', ['a' => false, 'b' => false]));
+    }
+
+    #[Test]
+    public function evaluateNegatedScope(): void
+    {
+        // Negated parenthesized expression
+        $result = LogicalExpressionEvaluator::run('!(a && b)', ['a' => true, 'b' => true]);
+        self::assertFalse($result);
+
+        $result2 = LogicalExpressionEvaluator::run('!(a && b)', ['a' => true, 'b' => false]);
+        self::assertTrue($result2);
+    }
+
+    #[Test]
+    public function rebuildUnshiftedShowsOperators(): void
+    {
+        $evaluator = new LogicalExpressionEvaluator();
+        $evaluator->parse($evaluator->tokenize('a && b'));
+
+        // Unshifted rebuild shows the raw structure
+        $unshifted = $evaluator->rebuild(true);
+        self::assertStringContainsString('a', $unshifted);
+        self::assertStringContainsString('b', $unshifted);
+    }
+
+    #[Test]
+    public function runWithExceptionUnexpectedOperator(): void
+    {
+        $this->expectException(LogicalExpressionEvaluatorException::class);
+        $this->expectExceptionMessage('Unexpected Operator');
+
+        $strExpression = '&& context1';
+        LogicalExpressionEvaluator::run($strExpression, []);
+    }
+
+    #[Test]
+    public function runWithExceptionUnopenedClosingParentheses(): void
+    {
+        $this->expectException(LogicalExpressionEvaluatorException::class);
+        $this->expectExceptionMessage('Found not opened closing parentheses');
+
+        $strExpression = 'context1)';
+        LogicalExpressionEvaluator::run($strExpression, []);
+    }
+
+    #[Test]
+    public function runWithExceptionUnexpectedClosingParentheses(): void
+    {
+        $this->expectException(LogicalExpressionEvaluatorException::class);
+        $this->expectExceptionMessage('Unexpected )');
+
+        // Expression where ) follows something that isn't a complete expression
+        $strExpression = '(a &&)';
+        LogicalExpressionEvaluator::run($strExpression, []);
+    }
+
+    #[Test]
+    public function runWithExceptionNegatedOperator(): void
+    {
+        $this->expectException(LogicalExpressionEvaluatorException::class);
+        $this->expectExceptionMessage("! can't preceded operators");
+
+        // This creates a situation where ! precedes an operator
+        $strExpression = 'a !&& b';
+        LogicalExpressionEvaluator::run($strExpression, []);
+    }
+
+    #[Test]
+    public function runWithExceptionUnexpectedToken(): void
+    {
+        $this->expectException(LogicalExpressionEvaluatorException::class);
+        $this->expectExceptionMessage('Unexpected');
+
+        // Unknown token (special character)
+        $strExpression = 'a @ b';
+        LogicalExpressionEvaluator::run($strExpression, []);
+    }
+
+    #[Test]
+    public function precedenceAndBeforeOr(): void
+    {
+        // AND has higher precedence than OR
+        // "a || b && c" should be parsed as "a || (b && c)"
+        $result = LogicalExpressionEvaluator::run('a || b && c', [
+            'a' => false,
+            'b' => true,
+            'c' => true,
+        ]);
+        self::assertTrue($result); // false || (true && true) = true
+
+        $result2 = LogicalExpressionEvaluator::run('a || b && c', [
+            'a' => false,
+            'b' => true,
+            'c' => false,
+        ]);
+        self::assertFalse($result2); // false || (true && false) = false
+    }
+
+    #[Test]
+    public function precedenceXorBeforeOr(): void
+    {
+        // XOR has higher precedence than OR
+        // "a || b >< c" should be parsed as "a || (b >< c)"
+        $result = LogicalExpressionEvaluator::run('a || b >< c', [
+            'a' => false,
+            'b' => true,
+            'c' => false,
+        ]);
+        self::assertTrue($result); // false || (true >< false) = true
+    }
+
+    #[Test]
+    public function nestedParenthesesEvaluation(): void
+    {
+        $result = LogicalExpressionEvaluator::run('((a && b) || c)', [
+            'a' => true,
+            'b' => false,
+            'c' => true,
+        ]);
+        self::assertTrue($result); // ((true && false) || true) = true
+    }
+
+    #[Test]
+    public function complexExpressionWithAllOperators(): void
+    {
+        $result = LogicalExpressionEvaluator::run('a && (b || !c) && d', [
+            'a' => true,
+            'b' => false,
+            'c' => false,
+            'd' => true,
+        ]);
+        // true && (false || true) && true = true && true && true = true
+        self::assertTrue($result);
+    }
+
+    #[Test]
+    public function doubleNegation(): void
+    {
+        // !!a should equal a
+        self::assertTrue(LogicalExpressionEvaluator::run('!!a', ['a' => true]));
+        self::assertFalse(LogicalExpressionEvaluator::run('!!a', ['a' => false]));
+    }
+
+    #[Test]
+    public function tripleNegation(): void
+    {
+        // !!!a should equal !a
+        self::assertFalse(LogicalExpressionEvaluator::run('!!!a', ['a' => true]));
+        self::assertTrue(LogicalExpressionEvaluator::run('!!!a', ['a' => false]));
     }
 }

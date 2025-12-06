@@ -165,7 +165,7 @@ class Configuration
     {
         if (isset($GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'])) {
             if ($setting !== null) {
-                return (array) $GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'][$setting];
+                return (array) ($GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'][$setting] ?? []);
             }
 
             return (array) $GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'];

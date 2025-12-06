@@ -1,0 +1,4 @@
+"tx_contexts_contexts"
+,"uid","pid","title","alias","type","type_conf","invert","use_session","disabled","hide_in_backend"
+,500,1,"Disabled Context","disabledctx","getparam","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_name""><value index=""vDEF"">disabled</value></field><field index=""field_values""><value index=""vDEF"">1</value></field></language></sheet></data></T3FlexForms>",0,0,1,0
+,501,1,"Enabled Context","enabledctx","domain","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_domains""><value index=""vDEF"">localhost</value></field></language></sheet></data></T3FlexForms>",0,0,0,0

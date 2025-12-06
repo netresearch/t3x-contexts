@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<ruleset name="Netresearch Contexts">
+    <description>PSR-12 coding standard with test-specific allowances</description>
+
+    <arg name="extensions" value="php"/>
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <file>Classes/</file>
+    <file>Configuration/</file>
+    <file>Tests/</file>
+    <file>ext_localconf.php</file>
+    <file>ext_tables.php</file>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>.Build/*</exclude-pattern>
+
+    <rule ref="PSR12">
+        <!-- Allow multiple classes in test files (test stubs) -->
+        <exclude name="PSR1.Classes.ClassDeclaration.MultipleClasses"/>
+        <!-- Allow longer lines in tests (data providers, assertions) -->
+        <exclude name="Generic.Files.LineLength.TooLong"/>
+    </rule>
+
+    <!-- Only apply line length warning to Classes, not Tests -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="0"/>
+        </properties>
+        <exclude-pattern>Tests/*</exclude-pattern>
+    </rule>
+</ruleset>

@@ -1,0 +1,5 @@
+"tx_contexts_contexts"
+,"uid","pid","title","alias","type","type_conf","invert","use_session","disabled","hide_in_backend"
+,300,1,"Base Context","basecontext","getparam","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_name""><value index=""vDEF"">base</value></field><field index=""field_values""><value index=""vDEF"">1</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
+,301,1,"Combination Context","combocontext","combination","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_expression""><value index=""vDEF"">basecontext &amp;&amp; domaintest</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
+,302,1,"Domain Test For Combo","domaintest","domain","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_domains""><value index=""vDEF"">localhost</value></field></language></sheet></data></T3FlexForms>",0,0,0,0

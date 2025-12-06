@@ -1,0 +1,7 @@
+"tx_contexts_contexts"
+,"uid","pid","title","alias","type","type_conf","invert","use_session","disabled","hide_in_backend"
+,100,1,"Query Param Test","qptest","getparam","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_name""><value index=""vDEF"">test</value></field><field index=""field_values""><value index=""vDEF"">1</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
+,101,1,"Domain Test","domaintest","domain","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_domains""><value index=""vDEF"">localhost
+example.com</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
+,102,1,"IP Test","iptest","ip","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_ip""><value index=""vDEF"">127.0.0.1
+::1</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
