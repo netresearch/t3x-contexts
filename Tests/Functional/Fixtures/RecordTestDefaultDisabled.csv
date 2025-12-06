@@ -1,0 +1,3 @@
+"tx_contexts_settings"
+,"uid","pid","context_uid","foreign_table","foreign_uid","name","enabled","tstamp","crdate","cruser_id"
+,1,0,10,"pages",0,"tx_contexts_visibility",0,0,0,0

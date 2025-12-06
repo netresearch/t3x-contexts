@@ -1,0 +1,17 @@
+# Node modules
+node_modules/
+
+# Playwright auth state
+.auth/
+
+# Test results and reports
+../../typo3temp/var/tests/playwright-reports/
+../../typo3temp/var/tests/playwright-results/
+
+# Playwright browsers (installed via playwright install)
+/.cache/
+
+# Lock files (optional - uncomment if you want to ignore)
+# package-lock.json
+# pnpm-lock.yaml
+# yarn.lock

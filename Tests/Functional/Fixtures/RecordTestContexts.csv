@@ -1,0 +1,3 @@
+"tx_contexts_contexts"
+,"uid","pid","title","alias","type","type_conf","invert","use_session","disabled","hide_in_backend","tstamp"
+,10,0,"Domain Context","domain-test","domain","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_domains""><value index=""vDEF"">localhost</value></field></language></sheet></data></T3FlexForms>",0,0,0,0,1234567890

@@ -1,0 +1,12 @@
+"tx_contexts_contexts"
+,"uid","pid","title","alias","type","type_conf","invert","use_session","disabled","hide_in_backend","tstamp"
+,10,0,"Settings Test Context","settings-test","domain","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_domains""><value index=""vDEF"">localhost</value></field></language></sheet></data></T3FlexForms>",0,0,0,0,1234567890
+,20,0,"Another Context","another-test","domain","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_domains""><value index=""vDEF"">test.local</value></field></language></sheet></data></T3FlexForms>",0,0,0,0,1234567891
+
+"tx_contexts_settings"
+,"uid","pid","context_uid","foreign_table","foreign_uid","name","enabled","tstamp","crdate","cruser_id"
+,1,0,10,"pages",100,"tx_contexts_visibility",1,0,0,0
+,2,0,10,"pages",100,"tx_contexts_nav",0,0,0,0
+,3,0,10,"pages",0,"tx_contexts_visibility",1,0,0,0
+,4,0,20,"pages",100,"tx_contexts_visibility",1,0,0,0
+,5,0,10,"tt_content",200,"tx_contexts_visibility",1,0,0,0

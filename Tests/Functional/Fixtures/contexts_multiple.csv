@@ -1,0 +1,9 @@
+"tx_contexts_contexts"
+,"uid","pid","title","alias","type","type_conf","invert","use_session","disabled","hide_in_backend"
+,1,1,"test get","testget","getparam","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_name""><value index=""vDEF"">test</value></field><field index=""field_values""><value index=""vDEF"">1</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
+,2,1,"domain context","domain","domain","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_domains""><value index=""vDEF"">localhost
+example.com</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
+,3,1,"IP context","ipcontext","ip","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_ip""><value index=""vDEF"">127.0.0.1
+::1</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
+,4,1,"disabled context","disabled","getparam","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_name""><value index=""vDEF"">x</value></field><field index=""field_values""><value index=""vDEF"">1</value></field></language></sheet></data></T3FlexForms>",0,0,1,0
+,5,1,"inverted context","inverted","getparam","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_name""><value index=""vDEF"">invert</value></field><field index=""field_values""><value index=""vDEF"">1</value></field></language></sheet></data></T3FlexForms>",1,0,0,0

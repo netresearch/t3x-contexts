@@ -208,7 +208,7 @@ abstract class AbstractContext
             ->from('tx_contexts_settings')
             ->where(
                 $queryBuilder->expr()->eq(
-                    'uid',
+                    'context_uid',
                     $queryBuilder->createNamedParameter($this->uid, Connection::PARAM_INT),
                 ),
                 $queryBuilder->expr()->eq(

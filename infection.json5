@@ -1,0 +1,47 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "Classes"
+        ],
+        "excludes": [
+            // Exclude TCA configuration files (no testable logic)
+            "Configuration",
+            // Exclude form elements with complex TYPO3 dependencies
+            "Form/Element"
+        ]
+    },
+    "phpUnit": {
+        "configDir": ".",
+        "customPath": "vendor/bin/phpunit"
+    },
+    "testFramework": "phpunit",
+    "timeout": 30,
+    "threads": 4,
+    "logs": {
+        "text": ".Build/infection/infection.log",
+        "html": ".Build/infection/infection.html",
+        "summary": ".Build/infection/infection-summary.log",
+        "json": ".Build/infection/infection.json"
+    },
+    "mutators": {
+        "@default": true,
+        // Disable mutators that produce false positives in TYPO3 context
+        "LogicalNot": {
+            "ignore": [
+                // Boolean inversions in TYPO3 hooks
+                "Netresearch\\Contexts\\Context\\AbstractContext::match"
+            ]
+        },
+        "Increment": true,
+        "Decrement": true,
+        "MethodCallRemoval": {
+            "ignore": [
+                // Ignore logging calls
+                "Netresearch\\Contexts\\*::setLogger"
+            ]
+        }
+    },
+    "minMsi": 30,
+    "minCoveredMsi": 50
+}

@@ -30,7 +30,8 @@
             "typo3/cms-composer-installers": true,
             "typo3/class-alias-loader": true,
             "phpro/grumphp": true,
-            "a9f/fractor-extension-installer": true
+            "a9f/fractor-extension-installer": true,
+            "infection/extension-installer": true
         },
         "audit": {
             "abandoned": "ignore",
@@ -50,6 +51,8 @@
     "require-dev": {
         "a9f/typo3-fractor": "^0.5",
         "friendsofphp/php-cs-fixer": "^3.64",
+        "infection/infection": "*",
+        "nikic/php-fuzzer": "^0.0.11",
         "phpro/grumphp": "^2.0",
         "phpstan/phpstan": "^2.0",
         "phpstan/phpstan-deprecation-rules": "^2.0",
@@ -57,6 +60,7 @@
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpunit/phpunit": "^10.5 || ^11.0 || ^12.0",
         "rector/rector": "^2.0",
+        "squizlabs/php_codesniffer": "^4.0",
         "ssch/typo3-rector": "^3.0",
         "typo3/testing-framework": "^8.0 || ^9.0"
     },
@@ -69,6 +73,30 @@
         "psr-4": {
             "Netresearch\\Contexts\\Tests\\": "Tests"
         }
+    },
+    "scripts": {
+        "test": [
+            "@test:unit"
+        ],
+        "test:unit": "phpunit -c Build/phpunit/UnitTests.xml",
+        "test:functional": "phpunit -c Build/phpunit/FunctionalTests.xml",
+        "test:coverage": "phpunit -c Build/phpunit/UnitTests.xml --coverage-html .Build/coverage/html --coverage-clover .Build/coverage/clover.xml",
+        "test:mutation": "infection --threads=4",
+        "test:fuzz": "@php -r \"echo 'Run individual fuzz tests with: vendor/bin/php-fuzzer fuzz Tests/Fuzz/<target>.php';\"",
+        "lint": "php-cs-fixer fix --dry-run --diff",
+        "lint:fix": "php-cs-fixer fix",
+        "analyze": "phpstan analyse -c phpstan.neon --no-progress"
+    },
+    "scripts-descriptions": {
+        "test": "Run unit tests",
+        "test:unit": "Run unit tests only",
+        "test:functional": "Run functional tests (requires database)",
+        "test:coverage": "Run unit tests with code coverage",
+        "test:mutation": "Run mutation testing with Infection",
+        "test:fuzz": "Show instructions for running fuzz tests",
+        "lint": "Check code style",
+        "lint:fix": "Fix code style",
+        "analyze": "Run static analysis"
     },
     "extra": {
         "branch-alias": {

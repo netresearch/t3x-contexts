@@ -24,7 +24,7 @@ grumphp:
             metadata:
                 priority: 500
             standard:
-                - PSR12
+                - phpcs.xml
             severity: ~
             error_severity: ~
             warning_severity: ~

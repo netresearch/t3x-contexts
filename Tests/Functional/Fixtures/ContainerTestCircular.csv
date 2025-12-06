@@ -1,0 +1,4 @@
+"tx_contexts_contexts"
+,"uid","pid","title","alias","type","type_conf","invert","use_session","disabled","hide_in_backend"
+,400,1,"Circular A","circulara","combination","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_expression""><value index=""vDEF"">circularb</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
+,401,1,"Circular B","circularb","combination","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_expression""><value index=""vDEF"">circulara</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
