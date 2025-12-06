@@ -79,7 +79,7 @@ class Configuration
     public static function enableContextsForTable(
         string $extKey,
         string $table,
-        array $settings = null,
+        ?array $settings = null,
         bool $addDefaults = true,
     ): void {
         $defaultSettings = [
@@ -129,7 +129,7 @@ class Configuration
 
         if (isset($GLOBALS['TCA']['tx_contexts_contexts']['columns']['type'])) {
             $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type']['config']
-                ['items'][] = [$title, $key];
+                ['items'][] = ['label' => $title, 'value' => $key];
             $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type_conf']['config']
                 ['ds'][$key] = $flexFile;
         }
@@ -161,7 +161,7 @@ class Configuration
      *                   First name is the disable column,
      *                   second the enable column name.
      */
-    public static function getFlatColumns(string $table, string $setting = null): array
+    public static function getFlatColumns(string $table, ?string $setting = null): array
     {
         if (isset($GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'])) {
             if ($setting !== null) {

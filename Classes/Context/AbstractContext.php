@@ -417,16 +417,21 @@ abstract class AbstractContext
      */
     protected function getSession()
     {
-        if ($this->getTypoScriptFrontendController() === null) {
+        $tsfe = $this->getTypoScriptFrontendController();
+        if ($tsfe === null) {
             return;
         }
 
-        return $this->getTypoScriptFrontendController()
-            ->fe_user
-            ->getKey(
-                'ses',
-                'contexts-' . $this->uid . '-' . $this->tstamp,
-            );
+        // Check if fe_user is available (may not be initialized in all contexts)
+        $feUser = $tsfe->fe_user ?? null;
+        if ($feUser === null) {
+            return;
+        }
+
+        return $feUser->getKey(
+            'ses',
+            'contexts-' . $this->uid . '-' . $this->tstamp,
+        );
     }
 
     /**
@@ -443,21 +448,24 @@ abstract class AbstractContext
             return $bMatch;
         }
 
-        if ($this->getTypoScriptFrontendController() === null) {
+        $tsfe = $this->getTypoScriptFrontendController();
+        if ($tsfe === null) {
             return $bMatch;
         }
 
-        $this->getTypoScriptFrontendController()
-            ->fe_user
-            ->setKey(
-                'ses',
-                'contexts-' . $this->uid . '-' . $this->tstamp,
-                $bMatch,
-            );
+        // Check if fe_user is available (may not be initialized in all contexts)
+        $feUser = $tsfe->fe_user ?? null;
+        if ($feUser === null) {
+            return $bMatch;
+        }
 
-        $this->getTypoScriptFrontendController()
-            ->fe_user
-            ->storeSessionData();
+        $feUser->setKey(
+            'ses',
+            'contexts-' . $this->uid . '-' . $this->tstamp,
+            $bMatch,
+        );
+
+        $feUser->storeSessionData();
 
         return $bMatch;
     }

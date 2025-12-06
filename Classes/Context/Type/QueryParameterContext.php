@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
+use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Service\FrontendControllerService;
 use RuntimeException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -48,7 +49,9 @@ class QueryParameterContext extends AbstractContext
             );
         }
 
-        if (!\array_key_exists($param, $_GET)) {
+        $queryParams = $this->getQueryParams();
+
+        if (!\array_key_exists($param, $queryParams)) {
             // load from session if no param given
             [$bUseMatch, $bMatch] = $this->getMatchFromSession();
             return $this->invert($bUseMatch && $bMatch);
@@ -75,6 +78,29 @@ class QueryParameterContext extends AbstractContext
     }
 
     /**
+     * Get all query parameters from the current request.
+     *
+     * @return array<string, mixed> Query parameters
+     */
+    protected function getQueryParams(): array
+    {
+        // Try to get from PSR-7 request first (preferred in TYPO3 v12+)
+        $request = Container::get()->getRequest();
+        if ($request !== null) {
+            return $request->getQueryParams();
+        }
+
+        // Fallback to GLOBALS['TYPO3_REQUEST'] if available
+        $globalRequest = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if ($globalRequest !== null) {
+            return $globalRequest->getQueryParams();
+        }
+
+        // Ultimate fallback to $_GET for backward compatibility
+        return $_GET;
+    }
+
+    /**
      * Get a query parameter value.
      *
      * @param string $param Parameter name
@@ -83,7 +109,7 @@ class QueryParameterContext extends AbstractContext
      */
     protected function getQueryParameter(string $param): mixed
     {
-        // Use $_GET directly as GeneralUtility::_GET() is deprecated in TYPO3 v12+
-        return $_GET[$param] ?? null;
+        $queryParams = $this->getQueryParams();
+        return $queryParams[$param] ?? null;
     }
 }
