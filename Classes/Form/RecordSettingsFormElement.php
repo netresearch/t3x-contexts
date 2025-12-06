@@ -48,19 +48,21 @@ class RecordSettingsFormElement extends AbstractFormElement
         $namePre = 'data' . $this->data['elementBaseName'];
         $settings = $this->data['parameterArray']['fieldConf']['config']['settings'];
 
+        $contextsLabel = $this->getLanguageService()->sL('LLL:' . Configuration::LANG_FILE . ':tx_contexts_contexts');
         $content = <<<HTML
             <table class="tx_contexts_table_settings typo3-dblist" style="width: auto; min-width: 50%;">
                 <tbody>
                     <tr class="t3-row-header">
                         <td></td>
                         <td class="tx_contexts_context">
-                            {$GLOBALS['LANG']->sL('LLL:' . Configuration::LANG_FILE . ':tx_contexts_contexts')}
+                            {$contextsLabel}
                         </td>
             HTML;
 
         foreach ($settings as $config) {
+            $settingLabel = $this->getLanguageService()->sL($config['label']);
             $content .= <<<HTML
-                <td class="tx_contexts_setting">{$GLOBALS['LANG']->sL($config['label'])}</td>
+                <td class="tx_contexts_setting">{$settingLabel}</td>
                 HTML;
         }
 
@@ -117,10 +119,11 @@ class RecordSettingsFormElement extends AbstractFormElement
                 . '</tr>';
         }
         if ($visibleContexts === 0) {
+            $noContextsLabel = $this->getLanguageService()->sL('LLL:' . Configuration::LANG_FILE . ':no_contexts');
             $content .= <<<HTML
                 <tr>
                     <td colspan="4" style="text-align: center;">
-                        {$GLOBALS['LANG']->sL('LLL:' . Configuration::LANG_FILE . ':no_contexts')}
+                        {$noContextsLabel}
                     </td>
                 </tr>
                 HTML;

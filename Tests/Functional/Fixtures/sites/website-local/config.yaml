@@ -1,0 +1,8 @@
+rootPageId: 1
+base: 'http://localhost/'
+languages:
+  -
+    languageId: 0
+    title: English
+    locale: en_US.UTF-8
+    base: /

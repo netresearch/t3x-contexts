@@ -91,22 +91,24 @@ class CombinationFormElement extends AbstractFormElement
             HTML;
         if (\count($notFound) > 0) {
             $notFoundText = implode(', ', $notFound);
+            $aliasesNotFoundLabel = $this->getLanguageService()->sL(
+                'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:aliasesNotFound',
+            );
             $html .= <<<HTML
                 <p>
-                    {$GLOBALS['LANG']->sL(
-                                'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:aliasesNotFound',
-                            )}: {$notFoundText}
+                    {$aliasesNotFoundLabel}: {$notFoundText}
                 </p>
                 HTML;
         }
 
         if (\count($unknownTokens) > 0) {
             $unknownTokensText = implode(', ', $unknownTokens);
+            $unknownTokensLabel = $this->getLanguageService()->sL(
+                'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:unknownTokensFound',
+            );
             $html .= <<<HTML
                 <p>
-                    {$GLOBALS['LANG']->sL(
-                                'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:unknownTokensFound',
-                            )}: {$unknownTokensText}
+                    {$unknownTokensLabel}: {$unknownTokensText}
                 </p>
                 HTML;
         }
