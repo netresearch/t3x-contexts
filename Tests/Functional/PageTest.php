@@ -17,7 +17,6 @@ use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Query\Restriction\ContextRestriction;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Configuration\SiteWriter;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
 use TYPO3\CMS\Core\Http\ServerRequest;
@@ -60,9 +59,26 @@ final class PageTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/Fixtures/tx_contexts_settings.csv');
         $this->importCSVDataSet(__DIR__ . '/Fixtures/pages.csv');
 
-        // Create site configuration programmatically
-        $siteWriter = $this->get(SiteWriter::class);
-        $siteWriter->createNewBasicSite('website-local', 1, 'http://localhost/');
+        // Create site configuration
+        $siteConfigPath = $this->instancePath . '/typo3conf/sites/website-local';
+        GeneralUtility::mkdir_deep($siteConfigPath);
+        $siteConfig = [
+            'rootPageId' => 1,
+            'base' => 'http://localhost/',
+            'languages' => [
+                [
+                    'languageId' => 0,
+                    'title' => 'English',
+                    'locale' => 'en_US.UTF-8',
+                    'base' => '/',
+                    'flag' => 'us',
+                ],
+            ],
+        ];
+        file_put_contents(
+            $siteConfigPath . '/config.yaml',
+            \Symfony\Component\Yaml\Yaml::dump($siteConfig, 99, 2),
+        );
 
         // Set up TypoScript template for frontend rendering
         $this->setUpFrontendRootPage(1, [
