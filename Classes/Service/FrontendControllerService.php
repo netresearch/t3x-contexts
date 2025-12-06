@@ -154,7 +154,7 @@ class FrontendControllerService implements SingletonInterface
      */
     public function configArrayPostProc(array &$params, TypoScriptFrontendController $tsfe): void
     {
-        $linkVars = $params['config']['linkVars'] . ',' . implode(',', array_keys(self::$linkVarParams));
+        $linkVars = ($params['config']['linkVars'] ?? '') . ',' . implode(',', array_keys(self::$linkVarParams));
         $params['config']['linkVars'] = trim($linkVars, ',');
     }
 }
