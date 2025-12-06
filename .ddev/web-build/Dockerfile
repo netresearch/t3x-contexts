@@ -1,14 +1,7 @@
-# Custom Dockerfile for TYPO3 contexts extension development
-# Adds additional tools needed for extension development
+#ddev-generated
+# Install pcov for fast code coverage (faster than Xdebug)
+ARG BASE_IMAGE
+FROM $BASE_IMAGE
 
-# Install additional PHP extensions and tools
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    graphviz \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install global composer tools for extension development
-RUN composer global require --no-interaction \
-    friendsofphp/php-cs-fixer \
-    phpstan/phpstan \
-    rector/rector
+# Install pcov using apt (available in Debian packages for PHP 8.x)
+RUN apt-get update && apt-get install -y --no-install-recommends php${DDEV_PHP_VERSION}-pcov && apt-get clean && rm -rf /var/lib/apt/lists/*
