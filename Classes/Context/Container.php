@@ -15,6 +15,7 @@ use ArrayObject;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\ContextException;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -34,6 +35,11 @@ class Container extends ArrayObject
     protected static ?Container $instance = null;
 
     /**
+     * The current server request.
+     */
+    protected ?ServerRequestInterface $request = null;
+
+    /**
      * Singleton accessor
      *
      */
@@ -44,6 +50,32 @@ class Container extends ArrayObject
         }
 
         return static::$instance;
+    }
+
+    /**
+     * Reset the singleton instance.
+     * Useful for testing to ensure a fresh state between tests.
+     */
+    public static function reset(): void
+    {
+        static::$instance = null;
+    }
+
+    /**
+     * Set the current server request.
+     */
+    public function setRequest(?ServerRequestInterface $request): Container
+    {
+        $this->request = $request;
+        return $this;
+    }
+
+    /**
+     * Get the current server request.
+     */
+    public function getRequest(): ?ServerRequestInterface
+    {
+        return $this->request;
     }
 
     /**

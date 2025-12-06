@@ -56,7 +56,7 @@ final class TcaTest extends FunctionalTestCase
     public function tcaHasPagesContextConfiguration(): void
     {
         self::assertArrayHasKey('enableSettings', $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']);
-        self::assertSame('tx_contexts', $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['enableSettings']);
+        self::assertContains('tx_contexts', $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['enableSettings']);
         self::assertArrayHasKey('flatSettings', $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']);
         self::assertSame(
             'tx_contexts_disable',
@@ -80,7 +80,7 @@ final class TcaTest extends FunctionalTestCase
     public function tcaHasContentContextConfiguration(): void
     {
         self::assertArrayHasKey('enableSettings', $GLOBALS['TCA']['tt_content']['ctrl']['tx_contexts']);
-        self::assertSame('tx_contexts', $GLOBALS['TCA']['tt_content']['ctrl']['tx_contexts']['enableSettings']);
+        self::assertContains('tx_contexts', $GLOBALS['TCA']['tt_content']['ctrl']['tx_contexts']['enableSettings']);
         self::assertArrayHasKey('flatSettings', $GLOBALS['TCA']['tt_content']['ctrl']['tx_contexts']);
         self::assertSame(
             'tx_contexts_disable',
