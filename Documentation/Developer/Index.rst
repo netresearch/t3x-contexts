@@ -94,6 +94,9 @@ In :file:`Configuration/TCA/Overrides/tx_contexts_contexts.php`:
 PSR-14 Events
 =============
 
+.. versionadded:: 4.0.0
+   PSR-14 events replace legacy SC_OPTIONS hooks.
+
 The extension dispatches several PSR-14 events that you can listen to.
 
 ContextMatchEvent

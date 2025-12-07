@@ -41,6 +41,9 @@ via CLI:
 Site Set Configuration (TYPO3 v13+)
 ===================================
 
+.. versionadded:: 4.0.0
+   Site Sets support for TYPO3 v13.
+
 For TYPO3 v13 and later, you can include the Contexts site set in your site
 configuration:
 

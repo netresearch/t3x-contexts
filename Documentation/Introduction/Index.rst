@@ -20,7 +20,7 @@ Key Features
 ============
 
 Multi-channel content management
-   Define contexts based on IP addresses, domains, GET/POST parameters, cookies,
+   Define contexts based on IP addresses, domains, query parameters, HTTP headers,
    session data, and more. Content visibility is automatically controlled based
    on the active context.
 

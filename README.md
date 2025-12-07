@@ -187,12 +187,31 @@ The implementation of a context query in TypoScript looks like::
 ### Testing
 ```bash
 composer install
-vendor/bin/phpunit -c phpunit.xml
-vendor/bin/phpstan analyse
-vendor/bin/php-cs-fixer fix --dry-run --diff
+
+# Run unit tests
+composer test:unit
+# Or directly:
+vendor/bin/phpunit -c Build/phpunit/UnitTests.xml
+
+# Run functional tests (requires database)
+composer test:functional
+
+# Run with coverage
+composer test:coverage
 ```
 
 ### Code Quality Tools
-- **PHPUnit**: Unit and functional tests
-- **PHPStan**: Static analysis (level 8)
-- **PHP-CS-Fixer**: Code style enforcement (PSR-12)
+```bash
+# Static analysis (level 8)
+composer analyze
+
+# Code style check
+composer lint
+
+# Code style fix
+composer lint:fix
+```
+
+- **PHPUnit 10/11/12**: Unit and functional tests
+- **PHPStan 2.x**: Static analysis (level 8)
+- **PHP-CS-Fixer 3.x**: Code style enforcement (PSR-12)
