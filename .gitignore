@@ -8,6 +8,13 @@ vendor/
 # AI assistant working directories
 claudedocs/
 .serena/
+.playwright-mcp/
+
+# Generated documentation
+Documentation-GENERATED-temp/
+
+# TYPO3 var directory
+var/
 
 # Do not ignore the Icons folder
 public/*
