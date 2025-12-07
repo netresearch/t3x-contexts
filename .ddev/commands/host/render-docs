@@ -8,7 +8,7 @@ set -e
 
 PROJECT_ROOT="${DDEV_APPROOT}"
 DOCS_SOURCE="${PROJECT_ROOT}/Documentation"
-DOCS_OUTPUT="${PROJECT_ROOT}/docs"
+DOCS_OUTPUT="${PROJECT_ROOT}/Documentation-GENERATED-temp"
 
 echo "Rendering documentation..."
 echo "Source: ${DOCS_SOURCE}"
