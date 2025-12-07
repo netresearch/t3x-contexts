@@ -14,7 +14,7 @@ grumphp:
             metadata:
                 priority: 700
         phpstan:
-            configuration: phpstan.neon
+            configuration: Build/phpstan.neon
             memory_limit: '-1'
             triggered_by:
                 - php
@@ -24,7 +24,7 @@ grumphp:
             metadata:
                 priority: 500
             standard:
-                - phpcs.xml
+                - Build/phpcs.xml
             severity: ~
             error_severity: ~
             warning_severity: ~

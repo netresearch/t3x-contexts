@@ -1,7 +1,7 @@
 includes:
-    - vendor/phpstan/phpstan-strict-rules/rules.neon
-    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
-    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - ../vendor/phpstan/phpstan-strict-rules/rules.neon
+    - ../vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - ../vendor/phpstan/phpstan-phpunit/extension.neon
 
 parameters:
     # Level 8: Strict boolean conditions and nullability checks
@@ -9,20 +9,20 @@ parameters:
     level: 8
 
     paths:
-        - Classes/
-        - Configuration/
-        - Tests/
-        - ext_localconf.php
-        - ext_tables.php
+        - ../Classes/
+        - ../Configuration/
+        - ../Tests/
+        - ../ext_localconf.php
+        - ../ext_tables.php
 
     excludePaths:
-        - vendor/*
-        - .Build/*
-        - ext_emconf.php
+        - ../vendor/*
+        - ../.Build/*
+        - ../ext_emconf.php
         # Exclude tests that need significant refactoring for PHPUnit 11
-        - Tests/Unit/Classes/Context/AbstractTest.php
-        - Tests/Unit/Classes/Context/Type/QueryParameterContextTest.php
-        - Tests/Functional/PageTest.php
+        - ../Tests/Unit/Classes/Context/AbstractTest.php
+        - ../Tests/Unit/Classes/Context/Type/QueryParameterContextTest.php
+        - ../Tests/Functional/PageTest.php
 
     # TYPO3-specific configuration (PHPStan 2.x compatible)
     treatPhpDocTypesAsCertain: false
@@ -78,107 +78,107 @@ parameters:
         -
             message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\MockObject::(.*).$#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # Allow dynamic method calls on mock objects
         -
             message: '#^Call to an undefined method object::(.*).$#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # Test helper methods not visible to PHPStan
         -
             message: '#^Call to an undefined method Netresearch\\Contexts\\Context\\AbstractContext::(.*).$#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # PHPStan strict assertions in tests (assertInstanceOf with known types, etc.)
         -
             message: '#will always evaluate to true#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # Fuzz tests may intentionally pass wrong types
         -
             message: '#Parameter .* expects .*, .* given#'
             paths:
-                - Tests/Fuzz/*
+                - ../Tests/Fuzz/*
 
         # Expressions in fuzz tests for analysis
         -
             message: '#does not do anything#'
             paths:
-                - Tests/Fuzz/*
+                - ../Tests/Fuzz/*
 
         # Offset access on array|false patterns in tests
         -
             message: '#Cannot access offset .* on array.*\|false#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # Parent constructor not called (intentional in test stubs)
         -
             message: '#does not call parent constructor#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # Test file offset access
         -
             message: '#Offset .* does not exist on array#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # Casting already-typed values (fine in tests)
         -
             message: '#Casting to string something that.s already string#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # Dynamic call to static method (test patterns)
         -
             message: '#Dynamic call to static method#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # Invalid type for foreach (test edge cases with array|false)
         -
             message: '#Argument of an invalid type .* supplied for foreach#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # Unused constructor parameters (test stubs)
         -
             message: '#has an unused parameter#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # ReflectionType::getName() issues (PHP compatibility in tests)
         -
             message: '#Call to an undefined method ReflectionType::getName#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # ArrayObject append type mismatches with mock objects
         -
             message: '#Parameter .* of method ArrayObject.*::append\(\) expects#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # Deprecated method calls in tests (testing deprecated APIs)
         -
             message: '#Call to deprecated method#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # Anonymous class constructor type mismatches (test mocks)
         -
             message: '#constructor expects .*, .* given#'
             paths:
-                - Tests/*
+                - ../Tests/*
 
         # TYPO3 globals access patterns
         -
             message: '#^Variable \$GLOBALS is never used.$#'
             paths:
-                - ext_localconf.php
-                - ext_tables.php
+                - ../ext_localconf.php
+                - ../ext_tables.php

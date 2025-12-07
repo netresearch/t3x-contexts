@@ -19,12 +19,12 @@ use a9f\Typo3Fractor\Set\Typo3LevelSetList;
 
 return FractorConfiguration::configure()
     ->withPaths([
-        __DIR__ . '/Configuration',
-        __DIR__ . '/Resources',
+        __DIR__ . '/../Configuration',
+        __DIR__ . '/../Resources',
     ])
     ->withSkip([
-        __DIR__ . '/.Build',
-        __DIR__ . '/vendor',
+        __DIR__ . '/../.Build',
+        __DIR__ . '/../vendor',
     ])
     ->withSets([
         // TYPO3 v12 migrations for FlexForms, TypoScript, YAML, Fluid

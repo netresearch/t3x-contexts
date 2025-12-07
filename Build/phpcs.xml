@@ -6,14 +6,14 @@
     <arg name="colors"/>
     <arg value="sp"/>
 
-    <file>Classes/</file>
-    <file>Configuration/</file>
-    <file>Tests/</file>
-    <file>ext_localconf.php</file>
-    <file>ext_tables.php</file>
+    <file>../Classes/</file>
+    <file>../Configuration/</file>
+    <file>../Tests/</file>
+    <file>../ext_localconf.php</file>
+    <file>../ext_tables.php</file>
 
-    <exclude-pattern>vendor/*</exclude-pattern>
-    <exclude-pattern>.Build/*</exclude-pattern>
+    <exclude-pattern>../vendor/*</exclude-pattern>
+    <exclude-pattern>../.Build/*</exclude-pattern>
 
     <rule ref="PSR12">
         <!-- Allow multiple classes in test files (test stubs) -->
@@ -28,6 +28,6 @@
             <property name="lineLimit" value="120"/>
             <property name="absoluteLineLimit" value="0"/>
         </properties>
-        <exclude-pattern>Tests/*</exclude-pattern>
+        <exclude-pattern>../Tests/*</exclude-pattern>
     </rule>
 </ruleset>

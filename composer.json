@@ -83,9 +83,9 @@
         "test:coverage": "phpunit -c Build/phpunit/UnitTests.xml --coverage-html .Build/coverage/html --coverage-clover .Build/coverage/clover.xml",
         "test:mutation": "infection --threads=4",
         "test:fuzz": "@php -r \"echo 'Run individual fuzz tests with: vendor/bin/php-fuzzer fuzz Tests/Fuzz/<target>.php';\"",
-        "lint": "php-cs-fixer fix --dry-run --diff",
-        "lint:fix": "php-cs-fixer fix",
-        "analyze": "phpstan analyse -c phpstan.neon --no-progress"
+        "lint": "php-cs-fixer fix --config=Build/php-cs-fixer.php --dry-run --diff",
+        "lint:fix": "php-cs-fixer fix --config=Build/php-cs-fixer.php",
+        "analyze": "phpstan analyse -c Build/phpstan.neon --no-progress"
     },
     "scripts-descriptions": {
         "test": "Run unit tests",
