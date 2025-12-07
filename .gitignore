@@ -5,6 +5,10 @@ vendor/
 .php-cs-fixer.cache
 .Build/
 
+# AI assistant working directories
+claudedocs/
+.serena/
+
 # Do not ignore the Icons folder
 public/*
 !public/Icons/
