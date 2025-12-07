@@ -41,10 +41,10 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse -c phpstan.neon --no-progress
+        run: vendor/bin/phpstan analyse -c Build/phpstan.neon --no-progress
 
       - name: Run PHP-CS-Fixer
-        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+        run: vendor/bin/php-cs-fixer fix --config=Build/php-cs-fixer.php --dry-run --diff
 
   unit-tests:
     name: Unit Tests (PHP ${{ matrix.php }}, TYPO3 ${{ matrix.typo3 }})

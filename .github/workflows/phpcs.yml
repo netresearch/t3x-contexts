@@ -38,4 +38,4 @@ jobs:
 
       - run: composer validate
       - run: composer install --no-progress --prefer-dist --optimize-autoloader
-      - run: vendor/bin/phpcs Classes/ --standard=PSR12
+      - run: vendor/bin/phpcs --standard=Build/phpcs.xml
