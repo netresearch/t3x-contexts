@@ -1,7 +1,7 @@
 {
     "name": "netresearch/contexts",
     "type": "typo3-cms-extension",
-    "description": "Contexts for TYPO3 - can be used to modify page behaviour in the frontend based on several conditions",
+    "description": "Multi-channel content visibility for TYPO3 - by Netresearch",
     "homepage": "https://github.com/netresearch/t3x-contexts/",
     "license": [
         "AGPL-3.0-or-later"
@@ -17,7 +17,7 @@
     "authors": [
         {
             "name": "Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag, Benni Mack",
-            "email": "typo3.org@netresearch.de",
+            "email": "typo3@netresearch.de",
             "role": "Developer",
             "homepage": "https://www.netresearch.de"
         }

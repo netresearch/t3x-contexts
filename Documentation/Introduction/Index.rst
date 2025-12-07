@@ -54,3 +54,14 @@ Requirements
 .. tip::
 
    For TYPO3 v11 support, use version 3.x of this extension.
+
+Related Extensions
+==================
+
+Additional context types are available through companion extensions by Netresearch:
+
+`contexts_geolocation <https://github.com/netresearch/t3x-contexts_geolocation>`__
+   Location-based contexts: continent, country, and area detection.
+
+`contexts_wurfl <https://github.com/netresearch/t3x-contexts_wurfl>`__
+   Device-based contexts: phone, tablet, TV detection, screen sizes, browser capabilities.

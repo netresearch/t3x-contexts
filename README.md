@@ -1,9 +1,23 @@
-![Latest version](https://img.shields.io/github/v/release/netresearch/t3x-contexts?sort=semver)
-![License](https://img.shields.io/github/license/netresearch/t3x-contexts)
-![CI](https://github.com/netresearch/t3x-contexts/actions/workflows/ci.yml/badge.svg)
-![PHPStan](https://github.com/netresearch/t3x-contexts/actions/workflows/phpstan.yml/badge.svg)
+<p align="center">
+  <a href="https://www.netresearch.de/">
+    <img src="Resources/Public/Icons/Extension.svg" alt="Netresearch" width="80" height="80">
+  </a>
+</p>
 
-# Multi-channel contexts
+<h1 align="center">Multi-channel Contexts</h1>
+
+<p align="center">
+  <strong>Content visibility control for TYPO3 based on configurable contexts</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/netresearch/t3x-contexts/releases"><img src="https://img.shields.io/github/v/release/netresearch/t3x-contexts?sort=semver" alt="Latest version"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/netresearch/t3x-contexts" alt="License"></a>
+  <a href="https://github.com/netresearch/t3x-contexts/actions/workflows/ci.yml"><img src="https://github.com/netresearch/t3x-contexts/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/netresearch/t3x-contexts/actions/workflows/phpstan.yml"><img src="https://github.com/netresearch/t3x-contexts/actions/workflows/phpstan.yml/badge.svg" alt="PHPStan"></a>
+</p>
+
+---
 
 Show and hide pages and content elements based on configurable "contexts".
 With the use of contexts, TYPO3 is able to do multichannel output.
@@ -15,183 +29,165 @@ With the use of contexts, TYPO3 is able to do multichannel output.
 | 4.x     | 12.4, 13.4  | 8.2 - 8.4  |
 | 3.x     | 11.5        | 7.4 - 8.1  |
 
-Examples for contexts:
+## Context Examples
 
-- Screen size < 500px
-- Browser runs on a tablet or mobile phone
-- Location is 15km around a certain place
-- User is from one of certain countries
-- User entered website with GET-Parameter ``affID=foo``
 - User IP matches a given rule
+- User entered website with GET-Parameter `affID=foo`
+- Domain the user visits
+- HTTP header values (User-Agent, Accept-Language, etc.)
 - A session variable is set
 - A combination of any other rules
+
+**With companion extensions:**
+- Screen size < 500px (`contexts_wurfl`)
+- Browser runs on a tablet or mobile phone (`contexts_wurfl`)
+- Location is 15km around a certain place (`contexts_geolocation`)
+- User is from one of certain countries (`contexts_geolocation`)
 
 Apart from the context rules, this extension also provides an API to use
 contexts in your own extensions.
 
+## Table of Contents
 
-<!-- TOC -->
-* [Multi-channel contexts](#multi-channel-contexts)
-  * [Setup](#setup)
-  * [Creating and using contexts](#creating-and-using-contexts)
-    * [Creating a context](#creating-a-context)
-    * [Using a context](#using-a-context)
-  * [Context types](#context-types)
-    * [Domain](#domain)
-      * [Domain matching](#domain-matching)
-    * [GET parameter](#get-parameter)
-    * [IP address](#ip-address)
-    * [HTTP header](#http-header)
-    * [Logical context combination](#logical-context-combination)
-  * [Fluid template implementation](#fluid-template-implementation)
-  * [TypoScript implementation](#typoscript-implementation)
-<!-- TOC -->
-
+- [Setup](#setup)
+- [Creating and Using Contexts](#creating-and-using-contexts)
+- [Context Types](#context-types)
+- [Integration](#integration)
+- [Development](#development)
 
 ## Setup
-1. Install and activate extension ``contexts``
+
+1. Install and activate extension `contexts`
 2. Clear TYPO3 cache
 
-Optional: Install extensions ``contexts_geolocation`` for location-based
-context rules (continent, country, area) and
-``contexts_wurfl`` for device-based rules
-(type check: phone, tablet, TV, ...; screen sizes, device/browser type).
-
-
-## Creating and using contexts
-
-### Creating a context
-1. Log into the TYPO3 backend as administrator
-2. Goto Web/List view, root page (ID 0)
-3. Create a new record: TYPO3 contexts -> Context
-
-   - Give it a title, e.g. "Affiliate ID: foo"
-   - Select a type: "GET parameter"
-   - GET parameter name: ``affID``
-   - Parameter value: ``foo``
-   - Activate "Store result in user session"
-   - Save and close
-
-### Using a context
-1. Goto Web/Page, select a page
-2. Edit a content element
-3. Select the "Contexts" tab
-4. For Context "Affiliate ID: foo", select "Visible: yes"
-5. Save
-
-View the page. The content element is not visible.
-
-Now add ``?affID=foo`` to the URL and load it.
-The content element will be visible now.
-
-You can visit other pages now. When you come back, the content element
-will still be visible - even though the GET parameter is not in the URL
-anymore - because "Store result in user session" had been activated.
-
-
-## Context types
-The ``contexts`` extension ships with a number of simple contexts.
-All of them get stored in table ``tx_contexts_contexts``.
-
-### Domain
-A domain context matches when the domain the user visits is in the
-configured list.
-
-This is helpful if the site is available on several domains, or
-when it is deployed on development/stage/live systems - you may choose
-to show a content element on the development system only.
-
-#### Domain matching
-You may use one domain per line.
-
-When the domain does not begin with a dot, it will only match fully:
-``www.example.org`` will not match the configured domain ``example.org``.
-
-It is possible to use a dot in front of the domain name.
-In this case, all subdomains will match:
-``some.www.example.org`` matches the configured domain ``.example.org``.
-
-
-### GET parameter
-Checks if a GET parameter is available and has a certain value.
-
-Activate "Store result in user session" to keep the context when navigating
-between pages.
-
-When leaving the parameter values field empty, any non-empty parameter value
-will activate the context.
-
-
-### IP address
-Matches the user's IP address. IPv4 and IPv6 are supported.
-
-Supported notations:
-
-- Full addresses: ``80.76.201.32``
-- Prefix: ``80.76.201.32/27``, ``FE80::/16``
-- Wildcards: ``80.76.201.*``, ``80.76.*.37``, ``80.76.*.*``
-
-
-### HTTP header
-Checks if an HTTP header is available and has a certain value.
-
-Activate "Store result in user session" to keep the context when navigating
-between pages.
-
-When leaving the parameter values field empty, any non-empty parameter value
-will activate the context.
-
-
-### Logical context combination
-Combines other contexts with logical operators.
-
-Contexts are referenced via their alias and can be combined with
-the following signs:
-
-- logical and: ``&&``
-- logical or: ``||``
-- negation: ``!``
-- parentheses to group parts of expressions: ``(...)``
-
-
-### Session variable
-This context checks if a session variable with the given name is
-set (is not NULL).
-
-
-## Fluid template implementation
-The implementation of a context query in fluid templates looks like::
-
-```html
-<div xmlns="http://www.w3.org/1999/xhtml" xmlns:contexts="http://typo3.org/ns/Tx_Contexts_ViewHelpers">
-    <f:if condition="{contexts:matches(alias:'mobile')}">
-        <f:then>is Mobile</f:then>
-        <f:else>is not Mobile</f:else>
-    </f:if>
-</div>
+```bash
+composer require netresearch/contexts
+vendor/bin/typo3 extension:activate contexts
+vendor/bin/typo3 cache:flush
 ```
 
-## TypoScript implementation
-The implementation of a context query in TypoScript looks like::
+**Optional Extensions:**
+- `contexts_geolocation` - Location-based rules (continent, country, area)
+- `contexts_wurfl` - Device-based rules (phone, tablet, TV, screen sizes)
 
-```typo3_typoscript
+## Creating and Using Contexts
+
+### Creating a Context
+
+1. Log into the TYPO3 backend as administrator
+2. Go to Web/List view, root page (ID 0)
+3. Create a new record: TYPO3 contexts → Context
+4. Configure:
+   - Title: e.g., "Affiliate ID: foo"
+   - Type: "GET parameter"
+   - Parameter name: `affID`
+   - Parameter value: `foo`
+   - Enable "Store result in user session"
+5. Save and close
+
+### Using a Context
+
+1. Go to Web/Page, select a page
+2. Edit a content element
+3. Select the "Contexts" tab
+4. For your context, select "Visible: yes"
+5. Save
+
+The content element is now only visible when the context matches.
+
+## Context Types
+
+### Domain
+
+Match based on the accessed domain name.
+
+- One domain per line
+- Without leading dot: exact match only (`www.example.org` ≠ `example.org`)
+- With leading dot: matches all subdomains (`.example.org` matches `www.example.org`)
+
+### GET Parameter
+
+Match based on URL query parameters.
+
+- Enable "Store result in user session" to persist across pages
+- Leave value empty to match any non-empty parameter value
+
+### IP Address
+
+Match the user's IP address. IPv4 and IPv6 supported.
+
+```
+80.76.201.32          # Full address
+80.76.201.32/27       # CIDR notation
+FE80::/16             # IPv6 prefix
+80.76.201.*           # Wildcard
+80.76.*.*             # Multiple wildcards
+```
+
+### HTTP Header
+
+Match HTTP request headers (User-Agent, Accept-Language, X-Forwarded-For, etc.)
+
+- Enable "Store result in user session" to persist across pages
+- Leave value empty to match any non-empty header value
+
+### Session Variable
+
+Match based on session data. Checks if a session variable with the given name exists.
+
+### Logical Combination
+
+Combine multiple contexts with logical operators:
+
+| Operator | Description |
+|----------|-------------|
+| `&&` | Logical AND |
+| `||` | Logical OR |
+| `!` | Negation |
+| `(...)` | Grouping |
+
+Example: `mobile && !tablet`
+
+## Integration
+
+### Fluid Templates
+
+```html
+<html xmlns:contexts="http://typo3.org/ns/Netresearch/Contexts/ViewHelpers">
+    <f:if condition="{contexts:matches(alias:'mobile')}">
+        <f:then>Mobile content</f:then>
+        <f:else>Desktop content</f:else>
+    </f:if>
+</html>
+```
+
+### TypoScript Conditions
+
+```typoscript
 [contextMatch("mobile")]
-    # do something, it's a mobile browser
+    page.10.template = EXT:site/Resources/Private/Templates/Mobile.html
 [END]
 ```
 
+### PHP API
 
+```php
+use Netresearch\Contexts\Api\ContextMatcher;
+
+if (ContextMatcher::getInstance()->matches('mobile')) {
+    // Mobile-specific logic
+}
+```
 
 ## Development
 
 ### Testing
+
 ```bash
 composer install
 
 # Run unit tests
 composer test:unit
-# Or directly:
-vendor/bin/phpunit -c Build/phpunit/UnitTests.xml
 
 # Run functional tests (requires database)
 composer test:functional
@@ -200,7 +196,8 @@ composer test:functional
 composer test:coverage
 ```
 
-### Code Quality Tools
+### Code Quality
+
 ```bash
 # Static analysis (level 8)
 composer analyze
@@ -212,6 +209,22 @@ composer lint
 composer lint:fix
 ```
 
-- **PHPUnit 10/11/12**: Unit and functional tests
-- **PHPStan 2.x**: Static analysis (level 8)
-- **PHP-CS-Fixer 3.x**: Code style enforcement (PSR-12)
+| Tool | Version | Purpose |
+|------|---------|---------|
+| PHPUnit | 10/11/12 | Unit and functional tests |
+| PHPStan | 2.x | Static analysis (level 8) |
+| PHP-CS-Fixer | 3.x | Code style (PSR-12) |
+
+## Documentation
+
+Full documentation available at [docs.typo3.org](https://docs.typo3.org/p/netresearch/contexts/main/en-us/).
+
+## License
+
+This project is licensed under the [AGPL-3.0-or-later](LICENSE).
+
+## Credits
+
+Developed and maintained by [Netresearch DTT GmbH](https://www.netresearch.de/).
+
+**Contributors:** Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag, Benni Mack, and [others](https://github.com/netresearch/t3x-contexts/graphs/contributors).

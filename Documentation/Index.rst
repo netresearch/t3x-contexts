@@ -86,6 +86,12 @@ and control content visibility across your entire TYPO3 installation.
    Migration/Index
    Changelog/Index
 
+----
+
+**Credits**
+
+Developed and maintained by `Netresearch DTT GmbH <https://www.netresearch.de/>`__.
+
 .. Meta Menu
 
 .. toctree::

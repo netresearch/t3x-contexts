@@ -9,10 +9,10 @@
 
 $EM_CONF['contexts'] = [
     'title'          => 'Multi-channel contexts',
-    'description'    => 'Contexts for TYPO3 - can be used to modify page behaviour in the frontend based on several conditions',
+    'description'    => 'Multi-channel content visibility for TYPO3 - by Netresearch',
     'category'       => 'misc',
     'author'         => 'Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag, Benni Mack',
-    'author_email'   => 'typo3.org@netresearch.de',
+    'author_email'   => 'typo3@netresearch.de',
     'author_company' => 'Netresearch DTT GmbH',
     'state'          => 'stable',
     'version'        => '4.0.0',
