@@ -4,7 +4,7 @@
   "private": true,
   "description": "E2E tests for TYPO3 contexts extension",
   "engines": {
-    "node": ">=22.18.0 <23.0.0",
+    "node": ">=22.18.0 <25.0.0",
     "npm": ">=11.5.2"
   },
   "scripts": {
