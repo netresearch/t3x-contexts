@@ -15,6 +15,7 @@ $finder = PhpCsFixer\Finder::create()
         '.Build',
         '.ddev',
         'Build',
+        'public',
         'vendor',
     ])
     ->notPath([
