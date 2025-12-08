@@ -8,8 +8,6 @@
              copyright="Netresearch DTT GmbH"
     />
 
-    <theme name="typo3docs" />
-
     <extension
         class="\T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
         project-home="https://github.com/netresearch/t3x-contexts"
