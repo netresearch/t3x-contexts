@@ -13,9 +13,13 @@
 
     <extension
         class="\T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
+        edit-on-github="netresearch/t3x-contexts"
+        edit-on-github-branch="main"
         project-home="https://github.com/netresearch/t3x-contexts"
-        project-contact="https://github.com/netresearch/t3x-contexts/issues"
+        project-contact="https://github.com/netresearch/t3x-contexts/discussions"
         project-repository="https://github.com/netresearch/t3x-contexts"
+        project-issues="https://github.com/netresearch/t3x-contexts/issues"
+        report-issue="https://github.com/netresearch/t3x-contexts/issues"
     />
 
     <inventory id="t3coreapi"
