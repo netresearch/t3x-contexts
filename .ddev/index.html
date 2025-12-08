@@ -4,19 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contexts Extension - Development Environment</title>
+    <!-- Netresearch Brand Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Netresearch Brand Colors */
         :root {
-            --primary: #ff8700;
-            --secondary: #1a1a2e;
-            --accent: #4a9eff;
-            --bg: #f5f5f5;
-            --card-bg: #ffffff;
+            --nr-turquoise: #2F99A4;
+            --nr-turquoise-dark: #267a83;
+            --nr-orange: #FF4D00;
+            --nr-orange-dark: #cc3d00;
+            --nr-anthracite: #585961;
+            --nr-light-grey: #CCCDCC;
+            --nr-white: #FFFFFF;
+            --nr-bg: #f8f9fa;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: var(--bg);
-            color: var(--secondary);
+            font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--nr-bg);
+            color: var(--nr-anthracite);
             line-height: 1.6;
             padding: 2rem;
         }
@@ -25,105 +33,169 @@
             text-align: center;
             margin-bottom: 3rem;
             padding: 2rem;
-            background: linear-gradient(135deg, var(--secondary) 0%, #2d2d44 100%);
+            background: linear-gradient(135deg, var(--nr-turquoise) 0%, var(--nr-turquoise-dark) 100%);
             border-radius: 16px;
-            color: white;
+            color: var(--nr-white);
+            position: relative;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .logo-symbol {
+            width: 48px;
+            height: 48px;
+            background: var(--nr-white);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Raleway', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--nr-anthracite);
         }
         header h1 {
+            font-family: 'Raleway', sans-serif;
             font-size: 2.5rem;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
-        header p { opacity: 0.9; font-size: 1.1rem; }
+        header p {
+            opacity: 0.95;
+            font-size: 1.1rem;
+        }
         .badge {
             display: inline-block;
             padding: 0.25rem 0.75rem;
-            background: var(--primary);
+            background: var(--nr-orange);
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 600;
             margin-top: 1rem;
+            font-family: 'Raleway', sans-serif;
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
         .card {
-            background: var(--card-bg);
+            background: var(--nr-white);
             border-radius: 12px;
             padding: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid var(--nr-light-grey);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             transition: transform 0.2s, box-shadow 0.2s;
         }
         .card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            box-shadow: 0 8px 24px rgba(47, 153, 164, 0.15);
         }
         .card h2 {
+            font-family: 'Raleway', sans-serif;
             font-size: 1.25rem;
+            font-weight: 600;
             margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            color: var(--nr-anthracite);
         }
-        .card p { color: #666; margin-bottom: 1rem; }
+        .card p {
+            color: var(--nr-anthracite);
+            margin-bottom: 1rem;
+            opacity: 0.85;
+        }
+        .card .links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
         .card a {
             display: inline-block;
             padding: 0.5rem 1rem;
-            background: var(--primary);
-            color: white;
+            background: var(--nr-turquoise);
+            color: var(--nr-white);
             text-decoration: none;
             border-radius: 8px;
-            font-weight: 500;
+            font-family: 'Raleway', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
             transition: background 0.2s;
         }
-        .card a:hover { background: #e67a00; }
+        .card a:hover { background: var(--nr-turquoise-dark); }
         .card a.secondary {
-            background: var(--secondary);
+            background: var(--nr-anthracite);
         }
-        .card a.secondary:hover { background: #2d2d44; }
+        .card a.secondary:hover { background: #44454c; }
+        .card a.frontend {
+            background: transparent;
+            border: 2px solid var(--nr-turquoise);
+            color: var(--nr-turquoise);
+        }
+        .card a.frontend:hover {
+            background: var(--nr-turquoise);
+            color: var(--nr-white);
+        }
         .version-tag {
-            font-size: 0.75rem;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.7rem;
             padding: 0.15rem 0.5rem;
-            background: #e0e0e0;
+            background: var(--nr-light-grey);
             border-radius: 4px;
             font-weight: 600;
+            text-transform: uppercase;
         }
         .version-tag.v12 { background: #c5e1a5; color: #33691e; }
         .version-tag.v13 { background: #b3e5fc; color: #01579b; }
         .commands {
-            background: var(--secondary);
+            background: var(--nr-anthracite);
             color: #e0e0e0;
             padding: 1.5rem;
             border-radius: 12px;
-            font-family: 'Fira Code', 'Monaco', monospace;
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
             font-size: 0.9rem;
         }
         .commands h3 {
-            color: var(--primary);
+            font-family: 'Raleway', sans-serif;
+            color: var(--nr-turquoise);
             margin-bottom: 1rem;
-            font-family: inherit;
         }
         .commands code {
             display: block;
             padding: 0.5rem 0;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #6b6c73;
         }
         .commands code:last-child { border-bottom: none; }
-        .commands .cmd { color: var(--accent); }
-        .commands .comment { color: #888; }
+        .commands .cmd { color: var(--nr-turquoise); }
+        .commands .comment { color: #9e9ea6; }
         footer {
             text-align: center;
             margin-top: 3rem;
-            color: #888;
+            color: var(--nr-anthracite);
             font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        footer a {
+            color: var(--nr-turquoise);
+            text-decoration: none;
+        }
+        footer a:hover {
+            color: var(--nr-orange);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
+            <div class="logo">
+                <div class="logo-symbol">[n]</div>
+            </div>
             <h1>Contexts Extension</h1>
             <p>TYPO3 Multi-Version Development Environment</p>
             <span class="badge">netresearch/contexts v4.0.0-dev</span>
@@ -136,7 +208,10 @@
                     <span class="version-tag v12">LTS</span>
                 </h2>
                 <p>TYPO3 12.4 LTS development instance with the contexts extension installed.</p>
-                <a href="https://v12.contexts.ddev.site/typo3" target="_blank">Open Backend</a>
+                <div class="links">
+                    <a href="https://v12.contexts.ddev.site/typo3" target="_blank">Backend</a>
+                    <a href="https://v12.contexts.ddev.site/" target="_blank" class="frontend">Frontend</a>
+                </div>
             </div>
 
             <div class="card">
@@ -145,7 +220,10 @@
                     <span class="version-tag v13">LTS</span>
                 </h2>
                 <p>TYPO3 13.4 LTS development instance with the contexts extension installed.</p>
-                <a href="https://v13.contexts.ddev.site/typo3" target="_blank">Open Backend</a>
+                <div class="links">
+                    <a href="https://v13.contexts.ddev.site/typo3" target="_blank">Backend</a>
+                    <a href="https://v13.contexts.ddev.site/" target="_blank" class="frontend">Frontend</a>
+                </div>
             </div>
 
             <div class="card">
@@ -156,7 +234,7 @@
 
             <div class="card">
                 <h2>Extension Source</h2>
-                <p>Direct access to the extension source code mounted at /var/www/html/extension.</p>
+                <p>Direct access to the extension source code on GitHub.</p>
                 <a href="https://github.com/netresearch/t3x-contexts" target="_blank" class="secondary">GitHub</a>
             </div>
         </div>
@@ -174,7 +252,7 @@
         </div>
 
         <footer>
-            <p>Contexts Extension &copy; Netresearch DTT GmbH | PHP 8.2+ | TYPO3 12.4-13.4 LTS</p>
+            <p>Contexts Extension &copy; <a href="https://www.netresearch.de" target="_blank">Netresearch DTT GmbH</a> | PHP 8.2+ | TYPO3 12.4-13.4 LTS</p>
         </footer>
     </div>
 </body>

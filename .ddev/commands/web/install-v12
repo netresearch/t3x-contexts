@@ -27,6 +27,10 @@ fi
 echo "Creating TYPO3 ${TYPO3_VERSION} project..."
 composer create-project "typo3/cms-base-distribution:${TYPO3_VERSION}" . --no-interaction
 
+# Fix PHP platform version to match actual runtime (required for extension compatibility)
+echo "Configuring PHP platform version..."
+composer config platform.php 8.2
+
 # Add path repository for local extension
 echo "Configuring local extension repository..."
 composer config repositories.local path "${EXTENSION_DIR}"
@@ -38,7 +42,7 @@ echo "Installing contexts extension..."
 composer require "netresearch/contexts:@dev" --no-interaction
 
 # Create necessary directories
-mkdir -p public/typo3conf public/fileadmin public/uploads var/log var/cache
+mkdir -p public/typo3conf public/fileadmin public/uploads var/log var/cache config/system
 
 # Database configuration
 DB_NAME="db_v12"
@@ -87,11 +91,10 @@ ADDITIONAL_CONFIG
 
 # Setup TYPO3
 echo "Setting up TYPO3..."
-./vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db_v12 --username=db --password=db --admin-username=admin --admin-password=Password123! --admin-email=admin@example.com --project-name="Contexts v12" --no-interaction --force
+./vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db_v12 --username=db --password=db --admin-username=admin --admin-user-password='Password:joh316' --admin-email=admin@example.com --project-name="Contexts v12" --server-type=apache --no-interaction --force
 
-# Activate extension
-echo "Activating contexts extension..."
-./vendor/bin/typo3 extension:activate contexts || true
+# Note: Extensions installed via Composer are auto-loaded in TYPO3 12+
+echo "Contexts extension installed via Composer (auto-loaded)..."
 
 echo ""
 echo "=== TYPO3 v12 Installation Complete ==="
