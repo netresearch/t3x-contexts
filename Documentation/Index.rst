@@ -23,7 +23,8 @@ Contexts Extension
 
 :License:
    This document is published under the
-   `GNU Affero General Public License v3.0 <https://www.gnu.org/licenses/agpl-3.0.html>`__
+   `Creative Commons BY 4.0 <https://creativecommons.org/licenses/by/4.0/>`__
+   license.
 
 :Rendered:
    |today|
