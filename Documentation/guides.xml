@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<guides xmlns="https://www.phpdoc.org/guides" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://www.phpdoc.org/guides https://docs.typo3.org/other/t3docs/render-guides/main/en-us/Schema/Guides.xsd"
+<guides
+    xmlns="https://www.phpdoc.org/guides"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://www.phpdoc.org/guides vendor/phpdocumentor/guides-cli/resources/schema/guides.xsd"
+    theme="typo3docs"
 >
     <project title="Contexts"
              version="4.0"
