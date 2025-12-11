@@ -136,7 +136,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8.4
+        image: mysql:9.5
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: typo3_test
