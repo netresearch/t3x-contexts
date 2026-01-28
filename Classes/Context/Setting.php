@@ -31,9 +31,8 @@ final class Setting
 
     /**
      * The name of table the setting is for
-     * @var string
      */
-    protected $foreignTable;
+    protected string $foreignTable;
 
     /**
      * The uid of the record the setting is for
@@ -43,9 +42,8 @@ final class Setting
 
     /**
      * The name of the setting
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Whether the record is enabled by this setting
