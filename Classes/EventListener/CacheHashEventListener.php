@@ -29,11 +29,9 @@ use TYPO3\CMS\Frontend\Event\ModifyCacheLifetimeForPageEvent;
 )]
 final readonly class CacheHashEventListener
 {
-    private PageService $pageService;
-
-    public function __construct(PageService $pageService)
-    {
-        $this->pageService = $pageService;
+    public function __construct(
+        private PageService $pageService,
+    ) {
     }
 
     public function __invoke(ModifyCacheLifetimeForPageEvent $event): void

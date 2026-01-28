@@ -24,6 +24,3 @@ services:
 
     Netresearch\Contexts\Service\FrontendControllerService:
         public: true
-
-    Netresearch\Contexts\Service\ContextService:
-        public: true

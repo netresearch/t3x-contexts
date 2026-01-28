@@ -1,0 +1,10 @@
+# Default owners for everything in the repository
+* @netresearch/typo3-team
+
+# CI/CD workflows
+/.github/ @netresearch/typo3-team
+
+# Core extension code
+/Classes/ @netresearch/typo3-team
+/Configuration/ @netresearch/typo3-team
+/Tests/ @netresearch/typo3-team
