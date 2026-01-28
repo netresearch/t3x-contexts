@@ -23,6 +23,22 @@ use PHPUnit\Framework\MockObject\MockObject;
 final class HttpHeaderContextTest extends TestBase
 {
     /**
+     * @var array<string, mixed>
+     */
+    private array $originalServerVars = [];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->originalServerVars = $_SERVER;
+    }
+
+    protected function tearDown(): void
+    {
+        $_SERVER = $this->originalServerVars;
+        parent::tearDown();
+    }
+    /**
      * @return array<string, array{0: string, 1: string, 2: bool}>
      */
     public static function valueMatchProvider(): array

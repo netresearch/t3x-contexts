@@ -22,6 +22,23 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 final class DomainContextTest extends TestBase
 {
+    private ?string $originalHttpHost = null;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->originalHttpHost = $_SERVER['HTTP_HOST'] ?? null;
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->originalHttpHost !== null) {
+            $_SERVER['HTTP_HOST'] = $this->originalHttpHost;
+        } else {
+            unset($_SERVER['HTTP_HOST']);
+        }
+        parent::tearDown();
+    }
     /**
      * @return array<string, array{0: string, 1: string, 2: bool}>
      */

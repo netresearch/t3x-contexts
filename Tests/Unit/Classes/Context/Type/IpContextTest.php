@@ -22,6 +22,23 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 final class IpContextTest extends TestBase
 {
+    private ?string $originalRemoteAddr = null;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->originalRemoteAddr = $_SERVER['REMOTE_ADDR'] ?? null;
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->originalRemoteAddr !== null) {
+            $_SERVER['REMOTE_ADDR'] = $this->originalRemoteAddr;
+        } else {
+            unset($_SERVER['REMOTE_ADDR']);
+        }
+        parent::tearDown();
+    }
     /**
      * @return array<array{0: string, 1: string, 2: bool}>
      */
