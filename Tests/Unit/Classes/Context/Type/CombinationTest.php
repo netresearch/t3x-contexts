@@ -295,7 +295,9 @@ final class CombinationTest extends TestBase
         $matched = $container->invokeMatch($arContexts);
 
         // ipContext (123) didn't match, but getContext (124) did, so OR succeeds
-        self::assertCount(3, $matched);
+        // Only 2 matched: getContext (124) and combinationContext (125)
+        self::assertCount(2, $matched);
+        self::assertArrayNotHasKey(123, $matched);
         self::assertArrayHasKey(124, $matched);
         self::assertArrayHasKey(125, $matched);
     }
