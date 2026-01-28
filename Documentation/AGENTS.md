@@ -1,4 +1,4 @@
-<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2025-12-08 -->
+<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-28 -->
 
 # AGENTS.md — Documentation/
 

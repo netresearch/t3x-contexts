@@ -1,4 +1,4 @@
-<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2025-12-08 -->
+<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-28 -->
 
 # AGENTS.md — Tests/
 
@@ -153,9 +153,76 @@ protected function setUp(): void
 - PHPUnit Docs: https://docs.phpunit.de/
 - Extension issues: https://github.com/netresearch/t3x-contexts/issues
 
+## Extension-Specific Testing Patterns
+
+### Testing Context Type Matching
+
+```php
+final class IpContextTest extends UnitTestCase
+{
+    public function testMatchReturnsTrueForMatchingIp(): void
+    {
+        $_SERVER['REMOTE_ADDR'] = '192.168.1.1';
+
+        $context = new IpContext([
+            'uid' => 1,
+            'type' => IpContext::class,
+            'title' => 'Test',
+            'alias' => 'test',
+            'tstamp' => time(),
+            'invert' => false,
+            'use_session' => false,
+            'disabled' => false,
+            'hide_in_backend' => false,
+            'type_conf' => '<T3FlexForms>...</T3FlexForms>',
+        ]);
+
+        self::assertTrue($context->match());
+    }
+}
+```
+
+### Testing with Context Container
+
+```php
+// Reset singleton between tests
+protected function setUp(): void
+{
+    parent::setUp();
+    GeneralUtility::resetSingletonInstances([]);
+}
+```
+
+### Functional Test Fixtures
+
+```csv
+# Tests/Functional/Fixtures/tx_contexts_contexts.csv
+"uid","pid","title","type","alias","use_session","disabled"
+1,0,"IP Context","Netresearch\Contexts\Context\Type\IpContext","ip-test",0,0
+```
+
+### Testing Page Access with Contexts
+
+```php
+final class PageAccessTest extends FunctionalTestCase
+{
+    protected array $testExtensionsToLoad = ['netresearch/contexts'];
+
+    public function testPageHiddenByContext(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/pages.csv');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/tx_contexts_contexts.csv');
+
+        // Test that page is inaccessible when context doesn't match
+    }
+}
+```
+
 ## House Rules
 
 - Unit tests must not require database or TYPO3 bootstrap
 - Functional tests must clean up after themselves
 - Coverage target: maintain or improve current coverage
 - No `@group slow` without justification
+- Context tests should disable session (`use_session=0`) to avoid pollution
+- Mock `$_SERVER['REMOTE_ADDR']` for IP context tests

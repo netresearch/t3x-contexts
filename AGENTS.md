@@ -1,4 +1,4 @@
-<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2025-12-08 -->
+<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-28 -->
 
 # AGENTS.md
 
@@ -76,6 +76,7 @@ Resources/         # Frontend assets, language files
 | Path | Purpose |
 |------|---------|
 | `Classes/AGENTS.md` | PHP backend code, context types, services |
+| `Configuration/AGENTS.md` | TCA, FlexForms, Services.yaml, Site Sets |
 | `Tests/AGENTS.md` | Testing patterns, fixtures, functional test setup |
 | `Documentation/AGENTS.md` | RST documentation standards |
 
@@ -86,6 +87,55 @@ Resources/         # Frontend assets, language files
 New context types extend `AbstractContext` and implement:
 - `match()`: Determine if context is active
 - Configuration via FlexForms in `Configuration/FlexForms/`
+
+```php
+// Context type implementation pattern
+class MyContext extends AbstractContext
+{
+    public function match(array $arDependencies = []): bool
+    {
+        // 1. Check session cache first (if use_session enabled)
+        [$fromSession, $result] = $this->getMatchFromSession();
+        if ($fromSession) {
+            return $result;
+        }
+
+        // 2. Implement matching logic
+        $configValue = $this->getConfValue('field_name');
+        $matches = /* your logic here */;
+
+        // 3. Apply inversion and store in session
+        return $this->storeInSession($this->invert($matches));
+    }
+}
+```
+
+### PSR-14 Event Listeners
+
+```php
+// Use PHP 8 attributes for event listener registration
+#[AsEventListener(
+    identifier: 'contexts/my-listener',
+    event: AfterPageAndLanguageIsResolvedEvent::class,
+)]
+final readonly class MyEventListener
+{
+    public function __invoke(AfterPageAndLanguageIsResolvedEvent $event): void
+    {
+        // Handle event
+    }
+}
+```
+
+### Query Restrictions
+
+Context-based query restrictions filter records automatically:
+
+```php
+// ContextRestriction implements EnforceableQueryRestrictionInterface
+// Applied automatically to pages, tt_content via flat columns
+// Flat columns: tx_contexts_enable, tx_contexts_disable
+```
 
 ### Database Queries
 
