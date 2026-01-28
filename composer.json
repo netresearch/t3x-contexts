@@ -53,6 +53,7 @@
         "friendsofphp/php-cs-fixer": "^3.64",
         "infection/infection": "*",
         "nikic/php-fuzzer": "^0.0.11",
+        "phpat/phpat": "^0.11",
         "phpro/grumphp": "^2.0",
         "phpstan/phpstan": "^2.0",
         "phpstan/phpstan-deprecation-rules": "^2.0",

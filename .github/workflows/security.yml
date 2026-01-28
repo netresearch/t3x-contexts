@@ -33,12 +33,13 @@ jobs:
 
       - name: Check for known vulnerabilities
         run: |
-          # Fail the build on high/critical vulnerabilities
+          # Fail the build on any security vulnerabilities
           AUDIT_OUTPUT=$(composer audit --format=json 2>/dev/null || echo '{"advisories":[]}')
           VULN_COUNT=$(echo "$AUDIT_OUTPUT" | jq '.advisories | length // 0')
           if [ "$VULN_COUNT" -gt 0 ]; then
-            echo "::warning::Found $VULN_COUNT security advisories in dependencies"
+            echo "::error::Found $VULN_COUNT security advisories in dependencies"
             echo "$AUDIT_OUTPUT" | jq '.advisories'
+            exit 1
           else
             echo "No known vulnerabilities found"
           fi

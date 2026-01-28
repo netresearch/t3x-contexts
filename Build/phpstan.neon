@@ -2,6 +2,7 @@ includes:
     - ../vendor/phpstan/phpstan-strict-rules/rules.neon
     - ../vendor/phpstan/phpstan-deprecation-rules/rules.neon
     - ../vendor/phpstan/phpstan-phpunit/extension.neon
+    - phpat.neon
 
 parameters:
     # Level 9: Type inference for argument.type errors
