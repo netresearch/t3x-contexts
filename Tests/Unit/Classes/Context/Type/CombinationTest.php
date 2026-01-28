@@ -234,34 +234,6 @@ final class CombinationTest extends TestBase
         self::assertEmpty($matched);
     }
 
-    /**
-     * Create a test context with specified properties.
-     */
-    private function createTestContext(
-        int $uid,
-        string $alias,
-        bool $disabled = false,
-        ?bool $matchResult = null,
-    ): AbstractContext {
-        return new class ($uid, $alias, $disabled, $matchResult) extends AbstractContext {
-            private readonly ?bool $matchResult;
-
-            public function __construct(int $uid, string $alias, bool $disabled, ?bool $matchResult)
-            {
-                parent::__construct([]);
-                $this->uid = $uid;
-                $this->alias = $alias;
-                $this->disabled = $disabled;
-                $this->matchResult = $matchResult;
-            }
-
-            public function match(array $arDependencies = []): bool
-            {
-                return $this->matchResult ?? false;
-            }
-        };
-    }
-
     #[Test]
     public function matchSuccessWithOrExpression(): void
     {
@@ -509,6 +481,34 @@ final class CombinationTest extends TestBase
 
         // (true && false) || true = false || true = true
         self::assertArrayHasKey(4, $matched);
+    }
+
+    /**
+     * Create a test context with specified properties.
+     */
+    private function createTestContext(
+        int $uid,
+        string $alias,
+        bool $disabled = false,
+        ?bool $matchResult = null,
+    ): AbstractContext {
+        return new class ($uid, $alias, $disabled, $matchResult) extends AbstractContext {
+            private readonly ?bool $matchResult;
+
+            public function __construct(int $uid, string $alias, bool $disabled, ?bool $matchResult)
+            {
+                parent::__construct([]);
+                $this->uid = $uid;
+                $this->alias = $alias;
+                $this->disabled = $disabled;
+                $this->matchResult = $matchResult;
+            }
+
+            public function match(array $arDependencies = []): bool
+            {
+                return $this->matchResult ?? false;
+            }
+        };
     }
 
     /**

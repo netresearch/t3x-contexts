@@ -13,6 +13,7 @@ namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
 use Netresearch\Contexts\Context\Type\SessionContext;
 use PHPUnit\Framework\Attributes\Test;
+use stdClass;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -105,7 +106,7 @@ final class SessionContextTest extends UnitTestCase
     #[Test]
     public function matchReturnsTrueWhenSessionVariableIsObject(): void
     {
-        $obj = new \stdClass();
+        $obj = new stdClass();
         $obj->property = 'value';
         $context = $this->createSessionContext('my_session_var', $obj, true);
 
