@@ -30,7 +30,7 @@ use TYPO3\CMS\Core\DataHandling\DataHandler;
 class DataHandlerService
 {
     /**
-     * @var array<int|string, array<string, string>>
+     * @var array<int|string, mixed>
      */
     protected array $currentSettings = [];
 

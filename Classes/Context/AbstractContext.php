@@ -229,7 +229,11 @@ abstract class AbstractContext
 
         if (\is_array($rows)) {
             foreach ($rows as $row) {
-                $this->settings[$table . '.' . $row['foreign_uid']][$row['name']]
+                /** @var int|string $foreignUid */
+                $foreignUid = $row['foreign_uid'];
+                /** @var string $name */
+                $name = $row['name'];
+                $this->settings[$table . '.' . $foreignUid][$name]
                     = new Setting($this, $row);
             }
         }

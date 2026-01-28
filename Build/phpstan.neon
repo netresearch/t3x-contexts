@@ -4,9 +4,9 @@ includes:
     - ../vendor/phpstan/phpstan-phpunit/extension.neon
 
 parameters:
-    # Level 8: Strict boolean conditions and nullability checks
-    # Level 9/10 require significant TYPO3 type annotations due to $GLOBALS/TCA dynamic access
-    level: 8
+    # Level 9: Type inference for argument.type errors
+    # Level 10 requires significant refactoring due to mixed types in legacy TYPO3 patterns
+    level: 9
 
     paths:
         - ../Classes/
@@ -37,7 +37,8 @@ parameters:
         - '#type has no value type specified in iterable type#'
 
         # TYPO3 TCA/GLOBALS access patterns - inherently untyped
-        - '#Cannot access offset .* on mixed#'
+        -
+            identifier: offsetAccess.nonOffsetAccessible
         - '#Parameter .* of function array_key_exists expects array, mixed given#'
         - '#Parameter .* of function array_merge expects array, mixed given#'
         - '#Parameter .* of function in_array expects array, mixed given#'
@@ -173,6 +174,12 @@ parameters:
         # Anonymous class constructor type mismatches (test mocks)
         -
             message: '#constructor expects .*, .* given#'
+            paths:
+                - ../Tests/*
+
+        # PHPUnit assertion parameter types (mixed arrays in tests)
+        -
+            message: '#Parameter \#2 \$.* of static method PHPUnit\\Framework\\Assert::(assertArrayHasKey|assertArrayNotHasKey|assertContains)\(\) expects#'
             paths:
                 - ../Tests/*
 

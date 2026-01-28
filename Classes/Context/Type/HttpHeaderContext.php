@@ -42,7 +42,7 @@ class HttpHeaderContext extends AbstractContext
             if (strtolower((string) $header) === $httpHeaderName) {
                 // header exists - check if any configured values match
                 return $this->invert($this->storeInSession(
-                    $this->matchValues($value),
+                    $this->matchValues((string) $value),
                 ));
             }
         }

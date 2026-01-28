@@ -28,7 +28,7 @@ class DomainContext extends AbstractContext
      */
     public function match(array $arDependencies = []): bool
     {
-        $curHost = $_SERVER['HTTP_HOST'];
+        $curHost = (string) ($_SERVER['HTTP_HOST'] ?? '');
         $arDomains = GeneralUtility::trimExplode(
             "\n",
             $this->getConfValue('field_domains'),

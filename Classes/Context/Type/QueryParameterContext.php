@@ -92,7 +92,7 @@ class QueryParameterContext extends AbstractContext
 
         // Fallback to GLOBALS['TYPO3_REQUEST'] if available
         $globalRequest = $GLOBALS['TYPO3_REQUEST'] ?? null;
-        if ($globalRequest !== null) {
+        if ($globalRequest instanceof \Psr\Http\Message\ServerRequestInterface) {
             return $globalRequest->getQueryParams();
         }
 
