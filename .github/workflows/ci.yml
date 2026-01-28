@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.2', '8.3']
+        php: ['8.2', '8.3', '8.4', '8.5']
 
     steps:
       - uses: actions/checkout@v6.0.2
@@ -67,6 +67,9 @@ jobs:
             typo3: '^13.4'
             coverage: false
           - php: '8.4'
+            typo3: '^13.4'
+            coverage: false
+          - php: '8.5'
             typo3: '^13.4'
             coverage: false
 
