@@ -262,6 +262,253 @@ final class CombinationTest extends TestBase
         };
     }
 
+    #[Test]
+    public function matchSuccessWithOrExpression(): void
+    {
+        $ipContext = $this->createTestContext(123, 'UNITTEST', false, false);
+        $getContext = $this->createTestContext(124, 'getUNITTEST', false, true);
+
+        $combinationContext = $this->createCombinationContext(
+            125,
+            'combiUNITTEST',
+            'UNITTEST || getUNITTEST',
+        );
+
+        $arContexts = [
+            123 => $ipContext,
+            124 => $getContext,
+            125 => $combinationContext,
+        ];
+
+        $container = new class ($arContexts) extends Container {
+            public function __construct(array $contexts)
+            {
+                parent::__construct($contexts);
+            }
+
+            public function invokeMatch(array $arContexts): array
+            {
+                return $this->match($arContexts);
+            }
+        };
+
+        $matched = $container->invokeMatch($arContexts);
+
+        // ipContext (123) didn't match, but getContext (124) did, so OR succeeds
+        self::assertCount(3, $matched);
+        self::assertArrayHasKey(124, $matched);
+        self::assertArrayHasKey(125, $matched);
+    }
+
+    #[Test]
+    public function matchFailedWithOrExpressionBothFalse(): void
+    {
+        $ipContext = $this->createTestContext(123, 'UNITTEST', false, false);
+        $getContext = $this->createTestContext(124, 'getUNITTEST', false, false);
+
+        $combinationContext = $this->createCombinationContext(
+            125,
+            'combiUNITTEST',
+            'UNITTEST || getUNITTEST',
+        );
+
+        $arContexts = [
+            123 => $ipContext,
+            124 => $getContext,
+            125 => $combinationContext,
+        ];
+
+        $container = new class ($arContexts) extends Container {
+            public function __construct(array $contexts)
+            {
+                parent::__construct($contexts);
+            }
+
+            public function invokeMatch(array $arContexts): array
+            {
+                return $this->match($arContexts);
+            }
+        };
+
+        $matched = $container->invokeMatch($arContexts);
+
+        // Both contexts failed, so combination also fails
+        self::assertEmpty($matched);
+    }
+
+    #[Test]
+    public function matchSuccessWithNegatedExpression(): void
+    {
+        $ipContext = $this->createTestContext(123, 'UNITTEST', false, false);
+
+        $combinationContext = $this->createCombinationContext(
+            125,
+            'combiUNITTEST',
+            '!UNITTEST',
+        );
+
+        $arContexts = [
+            123 => $ipContext,
+            125 => $combinationContext,
+        ];
+
+        $container = new class ($arContexts) extends Container {
+            public function __construct(array $contexts)
+            {
+                parent::__construct($contexts);
+            }
+
+            public function invokeMatch(array $arContexts): array
+            {
+                return $this->match($arContexts);
+            }
+        };
+
+        $matched = $container->invokeMatch($arContexts);
+
+        // ipContext (123) didn't match, but negation makes combination succeed
+        self::assertCount(1, $matched);
+        self::assertArrayHasKey(125, $matched);
+    }
+
+    #[Test]
+    public function matchSuccessWithXorExpression(): void
+    {
+        $ipContext = $this->createTestContext(123, 'UNITTEST', false, true);
+        $getContext = $this->createTestContext(124, 'getUNITTEST', false, false);
+
+        $combinationContext = $this->createCombinationContext(
+            125,
+            'combiUNITTEST',
+            'UNITTEST >< getUNITTEST',
+        );
+
+        $arContexts = [
+            123 => $ipContext,
+            124 => $getContext,
+            125 => $combinationContext,
+        ];
+
+        $container = new class ($arContexts) extends Container {
+            public function __construct(array $contexts)
+            {
+                parent::__construct($contexts);
+            }
+
+            public function invokeMatch(array $arContexts): array
+            {
+                return $this->match($arContexts);
+            }
+        };
+
+        $matched = $container->invokeMatch($arContexts);
+
+        // XOR: exactly one is true, so combination succeeds
+        self::assertCount(2, $matched);
+        self::assertArrayHasKey(123, $matched);
+        self::assertArrayHasKey(125, $matched);
+    }
+
+    #[Test]
+    public function matchFailedWithXorExpressionBothTrue(): void
+    {
+        $ipContext = $this->createTestContext(123, 'UNITTEST', false, true);
+        $getContext = $this->createTestContext(124, 'getUNITTEST', false, true);
+
+        $combinationContext = $this->createCombinationContext(
+            125,
+            'combiUNITTEST',
+            'UNITTEST >< getUNITTEST',
+        );
+
+        $arContexts = [
+            123 => $ipContext,
+            124 => $getContext,
+            125 => $combinationContext,
+        ];
+
+        $container = new class ($arContexts) extends Container {
+            public function __construct(array $contexts)
+            {
+                parent::__construct($contexts);
+            }
+
+            public function invokeMatch(array $arContexts): array
+            {
+                return $this->match($arContexts);
+            }
+        };
+
+        $matched = $container->invokeMatch($arContexts);
+
+        // XOR: both true, so combination fails
+        self::assertCount(2, $matched);
+        self::assertArrayHasKey(123, $matched);
+        self::assertArrayHasKey(124, $matched);
+        self::assertArrayNotHasKey(125, $matched);
+    }
+
+    #[Test]
+    public function getDependenciesWithMultipleReferences(): void
+    {
+        $testContext = $this->createTestContext(123, 'UNITTEST', false);
+
+        $combinationContext = $this->createCombinationContext(
+            125,
+            'combiUNITTEST',
+            'UNITTEST && UNITTEST || UNITTEST',
+        );
+
+        $arContexts = [
+            123 => $testContext,
+            125 => $combinationContext,
+        ];
+
+        $dependencies = $combinationContext->getDependencies($arContexts);
+
+        // Should only contain one entry even though UNITTEST appears multiple times
+        self::assertCount(1, $dependencies);
+        self::assertArrayHasKey(123, $dependencies);
+    }
+
+    #[Test]
+    public function matchSuccessWithNestedParentheses(): void
+    {
+        $ctx1 = $this->createTestContext(1, 'ctx1', false, true);
+        $ctx2 = $this->createTestContext(2, 'ctx2', false, false);
+        $ctx3 = $this->createTestContext(3, 'ctx3', false, true);
+
+        $combinationContext = $this->createCombinationContext(
+            4,
+            'combi',
+            '(ctx1 && ctx2) || ctx3',
+        );
+
+        $arContexts = [
+            1 => $ctx1,
+            2 => $ctx2,
+            3 => $ctx3,
+            4 => $combinationContext,
+        ];
+
+        $container = new class ($arContexts) extends Container {
+            public function __construct(array $contexts)
+            {
+                parent::__construct($contexts);
+            }
+
+            public function invokeMatch(array $arContexts): array
+            {
+                return $this->match($arContexts);
+            }
+        };
+
+        $matched = $container->invokeMatch($arContexts);
+
+        // (true && false) || true = false || true = true
+        self::assertArrayHasKey(4, $matched);
+    }
+
     /**
      * Create a CombinationContext with mocked expression.
      */

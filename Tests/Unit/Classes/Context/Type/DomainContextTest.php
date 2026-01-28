@@ -142,6 +142,111 @@ final class DomainContextTest extends TestBase
         self::assertSame($expectedResult, $result);
     }
 
+    #[Test]
+    public function matchReturnsTrueForHostWithPort(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'example.com:8080';
+
+        $mock = $this->createDomainContextMock();
+        $mock->method('getConfValue')
+            ->with('field_domains')
+            ->willReturn('example.com:8080');
+
+        $mock->setInvert(false);
+
+        self::assertTrue($mock->match());
+    }
+
+    #[Test]
+    public function matchReturnsFalseForHostWithDifferentPort(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'example.com:8080';
+
+        $mock = $this->createDomainContextMock();
+        $mock->method('getConfValue')
+            ->with('field_domains')
+            ->willReturn('example.com:443');
+
+        $mock->setInvert(false);
+
+        self::assertFalse($mock->match());
+    }
+
+    #[Test]
+    public function matchReturnsFalseForHostWithPortAgainstDomainWithoutPort(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'example.com:8080';
+
+        $mock = $this->createDomainContextMock();
+        $mock->method('getConfValue')
+            ->with('field_domains')
+            ->willReturn('example.com');
+
+        $mock->setInvert(false);
+
+        self::assertFalse($mock->match());
+    }
+
+    #[Test]
+    public function matchReturnsTrueForWildcardWithDeepSubdomain(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'deep.sub.www.example.com';
+
+        $mock = $this->createDomainContextMock();
+        $mock->method('getConfValue')
+            ->with('field_domains')
+            ->willReturn('.example.com');
+
+        $mock->setInvert(false);
+
+        self::assertTrue($mock->match());
+    }
+
+    #[Test]
+    public function matchReturnsTrueWhenInvertedForNonMatchingDomain(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'other.com';
+
+        $mock = $this->createDomainContextMock();
+        $mock->method('getConfValue')
+            ->with('field_domains')
+            ->willReturn('example.com');
+
+        $mock->setInvert(true);
+
+        self::assertTrue($mock->match());
+    }
+
+    #[Test]
+    public function matchReturnsFalseForWildcardOnDifferentDomain(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'www.different.com';
+
+        $mock = $this->createDomainContextMock();
+        $mock->method('getConfValue')
+            ->with('field_domains')
+            ->willReturn('.example.com');
+
+        $mock->setInvert(false);
+
+        self::assertFalse($mock->match());
+    }
+
+    #[Test]
+    public function matchHandlesMixedExactAndWildcardDomains(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'www.example.com';
+
+        $mock = $this->createDomainContextMock();
+        $mock->method('getConfValue')
+            ->with('field_domains')
+            ->willReturn("exact.com\n.example.com\nother.org");
+
+        $mock->setInvert(false);
+
+        self::assertTrue($mock->match());
+    }
+
     /**
      * Create a mock of DomainContext with getConfValue mocked.
      *

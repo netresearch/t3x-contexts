@@ -36,6 +36,16 @@ final class IpContextTest extends TestBase
             ['FE80:FFFF:0:FFFF:129:144:52:38', 'FE80::/16', true],
             ['FE80:FFFF:0:FFFF:129:144:52:38', 'FE80::/128', false],
 
+            // IPv6 exact match
+            ['2001:0db8:85a3:0000:0000:8a2e:0370:7334', '2001:0db8:85a3:0000:0000:8a2e:0370:7334', true],
+            ['2001:db8:85a3::8a2e:370:7334', '2001:db8:85a3::8a2e:370:7334', true],
+
+            // IPv6 different address
+            ['2001:db8:85a3::8a2e:370:7334', '2001:db8:85a3::8a2e:370:7335', false],
+
+            // IPv6 loopback
+            ['::1', '::1', true],
+
             // Empty range
             ['80.76.201.37', '', false],
             ['80.76.201', '', false],
@@ -46,6 +56,14 @@ final class IpContextTest extends TestBase
             ['80.76.201.37', '80.76.*', true],
             ['80.76.201.37', '80.76.*.37', true],
             ['80.76.201.37', '80.76.*.40', false],
+
+            // IPv4 exact match
+            ['192.168.1.100', '192.168.1.100', true],
+            ['192.168.1.100', '192.168.1.101', false],
+
+            // Multiple comma-separated ranges
+            ['10.0.0.5', '192.168.1.0/24,10.0.0.0/8', true],
+            ['172.16.0.1', '192.168.1.0/24,10.0.0.0/8', false],
         ];
     }
 
@@ -117,6 +135,127 @@ final class IpContextTest extends TestBase
         );
 
         self::assertSame($expectedResult, $result);
+    }
+
+    #[Test]
+    public function matchReturnsTrueForMultiLineIpConfiguration(): void
+    {
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.50';
+
+        $mock = $this->createIpContextMock();
+        $mock->method('getConfValue')
+            ->with('field_ip')
+            ->willReturn("192.168.1.0/24\n10.0.0.0/8\n172.16.0.0/12");
+
+        $mock->setInvert(false);
+
+        self::assertTrue($mock->match());
+    }
+
+    #[Test]
+    public function matchReturnsFalseForMultiLineIpConfigurationNotMatching(): void
+    {
+        $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
+
+        $mock = $this->createIpContextMock();
+        $mock->method('getConfValue')
+            ->with('field_ip')
+            ->willReturn("192.168.1.0/24\n10.0.0.0/8\n172.16.0.0/12");
+
+        $mock->setInvert(false);
+
+        self::assertFalse($mock->match());
+    }
+
+    #[Test]
+    public function matchReturnsTrueForIPv6Address(): void
+    {
+        $_SERVER['REMOTE_ADDR'] = '2001:db8:85a3::8a2e:370:7334';
+
+        $mock = $this->createIpContextMock();
+        $mock->method('getConfValue')
+            ->with('field_ip')
+            ->willReturn('2001:db8::/32');
+
+        $mock->setInvert(false);
+
+        self::assertTrue($mock->match());
+    }
+
+    #[Test]
+    public function matchReturnsFalseForIPv6AddressNotInRange(): void
+    {
+        $_SERVER['REMOTE_ADDR'] = '2001:db8:85a3::8a2e:370:7334';
+
+        $mock = $this->createIpContextMock();
+        $mock->method('getConfValue')
+            ->with('field_ip')
+            ->willReturn('fe80::/10');
+
+        $mock->setInvert(false);
+
+        self::assertFalse($mock->match());
+    }
+
+    #[Test]
+    public function matchReturnsTrueForIPv6Loopback(): void
+    {
+        $_SERVER['REMOTE_ADDR'] = '::1';
+
+        $mock = $this->createIpContextMock();
+        $mock->method('getConfValue')
+            ->with('field_ip')
+            ->willReturn('::1');
+
+        $mock->setInvert(false);
+
+        self::assertTrue($mock->match());
+    }
+
+    #[Test]
+    public function matchReturnsFalseForMalformedIpAddress(): void
+    {
+        $_SERVER['REMOTE_ADDR'] = 'not-an-ip-address';
+
+        $mock = $this->createIpContextMock();
+        $mock->method('getConfValue')
+            ->with('field_ip')
+            ->willReturn('192.168.1.0/24');
+
+        $mock->setInvert(false);
+
+        self::assertFalse($mock->match());
+    }
+
+    #[Test]
+    public function matchReturnsTrueWhenInvertedForMalformedIpAddress(): void
+    {
+        $_SERVER['REMOTE_ADDR'] = 'not-an-ip-address';
+
+        $mock = $this->createIpContextMock();
+        $mock->method('getConfValue')
+            ->with('field_ip')
+            ->willReturn('192.168.1.0/24');
+
+        $mock->setInvert(true);
+
+        self::assertTrue($mock->match());
+    }
+
+    #[Test]
+    public function matchHandlesPartialIpAddress(): void
+    {
+        $_SERVER['REMOTE_ADDR'] = '192.168.1';
+
+        $mock = $this->createIpContextMock();
+        $mock->method('getConfValue')
+            ->with('field_ip')
+            ->willReturn('192.168.1.0/24');
+
+        $mock->setInvert(false);
+
+        // Partial IP is invalid, should return false
+        self::assertFalse($mock->match());
     }
 
     /**

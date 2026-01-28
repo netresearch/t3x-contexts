@@ -94,6 +94,61 @@ final class SessionContextTest extends UnitTestCase
         self::assertFalse($context->match(), 'With invert, existing session should not match');
     }
 
+    #[Test]
+    public function matchReturnsTrueWhenSessionVariableIsArray(): void
+    {
+        $context = $this->createSessionContext('my_session_var', ['key' => 'value'], true);
+
+        self::assertTrue($context->match(), 'Array value session variable should match (is set)');
+    }
+
+    #[Test]
+    public function matchReturnsTrueWhenSessionVariableIsObject(): void
+    {
+        $obj = new \stdClass();
+        $obj->property = 'value';
+        $context = $this->createSessionContext('my_session_var', $obj, true);
+
+        self::assertTrue($context->match(), 'Object value session variable should match (is set)');
+    }
+
+    #[Test]
+    public function matchReturnsTrueWhenSessionVariableIsNegativeNumber(): void
+    {
+        $context = $this->createSessionContext('my_session_var', -1, true);
+
+        self::assertTrue($context->match(), 'Negative number session variable should match (is set)');
+    }
+
+    #[Test]
+    public function matchReturnsTrueWhenSessionVariableIsEmptyArray(): void
+    {
+        $context = $this->createSessionContext('my_session_var', [], true);
+
+        self::assertTrue($context->match(), 'Empty array session variable should match (is set)');
+    }
+
+    #[Test]
+    public function matchReturnsFalseWithInvertWhenSessionVariableIsEmptyString(): void
+    {
+        // Empty string is still "set" (not null), so with invert it should return false
+        $context = $this->createSessionContext('my_session_var', '', true, true);
+
+        self::assertFalse($context->match(), 'With invert, empty string session should not match');
+    }
+
+    #[Test]
+    public function matchHandlesDifferentVariableNames(): void
+    {
+        $context1 = $this->createSessionContext('user_logged_in', true, true);
+        $context2 = $this->createSessionContext('cart_items', 5, true);
+        $context3 = $this->createSessionContext('preferences', ['theme' => 'dark'], true);
+
+        self::assertTrue($context1->match(), 'Boolean true should match');
+        self::assertTrue($context2->match(), 'Integer should match');
+        self::assertTrue($context3->match(), 'Array should match');
+    }
+
     /**
      * Create a SessionContext with mocked TSFE and session.
      *

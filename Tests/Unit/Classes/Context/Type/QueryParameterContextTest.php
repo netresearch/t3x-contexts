@@ -110,6 +110,62 @@ final class QueryParameterContextTest extends UnitTestCase
         $context->match();
     }
 
+    #[Test]
+    public function matchWithInvertReturnsTrueWhenNoMatch(): void
+    {
+        $context = $this->createContext('affID', '123', ['affID' => '456']);
+        $context->setUseSession(false);
+        $context->setInvert(true);
+
+        self::assertTrue($context->match(), 'With invert, non-matching value should return true');
+    }
+
+    #[Test]
+    public function matchWithInvertReturnsFalseWhenMatch(): void
+    {
+        $context = $this->createContext('affID', '123', ['affID' => '123']);
+        $context->setUseSession(false);
+        $context->setInvert(true);
+
+        self::assertFalse($context->match(), 'With invert, matching value should return false');
+    }
+
+    #[Test]
+    public function matchWithWhitespaceTrimmedParameterName(): void
+    {
+        $context = $this->createContext('  affID  ', '123', ['affID' => '123']);
+        $context->setUseSession(false);
+
+        self::assertTrue($context->match(), 'Parameter name should be trimmed');
+    }
+
+    #[Test]
+    public function matchWithNumericParameterValue(): void
+    {
+        $context = $this->createContext('page', '42', ['page' => '42']);
+        $context->setUseSession(false);
+
+        self::assertTrue($context->match(), 'Numeric value should match as string');
+    }
+
+    #[Test]
+    public function matchWithSpecialCharactersInValue(): void
+    {
+        $context = $this->createContext('filter', 'price>100', ['filter' => 'price>100']);
+        $context->setUseSession(false);
+
+        self::assertTrue($context->match(), 'Special characters in value should work');
+    }
+
+    #[Test]
+    public function matchReturnsFalseWhenParameterMissingAndNoSession(): void
+    {
+        $context = $this->createContext('missing', 'value', []);
+        $context->setUseSession(false);
+
+        self::assertFalse($context->match(), 'Missing parameter without session should not match');
+    }
+
     /**
      * Create a QueryParameterContext with mocked configuration values.
      *
