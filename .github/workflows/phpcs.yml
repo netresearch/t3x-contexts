@@ -2,33 +2,38 @@ name: PHP_CodeSniffer
 
 on:
   push:
-    branches: [ master ]
+    branches: [master, main]
   pull_request:
-    branches: [ master ]
+    branches: [master, main]
+
+permissions:
+  contents: read
 
 jobs:
   run:
-    runs-on: ${{ matrix.operating-system }}
+    runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
-        operating-system: [ubuntu-22.04]
-        php-version: ['7.4', '8.0', '8.1', '8.2']
+        php-version: ['8.2', '8.3', '8.4']
 
-    name: Testing PHP ${{ matrix.php-version }} on ${{ matrix.operating-system }}
+    name: PHPCS (PHP ${{ matrix.php-version }})
 
     steps:
-      - uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # v2
         with:
           php-version: ${{ matrix.php-version }}
-          extensions: json,intl,mbstring
-
-      - name: Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+          extensions: json, intl, mbstring
+          tools: composer:v2
+          coverage: none
 
       - name: Cache Composer packages
         id: composer-cache
-        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: vendor
           key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}

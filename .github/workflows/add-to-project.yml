@@ -1,16 +1,19 @@
-name: Add issues to netreseach TYPO3 board
+name: Add issues to Netresearch TYPO3 board
 
 on:
   issues:
     types:
       - opened
 
+permissions:
+  issues: read
+
 jobs:
   add-to-project:
     name: Add issue to project
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/add-to-project@RELEASE_VERSION
+      - uses: actions/add-to-project@244f685bbc3b7adfa8466e08b698b5577571133e # v1.0.2
         with:
           # You can target a repository in a different organization
           # to the issue

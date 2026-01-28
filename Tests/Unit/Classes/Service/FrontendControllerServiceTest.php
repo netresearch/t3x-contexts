@@ -245,50 +245,6 @@ final class FrontendControllerServiceTest extends UnitTestCase
         self::assertTrue($service->checkEnableFieldsForRootLine($rootLine));
     }
 
-    #[Test]
-    public function checkEnableFieldsDelegatesToCheckEnableFieldsForRootLine(): void
-    {
-        $rootLine = [
-            ['uid' => 1, 'title' => 'Home', 'extendToSubpages' => 1, 'tx_contexts_enable' => '', 'tx_contexts_disable' => ''],
-        ];
-
-        $mockTsfe = $this->createMock(TypoScriptFrontendController::class);
-        $mockTsfe->rootLine = $rootLine;
-
-        $data = [
-            'pObj' => $mockTsfe,
-            'row' => ['uid' => 1],
-            'bypassGroupCheck' => false,
-        ];
-
-        $service = new FrontendControllerService();
-
-        // The deprecated method should return the same as the new method
-        self::assertTrue($service->checkEnableFields($data));
-    }
-
-    #[Test]
-    public function checkEnableFieldsReturnsFalseWhenContextMissing(): void
-    {
-        $rootLine = [
-            ['uid' => 1, 'title' => 'Home', 'extendToSubpages' => 1, 'tx_contexts_enable' => '999', 'tx_contexts_disable' => ''],
-        ];
-
-        $mockTsfe = $this->createMock(TypoScriptFrontendController::class);
-        $mockTsfe->rootLine = $rootLine;
-
-        $data = [
-            'pObj' => $mockTsfe,
-            'row' => ['uid' => 1],
-            'bypassGroupCheck' => false,
-        ];
-
-        $service = new FrontendControllerService();
-
-        // Context 999 required but not active
-        self::assertFalse($service->checkEnableFields($data));
-    }
-
     /**
      * Reset static properties using reflection.
      */

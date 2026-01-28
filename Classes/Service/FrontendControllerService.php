@@ -73,24 +73,6 @@ class FrontendControllerService implements SingletonInterface
     }
 
     /**
-     * Check subpages for context from rootline. Method is called from hook "hook_checkEnableFields".
-     *
-     * @param array{
-     *     pObj: TypoScriptFrontendController,
-     *     row: array<string, int|string|null>,
-     *     bypassGroupCheck: bool
-     *  } $data
-     *
-     * @return bool FALSE if context from root does not match
-     *
-     * @deprecated Use checkEnableFieldsForRootLine() instead. Will be removed in v4.0.
-     */
-    public function checkEnableFields(array $data): bool
-    {
-        return $this->checkEnableFieldsForRootLine($data['pObj']->rootLine);
-    }
-
-    /**
      * Check if page is accessible based on context settings in rootline.
      *
      * @param array<int, array<string, mixed>> $rootLine The page rootline
