@@ -27,7 +27,8 @@ final class IpContextTest extends TestBase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->originalRemoteAddr = $_SERVER['REMOTE_ADDR'] ?? null;
+        $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? null;
+        $this->originalRemoteAddr = is_string($remoteAddr) ? $remoteAddr : null;
     }
 
     protected function tearDown(): void

@@ -25,8 +25,8 @@ $finder = PhpCsFixer\Finder::create()
 return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([
-        // PSR-12 coding standard
-        '@PSR12' => true,
+        // PER Coding Style 2.0 (modern PHP coding standard)
+        '@PER-CS' => true,
 
         // PHP 8.2+ features
         '@PHP82Migration' => true,

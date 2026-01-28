@@ -49,20 +49,20 @@
         "typo3/cms-frontend": "^12.4 || ^13.4"
     },
     "require-dev": {
-        "a9f/typo3-fractor": "^0.5",
-        "friendsofphp/php-cs-fixer": "^3.64",
+        "a9f/typo3-fractor": "^0.5.8",
+        "friendsofphp/php-cs-fixer": "^3.92",
         "infection/infection": "*",
         "nikic/php-fuzzer": "^0.0.11",
-        "phpat/phpat": "^0.11",
+        "phpat/phpat": "^0.12",
         "phpro/grumphp": "^2.0",
-        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpunit/phpunit": "^10.5 || ^11.0 || ^12.0",
-        "rector/rector": "^2.0",
+        "rector/rector": "^2.3",
         "squizlabs/php_codesniffer": "^4.0",
-        "ssch/typo3-rector": "^3.0",
+        "ssch/typo3-rector": "^3.11",
         "typo3/testing-framework": "^8.0 || ^9.0"
     },
     "autoload": {

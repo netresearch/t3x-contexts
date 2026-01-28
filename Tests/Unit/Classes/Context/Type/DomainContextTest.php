@@ -27,7 +27,8 @@ final class DomainContextTest extends TestBase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->originalHttpHost = $_SERVER['HTTP_HOST'] ?? null;
+        $httpHost = $_SERVER['HTTP_HOST'] ?? null;
+        $this->originalHttpHost = is_string($httpHost) ? $httpHost : null;
     }
 
     protected function tearDown(): void
