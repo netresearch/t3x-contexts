@@ -80,7 +80,7 @@ jobs:
 
       - name: Submit SBOM to Dependency Graph
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: advanced-security/spdx-dependency-submission-action@5530bab9ee4bbe66420ce8280624036c77f89571 # v0.1.2
+        uses: advanced-security/spdx-dependency-submission-action@f957edbb35161c1f9e33f61026fc86a671c58cae # v0.1.2
         continue-on-error: true
         with:
           filePath: sbom.json
