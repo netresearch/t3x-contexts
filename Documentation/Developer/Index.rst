@@ -20,6 +20,8 @@ and registering your type.
 Step 1: Create the Context Class
 --------------------------------
 
+Extend ``AbstractContext`` and implement the ``match()`` method:
+
 .. code-block:: php
 
    <?php
@@ -29,6 +31,7 @@ Step 1: Create the Context Class
    namespace Vendor\MyExtension\Context\Type;
 
    use Netresearch\Contexts\Context\AbstractContext;
+   use Netresearch\Contexts\Context\Container;
 
    final class MyCustomContext extends AbstractContext
    {
@@ -37,15 +40,34 @@ Step 1: Create the Context Class
            $configuredValue = $this->getConfValue('myField');
            $actualValue = $this->getActualValue();
 
-           return $configuredValue === $actualValue;
+           // Use invert() and storeInSession() for proper behavior
+           return $this->invert($this->storeInSession(
+               $configuredValue === $actualValue
+           ));
        }
 
        private function getActualValue(): string
        {
-           // Your matching logic here
-           return '';
+           // Access the PSR-7 request via Container
+           $request = Container::get()->getRequest();
+           if ($request === null) {
+               return '';
+           }
+
+           // Example: get a query parameter
+           $params = $request->getQueryParams();
+           return $params['myParam'] ?? '';
        }
    }
+
+.. tip::
+
+   The ``AbstractContext`` provides helper methods:
+
+   - ``getConfValue($fieldName)`` - Get FlexForm configuration value
+   - ``invert($match)`` - Apply inversion setting if enabled
+   - ``storeInSession($match)`` - Cache result in user session
+   - ``getMatchFromSession()`` - Retrieve cached match result
 
 Step 2: Register the Context Type
 ---------------------------------
@@ -141,42 +163,134 @@ Context API
 Checking Contexts Programmatically
 ----------------------------------
 
+The ``Container`` class provides access to all matched contexts. It uses a
+singleton pattern and extends ``ArrayObject`` for easy iteration.
+
 .. code-block:: php
 
    <?php
+
+   declare(strict_types=1);
 
    use Netresearch\Contexts\Context\Container;
 
-   // Get all active contexts
-   $activeContexts = Container::getActiveContexts();
+   // Get the container instance (singleton)
+   $container = Container::get();
 
-   // Check if specific context is active
-   if (Container::isContextActive('my-context-alias')) {
-       // Context-specific logic
+   // Find a specific context by alias or UID
+   $context = $container->find('my-context-alias');
+   if ($context !== null) {
+       // Context exists and is active (matched)
    }
 
-   // Get context by alias
-   $context = Container::getContextByAlias('my-context-alias');
-   if ($context !== null && $context->match()) {
-       // Handle matched context
+   // Iterate over all active (matched) contexts
+   foreach (Container::get() as $uid => $context) {
+       echo $context->getAlias() . ' is active';
    }
 
-Getting Context Settings
-------------------------
+Using the ContextMatcher API
+----------------------------
+
+For simple matching checks, use the ``ContextMatcher`` API which caches results:
 
 .. code-block:: php
 
    <?php
 
-   use Netresearch\Contexts\Context\Setting;
+   declare(strict_types=1);
 
-   // Get setting for a record
-   $setting = Setting::getForRecord('tt_content', $uid);
+   use Netresearch\Contexts\Api\ContextMatcher;
 
-   // Check visibility
-   if ($setting->isEnabled()) {
-       // Record is visible in current context
+   // Check if a context matches by alias
+   if (ContextMatcher::getInstance()->matches('mobile')) {
+       // Mobile context is active
    }
+
+TypoScript Conditions
+---------------------
+
+Use the ``contextMatch()`` function in TypoScript conditions:
+
+.. code-block:: typoscript
+
+   # Show content only when mobile context is active
+   [contextMatch('mobile')]
+       page.10.wrap = <div class="mobile-wrapper">|</div>
+   [END]
+
+   # Combine with other conditions
+   [contextMatch('internal') && tree.level > 2]
+       lib.breadcrumb.show = 1
+   [END]
+
+The ``contextMatch()`` function is provided via TYPO3's ExpressionLanguage
+and works in all condition contexts (TypoScript, TSconfig, etc.)
+
+.. _developer-fluid:
+
+Fluid ViewHelpers
+=================
+
+The extension provides a ViewHelper for context matching in Fluid templates.
+
+Register the Namespace
+----------------------
+
+Add the namespace to your Fluid template:
+
+.. code-block:: html
+
+   <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+         xmlns:contexts="http://typo3.org/ns/Netresearch/Contexts/ViewHelpers"
+         data-namespace-typo3-fluid="true">
+
+Or use the inline namespace declaration:
+
+.. code-block:: html
+
+   {namespace contexts=Netresearch\Contexts\ViewHelpers}
+
+Using the Matches ViewHelper
+----------------------------
+
+Check if a context is active using the ``matches`` ViewHelper:
+
+.. code-block:: html
+
+   <f:if condition="{contexts:matches(alias: 'mobile')}">
+       <f:then>
+           <p>Mobile context is active</p>
+       </f:then>
+       <f:else>
+           <p>Mobile context is not active</p>
+       </f:else>
+   </f:if>
+
+The ViewHelper returns ``1`` when the context matches and ``0`` otherwise,
+making it compatible with Fluid's condition evaluation.
+
+Practical Examples
+------------------
+
+**Conditional rendering based on context:**
+
+.. code-block:: html
+
+   <f:if condition="{contexts:matches(alias: 'internal')}">
+       <div class="admin-toolbar">
+           <!-- Only shown for internal network -->
+       </div>
+   </f:if>
+
+**Combining with other conditions:**
+
+.. code-block:: html
+
+   <f:if condition="{contexts:matches(alias: 'premium')} && {user}">
+       <div class="premium-content">
+           <!-- Premium user content -->
+       </div>
+   </f:if>
 
 .. _developer-testing:
 
