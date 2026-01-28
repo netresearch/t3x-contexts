@@ -90,7 +90,7 @@ class CombinationFormElement extends AbstractFormElement
             <div class="text-danger">
             HTML;
         if (\count($notFound) > 0) {
-            $notFoundText = implode(', ', $notFound);
+            $notFoundText = htmlspecialchars(implode(', ', $notFound));
             $aliasesNotFoundLabel = $this->getLanguageService()->sL(
                 'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:aliasesNotFound',
             );
@@ -102,7 +102,7 @@ class CombinationFormElement extends AbstractFormElement
         }
 
         if (\count($unknownTokens) > 0) {
-            $unknownTokensText = implode(', ', $unknownTokens);
+            $unknownTokensText = htmlspecialchars(implode(', ', $unknownTokens));
             $unknownTokensLabel = $this->getLanguageService()->sL(
                 'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:unknownTokensFound',
             );

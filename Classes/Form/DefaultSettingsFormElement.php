@@ -80,7 +80,7 @@ class DefaultSettingsFormElement extends AbstractFormElement
                 $checked = 'checked="checked"';
             }
 
-            $label = $this->getLanguageService()->sL($config['label']);
+            $label = htmlspecialchars($this->getLanguageService()->sL($config['label']));
             $content .= <<<HTML
                 <input type="hidden" name="{$name}" value="0" />
                 <input class="checkbox" type="checkbox" name="{$name}" value="1" id="{$id}" {$checked}/>
