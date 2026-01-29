@@ -174,9 +174,7 @@ final class IpContextTest extends TestBase
     #[Test]
     public function matchReturnsFalseForMultiLineIpConfigurationNotMatching(): void
     {
-        $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
-
-        $mock = $this->createIpContextMock();
+        $mock = $this->createIpContextMockWithRemoteAddress('8.8.8.8');
         $mock->method('getConfValue')
             ->with('field_ip')
             ->willReturn("192.168.1.0/24\n10.0.0.0/8\n172.16.0.0/12");
@@ -189,9 +187,7 @@ final class IpContextTest extends TestBase
     #[Test]
     public function matchReturnsTrueForIPv6Address(): void
     {
-        $_SERVER['REMOTE_ADDR'] = '2001:db8:85a3::8a2e:370:7334';
-
-        $mock = $this->createIpContextMock();
+        $mock = $this->createIpContextMockWithRemoteAddress('2001:db8:85a3::8a2e:370:7334');
         $mock->method('getConfValue')
             ->with('field_ip')
             ->willReturn('2001:db8::/32');
@@ -219,9 +215,7 @@ final class IpContextTest extends TestBase
     #[Test]
     public function matchReturnsTrueForIPv6Loopback(): void
     {
-        $_SERVER['REMOTE_ADDR'] = '::1';
-
-        $mock = $this->createIpContextMock();
+        $mock = $this->createIpContextMockWithRemoteAddress('::1');
         $mock->method('getConfValue')
             ->with('field_ip')
             ->willReturn('::1');
@@ -234,9 +228,7 @@ final class IpContextTest extends TestBase
     #[Test]
     public function matchReturnsFalseForMalformedIpAddress(): void
     {
-        $_SERVER['REMOTE_ADDR'] = 'not-an-ip-address';
-
-        $mock = $this->createIpContextMock();
+        $mock = $this->createIpContextMockWithRemoteAddress('not-an-ip-address');
         $mock->method('getConfValue')
             ->with('field_ip')
             ->willReturn('192.168.1.0/24');
@@ -249,9 +241,7 @@ final class IpContextTest extends TestBase
     #[Test]
     public function matchReturnsTrueWhenInvertedForMalformedIpAddress(): void
     {
-        $_SERVER['REMOTE_ADDR'] = 'not-an-ip-address';
-
-        $mock = $this->createIpContextMock();
+        $mock = $this->createIpContextMockWithRemoteAddress('not-an-ip-address');
         $mock->method('getConfValue')
             ->with('field_ip')
             ->willReturn('192.168.1.0/24');
@@ -264,9 +254,7 @@ final class IpContextTest extends TestBase
     #[Test]
     public function matchHandlesPartialIpAddress(): void
     {
-        $_SERVER['REMOTE_ADDR'] = '192.168.1';
-
-        $mock = $this->createIpContextMock();
+        $mock = $this->createIpContextMockWithRemoteAddress('192.168.1');
         $mock->method('getConfValue')
             ->with('field_ip')
             ->willReturn('192.168.1.0/24');
@@ -288,5 +276,22 @@ final class IpContextTest extends TestBase
             IpContext::class,
             ['getConfValue'],
         );
+    }
+
+    /**
+     * Create a mock of IpContext with getConfValue and getRemoteAddress mocked.
+     *
+     * @return MockObject&IpContext
+     */
+    protected function createIpContextMockWithRemoteAddress(string $remoteAddress): MockObject
+    {
+        $mock = $this->getAccessibleMock(
+            IpContext::class,
+            ['getConfValue', 'getRemoteAddress'],
+        );
+        $mock->method('getRemoteAddress')
+            ->willReturn($remoteAddress);
+
+        return $mock;
     }
 }
