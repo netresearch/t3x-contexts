@@ -62,7 +62,7 @@ Classes/           # PHP source code (34 files)
 ├── Context/       # Context type implementations
 ├── Service/       # Business logic services
 └── Form/          # Backend form elements
-Tests/             # Test suite (41 files)
+Tests/             # Test suite (37 files)
 ├── Unit/          # Unit tests
 └── Functional/    # Functional tests (needs TYPO3)
 Configuration/     # TYPO3 configuration (TCA, TypoScript, FlexForms)
