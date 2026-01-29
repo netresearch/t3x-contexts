@@ -33,7 +33,7 @@ class IpContext extends AbstractContext
      */
     public function match(array $arDependencies = []): bool
     {
-        $strCurIp = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+        $strCurIp = $this->getRemoteAddress();
 
         $bIpv4 = filter_var(
             $strCurIp,

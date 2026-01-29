@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
+use Netresearch\Contexts\Context\Container;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -28,7 +30,7 @@ class DomainContext extends AbstractContext
      */
     public function match(array $arDependencies = []): bool
     {
-        $curHost = (string) ($_SERVER['HTTP_HOST'] ?? '');
+        $curHost = $this->getCurrentHost();
         $arDomains = GeneralUtility::trimExplode(
             "\n",
             $this->getConfValue('field_domains'),
@@ -47,6 +49,29 @@ class DomainContext extends AbstractContext
     /**
      *
      */
+    /**
+     * Get the current host from the request.
+     *
+     * @return string The current host
+     */
+    protected function getCurrentHost(): string
+    {
+        // Try to get from PSR-7 request first (preferred in TYPO3 v12+)
+        $request = Container::get()->getRequest();
+        if ($request instanceof ServerRequestInterface) {
+            return $request->getUri()->getHost();
+        }
+
+        // Fallback to GLOBALS['TYPO3_REQUEST'] if available
+        $globalRequest = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if ($globalRequest instanceof ServerRequestInterface) {
+            return $globalRequest->getUri()->getHost();
+        }
+
+        // Fallback to $_SERVER
+        return (string) ($_SERVER['HTTP_HOST'] ?? '');
+    }
+
     protected function matchDomain(string $domain, string $curHost): bool
     {
         if ($domain === '') {

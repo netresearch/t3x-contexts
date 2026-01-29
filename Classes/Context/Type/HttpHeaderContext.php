@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
+use Netresearch\Contexts\Context\Container;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -37,8 +39,11 @@ class HttpHeaderContext extends AbstractContext
         $configValue = $this->getConfValue('field_name');
         $httpHeaderName = strtolower(trim($configValue));
 
+        // Get server params from PSR-7 request
+        $serverParams = $this->getServerParams();
+
         // Check, if header exists in HTTP request
-        foreach ($_SERVER as $header => $value) {
+        foreach ($serverParams as $header => $value) {
             if (strtolower((string) $header) === $httpHeaderName) {
                 // header exists - check if any configured values match
                 return $this->invert($this->storeInSession(
@@ -49,6 +54,29 @@ class HttpHeaderContext extends AbstractContext
 
         // HTTP header does not exist
         return $this->invert(false);
+    }
+
+    /**
+     * Get server parameters from the current request.
+     *
+     * @return array<string, mixed> Server parameters
+     */
+    protected function getServerParams(): array
+    {
+        // Try to get from PSR-7 request first (preferred in TYPO3 v12+)
+        $request = Container::get()->getRequest();
+        if ($request instanceof ServerRequestInterface) {
+            return $request->getServerParams();
+        }
+
+        // Fallback to GLOBALS['TYPO3_REQUEST'] if available
+        $globalRequest = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if ($globalRequest instanceof ServerRequestInterface) {
+            return $globalRequest->getServerParams();
+        }
+
+        // Fallback to $_SERVER
+        return $_SERVER;
     }
 
     /**
