@@ -212,7 +212,7 @@ composer lint:fix
 | Tool | Version | Purpose |
 |------|---------|---------|
 | PHPUnit | 10/11/12 | Unit and functional tests |
-| PHPStan | 2.x | Static analysis (level 8) |
+| PHPStan | 2.x | Static analysis (level 9) |
 | PHP-CS-Fixer | 3.x | Code style (PSR-12) |
 
 ## Documentation

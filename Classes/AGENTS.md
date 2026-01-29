@@ -28,7 +28,7 @@ ddev start && ddev install-v13
 
 ```bash
 composer lint              # PHP_CodeSniffer
-composer analyze           # PHPStan level 8
+composer analyze           # PHPStan level 9
 composer test:unit         # Unit tests for this code
 ```
 
