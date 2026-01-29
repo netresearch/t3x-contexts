@@ -79,9 +79,11 @@ jobs:
           path: sbom.json
           retention-days: 90
 
+      # Note: Dependency graph submission requires SPDX format or native GitHub action
+      # CycloneDX SBOM is available as artifact for supply chain security
       - name: Submit SBOM to Dependency Graph
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: advanced-security/spdx-dependency-submission-action@f957edbb35161c1f9e33f61026fc86a671c58cae # v0.1.2
+        uses: anchore/sbom-action/publish-sbom@ed92d5abd7b1b5a90ab5e2f09778ae3c8aa2fb2e # v0.18.0
         continue-on-error: true
         with:
-          filePath: sbom.json
+          sbom-artifact-match: sbom.json
