@@ -5,22 +5,27 @@ This repository contains a TYPO3 extension for multi-channel contexts that show/
 ## Code Standards and Style
 
 ### PHP Requirements
-- **PHP Version**: 7.4+ minimum, with strict typing
+- **PHP Version**: 8.2+ minimum, with strict typing
 - **Always include**: `declare(strict_types=1);` at the top of every PHP file after the opening tag
 - **Namespace**: All classes use `Netresearch\Contexts\` namespace following PSR-4 autoloading
-- **Coding Standard**: PSR-12 (enforced via PHPCodeSniffer)
+- **Coding Standard**: PSR-12 / PER-CS (enforced via PHP-CS-Fixer and PHPCodeSniffer)
 
 ### File Structure
 - **Classes/**: Main source code following TYPO3 extension structure
   - `Context/`: Context implementations and factory
+  - `Context/Type/`: Concrete context type classes extending AbstractContext
   - `Api/`: Public API classes
   - `Service/`: Service layer classes
   - `ViewHelpers/`: Fluid template helpers
   - `Form/`: Backend form elements
-  - `Middleware/`: TYPO3 middleware
-- **Tests/**: PHPUnit tests (Unit/ and Functional/)
+  - `Middleware/`: PSR-15 middleware
+  - `EventListener/`: PSR-14 event listeners
+  - `ExpressionLanguage/`: TypoScript condition providers
+  - `Query/Restriction/`: Doctrine DBAL query restrictions
+- **Tests/**: PHPUnit tests (Unit/, Functional/, Fuzz/)
 - **Configuration/**: TYPO3 configuration files
 - **Resources/**: Static resources (CSS, JS, templates)
+- **Documentation/**: RST documentation for docs.typo3.org
 
 ### Naming Conventions
 - **Classes**: PascalCase (e.g., `AbstractContext`, `LogicalExpressionEvaluator`)
@@ -31,39 +36,60 @@ This repository contains a TYPO3 extension for multi-channel contexts that show/
 ## TYPO3-Specific Patterns
 
 ### Extension Structure
-- This is a TYPO3 v11 extension (`typo3/cms-core: ^11.5`)
+- This is a TYPO3 v12.4/v13.4 extension (`typo3/cms-core: ^12.4 || ^13.4`)
 - Follow TYPO3 extension conventions for file naming and structure
 - Use TYPO3's dependency injection and service container
 - Implement TYPO3 interfaces where appropriate (e.g., `SingletonInterface`)
+- Use PHP 8 attributes for event listeners (`#[AsEventListener]`)
 
 ### Database and ORM
-- Use TYPO3's Doctrine DBAL for database operations
+- Use TYPO3's Doctrine DBAL 4.x for database operations
 - Context records are stored in `tx_contexts_contexts` table
 - Use prepared statements and parameterized queries for security
 - Handle database exceptions (`DBALException`, `Driver\Exception`)
+- **IMPORTANT**: Use `Connection::PARAM_INT`/`Connection::PARAM_STR` constants, NOT `PDO::PARAM_*`
+
+### Database Parameter Types
+
+```php
+// Good: TYPO3 Connection constants (DBAL 4.x compatible)
+use TYPO3\CMS\Core\Database\Connection;
+$qb->createNamedParameter($uid, Connection::PARAM_INT);
+$qb->createNamedParameter($title, Connection::PARAM_STR);
+
+// Bad: PDO constants (breaks DBAL 4.x)
+$qb->createNamedParameter($uid, \PDO::PARAM_INT); // DON'T USE
+```
 
 ### Frontend Integration
 - Contexts integrate with TYPO3 frontend rendering
-- Use `TypoScriptFrontendController` for frontend operations
+- Use `TypoScriptFrontendController` for frontend operations (null-safe access)
 - Provide Fluid ViewHelpers for template integration
-- Support TypoScript conditions
+- Support TypoScript conditions via ExpressionLanguage
 
 ## Quality Assurance
 
 ### Static Analysis
-- **PHPStan**: Level 9 analysis with strict rules (see `phpstan.neon`)
-- Run: `vendor/bin/phpstan analyse --configuration phpstan.neon`
+- **PHPStan**: Level 9 analysis with strict rules (see `Build/phpstan.neon`)
+- Run: `composer analyze`
 - Address all PHPStan errors before committing
 
 ### Code Style
+- **PHP-CS-Fixer**: PER-CS + PHP 8.2 migration rules
 - **PHP_CodeSniffer**: PSR-12 standard enforcement
-- Run: `vendor/bin/phpcs Classes/ --standard=PSR12`
-- Fix automatically: `vendor/bin/phpcbf Classes/ --standard=PSR12`
+- Run: `composer lint` (check) or `composer lint:fix` (auto-fix)
+
+### Testing
+- **PHPUnit**: 10.5+/11/12 supported
+- **Unit Tests**: `composer test:unit`
+- **Functional Tests**: `composer test:functional` (requires database)
+- **Coverage**: `composer test:coverage`
+- **Mutation Testing**: `composer test:mutation` (Infection)
+- **Fuzz Testing**: See `Tests/Fuzz/`
 
 ### Refactoring
-- **Rector**: Automated refactoring for PHP/TYPO3 upgrades (see `rector.php`)
-- Run dry-run: `vendor/bin/rector --dry-run`
-- Targets PHP 7.4 and TYPO3 v11 patterns
+- **Rector**: Automated refactoring for PHP/TYPO3 upgrades (see `Build/rector.php`)
+- **Fractor**: TYPO3-specific migrations
 
 ### Pre-commit Quality Gates
 - **GrumPHP**: Automated quality checks on commit (see `grumphp.yml`)
@@ -75,7 +101,8 @@ This repository contains a TYPO3 extension for multi-channel contexts that show/
 ### Test Structure
 - **Unit Tests**: `Tests/Unit/` for isolated component testing
 - **Functional Tests**: `Tests/Functional/` for integration testing
-- Use PHPUnit 9.x (`vendor/bin/phpunit`)
+- **Fuzz Tests**: `Tests/Fuzz/` for property-based testing
+- Use PHPUnit 10.5+ (`vendor/bin/phpunit`)
 - Follow TYPO3 testing patterns and extend TYPO3 test base classes
 
 ### Test Requirements
@@ -125,6 +152,7 @@ declare(strict_types=1);
 - Validate all user inputs, especially GET/POST parameters and headers
 - Use parameterized database queries to prevent SQL injection
 - Sanitize data before storing in session or database
+- Use PSR-7 request objects instead of direct `$_GET`/`$_POST` access
 
 ### Context Evaluation
 - Be careful with logical expression evaluation to prevent code injection
@@ -135,17 +163,25 @@ declare(strict_types=1);
 
 ### Build Process
 1. `composer install` - Install dependencies
-2. `vendor/bin/grumphp run` - Run all quality checks
-3. `vendor/bin/phpunit` - Run tests
-4. Manual testing in TYPO3 backend/frontend
+2. `composer lint` - Check code style
+3. `composer analyze` - Run static analysis
+4. `composer test:unit` - Run unit tests
+5. `composer test:functional` - Run functional tests (requires database)
+
+### DDEV Environment
+```bash
+ddev start
+ddev install-v13  # or ddev install-v12
+```
 
 ### Adding New Context Types
-1. Extend `AbstractContext` class
-2. Implement required abstract methods
-3. Register in `Configuration::getContextTypes()`
-4. Add corresponding database fields if needed
-5. Create backend form configuration
-6. Write comprehensive tests
+1. Extend `AbstractContext` class in `Classes/Context/Type/`
+2. Implement `match(array $arDependencies = []): bool` method
+3. Use `getConfValue()` to read FlexForm configuration
+4. Use `invert()` to support result inversion
+5. Use `storeInSession()`/`getMatchFromSession()` for session caching
+6. Add FlexForm configuration in `Configuration/FlexForms/`
+7. Write comprehensive tests
 
 ## Performance Considerations
 
@@ -157,8 +193,8 @@ declare(strict_types=1);
 
 ## Compatibility
 
-- Maintain TYPO3 v11.5+ compatibility
-- Support PHP 7.4+ (current platform constraint)
+- Maintain TYPO3 v12.4+ and v13.4+ compatibility
+- Support PHP 8.2 - 8.5
 - Test with different TYPO3 configurations
 - Consider backwards compatibility when making changes
 
@@ -176,106 +212,39 @@ When making changes, always run the full quality suite and ensure all tests pass
 - Batch file operations when possible to improve efficiency
 - Use command chains for dependent bash operations: `command1 && command2`
 
-## Agent Workflow Integration
-
-### Issue Assignment and Handling
-- When assigned an issue, start by exploring the repository structure and understanding the current state
-- Create an implementation plan using **report_progress** before making changes
-- Make small, incremental changes with frequent progress reports
-- Use the existing quality tools (PHPStan, PHPCS, PHPUnit) to validate changes
-
-### Code Review Process
-- Run **code_review** tool before finalizing changes to get automated feedback
-- Address valid review comments and re-run if significant changes are made
-- Use **codeql_checker** for security analysis after code reviews
-- Include a Security Summary for any vulnerabilities discovered
-
-### Git and Branch Management
-- Work on feature branches (never directly on main/master)
-- Use meaningful commit messages that follow conventional commit patterns
-- Keep commits focused and atomic
-- Use **report_progress** for committing and pushing changes
-
-## Environment and Limitations
-
-### Sandboxed Environment
-- Repository is cloned locally in a sandboxed environment
-- Can read, edit, and create files within the repository
-- Can run local commands and tools via bash
-- Cannot directly push to GitHub (use **report_progress** instead)
-
-### Quality Gates
-- All quality checks must pass before finalizing work
-- PHPStan level 9 analysis is enforced
-- PSR-12 coding standards are mandatory
-- GrumPHP hooks ensure code quality on commits
-- Address any failing tests or quality issues
-
-### Testing Requirements
-- Unit tests for new public methods and classes
-- Functional tests for TYPO3 integration and database operations
-- Test both success and failure scenarios
-- Follow existing test patterns and extend appropriate base classes
-
-### Common Patterns and Examples
-
-#### File Header Template
-```php
-<?php
-
-/**
- * This file is part of the package netresearch/contexts.
- *
- * For the full copyright and license information, please read the
- * LICENSE file that was distributed with this source code.
- */
-
-declare(strict_types=1);
-
-namespace Netresearch\Contexts\[Subnamespace];
-
-// imports...
-```
-
-#### Context Implementation Pattern
-```php
-// Context classes extend AbstractContext
-class MyContext extends AbstractContext
-{
-    // Implement required abstract methods
-    // Use proper type hints and return types
-    // Include comprehensive PHPDoc
-}
-```
-
-#### Database Query Pattern
-```php
-try {
-    $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-        ->getQueryBuilderForTable('tx_contexts_contexts');
-    
-    $result = $queryBuilder
-        ->select('*')
-        ->from('tx_contexts_contexts')
-        ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($contextUid, PDO::PARAM_INT)))
-        ->executeQuery();
-} catch (DBALException | Exception $e) {
-    // Handle database exceptions appropriately
-    $this->logger->error('Database error: ' . $e->getMessage());
-}
-```
-
 ## Repository Specific Guidance
 
 ### Key Extension Points
-- **New Context Types**: Extend `AbstractContext` and register in `Configuration::getContextTypes()`
+- **New Context Types**: Extend `AbstractContext` and implement `match()` method
 - **ViewHelpers**: Create Fluid helpers in `Classes/ViewHelpers/` for template integration
 - **Middleware**: Add HTTP middleware in `Classes/Middleware/` for request processing
 - **Services**: Implement business logic in `Classes/Service/` with proper dependency injection
+- **Event Listeners**: Use `#[AsEventListener]` attribute for PSR-14 events
 
 ### TYPO3 Integration Patterns
 - Use TYPO3's dependency injection container for service registration
 - Implement `SingletonInterface` for stateless services
 - Use `LoggerAwareInterface` and inject PSR-3 loggers
-- Follow TYPO3 v11 patterns and deprecation guidelines
+- Follow TYPO3 v12/v13 patterns and deprecation guidelines
 - Register services in `Configuration/Services.yaml` when needed
+
+### PSR-14 Event Listeners
+
+```php
+// Use PHP 8 attributes - no Services.yaml entry needed
+#[AsEventListener(
+    identifier: 'contexts/my-event',
+    event: SomeEvent::class,
+)]
+final readonly class MyEventListener
+{
+    public function __construct(
+        private SomeService $service,
+    ) {}
+
+    public function __invoke(SomeEvent $event): void
+    {
+        // Handle event
+    }
+}
+```
