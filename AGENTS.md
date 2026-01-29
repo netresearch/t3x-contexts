@@ -36,6 +36,11 @@ composer test:coverage    # Coverage report (needs PCOV/Xdebug)
 # DDEV setup (recommended)
 cd main && composer install
 ddev start
+ddev install-all          # Install TYPO3 v12 and v13
+
+# Or install specific version
+ddev install-v12          # TYPO3 v12 only
+ddev install-v13          # TYPO3 v13 only
 
 # Render documentation locally
 ddev render-docs
@@ -44,6 +49,8 @@ ddev render-docs
 https://v12.contexts.ddev.site/typo3/    # TYPO3 v12 backend
 https://v13.contexts.ddev.site/typo3/    # TYPO3 v13 backend
 https://docs.contexts.ddev.site/         # Local documentation
+
+# Credentials: admin / joh316
 ```
 
 ## CI Workflows
