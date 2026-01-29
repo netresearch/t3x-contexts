@@ -22,7 +22,7 @@ The **closest AGENTS.md** to changed files wins. This root file holds global def
 ```bash
 # Automatic on commit (via GrumPHP):
 composer lint          # PHP_CodeSniffer (PSR-12 + TYPO3 CGL)
-composer analyze       # PHPStan level 8
+composer analyze       # PHPStan level 9
 
 # Manual testing:
 composer test:unit        # PHPUnit unit tests
@@ -34,15 +34,16 @@ composer test:coverage    # Coverage report (needs PCOV/Xdebug)
 
 ```bash
 # DDEV setup (recommended)
+cd main && composer install
 ddev start
-ddev install-all          # Install TYPO3 v11, v12, v13
+
+# Render documentation locally
+ddev render-docs
 
 # Access
 https://v12.contexts.ddev.site/typo3/    # TYPO3 v12 backend
 https://v13.contexts.ddev.site/typo3/    # TYPO3 v13 backend
 https://docs.contexts.ddev.site/         # Local documentation
-
-# Credentials: admin / Password:joh316
 ```
 
 ## CI Workflows
@@ -62,9 +63,11 @@ Classes/           # PHP source code (34 files)
 ├── Context/       # Context type implementations
 ├── Service/       # Business logic services
 └── Form/          # Backend form elements
-Tests/             # Test suite (37 files)
+Tests/             # Test suite
 ├── Unit/          # Unit tests
-└── Functional/    # Functional tests (needs TYPO3)
+├── Functional/    # Functional tests (needs TYPO3)
+├── Architecture/  # PHPat layer tests
+└── Fuzz/          # Property-based fuzz testing
 Configuration/     # TYPO3 configuration (TCA, TypoScript, FlexForms)
 Documentation/     # RST documentation for docs.typo3.org
 Build/             # Build tooling configs (phpstan, phpunit, phpcs)

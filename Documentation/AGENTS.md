@@ -9,8 +9,7 @@ RST documentation for docs.typo3.org publication.
 ```
 Documentation/
 ├── Index.rst              # Main entry point with card-grid navigation
-├── guides.xml             # Modern PHP-based rendering config
-├── Settings.cfg           # Legacy Sphinx config (fallback)
+├── guides.xml             # Modern PHP-based rendering config (TYPO3 v12+)
 ├── Introduction/          # Overview, features, screenshots
 ├── Installation/          # Setup instructions
 ├── Configuration/         # Settings and options

@@ -9,7 +9,9 @@ Test suite for the Contexts extension.
 ```
 Tests/
 ├── Unit/           # Fast, isolated unit tests
-└── Functional/     # Integration tests requiring TYPO3 + database
+├── Functional/     # Integration tests requiring TYPO3 + database
+├── Architecture/   # PHPat architecture tests (layer dependencies)
+└── Fuzz/           # Property-based fuzz testing (nikic/php-fuzzer)
 ```
 
 ## Setup & Environment
