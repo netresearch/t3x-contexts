@@ -11,6 +11,14 @@ updates:
       commit-message:
           prefix: "ci"
 
+    # Maintain dependencies for npm (Playwright E2E tests)
+    - package-ecosystem: "npm"
+      directory: "/Build/playwright"
+      schedule:
+          interval: "weekly"
+      commit-message:
+          prefix: "deps(npm)"
+
     # Maintain dependencies for Composer
     - package-ecosystem: "composer"
       directory: "/"
