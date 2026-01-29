@@ -83,7 +83,7 @@ jobs:
       # CycloneDX SBOM is available as artifact for supply chain security
       - name: Submit SBOM to Dependency Graph
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: anchore/sbom-action/publish-sbom@ed92d5abd7b1b5a90ab5e2f09778ae3c8aa2fb2e # v0.18.0
+        uses: anchore/sbom-action/publish-sbom@f325610c9f50a54015d37c8d16cb3b0e2c8f4de0 # v0.18.0
         continue-on-error: true
         with:
           sbom-artifact-match: sbom.json
