@@ -39,7 +39,7 @@ Improvements
 - Modernized codebase with strict types
 - Enhanced IDE support through better typing
 - Improved test coverage (target: 80%+)
-- PHPStan level 8 compliance
+- PHPStan level 9 compliance
 - Updated coding standards (PSR-12)
 
 Migration

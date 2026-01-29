@@ -199,7 +199,7 @@ composer test:coverage
 ### Code Quality
 
 ```bash
-# Static analysis (level 8)
+# Static analysis (level 9)
 composer analyze
 
 # Code style check

@@ -10,7 +10,7 @@
 - Full TYPO3 v12.4 LTS support
 - Full TYPO3 v13.4 LTS support
 - PHP 8.4 compatibility
-- PHPStan level 8 compliance
+- PHPStan level 9 compliance
 - SBOM generation for supply chain security
 - Comprehensive test coverage
 
