@@ -40,7 +40,7 @@ final class AbstractTest extends TestBase
     #[DataProvider('sessionProvider')]
     public function getMatchFromSession(bool $useSession, mixed $sessionReturn, array $expected): void
     {
-        $stub = new class () extends AbstractContext {
+        $stub = new class extends AbstractContext {
             public mixed $mockSessionReturn = null;
 
             public function match(array $arDependencies = []): bool
@@ -64,7 +64,7 @@ final class AbstractTest extends TestBase
     #[Test]
     public function getRemoteAddressWithProxyGetFirst(): void
     {
-        $test = new class () extends AbstractContext {
+        $test = new class extends AbstractContext {
             public function match(array $arDependencies = []): bool
             {
                 return true;

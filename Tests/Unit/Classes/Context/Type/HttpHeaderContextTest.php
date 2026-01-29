@@ -38,6 +38,7 @@ final class HttpHeaderContextTest extends TestBase
         $_SERVER = $this->originalServerVars;
         parent::tearDown();
     }
+
     /**
      * @return array<string, array{0: string, 1: string, 2: bool}>
      */

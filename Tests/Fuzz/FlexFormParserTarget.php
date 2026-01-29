@@ -75,10 +75,10 @@ $contextClass = new class ([
 /** @var PhpFuzzer\Config $config */
 $config->setTarget(function (string $input) use ($contextClass): void {
     // Wrap XML in FlexForm structure
-    $xml = '<?xml version="1.0" encoding="utf-8"?>' .
-        '<T3FlexForms><data><sheet index="sDEF"><language index="lDEF">' .
-        '<field index="fuzzField"><value index="vDEF">' . $input . '</value></field>' .
-        '</language></sheet></data></T3FlexForms>';
+    $xml = '<?xml version="1.0" encoding="utf-8"?>'
+        . '<T3FlexForms><data><sheet index="sDEF"><language index="lDEF">'
+        . '<field index="fuzzField"><value index="vDEF">' . $input . '</value></field>'
+        . '</language></sheet></data></T3FlexForms>';
 
     $contextClass->setTypeConf($xml);
 

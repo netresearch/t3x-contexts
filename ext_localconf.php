@@ -22,8 +22,8 @@ defined('TYPO3') || die('Access denied.');
 if (!isset($GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'])) {
     $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] = '';
 }
-$GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] =
-    (string) $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields']
+$GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields']
+    = (string) $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields']
     . ',tx_contexts_enable,tx_contexts_disable';
 
 // XClass: This is needed for the context fields in the page tree

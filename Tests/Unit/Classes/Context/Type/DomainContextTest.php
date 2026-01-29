@@ -28,7 +28,7 @@ final class DomainContextTest extends TestBase
     {
         parent::setUp();
         $httpHost = $_SERVER['HTTP_HOST'] ?? null;
-        $this->originalHttpHost = is_string($httpHost) ? $httpHost : null;
+        $this->originalHttpHost = \is_string($httpHost) ? $httpHost : null;
     }
 
     protected function tearDown(): void
@@ -40,6 +40,7 @@ final class DomainContextTest extends TestBase
         }
         parent::tearDown();
     }
+
     /**
      * @return array<string, array{0: string, 1: string, 2: bool}>
      */

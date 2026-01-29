@@ -28,7 +28,7 @@ final class IpContextTest extends TestBase
     {
         parent::setUp();
         $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? null;
-        $this->originalRemoteAddr = is_string($remoteAddr) ? $remoteAddr : null;
+        $this->originalRemoteAddr = \is_string($remoteAddr) ? $remoteAddr : null;
     }
 
     protected function tearDown(): void
@@ -40,6 +40,7 @@ final class IpContextTest extends TestBase
         }
         parent::tearDown();
     }
+
     /**
      * @return array<array{0: string, 1: string, 2: bool}>
      */

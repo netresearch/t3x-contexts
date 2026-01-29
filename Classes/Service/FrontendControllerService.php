@@ -64,12 +64,12 @@ class FrontendControllerService implements SingletonInterface
         $conf = &$GLOBALS['TYPO3_CONF_VARS'];
 
         // Hook for postProcessing the configuration array
-        $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'][self::class] =
-            self::class . '->configArrayPostProc';
+        $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'][self::class]
+            = self::class . '->configArrayPostProc';
 
         // Hook to influence the page hash calculation
-        $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][self::class] =
-            self::class . '->createHashBase';
+        $conf['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][self::class]
+            = self::class . '->createHashBase';
     }
 
     /**

@@ -32,11 +32,11 @@ final class LayerTest
             ->classes(Selector::inNamespace('Netresearch\Contexts\Context\Type'))
             ->excluding(
                 Selector::classname('Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator'),
-                Selector::classname('Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException')
+                Selector::classname('Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException'),
             )
             ->shouldExtend()
             ->classes(
-                Selector::classname('Netresearch\Contexts\Context\AbstractContext')
+                Selector::classname('Netresearch\Contexts\Context\AbstractContext'),
             )
             ->because('All context types should extend AbstractContext');
     }
