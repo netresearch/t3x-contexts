@@ -13,6 +13,10 @@ claudedocs/
 # Generated documentation
 Documentation-GENERATED-temp/
 
+# Generated coverage analysis
+COVERAGE_*.md
+TEST_COVERAGE_*.md
+
 # TYPO3 var directory
 var/
 
