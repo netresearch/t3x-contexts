@@ -21,7 +21,7 @@ The **closest AGENTS.md** to changed files wins. This root file holds global def
 
 ```bash
 # Automatic on commit (via GrumPHP):
-composer lint          # PHP_CodeSniffer (PSR-12 + TYPO3 CGL)
+composer lint          # PHP-CS-Fixer (PSR-12 + strict types)
 composer analyze       # PHPStan level 9
 
 # Manual testing:
