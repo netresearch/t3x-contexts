@@ -11,7 +11,7 @@ All notable changes to this project are documented here.
 Version 4.0.0
 =============
 
-Release date: 2025
+Release date: 2025-01-28
 
 This is a major release with TYPO3 v12/v13 support and significant modernization.
 
