@@ -1,36 +1,25 @@
-<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-28 -->
+<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-31 -->
 
 # AGENTS.md
 
 **Project:** netresearch/contexts — Multi-channel content visibility for TYPO3
 **Type:** TYPO3 CMS Extension (PHP 8.2+, TYPO3 12.4/13.4)
 
-## Precedence
+## Overview
 
-The **closest AGENTS.md** to changed files wins. This root file holds global defaults only.
+The Contexts extension provides multi-channel content visibility for TYPO3 CMS. It allows content editors to control which content elements, pages, and records are displayed based on configurable context conditions such as:
 
-## Global Rules
+- Domain/hostname matching
+- IP address ranges
+- GET/POST parameters
+- Cookies
+- HTTP headers
+- Session values
+- Logical combinations (AND/OR/NOT)
 
-- Keep PRs small (~300 net LOC)
-- Conventional Commits: `type(scope): subject`
-- Ask before: heavy dependencies, architecture changes, new context types
-- Never commit secrets, credentials, or PII
-- GrumPHP runs pre-commit checks automatically
+Context types are extensible - developers can create custom context implementations by extending `AbstractContext`.
 
-## Pre-Commit Checks (GrumPHP)
-
-```bash
-# Automatic on commit (via GrumPHP):
-composer lint          # PHP-CS-Fixer (PSR-12 + strict types)
-composer analyze       # PHPStan level 9
-
-# Manual testing:
-composer test:unit        # PHPUnit unit tests
-composer test:functional  # PHPUnit functional tests (needs DB)
-composer test:coverage    # Coverage report (needs PCOV/Xdebug)
-```
-
-## Development Environment
+## Setup / Getting Started
 
 ```bash
 # DDEV setup (recommended)
@@ -53,15 +42,44 @@ https://docs.contexts.ddev.site/         # Local documentation
 # Credentials: admin / joh316
 ```
 
-## CI Workflows
+## Commands
 
-| Workflow | Trigger | Purpose |
-|----------|---------|---------|
-| `ci.yml` | push/PR | Full test suite (unit, functional, lint, phpstan) |
-| `phpstan.yml` | push/PR | Static analysis |
-| `phpcs.yml` | push/PR | Code style |
-| `security.yml` | schedule | Dependency vulnerability scan |
-| `publish-to-ter.yml` | tag | Publish to TYPO3 Extension Repository |
+```bash
+# Pre-commit checks (automatic via GrumPHP)
+composer lint             # PHP-CS-Fixer (PSR-12 + strict types)
+composer analyze          # PHPStan level 9
+
+# Testing
+composer test:unit        # PHPUnit unit tests
+composer test:functional  # PHPUnit functional tests (needs DB)
+composer test:coverage    # Coverage report (needs PCOV/Xdebug)
+
+# Full CI suite
+composer ci               # Run all checks (lint, analyze, test)
+```
+
+## Critical Constraints
+
+- **Keep PRs small** (~300 net LOC)
+- **Conventional Commits**: `type(scope): subject`
+- **Ask before**: heavy dependencies, architecture changes, new context types
+- **Never commit** secrets, credentials, or PII
+- **GrumPHP** runs pre-commit checks automatically
+- **Database queries**: Always use `Connection::PARAM_*` (not `PDO::PARAM_*`)
+- **Testing**: Functional tests need database credentials (auto-detected in DDEV)
+
+## Precedence
+
+The **closest AGENTS.md** to changed files wins. This root file holds global defaults only.
+
+## Index of Scoped AGENTS.md
+
+| Path | Purpose |
+|------|---------|
+| `Classes/AGENTS.md` | PHP backend code, context types, services |
+| `Configuration/AGENTS.md` | TCA, FlexForms, Services.yaml, Site Sets |
+| `Tests/AGENTS.md` | Testing patterns, fixtures, functional test setup |
+| `Documentation/AGENTS.md` | RST documentation standards |
 
 ## Project Structure
 
@@ -81,14 +99,15 @@ Build/             # Build tooling configs (phpstan, phpunit, phpcs)
 Resources/         # Frontend assets, language files
 ```
 
-## Index of Scoped AGENTS.md
+## CI Workflows
 
-| Path | Purpose |
-|------|---------|
-| `Classes/AGENTS.md` | PHP backend code, context types, services |
-| `Configuration/AGENTS.md` | TCA, FlexForms, Services.yaml, Site Sets |
-| `Tests/AGENTS.md` | Testing patterns, fixtures, functional test setup |
-| `Documentation/AGENTS.md` | RST documentation standards |
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| `ci.yml` | push/PR | Full test suite (unit, functional, lint, phpstan) |
+| `phpstan.yml` | push/PR | Static analysis |
+| `phpcs.yml` | push/PR | Code style |
+| `security.yml` | schedule | Dependency vulnerability scan |
+| `publish-to-ter.yml` | tag | Publish to TYPO3 Extension Repository |
 
 ## Key Conventions
 
@@ -145,20 +164,6 @@ Context-based query restrictions filter records automatically:
 // ContextRestriction implements EnforceableQueryRestrictionInterface
 // Applied automatically to pages, tt_content via flat columns
 // Flat columns: tx_contexts_enable, tx_contexts_disable
-```
-
-### Database Queries
-
-```php
-// Always use Connection::PARAM_* (not PDO::PARAM_*)
-$queryBuilder->createNamedParameter($value, Connection::PARAM_INT)
-```
-
-### Testing
-
-```php
-// Functional tests need database credentials (auto-detected in DDEV)
-// Use session isolation in fixtures: use_session=0
 ```
 
 ## When Instructions Conflict

@@ -1,0 +1,14 @@
+# DDEV local files - do not commit
+.ddev-docker-compose-full.yaml
+.ddev-docker-compose-base.yaml
+.global_commands
+.homeadditions
+.sshimageBuild
+.webimageBuild
+.dbimageBuild
+db_snapshots/
+import.yaml
+import-db/
+sequelace.yaml
+traefik/
+commands/.homeadditions

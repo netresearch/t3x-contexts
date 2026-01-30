@@ -16,10 +16,10 @@
     },
     "authors": [
         {
-            "name": "Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag, Benni Mack",
-            "email": "typo3@netresearch.de",
-            "role": "Developer",
-            "homepage": "https://www.netresearch.de"
+            "name": "Netresearch DTT GmbH",
+            "email": "info@netresearch.de",
+            "homepage": "https://www.netresearch.de",
+            "role": "Developer"
         }
     ],
     "config": {
@@ -67,7 +67,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Netresearch\\Contexts\\": "Classes"
+            "Netresearch\\Contexts\\": "Classes/"
         }
     },
     "autoload-dev": {
@@ -76,28 +76,34 @@
         }
     },
     "scripts": {
+        "analyze": "phpstan analyse -c Build/phpstan.neon --no-progress",
+        "cs:fix": "php-cs-fixer fix --config=Build/php-cs-fixer.php",
+        "lint": "php-cs-fixer fix --config=Build/php-cs-fixer.php --dry-run --diff",
+        "lint:fix": "php-cs-fixer fix --config=Build/php-cs-fixer.php",
+        "rector": "rector process --dry-run --config=Build/rector.php",
+        "rector:fix": "rector process --config=Build/rector.php",
         "test": [
             "@test:unit"
         ],
-        "test:unit": "phpunit -c Build/phpunit/UnitTests.xml",
-        "test:functional": "phpunit -c Build/phpunit/FunctionalTests.xml",
         "test:coverage": "phpunit -c Build/phpunit/UnitTests.xml --coverage-html .Build/coverage/html --coverage-clover .Build/coverage/clover.xml",
-        "test:mutation": "infection --threads=4",
+        "test:functional": "phpunit -c Build/phpunit/FunctionalTests.xml",
         "test:fuzz": "@php -r \"echo 'Run individual fuzz tests with: vendor/bin/php-fuzzer fuzz Tests/Fuzz/<target>.php';\"",
-        "lint": "php-cs-fixer fix --config=Build/php-cs-fixer.php --dry-run --diff",
-        "lint:fix": "php-cs-fixer fix --config=Build/php-cs-fixer.php",
-        "analyze": "phpstan analyse -c Build/phpstan.neon --no-progress"
+        "test:mutation": "infection --threads=4",
+        "test:unit": "phpunit -c Build/phpunit/UnitTests.xml"
     },
     "scripts-descriptions": {
-        "test": "Run unit tests",
-        "test:unit": "Run unit tests only",
-        "test:functional": "Run functional tests (requires database)",
-        "test:coverage": "Run unit tests with code coverage",
-        "test:mutation": "Run mutation testing with Infection",
-        "test:fuzz": "Show instructions for running fuzz tests",
+        "analyze": "Run static analysis",
+        "cs:fix": "Fix code style (alias for lint:fix)",
         "lint": "Check code style",
         "lint:fix": "Fix code style",
-        "analyze": "Run static analysis"
+        "rector": "Run Rector in dry-run mode",
+        "rector:fix": "Apply Rector fixes",
+        "test": "Run unit tests",
+        "test:coverage": "Run unit tests with code coverage",
+        "test:functional": "Run functional tests (requires database)",
+        "test:fuzz": "Show instructions for running fuzz tests",
+        "test:mutation": "Run mutation testing with Infection",
+        "test:unit": "Run unit tests only"
     },
     "extra": {
         "branch-alias": {

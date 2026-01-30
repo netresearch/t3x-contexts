@@ -24,3 +24,10 @@ var/
 public/*
 !public/Icons/
 !public/Icons/**
+# Environment files - may contain secrets
+.env
+.env.*
+
+# Node.js dependencies
+node_modules/
+.analysis/

@@ -13,6 +13,7 @@ use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\StaticCall\RemoveParentCallWithoutParentRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Set\ValueObject\LevelSetList;
+use Rector\Set\ValueObject\SetList;
 use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
 
@@ -35,6 +36,12 @@ return static function (RectorConfig $rectorConfig): void {
 
     // Define what rule sets will be applied - upgrade to PHP 8.2 and TYPO3 v13
     $rectorConfig->sets([
+        // Dead code removal
+        SetList::DEAD_CODE,
+
+        // Code quality improvements
+        SetList::CODE_QUALITY,
+
         // PHP level upgrades
         LevelSetList::UP_TO_PHP_82,
 

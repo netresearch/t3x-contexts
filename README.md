@@ -11,10 +11,13 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/netresearch/t3x-contexts/releases"><img src="https://img.shields.io/github/v/release/netresearch/t3x-contexts?sort=semver" alt="Latest version"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/netresearch/t3x-contexts" alt="License"></a>
-  <a href="https://github.com/netresearch/t3x-contexts/actions/workflows/ci.yml"><img src="https://github.com/netresearch/t3x-contexts/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/netresearch/t3x-contexts/actions/workflows/phpstan.yml"><img src="https://github.com/netresearch/t3x-contexts/actions/workflows/phpstan.yml/badge.svg" alt="PHPStan"></a>
+  <a href="https://github.com/netresearch/contexts/releases"><img src="https://img.shields.io/github/v/release/netresearch/contexts?sort=semver" alt="Latest version"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/netresearch/contexts" alt="License"></a>
+  <a href="https://github.com/netresearch/contexts/actions/workflows/ci.yml"><img src="https://github.com/netresearch/contexts/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/netresearch/contexts/actions/workflows/phpstan.yml"><img src="https://github.com/netresearch/contexts/actions/workflows/phpstan.yml/badge.svg" alt="PHPStan"></a>
+  <a href="https://codecov.io/gh/netresearch/contexts"><img src="https://codecov.io/gh/netresearch/contexts/branch/main/graph/badge.svg" alt="Codecov"></a>
+  <a href="https://scorecard.dev/viewer/?uri=github.com/netresearch/contexts"><img src="https://api.scorecard.dev/projects/github.com/netresearch/contexts/badge" alt="OpenSSF Scorecard"></a>
+  <a href="https://www.bestpractices.dev/projects/XXXXX"><img src="https://www.bestpractices.dev/projects/XXXXX/badge" alt="OpenSSF Best Practices"></a>
 </p>
 
 ---
@@ -227,4 +230,4 @@ This project is licensed under the [AGPL-3.0-or-later](LICENSE).
 
 Developed and maintained by [Netresearch DTT GmbH](https://www.netresearch.de/).
 
-**Contributors:** Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag, Benni Mack, and [others](https://github.com/netresearch/t3x-contexts/graphs/contributors).
+**Contributors:** Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag, Benni Mack, and [others](https://github.com/netresearch/contexts/graphs/contributors).

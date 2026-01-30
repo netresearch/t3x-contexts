@@ -1,0 +1,6 @@
+#!/bin/bash
+## Description: Setup project for development
+## Usage: setup
+## Example: ddev setup
+
+composer install
