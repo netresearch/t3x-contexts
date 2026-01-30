@@ -26,7 +26,7 @@ With the use of contexts, TYPO3 is able to do multichannel output.
 
 | Version | TYPO3       | PHP        |
 |---------|-------------|------------|
-| 4.x     | 12.4, 13.4  | 8.2 - 8.4  |
+| 4.x     | 12.4, 13.4  | 8.2 - 8.5  |
 | 3.x     | 11.5        | 7.4 - 8.1  |
 
 ## Context Examples
