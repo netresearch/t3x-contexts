@@ -58,6 +58,50 @@ composer test:coverage    # Coverage report (needs PCOV/Xdebug)
 composer ci               # Run all checks (lint, analyze, test)
 ```
 
+## Development
+
+### Development Workflow
+
+1. **Create feature branch** from `main`
+2. **Make changes** following conventions in this file
+3. **Run local checks** before committing:
+   ```bash
+   composer lint            # Fix code style
+   composer analyze         # Static analysis
+   composer test:unit       # Unit tests
+   ```
+4. **Commit** using conventional commits format
+5. **Push** and create PR - CI will run full test suite
+
+### PHPUnit Configuration
+
+PHPUnit configs are located in `Build/phpunit/`:
+- `Build/UnitTests.xml` -> `Build/phpunit/UnitTests.xml`
+- `Build/FunctionalTests.xml` -> `Build/phpunit/FunctionalTests.xml`
+
+Run tests directly via:
+```bash
+./vendor/bin/phpunit -c Build/UnitTests.xml
+./vendor/bin/phpunit -c Build/FunctionalTests.xml
+```
+
+### Code Quality Tools
+
+| Tool | Config | Purpose |
+|------|--------|---------|
+| PHP-CS-Fixer | `.php-cs-fixer.dist.php` | Code style (PSR-12) |
+| PHPStan | `Build/phpstan.neon` | Static analysis (level 9) |
+| PHPUnit | `Build/phpunit/*.xml` | Unit & functional tests |
+| GrumPHP | `grumphp.yml` | Pre-commit hooks |
+| Rector | `rector.php` | Automated refactoring |
+| Fractor | `fractor.php` | TYPO3-specific migrations |
+
+### Extension Best Practices
+
+- **No composer.lock**: Extensions should not commit `composer.lock` (it is gitignored)
+- **Environment files**: `.env` files are gitignored for security
+- **Flat columns**: Use `tx_contexts_enable`/`tx_contexts_disable` for context visibility
+
 ## Critical Constraints
 
 - **Keep PRs small** (~300 net LOC)
