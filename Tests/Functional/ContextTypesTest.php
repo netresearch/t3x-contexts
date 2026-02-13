@@ -14,13 +14,15 @@ namespace Netresearch\Contexts\Tests\Functional;
 use Netresearch\Contexts\Context\Container;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Functional tests for different context types matching.
  *
- * Note: Context types (DomainContext, IpContext) use $_SERVER superglobal
- * directly for backwards compatibility with legacy TYPO3 code.
+ * Note: Context types (DomainContext, IpContext) resolve the remote address
+ * via GeneralUtility::getIndpEnv() which caches results internally.
+ * Tests must flush runtime caches after modifying $_SERVER values.
  */
 final class ContextTypesTest extends FunctionalTestCase
 {
@@ -48,6 +50,9 @@ final class ContextTypesTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/Fixtures/contexts_multiple.csv');
         $this->importCSVDataSet(__DIR__ . '/Fixtures/tx_contexts_settings.csv');
         $this->importCSVDataSet(__DIR__ . '/Fixtures/pages.csv');
+
+        // Flush getIndpEnv() cache so $_SERVER changes in tests take effect
+        GeneralUtility::flushInternalRuntimeCaches();
     }
 
     protected function tearDown(): void
@@ -62,6 +67,8 @@ final class ContextTypesTest extends FunctionalTestCase
                 $_SERVER[$key] = $value;
             }
         }
+
+        GeneralUtility::flushInternalRuntimeCaches();
 
         parent::tearDown();
     }
