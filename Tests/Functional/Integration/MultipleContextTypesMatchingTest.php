@@ -14,6 +14,7 @@ namespace Netresearch\Contexts\Tests\Functional\Integration;
 use Netresearch\Contexts\Context\Container;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
@@ -57,6 +58,9 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/Fixtures/cross_extension_contexts.csv');
         $this->importCSVDataSet(__DIR__ . '/Fixtures/tx_contexts_settings.csv');
         $this->importCSVDataSet(__DIR__ . '/Fixtures/pages.csv');
+
+        // Flush getIndpEnv() cache so $_SERVER changes in tests take effect
+        GeneralUtility::flushInternalRuntimeCaches();
     }
 
     protected function tearDown(): void
@@ -71,6 +75,8 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
                 $_SERVER[$key] = $value;
             }
         }
+
+        GeneralUtility::flushInternalRuntimeCaches();
 
         parent::tearDown();
     }
