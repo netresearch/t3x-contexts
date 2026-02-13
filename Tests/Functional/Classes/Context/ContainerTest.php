@@ -14,6 +14,7 @@ namespace Netresearch\Contexts\Tests\Functional\Classes\Context;
 use Netresearch\Contexts\Context\Container;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
@@ -47,6 +48,9 @@ final class ContainerTest extends FunctionalTestCase
         ];
 
         Container::reset();
+
+        // Flush getIndpEnv() cache so $_SERVER changes in tests take effect
+        GeneralUtility::flushInternalRuntimeCaches();
     }
 
     protected function tearDown(): void
@@ -61,6 +65,8 @@ final class ContainerTest extends FunctionalTestCase
                 $_SERVER[$key] = $value;
             }
         }
+
+        GeneralUtility::flushInternalRuntimeCaches();
 
         parent::tearDown();
     }
