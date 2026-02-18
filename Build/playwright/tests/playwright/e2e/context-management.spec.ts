@@ -22,11 +22,17 @@ async function handleRefreshModal(page: Page): Promise<void> {
   // Check if modal appeared and handle it
   const modal = page.locator('.modal.show');
   if (await modal.isVisible().catch(() => false)) {
-    // Click "Keep editing" button to dismiss without saving
-    const keepEditingBtn = page.locator('button:has-text("Keep editing")');
-    await keepEditingBtn.click({ timeout: 3000 });
+    // Try multiple button labels (v12 uses "OK"/"Close", v13 uses "Keep editing")
+    const dismissBtn = modal.locator(
+      'button:has-text("Keep editing"), ' +
+      'button:has-text("OK"), ' +
+      'button:has-text("Close"), ' +
+      'button[data-bs-dismiss="modal"], ' +
+      '.btn-default, .btn-secondary'
+    ).first();
+    await dismissBtn.click({ timeout: 5000 }).catch(() => {});
     // Wait for modal to close
-    await modal.waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
+    await modal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
   }
 }
 

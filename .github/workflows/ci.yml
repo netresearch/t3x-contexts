@@ -274,36 +274,47 @@ jobs:
         env:
           TYPO3_VERSION: ${{ matrix.typo3 }}
         run: |
+          # Strip all require-dev to avoid nikic/php-parser v4/v5 conflict
+          # between typo3/cms-install v12 (^4) and dev tools like rector/php-fuzzer (^5).
+          # E2E tests only need the TYPO3 runtime, not dev tools.
+          composer config --unset require-dev
           composer require --no-update "typo3/cms-core:${TYPO3_VERSION}"
-          composer install --prefer-dist --no-progress
+          # Ensure typo3/cms-install is present (provides the setup CLI command)
+          composer require --no-update "typo3/cms-install:${TYPO3_VERSION}"
+          composer install --prefer-dist --no-progress --no-dev
 
-      - name: Create TYPO3 database
+      - name: Setup TYPO3 instance
         env:
-          typo3DatabaseDriver: mysqli
-          typo3DatabaseHost: 127.0.0.1
-          typo3DatabasePort: 3306
-          typo3DatabaseName: typo3_test
-          typo3DatabaseUsername: root
-          typo3DatabasePassword: root
-        run: |
-          vendor/bin/typo3 setup:create --skip-integrity-checks
+          TYPO3_DB_DRIVER: mysqli
+          TYPO3_DB_HOST: 127.0.0.1
+          TYPO3_DB_PORT: '3306'
+          TYPO3_DB_DBNAME: typo3_test
+          TYPO3_DB_USERNAME: root
+          TYPO3_DB_PASSWORD: root
+          TYPO3_SETUP_ADMIN_USERNAME: admin
+          TYPO3_SETUP_ADMIN_PASSWORD: Password.1
+          TYPO3_SERVER_TYPE: other
+          TYPO3_SETUP_CREATE_SITE: http://127.0.0.1:8000/
+        run: vendor/bin/typo3 setup --force --no-interaction
 
-      - name: Install Playwright browsers
+      - name: Install Playwright dependencies
         working-directory: Build/playwright
-        run: npm run playwright:install
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
 
       - name: Run E2E tests
         working-directory: Build/playwright
         env:
           PLAYWRIGHT_BASE_URL: 'http://127.0.0.1:8000/typo3/'
-          PLAYWRIGHT_ADMIN_USERNAME: 'admin'
-          PLAYWRIGHT_ADMIN_PASSWORD: 'password'
+          PLAYWRIGHT_ADMIN_USERNAME: admin
+          PLAYWRIGHT_ADMIN_PASSWORD: Password.1
         run: |
-          # Start PHP built-in server
-          php -S 127.0.0.1:8000 -t /home/runner/work/contexts/contexts &
-          sleep 2
+          # Start PHP built-in server pointing to TYPO3 public directory
+          php -S 127.0.0.1:8000 -t "${GITHUB_WORKSPACE}/public" &
+          sleep 3
           # Run tests
-          npm run playwright:run || true
+          npm run playwright:run
 
       - name: Upload Playwright report
         if: always()
