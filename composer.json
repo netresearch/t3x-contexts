@@ -35,7 +35,10 @@
         },
         "audit": {
             "abandoned": "ignore",
-            "block-insecure": false
+            "block-insecure": false,
+            "ignore": {
+                "PKSA-y2cr-5h3j-g3ys": "Upstream firebase/php-jwt issue via typo3/cms-core, no fix available yet"
+            }
         },
         "sort-packages": true
     },
