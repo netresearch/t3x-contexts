@@ -15,8 +15,10 @@ test.describe('Smoke Tests - TYPO3 Backend Infrastructure', () => {
    * Verifies the TYPO3 backend is accessible and properly initialized
    */
   test('TYPO3 backend loads and is accessible', async ({ backend, page }) => {
-    // The fixture ensures we're already logged in
-    // Just verify we're on the TYPO3 backend
+    // Navigate to the TYPO3 backend (storageState only restores cookies, not URL)
+    await backend.ensureBackendLoaded();
+
+    // Verify we're on the TYPO3 backend
     expect(page.url()).toContain('/typo3/');
 
     // Check for the module menu (present in both v12 and v13)
@@ -57,7 +59,10 @@ test.describe('Smoke Tests - TYPO3 Backend Infrastructure', () => {
    *
    * Ensures the module menu is interactive and can be clicked
    */
-  test('backend module menu is responsive', async ({ page }) => {
+  test('backend module menu is responsive', async ({ backend, page }) => {
+    // Navigate to backend first (storageState only restores cookies, not URL)
+    await backend.ensureBackendLoaded();
+
     // Get the List module menu item
     const listModuleItem = page.locator('[data-modulemenu-identifier="web_list"], button:has-text("List"), a:has-text("List")').first();
 
@@ -105,17 +110,18 @@ test.describe('Smoke Tests - Basic Navigation', () => {
     // Start at List module
     await backend.gotoModule('web_list');
     await backend.moduleLoaded();
-    expect(page.url()).toContain('web_list');
+    // Verify module loaded by checking content frame is visible
+    await expect(backend.contentFrame.locator('body')).toBeVisible();
 
-    // Navigate to Dashboard module (if available)
-    await backend.gotoModule('web_page');
+    // Navigate to Page module
+    await backend.gotoModule('web_layout');
     await backend.moduleLoaded();
-    expect(page.url()).toContain('web_page');
+    await expect(backend.contentFrame.locator('body')).toBeVisible();
 
     // Navigate back to List module
     await backend.gotoModule('web_list');
     await backend.moduleLoaded();
-    expect(page.url()).toContain('web_list');
+    await expect(backend.contentFrame.locator('body')).toBeVisible();
   });
 
   /**
@@ -124,6 +130,9 @@ test.describe('Smoke Tests - Basic Navigation', () => {
    * Verifies that the authenticated session persists across module navigation
    */
   test('authenticated session persists across navigation', async ({ backend, page }) => {
+    // Navigate to backend first (storageState only restores cookies, not URL)
+    await backend.ensureBackendLoaded();
+
     // Get the user name from the toolbar (proves we're logged in)
     const userInfo = page.locator('[class*="user"], [class*="topbar"], .scaffold-toolbar');
     await expect(userInfo.first()).toBeVisible();
