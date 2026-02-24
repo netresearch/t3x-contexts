@@ -12,12 +12,12 @@
         "contexts"
     ],
     "support": {
-        "issues": "https://github.com/netresearch/t3x-contexts/issues"
+        "issues": "https://github.com/netresearch/t3x-contexts/issues",
+        "source": "https://github.com/netresearch/t3x-contexts"
     },
     "authors": [
         {
             "name": "Netresearch DTT GmbH",
-            "email": "info@netresearch.de",
             "homepage": "https://www.netresearch.de",
             "role": "Developer"
         }
