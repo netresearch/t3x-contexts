@@ -37,8 +37,17 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
  */
 class RecordSettingsFormElement extends AbstractFormElement
 {
-    public function __construct(private readonly IconFactory $iconFactory)
+    /**
+     * Redeclared as non-readonly for TYPO3 12 compatibility
+     * (parent declares protected $iconFactory in TYPO3 12).
+     *
+     * @var IconFactory
+     */
+    protected $iconFactory;
+
+    public function injectIconFactory(IconFactory $iconFactory): void
     {
+        $this->iconFactory = $iconFactory;
     }
 
     /**
