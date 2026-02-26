@@ -19,7 +19,6 @@ namespace Netresearch\Contexts\Tests\Unit\Api;
 use Netresearch\Contexts\Api\Record;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
-use Netresearch\Contexts\Context\Setting;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 

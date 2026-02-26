@@ -38,9 +38,8 @@ abstract class TestBase extends TestCase
     protected function getAccessibleMethod(string $className, string $methodName): ReflectionMethod
     {
         $reflectedClass = new ReflectionClass($className);
-        $method = $reflectedClass->getMethod($methodName);
 
-        return $method;
+        return $reflectedClass->getMethod($methodName);
     }
 
     /**

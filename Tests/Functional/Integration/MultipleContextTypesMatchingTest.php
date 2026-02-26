@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Functional\Integration;
 
+use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\ServerRequest;
@@ -272,7 +273,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
 
         // Now with both dependencies matching, combination should be found
         $combinationContext = Container::get()->find('combination_test');
-        if ($combinationContext !== null) {
+        if ($combinationContext instanceof AbstractContext) {
             self::assertSame('combination', $combinationContext->getType());
         }
     }

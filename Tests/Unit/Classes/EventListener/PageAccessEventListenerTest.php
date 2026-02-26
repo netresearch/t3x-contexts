@@ -22,7 +22,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use Throwable;
-use TYPO3\CMS\Core\Http\ImmediateResponseException;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Frontend\Event\AfterPageAndLanguageIsResolvedEvent;
 use TYPO3\CMS\Frontend\Page\PageInformation;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -41,7 +41,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $typo3Version = new \TYPO3\CMS\Core\Information\Typo3Version();
+        $typo3Version = new Typo3Version();
         if ($typo3Version->getMajorVersion() < 13) {
             self::markTestSkipped('PageInformation is only available in TYPO3 v13+');
         }

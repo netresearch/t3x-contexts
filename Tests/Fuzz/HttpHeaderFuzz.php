@@ -21,7 +21,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
  * @param string $data Random fuzz input
  */
 return function (string $data): void {
-    if (strlen($data) === 0) {
+    if ($data === '') {
         return;
     }
 
@@ -43,21 +43,15 @@ return function (string $data): void {
 
         // Test pattern matching modes
         if ($actualValue !== null && $pattern !== '') {
-            // Simple presence check
-            $actualValue !== '';
-
-            // Value matching
-            $actualValue === $pattern;
-
             // Regex matching (with error suppression for invalid patterns)
             @preg_match('/' . $pattern . '/i', $actualValue);
         }
 
         // Clean up
         unset($_SERVER[$serverKey]);
-    } catch (TypeError $e) {
+    } catch (TypeError) {
         // Expected for malformed input
-    } catch (ValueError $e) {
+    } catch (ValueError) {
         // Expected for invalid values
     } finally {
         // Ensure cleanup

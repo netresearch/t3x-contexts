@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Api;
 
+use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 
 /**
@@ -48,7 +49,7 @@ class ContextMatcher
      */
     public static function getInstance(): self
     {
-        if (self::$instance === null) {
+        if (!self::$instance instanceof ContextMatcher) {
             self::$instance = new self();
         }
         return self::$instance;
@@ -77,7 +78,7 @@ class ContextMatcher
         }
 
         $context = Container::get()->find($strContext);
-        $this->arMatches[$strContext] = $context !== null;
+        $this->arMatches[$strContext] = $context instanceof AbstractContext;
 
         return $this->arMatches[$strContext];
     }

@@ -21,6 +21,7 @@ use Netresearch\Contexts\Service\IconService;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionClass;
 use TYPO3\CMS\Core\Imaging\Event\ModifyRecordOverlayIconIdentifierEvent;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -36,7 +37,7 @@ final class IconOverlayEventListenerTest extends UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $typo3Version = new \TYPO3\CMS\Core\Information\Typo3Version();
+        $typo3Version = new Typo3Version();
         if ($typo3Version->getMajorVersion() < 13) {
             self::markTestSkipped('ModifyRecordOverlayIconIdentifierEvent is only available in TYPO3 v13+');
         }

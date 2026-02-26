@@ -20,6 +20,7 @@ use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\ContextException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -48,7 +49,7 @@ class Factory implements LoggerAwareInterface
         $type = $arRow['type'];
 
         if (!$type || !\array_key_exists($type, $classMap)) {
-            if ($this->logger !== null) {
+            if ($this->logger instanceof LoggerInterface) {
                 $this->logger->warning('tx_contexts: No class found for context type "' . $type . '"');
             }
 

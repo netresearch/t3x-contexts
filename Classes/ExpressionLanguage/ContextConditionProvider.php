@@ -30,7 +30,6 @@ class ContextConditionProvider extends AbstractProvider
 {
     /**
      * ContextConditionProvider constructor.
-     * @return void
      */
     public function __construct()
     {

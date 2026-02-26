@@ -18,6 +18,10 @@ namespace Netresearch\Contexts\Tests\Unit\Context;
 
 use Netresearch\Contexts\Context\AbstractContext;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -35,7 +39,7 @@ class TypoScriptFrontendControllerStub extends TypoScriptFrontendController
     /**
      * @var FrontendUserAuthentication|null
      */
-    public $fe_user = null;
+    public $fe_user;
 
     /**
      * @var array<int, array<string, mixed>>
@@ -69,17 +73,17 @@ final class AbstractContextTest extends UnitTestCase
         parent::setUp();
 
         // Initialize runtime cache required by GeneralUtility::xml2array()
-        $cacheManager = new \TYPO3\CMS\Core\Cache\CacheManager();
+        $cacheManager = new CacheManager();
         $cacheManager->setCacheConfigurations([
             'runtime' => [
-                'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
-                'backend' => \TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class,
+                'frontend' => VariableFrontend::class,
+                'backend' => TransientMemoryBackend::class,
                 'options' => [],
                 'groups' => [],
             ],
         ]);
-        \TYPO3\CMS\Core\Utility\GeneralUtility::setSingletonInstance(
-            \TYPO3\CMS\Core\Cache\CacheManager::class,
+        GeneralUtility::setSingletonInstance(
+            CacheManager::class,
             $cacheManager,
         );
     }

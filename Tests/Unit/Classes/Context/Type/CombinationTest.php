@@ -502,7 +502,7 @@ final class CombinationTest extends TestBase
 
             public function __construct(int $uid, string $alias, bool $disabled, ?bool $matchResult)
             {
-                parent::__construct([]);
+                parent::__construct();
                 $this->uid = $uid;
                 $this->alias = $alias;
                 $this->disabled = $disabled;
@@ -526,7 +526,7 @@ final class CombinationTest extends TestBase
 
             public function __construct(int $uid, string $alias, string $expression)
             {
-                parent::__construct([]);
+                parent::__construct();
                 $this->uid = $uid;
                 $this->alias = $alias;
                 $this->expression = $expression;

@@ -50,7 +50,7 @@ class Container extends ArrayObject
      */
     public static function get(): Container
     {
-        if (static::$instance === null) {
+        if (!static::$instance instanceof Container) {
             static::$instance = new self();
         }
 

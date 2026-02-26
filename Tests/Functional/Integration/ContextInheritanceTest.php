@@ -230,7 +230,7 @@ final class ContextInheritanceTest extends FunctionalTestCase
 
         // Note: This will only work if geolocation extension is loaded
         // If not loaded, the context won't be instantiated properly
-        if ($invertedContext === null) {
+        if (!$invertedContext instanceof AbstractContext) {
             self::markTestSkipped('Inverted country context requires geolocation extension');
         }
 

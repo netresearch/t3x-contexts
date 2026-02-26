@@ -22,6 +22,7 @@ use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Query\Restriction\ContextRestriction;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
+use Symfony\Component\Yaml\Yaml;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
 use TYPO3\CMS\Core\Http\ServerRequest;
@@ -82,7 +83,7 @@ final class PageTest extends FunctionalTestCase
         ];
         file_put_contents(
             $siteConfigPath . '/config.yaml',
-            \Symfony\Component\Yaml\Yaml::dump($siteConfig, 99, 2),
+            Yaml::dump($siteConfig, 99, 2),
         );
 
         // Set up TypoScript template for frontend rendering

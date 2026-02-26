@@ -16,6 +16,9 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Architecture;
 
+use Netresearch\Contexts\Context\AbstractContext;
+use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
+use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException;
 use PHPat\Selector\Selector;
 use PHPat\Test\Builder\Rule;
 use PHPat\Test\PHPat;
@@ -36,12 +39,12 @@ final class LayerTest
         return PHPat::rule()
             ->classes(Selector::inNamespace('Netresearch\Contexts\Context\Type'))
             ->excluding(
-                Selector::classname('Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator'),
-                Selector::classname('Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException'),
+                Selector::classname(LogicalExpressionEvaluator::class),
+                Selector::classname(LogicalExpressionEvaluatorException::class),
             )
             ->shouldExtend()
             ->classes(
-                Selector::classname('Netresearch\Contexts\Context\AbstractContext'),
+                Selector::classname(AbstractContext::class),
             )
             ->because('All context types should extend AbstractContext');
     }

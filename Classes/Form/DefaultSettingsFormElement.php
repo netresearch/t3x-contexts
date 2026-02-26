@@ -18,7 +18,9 @@ namespace Netresearch\Contexts\Form;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
+use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
+use Netresearch\Contexts\Context\Setting;
 use Netresearch\Contexts\ContextException;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 
@@ -72,15 +74,15 @@ class DefaultSettingsFormElement extends AbstractFormElement
             $setting = null;
             $hasSetting = false;
 
-            if ($context !== null) {
+            if ($context instanceof AbstractContext) {
                 $setting = $context->getSetting($table, $configKey, 0);
                 $hasSetting = (bool) $setting;
             }
 
             if (
-                ($context === null)
+                (!$context instanceof AbstractContext)
                 || !$hasSetting
-                || (($setting !== null) && $setting->getEnabled())
+                || (($setting instanceof Setting) && $setting->getEnabled())
             ) {
                 $checked = 'checked="checked"';
             }

@@ -259,7 +259,7 @@ abstract class AbstractContext
      */
     final public function hasSetting(string $table, string $setting, int $uid): bool
     {
-        return $this->getSetting($table, $setting, $uid) !== null;
+        return $this->getSetting($table, $setting, $uid) instanceof Setting;
     }
 
     /**
@@ -427,7 +427,7 @@ abstract class AbstractContext
     protected function getSession()
     {
         $tsfe = $this->getTypoScriptFrontendController();
-        if ($tsfe === null) {
+        if (!$tsfe instanceof TypoScriptFrontendController) {
             return;
         }
 
@@ -458,7 +458,7 @@ abstract class AbstractContext
         }
 
         $tsfe = $this->getTypoScriptFrontendController();
-        if ($tsfe === null) {
+        if (!$tsfe instanceof TypoScriptFrontendController) {
             return $bMatch;
         }
 

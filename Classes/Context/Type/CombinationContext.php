@@ -67,11 +67,7 @@ class CombinationContext extends AbstractContext
                 }
 
                 if (isset($context)) {
-                    if ($context->getDisabled()) {
-                        $dependencies[$context->getUid()] = false;
-                    } else {
-                        $dependencies[$context->getUid()] = true;
-                    }
+                    $dependencies[$context->getUid()] = !$context->getDisabled();
                 }
 
                 // Missing contexts will be detected later in match method

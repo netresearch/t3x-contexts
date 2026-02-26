@@ -21,11 +21,11 @@ use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
+use Netresearch\Contexts\Context\Setting;
 use Netresearch\Contexts\ContextException;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * USER function to render the record settings fields
@@ -37,6 +37,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class RecordSettingsFormElement extends AbstractFormElement
 {
+    public function __construct(private readonly IconFactory $iconFactory)
+    {
+    }
+
     /**
      * Render the context settings field for a certain table
      *
@@ -99,15 +103,15 @@ class RecordSettingsFormElement extends AbstractFormElement
                     )
                     : null;
 
-                $bHasSetting = $bHasSetting || ($setting !== null);
+                $bHasSetting = $bHasSetting || ($setting instanceof Setting);
                 $contSettings .= '<td class="tx_contexts_setting">'
                     . '<select name="' . $namePre . '[' . $context->getUid() . '][' . $settingName . ']">'
                     . '<option value="">n/a</option>'
                     . '<option value="1"'
-                    . (($setting !== null) && $setting->getEnabled() ? ' selected="selected"' : '')
+                    . (($setting instanceof Setting) && $setting->getEnabled() ? ' selected="selected"' : '')
                     . '>Yes</option>'
                     . '<option value="0"'
-                    . (($setting !== null) && !$setting->getEnabled() ? ' selected="selected"' : '')
+                    . (($setting instanceof Setting) && !$setting->getEnabled() ? ' selected="selected"' : '')
                     . '>No</option>'
                     . '</select></td>';
             }
@@ -200,7 +204,7 @@ class RecordSettingsFormElement extends AbstractFormElement
     protected function getIcon(array $row): string
     {
         if (class_exists(IconFactory::class)) {
-            $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+            $iconFactory = $this->iconFactory;
 
             return (string) $iconFactory->getIconForRecord(
                 'tx_contexts_contexts',

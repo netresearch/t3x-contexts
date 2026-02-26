@@ -245,7 +245,7 @@ class LogicalExpressionEvaluator
             $this->getScope()->handleToken($token);
         }
 
-        if ($this->scopeContainer !== null) {
+        if ($this->scopeContainer instanceof stdClass) {
             foreach ($this->scopeContainer->scopes as $scope) {
                 $scope->precedenceShiftTokens([
                     self::T_AND,
@@ -328,7 +328,7 @@ class LogicalExpressionEvaluator
         foreach ($this->tokens as $token) {
             if ($token instanceof self) {
                 $str = $token->rebuild($unshifted);
-                if ($token->parentScope !== null) {
+                if ($token->parentScope instanceof LogicalExpressionEvaluator) {
                     $str = '(' . $str . ')';
                 }
                 if ($token->negated) {
@@ -359,7 +359,7 @@ class LogicalExpressionEvaluator
      */
     protected function pushScope(): void
     {
-        if ($this->scopeContainer === null) {
+        if (!$this->scopeContainer instanceof stdClass) {
             return;
         }
 
@@ -377,7 +377,7 @@ class LogicalExpressionEvaluator
      */
     protected function popScope(): void
     {
-        if ($this->scopeContainer !== null && !empty($this->scopeContainer->keys)) {
+        if ($this->scopeContainer instanceof stdClass && !empty($this->scopeContainer->keys)) {
             array_pop($this->scopeContainer->keys);
         }
     }
@@ -388,7 +388,7 @@ class LogicalExpressionEvaluator
      */
     protected function getScope(): LogicalExpressionEvaluator
     {
-        if ($this->scopeContainer === null || empty($this->scopeContainer->keys)) {
+        if (!$this->scopeContainer instanceof stdClass || empty($this->scopeContainer->keys)) {
             return $this;
         }
 
@@ -417,7 +417,7 @@ class LogicalExpressionEvaluator
                 $scope = $this->getScope();
                 $this->popScope();
 
-                if (($scope->parentScope !== null) && ($scope->parentScope->parentScope === null)) {
+                if (($scope->parentScope instanceof LogicalExpressionEvaluator) && (!$scope->parentScope->parentScope instanceof LogicalExpressionEvaluator)) {
                     throw new LogicalExpressionEvaluatorException(
                         'Found not opened closing parentheses',
                         6590670096,
@@ -431,7 +431,7 @@ class LogicalExpressionEvaluator
                     );
                 }
 
-                if ($this->parentScope !== null) {
+                if ($this->parentScope instanceof LogicalExpressionEvaluator) {
                     $this->parentScope->pushToken($scope);
                 }
 
@@ -458,8 +458,8 @@ class LogicalExpressionEvaluator
                 }
 
                 if (
-                    ($this->getScope()->parentScope !== null)
-                    && ($this->getScope()->parentScope->parentScope !== null)
+                    ($this->getScope()->parentScope instanceof LogicalExpressionEvaluator)
+                    && ($this->getScope()->parentScope->parentScope instanceof LogicalExpressionEvaluator)
                 ) {
                     throw new LogicalExpressionEvaluatorException(
                         'Missing closing parentheses',

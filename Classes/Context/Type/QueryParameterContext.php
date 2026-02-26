@@ -19,6 +19,7 @@ namespace Netresearch\Contexts\Context\Type;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Service\FrontendControllerService;
+use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -91,13 +92,13 @@ class QueryParameterContext extends AbstractContext
     {
         // Try to get from PSR-7 request first (preferred in TYPO3 v12+)
         $request = Container::get()->getRequest();
-        if ($request !== null) {
+        if ($request instanceof ServerRequestInterface) {
             return $request->getQueryParams();
         }
 
         // Fallback to GLOBALS['TYPO3_REQUEST'] if available
         $globalRequest = $GLOBALS['TYPO3_REQUEST'] ?? null;
-        if ($globalRequest instanceof \Psr\Http\Message\ServerRequestInterface) {
+        if ($globalRequest instanceof ServerRequestInterface) {
             return $globalRequest->getQueryParams();
         }
 

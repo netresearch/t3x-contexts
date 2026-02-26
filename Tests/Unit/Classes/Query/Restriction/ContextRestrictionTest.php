@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Query\Restriction;
 
+use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Query\Restriction\ContextRestriction;
 use PHPUnit\Framework\Attributes\Test;
@@ -304,7 +305,6 @@ final class ContextRestrictionTest extends UnitTestCase
         $expressionBuilder = $this->createMock(ExpressionBuilder::class);
         $compositeExpression = $this->createMock(CompositeExpression::class);
         $orExpression = $this->createMock(CompositeExpression::class);
-        $andExpression = $this->createMock(CompositeExpression::class);
 
         // Should build enable constraints (isNull, eq on enable column)
         // AND disable constraints (isNull, eq on disable column)
@@ -504,7 +504,7 @@ final class ContextRestrictionTest extends UnitTestCase
      */
     private function createMockContext(int $uid): object
     {
-        $context = $this->getMockBuilder(\Netresearch\Contexts\Context\AbstractContext::class)
+        $context = $this->getMockBuilder(AbstractContext::class)
             ->disableOriginalConstructor()
             ->getMock();
 

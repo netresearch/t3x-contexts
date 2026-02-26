@@ -131,7 +131,7 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         // Get settings for a record that has no specific settings
         // but there's a default (uid=0) setting
-        $settings = $context->getSettings('pages', 999);
+        $context->getSettings('pages', 999);
 
         // The default (uid=0) setting should also be loaded into cache
         $defaultSettings = $context->getSettings('pages', 0);
@@ -342,7 +342,7 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
         $setting = $context->getSetting('pages', 'tx_contexts', 100, $row);
 
         // When flat columns exist in row, Setting::fromFlatData is used
-        if ($setting !== null) {
+        if ($setting instanceof Setting) {
             self::assertInstanceOf(Setting::class, $setting);
         }
     }

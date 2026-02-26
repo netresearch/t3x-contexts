@@ -344,14 +344,12 @@ class Configuration
             ];
             $arFlatColumns = self::getFlatColumns($table);
 
-            if (\count($arFlatColumns) > 0) {
-                // add passthrough fields to keep settings when copying records
-                foreach ($arFlatColumns as $arSetting) {
-                    foreach ($arSetting as $columnName) {
-                        $arColumns[$columnName] = [
-                            'config' => ['type' => 'passthrough'],
-                        ];
-                    }
+            // add passthrough fields to keep settings when copying records
+            foreach ($arFlatColumns as $arSetting) {
+                foreach ($arSetting as $columnName) {
+                    $arColumns[$columnName] = [
+                        'config' => ['type' => 'passthrough'],
+                    ];
                 }
             }
 

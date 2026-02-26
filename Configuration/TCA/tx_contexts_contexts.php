@@ -119,7 +119,7 @@ return [
     ],
     'types' => [
         '0' => [
-            'showitem' => '--div--;' . 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.general'
+            'showitem' => '--div--;LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.general'
                 . ',title'
                 . ',--palette--;' . 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.visibility;visibility'
                 . ',alias,type,type_conf,invert,'

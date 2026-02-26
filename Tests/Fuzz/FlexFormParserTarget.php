@@ -15,21 +15,25 @@
 declare(strict_types=1);
 
 use Netresearch\Contexts\Context\AbstractContext;
+use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 // Initialize TYPO3 cache manager required by GeneralUtility::xml2array()
-$cacheManager = new TYPO3\CMS\Core\Cache\CacheManager();
+$cacheManager = new CacheManager();
 $cacheManager->setCacheConfigurations([
     'runtime' => [
-        'frontend' => TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
-        'backend' => TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend::class,
+        'frontend' => VariableFrontend::class,
+        'backend' => TransientMemoryBackend::class,
         'options' => [],
         'groups' => [],
     ],
 ]);
-TYPO3\CMS\Core\Utility\GeneralUtility::setSingletonInstance(
-    TYPO3\CMS\Core\Cache\CacheManager::class,
+GeneralUtility::setSingletonInstance(
+    CacheManager::class,
     $cacheManager,
 );
 
@@ -59,7 +63,6 @@ $contextClass = new class ([
         // Use reflection to set the type_conf and trigger re-parsing
         $reflection = new ReflectionClass(AbstractContext::class);
         $arRowProp = $reflection->getProperty('arRow');
-        $arRowProp->setAccessible(true);
 
         $arRow = $arRowProp->getValue($this);
         $arRow['type_conf'] = $xml;
@@ -67,7 +70,6 @@ $contextClass = new class ([
 
         // Reset the parsed config
         $arFlexProp = $reflection->getProperty('arFlex');
-        $arFlexProp->setAccessible(true);
         $arFlexProp->setValue($this, null);
     }
 

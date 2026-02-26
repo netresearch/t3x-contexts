@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Check if a session variable is set or not
@@ -37,7 +38,7 @@ class SessionContext extends AbstractContext
      */
     public function match(array $arDependencies = []): bool
     {
-        if ($this->getTypoScriptFrontendController() === null) {
+        if (!$this->getTypoScriptFrontendController() instanceof TypoScriptFrontendController) {
             return false;
         }
 

@@ -22,6 +22,7 @@ use Netresearch\Contexts\Context\Type\QueryParameterContext;
 use Netresearch\Contexts\ContextException;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\LoggerInterface;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -243,7 +244,7 @@ final class FactoryTest extends UnitTestCase
 /**
  * Stub class that implements SingletonInterface (not allowed for contexts).
  */
-class SingletonContextStub extends AbstractContext implements \TYPO3\CMS\Core\SingletonInterface
+class SingletonContextStub extends AbstractContext implements SingletonInterface
 {
     public function match(array $arDependencies = []): bool
     {
@@ -256,7 +257,4 @@ class SingletonContextStub extends AbstractContext implements \TYPO3\CMS\Core\Si
  */
 class InvalidContextStub
 {
-    public function __construct(array $row)
-    {
-    }
 }

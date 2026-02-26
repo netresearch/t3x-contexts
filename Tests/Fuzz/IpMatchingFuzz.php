@@ -24,7 +24,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
  */
 return function (string $data): void {
     // Skip empty input
-    if (strlen($data) === 0) {
+    if ($data === '') {
         return;
     }
 
@@ -44,11 +44,11 @@ return function (string $data): void {
             // Test match with fuzzed IP and range
             $matcher->match($testIp, $ipRange);
         }
-    } catch (TypeError $e) {
+    } catch (TypeError) {
         // Type errors are expected for malformed input
-    } catch (ValueError $e) {
+    } catch (ValueError) {
         // Value errors are expected for invalid ranges
-    } catch (InvalidArgumentException $e) {
+    } catch (InvalidArgumentException) {
         // Invalid argument exceptions are expected
     } finally {
         // Clean up

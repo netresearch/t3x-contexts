@@ -223,7 +223,7 @@ class DataHandlerService
         }
 
         if (\count($values) > 0) {
-            foreach ($values as $colname => &$val) {
+            foreach ($values as &$val) {
                 $val = implode(',', $val);
             }
 
