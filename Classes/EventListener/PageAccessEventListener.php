@@ -21,6 +21,7 @@ use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Http\ImmediateResponseException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Event\AfterPageAndLanguageIsResolvedEvent;
 
 /**
@@ -40,14 +41,27 @@ final readonly class PageAccessEventListener
 
     public function __invoke(AfterPageAndLanguageIsResolvedEvent $event): void
     {
-        $pageInformation = $event->getPageInformation();
-        $pageRecord = $pageInformation->getPageRecord();
+        // TYPO3 13+: getPageInformation(), TYPO3 12: getController()
+        if (method_exists($event, 'getPageInformation')) {
+            $pageInformation = $event->getPageInformation();
+            $pageRecord = $pageInformation->getPageRecord();
 
-        if ($pageRecord === []) {
-            return;
+            if ($pageRecord === []) {
+                return;
+            }
+
+            $rootLine = $pageInformation->getRootLine();
+        } else {
+            /** @var TypoScriptFrontendController $controller */
+            $controller = $event->getController(); // @phpstan-ignore method.notFound
+            $pageRecord = $controller->page ?? [];
+
+            if ($pageRecord === []) {
+                return;
+            }
+
+            $rootLine = $controller->rootLine ?? [];
         }
-
-        $rootLine = $pageInformation->getRootLine();
 
         // Check if page is accessible based on context
         $result = $this->frontendControllerService->checkEnableFieldsForRootLine($rootLine);

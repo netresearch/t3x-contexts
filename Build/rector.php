@@ -20,6 +20,7 @@ use Rector\DeadCode\Rector\StaticCall\RemoveParentCallWithoutParentRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
+use Ssch\TYPO3Rector\CodeQuality\General\InjectMethodToConstructorInjectionRector;
 use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
 
@@ -71,6 +72,13 @@ return static function (RectorConfig $rectorConfig): void {
         // Skip removing unused event listener parameters - PSR-14 listeners must accept the event
         RemoveUnusedPublicMethodParameterRector::class => [
             __DIR__ . '/../Classes/EventListener',
+        ],
+
+        // Skip inject-to-constructor conversion for RecordSettingsFormElement
+        // because TYPO3 12 AbstractFormElement declares protected $iconFactory
+        // which conflicts with constructor promotion
+        InjectMethodToConstructorInjectionRector::class => [
+            __DIR__ . '/../Classes/Form/RecordSettingsFormElement.php',
         ],
     ]);
 };

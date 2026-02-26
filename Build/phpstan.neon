@@ -53,9 +53,11 @@ parameters:
 
         # TYPO3 13+ attributes and events not available in TYPO3 12
         - '#Attribute class TYPO3\\CMS\\Core\\Attribute\\AsEventListener does not exist#'
-        - '#Class TYPO3\\CMS\\Core\\Imaging\\Event\\ModifyRecordOverlayIconIdentifierEvent not found#'
+        - '#.*class TYPO3\\CMS\\Core\\Imaging\\Event\\ModifyRecordOverlayIconIdentifierEvent not found#'
         - '#.*unknown class TYPO3\\CMS\\Core\\Imaging\\Event\\ModifyRecordOverlayIconIdentifierEvent#'
         - '#.*invalid type TYPO3\\CMS\\Core\\Imaging\\Event\\ModifyRecordOverlayIconIdentifierEvent#'
+        - '#.*class TYPO3\\CMS\\Frontend\\Page\\PageInformation not found#'
+        - '#.*unknown class TYPO3\\CMS\\Frontend\\Page\\PageInformation#'
 
         # TYPO3 v12/v13 API changes - to be addressed for full compatibility
         - '#Property TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController::\$fe_user .* on left side of \?\? is not nullable#'
@@ -65,6 +67,11 @@ parameters:
         - '#Call to an undefined static method TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::allowTableOnStandardPages#'
         - '#Call to an undefined static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility::_GET#'
         - '#Unable to resolve the template type T in call to static method#'
+        - '#Access to deprecated property \$nodeFactory#'
+        - '#Access to deprecated property \$iconFactory#'
+        - '#PHPDoc type .* of property .* is not the same as PHPDoc type .* of overridden property#'
+        # Runtime version check for TYPO3 12/13 compatibility
+        - '#Call to function method_exists\(\) with .* will always evaluate to true#'
         # Doctrine DBAL 4.x type parameter changes (int → ParameterType enum)
         - '~Parameter \#2 \$type of method .* expects .*, int given~'
 
