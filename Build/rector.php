@@ -15,6 +15,7 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPublicMethodParameterRector;
 use Rector\DeadCode\Rector\StaticCall\RemoveParentCallWithoutParentRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Set\ValueObject\LevelSetList;
@@ -66,5 +67,10 @@ return static function (RectorConfig $rectorConfig): void {
 
         // Skip removing parent calls - may be needed for TYPO3 hooks
         RemoveParentCallWithoutParentRector::class,
+
+        // Skip removing unused event listener parameters - PSR-14 listeners must accept the event
+        RemoveUnusedPublicMethodParameterRector::class => [
+            __DIR__ . '/../Classes/EventListener',
+        ],
     ]);
 };

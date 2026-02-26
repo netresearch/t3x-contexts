@@ -29,11 +29,4 @@
             <directory suffix=".php">../../Classes/</directory>
         </include>
     </source>
-
-    <coverage>
-        <report>
-            <clover outputFile="../../.Build/coverage/functional/clover.xml"/>
-            <html outputDirectory="../../.Build/coverage/functional/html"/>
-        </report>
-    </coverage>
 </phpunit>

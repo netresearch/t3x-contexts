@@ -51,7 +51,14 @@ parameters:
         # PHPDoc type issues with Doctrine exceptions
         - '#PHPDoc tag @throws with type Doctrine\\DBAL\\.*Exception is not subtype of Throwable#'
 
+        # TYPO3 13+ attributes and events not available in TYPO3 12
+        - '#Attribute class TYPO3\\CMS\\Core\\Attribute\\AsEventListener does not exist#'
+        - '#Class TYPO3\\CMS\\Core\\Imaging\\Event\\ModifyRecordOverlayIconIdentifierEvent not found#'
+        - '#.*unknown class TYPO3\\CMS\\Core\\Imaging\\Event\\ModifyRecordOverlayIconIdentifierEvent#'
+        - '#.*invalid type TYPO3\\CMS\\Core\\Imaging\\Event\\ModifyRecordOverlayIconIdentifierEvent#'
+
         # TYPO3 v12/v13 API changes - to be addressed for full compatibility
+        - '#Property TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController::\$fe_user .* on left side of \?\? is not nullable#'
         - '#deprecated class TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController#'
         - '#Call to an undefined method TYPO3\\CMS\\Core\\Database\\Query\\QueryBuilder::execute#'
         - '#Access to an undefined property TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController::\$fe_user#'
@@ -109,6 +116,10 @@ parameters:
         # Expressions in fuzz tests for analysis
         -
             message: '#does not do anything#'
+            paths:
+                - ../Tests/Fuzz/*
+        -
+            message: '#on a separate line has no effect#'
             paths:
                 - ../Tests/Fuzz/*
 

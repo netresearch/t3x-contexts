@@ -25,11 +25,4 @@
             <directory suffix=".php">../../Classes/Domain/Model/</directory>
         </exclude>
     </source>
-
-    <coverage>
-        <report>
-            <clover outputFile="../../.Build/coverage/unit/clover.xml"/>
-            <html outputDirectory="../../.Build/coverage/unit/html"/>
-        </report>
-    </coverage>
 </phpunit>
