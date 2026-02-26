@@ -46,16 +46,17 @@ https://docs.contexts.ddev.site/         # Local documentation
 
 ```bash
 # Pre-commit checks (automatic via GrumPHP)
-composer lint             # PHP-CS-Fixer (PSR-12 + strict types)
-composer analyze          # PHPStan level 9
+composer ci:test:php:cgl      # PHP-CS-Fixer (PSR-12 + strict types)
+composer ci:test:php:phpstan  # PHPStan level 9
 
 # Testing
-composer test:unit        # PHPUnit unit tests
-composer test:functional  # PHPUnit functional tests (needs DB)
-composer test:coverage    # Coverage report (needs PCOV/Xdebug)
+composer ci:test:php:unit        # PHPUnit unit tests
+composer ci:test:php:functional  # PHPUnit functional tests (needs DB)
+composer test:coverage           # Coverage report (needs PCOV/Xdebug)
 
-# Full CI suite
-composer ci               # Run all checks (lint, analyze, test)
+# Fix commands (for local development)
+composer ci:cgl               # Fix code style
+composer ci:rector:fix        # Apply Rector fixes
 ```
 
 ## Development
@@ -66,9 +67,9 @@ composer ci               # Run all checks (lint, analyze, test)
 2. **Make changes** following conventions in this file
 3. **Run local checks** before committing:
    ```bash
-   composer lint            # Fix code style
-   composer analyze         # Static analysis
-   composer test:unit       # Unit tests
+   composer ci:cgl                # Fix code style
+   composer ci:test:php:phpstan   # Static analysis
+   composer ci:test:php:unit      # Unit tests
    ```
 4. **Commit** using conventional commits format
 5. **Push** and create PR - CI will run full test suite

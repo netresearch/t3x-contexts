@@ -71,18 +71,18 @@ $qb->createNamedParameter($uid, \PDO::PARAM_INT); // DON'T USE
 
 ### Static Analysis
 - **PHPStan**: Level 9 analysis with strict rules (see `Build/phpstan.neon`)
-- Run: `composer analyze`
+- Run: `composer ci:test:php:phpstan`
 - Address all PHPStan errors before committing
 
 ### Code Style
 - **PHP-CS-Fixer**: PER-CS + PHP 8.2 migration rules
 - **PHP_CodeSniffer**: PSR-12 standard enforcement
-- Run: `composer lint` (check) or `composer lint:fix` (auto-fix)
+- Run: `composer ci:test:php:cgl` (check) or `composer ci:cgl` (auto-fix)
 
 ### Testing
 - **PHPUnit**: 10.5+/11/12 supported
-- **Unit Tests**: `composer test:unit`
-- **Functional Tests**: `composer test:functional` (requires database)
+- **Unit Tests**: `composer ci:test:php:unit`
+- **Functional Tests**: `composer ci:test:php:functional` (requires database)
 - **Coverage**: `composer test:coverage`
 - **Mutation Testing**: `composer test:mutation` (Infection)
 - **Fuzz Testing**: See `Tests/Fuzz/`
@@ -163,10 +163,10 @@ declare(strict_types=1);
 
 ### Build Process
 1. `composer install` - Install dependencies
-2. `composer lint` - Check code style
-3. `composer analyze` - Run static analysis
-4. `composer test:unit` - Run unit tests
-5. `composer test:functional` - Run functional tests (requires database)
+2. `composer ci:test:php:cgl` - Check code style
+3. `composer ci:test:php:phpstan` - Run static analysis
+4. `composer ci:test:php:unit` - Run unit tests
+5. `composer ci:test:php:functional` - Run functional tests (requires database)
 
 ### DDEV Environment
 ```bash

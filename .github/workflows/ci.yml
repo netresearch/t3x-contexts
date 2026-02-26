@@ -15,6 +15,3 @@ jobs:
       run-functional-tests: true
       functional-test-db: mysql
       db-image: 'mysql:9.6'
-      cgl-command: 'composer lint'
-      phpstan-command: 'composer analyze'
-      rector-command: 'composer rector'

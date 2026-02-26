@@ -39,8 +39,8 @@ export typo3DatabasePassword=root
 composer test
 
 # Run specific suites
-composer test:unit           # Unit tests only (~fast)
-composer test:functional     # Functional tests (~slower, needs DB)
+composer ci:test:php:unit           # Unit tests only (~fast)
+composer ci:test:php:functional     # Functional tests (~slower, needs DB)
 
 # Coverage (requires PCOV or Xdebug)
 composer test:coverage

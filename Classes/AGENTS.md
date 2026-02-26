@@ -27,9 +27,9 @@ ddev start && ddev install-v13
 ## Build & Tests
 
 ```bash
-composer lint              # PHP_CodeSniffer
-composer analyze           # PHPStan level 9
-composer test:unit         # Unit tests for this code
+composer ci:test:php:cgl      # PHP-CS-Fixer
+composer ci:test:php:phpstan  # PHPStan level 9
+composer ci:test:php:unit     # Unit tests for this code
 ```
 
 ## Code Style & Conventions
@@ -90,8 +90,8 @@ if ($tsfe instanceof TypoScriptFrontendController) {
 
 ## PR/Commit Checklist
 
-- [ ] `composer lint` passes
-- [ ] `composer analyze` passes
+- [ ] `composer ci:test:php:cgl` passes
+- [ ] `composer ci:test:php:phpstan` passes
 - [ ] Unit tests added/updated for new functionality
 - [ ] No `PDO::PARAM_*` constants (use `Connection::PARAM_*`)
 - [ ] Strict types declared

@@ -23,10 +23,10 @@ Fixes #
 
 <!-- Describe the tests you ran -->
 
-- [ ] Unit tests pass (`composer test:unit`)
-- [ ] Functional tests pass (`composer test:functional`)
-- [ ] Static analysis passes (`composer analyze`)
-- [ ] Code style passes (`composer lint`)
+- [ ] Unit tests pass (`composer ci:test:php:unit`)
+- [ ] Functional tests pass (`composer ci:test:php:functional`)
+- [ ] Static analysis passes (`composer ci:test:php:phpstan`)
+- [ ] Code style passes (`composer ci:test:php:cgl`)
 
 ## Checklist
 

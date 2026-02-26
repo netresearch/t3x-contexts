@@ -190,10 +190,10 @@ if (ContextMatcher::getInstance()->matches('mobile')) {
 composer install
 
 # Run unit tests
-composer test:unit
+composer ci:test:php:unit
 
 # Run functional tests (requires database)
-composer test:functional
+composer ci:test:php:functional
 
 # Run with coverage
 composer test:coverage
@@ -203,13 +203,13 @@ composer test:coverage
 
 ```bash
 # Static analysis (level 9)
-composer analyze
+composer ci:test:php:phpstan
 
 # Code style check
-composer lint
+composer ci:test:php:cgl
 
 # Code style fix
-composer lint:fix
+composer ci:cgl
 ```
 
 | Tool | Version | Purpose |
