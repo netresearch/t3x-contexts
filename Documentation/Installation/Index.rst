@@ -15,7 +15,7 @@ Requirements
    :header: "Extension Version", "TYPO3", "PHP"
    :widths: 20, 30, 30
 
-   "4.x", "12.4 LTS, 13.4 LTS", "8.2 - 8.4"
+   "4.x", "12.4 LTS, 13.4 LTS", "8.2 - 8.5"
    "3.x", "11.5 LTS", "7.4 - 8.1"
 
 The recommended way to install this extension is via Composer.
