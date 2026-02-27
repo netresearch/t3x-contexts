@@ -1,0 +1,43 @@
+name: Greetings
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  greeting:
+    name: Greet Contributors
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/first-interaction@1c4688942c71f71d4f5502a26ea67c331730fa4d # v3.1.0
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_message: |
+            Thanks for opening your first issue! We appreciate you taking the time to report this.
+
+            A maintainer will review your issue soon. In the meantime, please make sure you've:
+            - Checked the [documentation](https://docs.typo3.org/p/netresearch/contexts/main/en-us/)
+            - Searched for [existing issues](https://github.com/netresearch/t3x-contexts/issues)
+          pr_message: |
+            Thanks for your first pull request! We're excited to have you contribute.
+
+            A maintainer will review your PR soon. Please ensure:
+            - All CI checks pass
+            - Your code follows the project's coding standards
+            - Tests are included for new functionality
+
+            Check our [Contributing Guide](https://github.com/netresearch/t3x-contexts/blob/main/CONTRIBUTING.md) for more details.
