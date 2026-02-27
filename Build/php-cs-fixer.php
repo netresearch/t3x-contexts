@@ -21,6 +21,7 @@ $finder = PhpCsFixer\Finder::create()
         '.ddev',
         'Build',
         'public',
+        'var',
         'vendor',
     ])
     ->notPath([
@@ -33,7 +34,7 @@ return (new PhpCsFixer\Config())
         // PER Coding Style 3.0 (modern PHP coding standard)
         '@PER-CS' => true,
 
-        // Override: Keep braces on separate lines (GrumPHP/PHP_CodeSniffer compatibility)
+        // Override: Keep braces on separate lines (PHP_CodeSniffer compatibility)
         'single_line_empty_body' => false,
 
         // PHP 8.2+ features

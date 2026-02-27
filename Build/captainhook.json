@@ -1,0 +1,55 @@
+{
+    "config": {
+        "bootstrap": "../vendor/autoload.php"
+    },
+    "commit-msg": {
+        "enabled": true,
+        "actions": [
+            {
+                "action": "\\CaptainHook\\App\\Hook\\Message\\Action\\Regex",
+                "options": {
+                    "regex": "#^(feat|fix|chore|docs|test|refactor|style|ci|perf|build|revert)(\\(.+\\))?: .{1,72}$#m"
+                },
+                "conditions": []
+            }
+        ]
+    },
+    "pre-commit": {
+        "enabled": true,
+        "actions": [
+            {
+                "action": "composer ci:test:php:cgl"
+            },
+            {
+                "action": "composer ci:test:php:phpstan"
+            },
+            {
+                "action": "composer ci:test:php:unit"
+            }
+        ]
+    },
+    "pre-push": {
+        "enabled": true,
+        "actions": [
+            {
+                "action": "composer ci:test:php:unit"
+            }
+        ]
+    },
+    "post-merge": {
+        "enabled": true,
+        "actions": [
+            {
+                "action": "composer install"
+            }
+        ]
+    },
+    "post-checkout": {
+        "enabled": true,
+        "actions": [
+            {
+                "action": "composer install"
+            }
+        ]
+    }
+}

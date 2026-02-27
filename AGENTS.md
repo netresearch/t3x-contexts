@@ -45,7 +45,7 @@ https://docs.contexts.ddev.site/         # Local documentation
 ## Commands
 
 ```bash
-# Pre-commit checks (automatic via GrumPHP)
+# Pre-commit checks (automatic via CaptainHook)
 composer ci:test:php:cgl      # PHP-CS-Fixer (PSR-12 + strict types)
 composer ci:test:php:phpstan  # PHPStan level 10
 
@@ -91,9 +91,9 @@ Run tests directly via:
 | Tool | Config | Purpose |
 |------|--------|---------|
 | PHP-CS-Fixer | `.php-cs-fixer.dist.php` | Code style (PSR-12) |
-| PHPStan | `Build/phpstan.neon` | Static analysis (level 9) |
+| PHPStan | `Build/phpstan.neon` | Static analysis (level 10) |
 | PHPUnit | `Build/phpunit/*.xml` | Unit & functional tests |
-| GrumPHP | `grumphp.yml` | Pre-commit hooks |
+| CaptainHook | `Build/captainhook.json` | Git hooks (pre-commit, commit-msg) |
 | Rector | `rector.php` | Automated refactoring |
 | Fractor | `fractor.php` | TYPO3-specific migrations |
 
@@ -109,7 +109,7 @@ Run tests directly via:
 - **Conventional Commits**: `type(scope): subject`
 - **Ask before**: heavy dependencies, architecture changes, new context types
 - **Never commit** secrets, credentials, or PII
-- **GrumPHP** runs pre-commit checks automatically
+- **CaptainHook** runs pre-commit checks automatically
 - **Database queries**: Always use `Connection::PARAM_*` (not `PDO::PARAM_*`)
 - **Testing**: Functional tests need database credentials (auto-detected in DDEV)
 
