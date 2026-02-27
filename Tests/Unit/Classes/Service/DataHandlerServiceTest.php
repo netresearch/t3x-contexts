@@ -433,10 +433,10 @@ final class DataHandlerServiceTest extends TestCase
             ->method('insert')
             ->with(
                 'tx_contexts_settings',
-                self::callback(static function (array $data): bool {
+                self::callback(
                     // Should use resolved id (42), not the string 'NEW123'
-                    return $data['context_uid'] === 42;
-                }),
+                    static fn(array $data): bool => $data['context_uid'] === 42,
+                ),
             );
 
         // Act
@@ -810,14 +810,14 @@ final class DataHandlerServiceTest extends TestCase
             ->method('update')
             ->with(
                 'pages',
-                self::callback(static function (array $values): bool {
+                self::callback(
                     // tx_contexts_enable should contain context 1 (set to '1')
                     // tx_contexts_disable should contain context 2 (set to '0')
-                    return isset($values['tx_contexts_enable'])
-                        && isset($values['tx_contexts_disable'])
-                        && str_contains((string) $values['tx_contexts_enable'], '1')
-                        && str_contains((string) $values['tx_contexts_disable'], '2');
-                }),
+                    static fn(array $values): bool => isset($values['tx_contexts_enable'])
+                    && isset($values['tx_contexts_disable'])
+                    && str_contains((string) $values['tx_contexts_enable'], '1')
+                    && str_contains((string) $values['tx_contexts_disable'], '2'),
+                ),
                 ['uid' => 50],
             );
 
@@ -903,11 +903,11 @@ final class DataHandlerServiceTest extends TestCase
             ->method('update')
             ->with(
                 'pages',
-                self::callback(static function (array $values): bool {
+                self::callback(
                     // Both flat columns should be empty strings
-                    return $values['tx_contexts_disable'] === ''
-                        && $values['tx_contexts_enable'] === '';
-                }),
+                    static fn(array $values): bool => $values['tx_contexts_disable'] === ''
+                    && $values['tx_contexts_enable'] === '',
+                ),
                 ['uid' => 70],
             );
 

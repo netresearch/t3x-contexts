@@ -16,7 +16,9 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Form;
 
+use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
+use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
 use Netresearch\Contexts\Form\CombinationFormElement;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionClass;
@@ -145,7 +147,7 @@ final class CombinationFormElementTest extends UnitTestCase
             'inlineData' => [],
         ];
 
-        $mockContext = $this->createMock(\Netresearch\Contexts\Context\AbstractContext::class);
+        $mockContext = $this->createMock(AbstractContext::class);
         $mockContext->method('getAlias')->willReturn('mobile');
 
         $element = $this->buildTestableElement(
@@ -323,7 +325,7 @@ final class CombinationFormElementTest extends UnitTestCase
             'inlineData' => [],
         ];
 
-        $mockContext = $this->createMock(\Netresearch\Contexts\Context\AbstractContext::class);
+        $mockContext = $this->createMock(AbstractContext::class);
         $mockContext->method('getAlias')->willReturn('found');
 
         $element = $this->buildTestableElement(
@@ -378,11 +380,7 @@ final class CombinationFormElementTest extends UnitTestCase
             ],
         ];
 
-        $element = new TestableCombinationFormElement($textElementResult, $languageService);
-        $element->injectNodeFactory($nodeFactory);
-        $element->setData($data);
-
-        return $element;
+        return new TestableCombinationFormElement($textElementResult, $languageService, $nodeFactory, $data);
     }
 }
 
@@ -394,13 +392,19 @@ final class CombinationFormElementTest extends UnitTestCase
  */
 class TestableCombinationFormElement extends CombinationFormElement
 {
-    private array $textElementResult;
+    private readonly array $textElementResult;
 
-    private LanguageService $mockLanguageService;
+    private readonly LanguageService $mockLanguageService;
 
-    public function __construct(array $textElementResult, LanguageService $mockLanguageService)
-    {
-        // Do not call parent constructor — AbstractFormElement has no constructor
+    public function __construct(
+        array $textElementResult,
+        LanguageService $mockLanguageService,
+        NodeFactory $nodeFactory,
+        array $data,
+    ) {
+        // Set parent properties directly — works for both v12 (constructor) and v13 (setter)
+        $this->nodeFactory = $nodeFactory;
+        $this->data = $data;
         $this->textElementResult = $textElementResult;
         $this->mockLanguageService = $mockLanguageService;
     }
@@ -409,7 +413,7 @@ class TestableCombinationFormElement extends CombinationFormElement
     {
         // Stub GeneralUtility::makeInstance(TextElement) by using a mock inline
         $textElementMock = new class ($this->textElementResult) {
-            private array $result;
+            private readonly array $result;
 
             public function __construct(array $result)
             {
@@ -422,7 +426,7 @@ class TestableCombinationFormElement extends CombinationFormElement
             }
         };
 
-        $evaluator = new \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator();
+        $evaluator = new LogicalExpressionEvaluator();
         $tokens = $evaluator->tokenize($this->data['parameterArray']['itemFormElValue']);
 
         $notFound = [];
@@ -431,7 +435,7 @@ class TestableCombinationFormElement extends CombinationFormElement
         foreach ($tokens as $token) {
             if (
                 \is_array($token)
-                && $token[0] === \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator::T_VAR
+                && $token[0] === LogicalExpressionEvaluator::T_VAR
             ) {
                 // Use the real Container singleton (which has been pre-loaded in the test)
                 $contexts = Container::get();
@@ -448,7 +452,7 @@ class TestableCombinationFormElement extends CombinationFormElement
                 }
             } elseif (
                 \is_array($token)
-                && ($token[0] === \Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator::T_UNKNOWN)
+                && ($token[0] === LogicalExpressionEvaluator::T_UNKNOWN)
             ) {
                 $unknownTokens[] = $token[1];
             }

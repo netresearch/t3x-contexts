@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Form;
 
+use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Context\Setting;
@@ -475,7 +476,6 @@ final class RecordSettingsFormElementTest extends UnitTestCase
             tableName: 'tt_content',
             settings: ['tx_contexts' => ['label' => 'LLL:visibility']],
             contexts: [5 => $context],
-            resolvedSetting: null,
         );
 
         $result = $element->render();
@@ -524,7 +524,6 @@ final class RecordSettingsFormElementTest extends UnitTestCase
             tableName: 'tt_content',
             settings: ['tx_contexts' => ['label' => 'LLL:visibility']],
             contexts: [5 => $context],
-            resolvedSetting: null,
         );
 
         $result = $element->render();
@@ -570,7 +569,7 @@ final class RecordSettingsFormElementTest extends UnitTestCase
 
         $result = $element->render();
 
-        $settingColumnCount = substr_count($result['html'], 'tx_contexts_setting');
+        $settingColumnCount = substr_count((string) $result['html'], 'tx_contexts_setting');
         // At least 2 header cells (one per setting in the header row)
         self::assertGreaterThanOrEqual(2, $settingColumnCount);
     }
@@ -818,15 +817,13 @@ final class RecordSettingsFormElementTest extends UnitTestCase
             ],
         ];
 
-        $element = new TestableRecordSettingsFormElement(
+        return new TestableRecordSettingsFormElement(
             $contexts,
             $resolvedSetting,
             $languageService,
+            $nodeFactory,
+            $data,
         );
-        $element->injectNodeFactory($nodeFactory);
-        $element->setData($data);
-
-        return $element;
     }
 }
 
@@ -840,11 +837,11 @@ final class RecordSettingsFormElementTest extends UnitTestCase
 class TestableRecordSettingsFormElement extends RecordSettingsFormElement
 {
     /** @var AbstractContext[] */
-    private array $testContexts;
+    private readonly array $testContexts;
 
-    private ?Setting $testResolvedSetting;
+    private readonly ?Setting $testResolvedSetting;
 
-    private LanguageService $mockLanguageService;
+    private readonly LanguageService $mockLanguageService;
 
     /**
      * @param AbstractContext[] $testContexts
@@ -853,8 +850,12 @@ class TestableRecordSettingsFormElement extends RecordSettingsFormElement
         array $testContexts,
         ?Setting $testResolvedSetting,
         LanguageService $mockLanguageService,
+        NodeFactory $nodeFactory,
+        array $data,
     ) {
-        // Do not call parent constructor
+        // Set parent properties directly — works for both v12 (constructor) and v13 (setter)
+        $this->nodeFactory = $nodeFactory;
+        $this->data = $data;
         $this->testContexts = $testContexts;
         $this->testResolvedSetting = $testResolvedSetting;
         $this->mockLanguageService = $mockLanguageService;
@@ -885,7 +886,7 @@ class TestableRecordSettingsFormElement extends RecordSettingsFormElement
         $namePre = 'data' . $this->data['elementBaseName'];
         $settings = $this->data['parameterArray']['fieldConf']['config']['settings'];
 
-        $contextsLabel = $this->getLanguageService()->sL('LLL:' . \Netresearch\Contexts\Api\Configuration::LANG_FILE . ':tx_contexts_contexts');
+        $contextsLabel = $this->getLanguageService()->sL('LLL:' . Configuration::LANG_FILE . ':tx_contexts_contexts');
         $content = <<<HTML
             <table class="tx_contexts_table_settings typo3-dblist" style="width: auto; min-width: 50%;">
                 <tbody>
@@ -950,7 +951,7 @@ class TestableRecordSettingsFormElement extends RecordSettingsFormElement
         }
 
         if ($visibleContexts === 0) {
-            $noContextsLabel = $this->getLanguageService()->sL('LLL:' . \Netresearch\Contexts\Api\Configuration::LANG_FILE . ':no_contexts');
+            $noContextsLabel = $this->getLanguageService()->sL('LLL:' . Configuration::LANG_FILE . ':no_contexts');
             $content .= <<<HTML
                 <tr>
                     <td colspan="4" style="text-align: center;">
@@ -990,7 +991,7 @@ class TestableRecordSettingsFormElement extends RecordSettingsFormElement
      */
     protected function getIcon(array $row): string
     {
-        if (!isset($this->iconFactory)) {
+        if ($this->iconFactory === null) {
             return '';
         }
 

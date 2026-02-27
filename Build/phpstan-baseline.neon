@@ -222,6 +222,31 @@ parameters:
 			count: 1
 			path: ../Classes/EventListener/IconOverlayEventListener.php
 
+		# TYPO3 v12: event methods return mixed instead of typed values
+		-
+			message: '#^Parameter \#1 \$table of method Netresearch\\Contexts\\Service\\IconService\:\:postOverlayPriorityLookup\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/EventListener/IconOverlayEventListener.php
+
+		-
+			message: '#^Parameter \#2 \$row of method Netresearch\\Contexts\\Service\\IconService\:\:postOverlayPriorityLookup\(\) expects array\<string, mixed\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/EventListener/IconOverlayEventListener.php
+
+		-
+			message: '#^Parameter \#3 \$status of method Netresearch\\Contexts\\Service\\IconService\:\:postOverlayPriorityLookup\(\) expects array\<string, mixed\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/EventListener/IconOverlayEventListener.php
+
+		-
+			message: '#^Parameter \#4 \$iconName of method Netresearch\\Contexts\\Service\\IconService\:\:postOverlayPriorityLookup\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/EventListener/IconOverlayEventListener.php
+
 		-
 			message: '#^Parameter \#1 \$menuItems of method Netresearch\\Contexts\\Service\\PageService\:\:filterMenuItems\(\) expects array\<int, array\<string, mixed\>\>, array given\.$#'
 			identifier: argument.type
@@ -230,6 +255,25 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$rootLine of method Netresearch\\Contexts\\Service\\FrontendControllerService\:\:checkEnableFieldsForRootLine\(\) expects array\<int, array\<string, mixed\>\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/EventListener/PageAccessEventListener.php
+
+		# TYPO3 v12: PageInformation class does not exist, getPageInformation() returns mixed
+		-
+			message: '#^Cannot call method getPageRecord\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: ../Classes/EventListener/PageAccessEventListener.php
+
+		-
+			message: '#^Cannot call method getRootLine\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: ../Classes/EventListener/PageAccessEventListener.php
+
+		-
+			message: '#^Parameter \#1 \$rootLine of method Netresearch\\Contexts\\Service\\FrontendControllerService\:\:checkEnableFieldsForRootLine\(\) expects array\<int, array\<string, mixed\>\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../Classes/EventListener/PageAccessEventListener.php
@@ -485,3 +529,10 @@ parameters:
 			identifier: method.nonObject
 			count: 1
 			path: ../Tests/Unit/Classes/ViewHelpers/MatchesViewHelperTest.php
+
+		# TYPO3 v12: PageInformation class does not exist, getPageInformation() returns mixed
+		-
+			message: '#^Cannot call method getPageRecord\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: ../Tests/Unit/Classes/EventListener/PageAccessEventListenerTest.php

@@ -7,7 +7,7 @@ as required by OpenSSF Scorecard's Code-Review check.
 
 This project uses automated quality gates as compensating controls for human code review:
 
-1. **PHPStan Level 9** — Strict static analysis catches type errors and logic bugs
+1. **PHPStan Level 10** — Strict static analysis catches type errors and logic bugs
 2. **PHP-CS-Fixer** — Enforces consistent code style (PSR-12)
 3. **PHPUnit** — Unit and functional tests with coverage reporting
 4. **Architecture Tests** — PHPat enforces layer boundaries
@@ -15,7 +15,7 @@ This project uses automated quality gates as compensating controls for human cod
 6. **CodeQL** — Automated security vulnerability scanning
 7. **Gitleaks** — Secret scanning in code and history
 8. **Dependency Review** — License and vulnerability checking
-9. **GrumPHP** — Pre-commit hooks enforce local quality gates
+9. **CaptainHook** — Pre-commit hooks enforce local quality gates
 
 ## Auto-Approval Workflow
 

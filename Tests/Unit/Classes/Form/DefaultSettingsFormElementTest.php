@@ -271,7 +271,7 @@ final class DefaultSettingsFormElementTest extends UnitTestCase
 
         $result = $element->render();
 
-        $checkboxCount = substr_count($result['html'], 'type="checkbox"');
+        $checkboxCount = substr_count((string) $result['html'], 'type="checkbox"');
         self::assertSame(2, $checkboxCount, 'There should be one checkbox per setting');
     }
 
@@ -281,9 +281,9 @@ final class DefaultSettingsFormElementTest extends UnitTestCase
         $element = $this->buildTestableElement(
             uid: 0,
             table: 'tt_content',
-            itemFormElName: 'data[tx_contexts_contexts][1][default_settings_tt_content]',
             settings: ['tx_contexts' => ['label' => 'LLL:visibility']],
             resolvedSetting: null,
+            itemFormElName: 'data[tx_contexts_contexts][1][default_settings_tt_content]',
         );
 
         $result = $element->render();
@@ -299,9 +299,9 @@ final class DefaultSettingsFormElementTest extends UnitTestCase
         $element = $this->buildTestableElement(
             uid: 0,
             table: 'tt_content',
-            itemFormElName: 'data[tx_contexts_contexts][1][default_settings_tt_content]',
             settings: ['mysetting' => ['label' => 'LLL:mysetting']],
             resolvedSetting: null,
+            itemFormElName: 'data[tx_contexts_contexts][1][default_settings_tt_content]',
         );
 
         $result = $element->render();
@@ -330,16 +330,16 @@ final class DefaultSettingsFormElementTest extends UnitTestCase
         $element = $this->buildTestableElement(
             uid: 0,
             table: 'tt_content',
-            itemFormElName: 'data[tx_contexts_contexts][1][default_settings_tt_content]',
             settings: ['tx_contexts' => ['label' => 'LLL:visibility']],
             resolvedSetting: null,
+            itemFormElName: 'data[tx_contexts_contexts][1][default_settings_tt_content]',
         );
 
         $result = $element->render();
 
         // The label's 'for' attribute should match the checkbox 'id'
-        preg_match('/id="([^"]+)"/', $result['html'], $idMatches);
-        preg_match('/for="([^"]+)"/', $result['html'], $forMatches);
+        preg_match('/id="([^"]+)"/', (string) $result['html'], $idMatches);
+        preg_match('/for="([^"]+)"/', (string) $result['html'], $forMatches);
 
         self::assertNotEmpty($idMatches[1] ?? '', 'Checkbox should have an id attribute');
         self::assertNotEmpty($forMatches[1] ?? '', 'Label should have a for attribute');
@@ -433,15 +433,13 @@ final class DefaultSettingsFormElementTest extends UnitTestCase
             ],
         ];
 
-        $element = new TestableDefaultSettingsFormElement(
+        return new TestableDefaultSettingsFormElement(
             $resolvedSetting,
             $contextFound,
             $languageService,
+            $nodeFactory,
+            $data,
         );
-        $element->injectNodeFactory($nodeFactory);
-        $element->setData($data);
-
-        return $element;
     }
 }
 
@@ -454,18 +452,22 @@ final class DefaultSettingsFormElementTest extends UnitTestCase
  */
 class TestableDefaultSettingsFormElement extends DefaultSettingsFormElement
 {
-    private ?Setting $resolvedSetting;
+    private readonly ?Setting $resolvedSetting;
 
-    private bool $contextFound;
+    private readonly bool $contextFound;
 
-    private LanguageService $mockLanguageService;
+    private readonly LanguageService $mockLanguageService;
 
     public function __construct(
         ?Setting $resolvedSetting,
         bool $contextFound,
         LanguageService $mockLanguageService,
+        NodeFactory $nodeFactory,
+        array $data,
     ) {
-        // Do not call parent constructor
+        // Set parent properties directly — works for both v12 (constructor) and v13 (setter)
+        $this->nodeFactory = $nodeFactory;
+        $this->data = $data;
         $this->resolvedSetting = $resolvedSetting;
         $this->contextFound = $contextFound;
         $this->mockLanguageService = $mockLanguageService;
@@ -473,7 +475,6 @@ class TestableDefaultSettingsFormElement extends DefaultSettingsFormElement
 
     public function render(): array
     {
-        $table = $this->data['parameterArray']['fieldConf']['config']['table'];
         $content = '';
 
         $namePre = str_replace(
