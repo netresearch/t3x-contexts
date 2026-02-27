@@ -115,6 +115,13 @@ final class RecordSettingsFormElementTest extends UnitTestCase
     #[Test]
     public function injectIconFactoryStoresIconFactory(): void
     {
+        // TYPO3 v12: AbstractNode constructor calls GeneralUtility::makeInstance(IconFactory::class)
+        // which requires constructor arguments unavailable in unit tests.
+        // v13 removed AbstractNode::__construct(), so direct instantiation works there.
+        if ((new ReflectionClass(\TYPO3\CMS\Backend\Form\AbstractNode::class))->getConstructor() !== null) {
+            self::markTestSkipped('TYPO3 v12: AbstractNode constructor requires dependencies unavailable in unit tests');
+        }
+
         $mockIconFactory = $this->createMock(IconFactory::class);
         $element = new RecordSettingsFormElement();
         $element->injectIconFactory($mockIconFactory);
