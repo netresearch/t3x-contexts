@@ -15,8 +15,8 @@
   <a href="https://codecov.io/gh/netresearch/t3x-contexts"><img src="https://codecov.io/gh/netresearch/t3x-contexts/graph/badge.svg" alt="Codecov"></a>
   <a href="https://github.com/netresearch/t3x-contexts/actions/workflows/docs.yml"><img src="https://github.com/netresearch/t3x-contexts/actions/workflows/docs.yml/badge.svg" alt="Documentation"></a>
   <a href="https://scorecard.dev/viewer/?uri=github.com/netresearch/t3x-contexts"><img src="https://api.scorecard.dev/projects/github.com/netresearch/t3x-contexts/badge" alt="OpenSSF Scorecard"></a>
-  <a href="https://www.bestpractices.dev/projects/XXXXX"><img src="https://www.bestpractices.dev/projects/XXXXX/badge" alt="OpenSSF Best Practices"></a>
-  <a href="https://phpstan.org/"><img src="https://img.shields.io/badge/PHPStan-level%209-brightgreen.svg" alt="PHPStan"></a>
+  <a href="https://www.bestpractices.dev/projects/11854"><img src="https://www.bestpractices.dev/projects/11854/badge" alt="OpenSSF Best Practices"></a>
+  <a href="https://phpstan.org/"><img src="https://img.shields.io/badge/PHPStan-level%2010-brightgreen.svg" alt="PHPStan"></a>
   <a href="https://www.php.net/"><img src="https://img.shields.io/badge/PHP-8.2--8.5-blue.svg" alt="PHP 8.2-8.5"></a>
   <a href="https://typo3.org/"><img src="https://img.shields.io/badge/TYPO3-v12%20%7C%20v13-orange.svg" alt="TYPO3 v12 | v13"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/netresearch/t3x-contexts" alt="License"></a>
