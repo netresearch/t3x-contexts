@@ -65,6 +65,9 @@ final class IconServiceTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $row
+     */
     #[Test]
     #[DataProvider('overlayProvider')]
     public function postOverlayPriorityLookupReturnsExpectedIcon(

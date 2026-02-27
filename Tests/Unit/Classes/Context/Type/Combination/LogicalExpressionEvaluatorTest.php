@@ -155,6 +155,9 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
         return $expression === 'true';
     }
 
+    /**
+     * @param array<string, bool> $values
+     */
     #[Test]
     #[DataProvider('expressionValueProvider')]
     public function runWithoutException(string $expression, string $rebuiltExpression, array $values): void

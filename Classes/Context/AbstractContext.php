@@ -389,7 +389,7 @@ abstract class AbstractContext
     /**
      * Loads match() result from session if the context is configured so.
      *
-     * @return array Array with two values:
+     * @return array{0: bool, 1: bool|null} Array with two values:
      *               0: true: Use the second value as return,
      *                  false: calculate it
      *               1: Return value when 0 is true

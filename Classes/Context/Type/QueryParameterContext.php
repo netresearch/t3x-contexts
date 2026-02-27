@@ -60,7 +60,7 @@ class QueryParameterContext extends AbstractContext
         if (!\array_key_exists($param, $queryParams)) {
             // load from session if no param given
             [$bUseMatch, $bMatch] = $this->getMatchFromSession();
-            return $this->invert($bUseMatch && $bMatch);
+            return $this->invert($bUseMatch && ($bMatch ?? false));
         }
 
         $value = $this->getQueryParameter($param);

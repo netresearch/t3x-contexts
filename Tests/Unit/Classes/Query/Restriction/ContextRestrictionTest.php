@@ -324,7 +324,7 @@ final class ContextRestrictionTest extends UnitTestCase
         // Should build inSet for both enable and disable columns
         $expressionBuilder->expects(self::exactly(2))
             ->method('inSet')
-            ->willReturnCallback(fn($column, $value) => "FIND_IN_SET({$value}, {$column})");
+            ->willReturnCallback(fn($column, $value) => 'FIND_IN_SET(' . (string) $value . ', ' . (string) $column . ')');
 
         // Should create OR expressions: one for enable, one for disable
         $expressionBuilder->expects(self::exactly(2))
@@ -464,7 +464,7 @@ final class ContextRestrictionTest extends UnitTestCase
             ->method('inSet')
             ->willReturnCallback(function ($column, $value) use (&$inSetCalls) {
                 $inSetCalls[] = ['column' => $column, 'value' => $value];
-                return "FIND_IN_SET({$value}, {$column})";
+                return 'FIND_IN_SET(' . (string) $value . ', ' . (string) $column . ')';
             });
 
         $expressionBuilder->method('isNull')->willReturn('IS NULL');

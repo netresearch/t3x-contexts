@@ -62,12 +62,10 @@ final class CrossExtensionIntegrationTest extends FunctionalTestCase
     {
         // Check if sub-extensions are available using string-based class names
         // to avoid PHPStan errors when extensions are not installed
-        $this->hasGeolocationExtension = class_exists(
-            'Netresearch\\ContextsGeolocation\\Context\\Type\\CountryContext',
-        );
-        $this->hasDeviceExtension = class_exists(
-            'Netresearch\\ContextsDevice\\Context\\Type\\DeviceContext',
-        );
+        $geolocationClass = 'Netresearch\\ContextsGeolocation\\Context\\Type\\CountryContext';
+        $deviceClass = 'Netresearch\\ContextsDevice\\Context\\Type\\DeviceContext';
+        $this->hasGeolocationExtension = class_exists($geolocationClass);
+        $this->hasDeviceExtension = class_exists($deviceClass);
 
         // Dynamically add extensions if available
         if ($this->hasGeolocationExtension) {
@@ -168,9 +166,10 @@ final class CrossExtensionIntegrationTest extends FunctionalTestCase
 
             // Verify class exists if it's set and not empty
             if (!empty($config['class'])) {
+                $className = (string) $config['class'];
                 self::assertTrue(
-                    class_exists($config['class']),
-                    "Class '{$config['class']}' for context type '{$type}' should exist",
+                    class_exists($className),
+                    "Class '{$className}' for context type '{$type}' should exist",
                 );
             }
         }
@@ -280,11 +279,12 @@ final class CrossExtensionIntegrationTest extends FunctionalTestCase
         $contextTypes = Configuration::getContextTypes();
 
         foreach ($contextTypes as $type => $config) {
-            if ($config['class'] === null || !class_exists($config['class'])) {
+            $className = (string) ($config['class'] ?? '');
+            if ($className === '' || !class_exists($className)) {
                 continue;
             }
 
-            $reflection = new ReflectionClass($config['class']);
+            $reflection = new ReflectionClass($className);
 
             self::assertTrue(
                 $reflection->hasMethod('match'),

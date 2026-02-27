@@ -519,6 +519,9 @@ final class ContainerTest extends UnitTestCase
  */
 class TestableContainer extends Container
 {
+    /**
+     * @param array<AbstractContext> $arContexts
+     */
     public function exposeMatch(array $arContexts): array
     {
         return $this->match($arContexts);

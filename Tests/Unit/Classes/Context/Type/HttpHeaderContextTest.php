@@ -35,7 +35,9 @@ final class HttpHeaderContextTest extends TestBase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->originalServerVars = $_SERVER;
+        /** @var array<string, mixed> $serverVars */
+        $serverVars = $_SERVER;
+        $this->originalServerVars = $serverVars;
     }
 
     protected function tearDown(): void

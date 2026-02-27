@@ -193,7 +193,7 @@ final class FrontendControllerServiceTest extends UnitTestCase
 
         $expectedKey = strtolower(FrontendControllerService::class);
         self::assertArrayHasKey($expectedKey, $params['hashParameters']);
-        self::assertStringContainsString('hash_test', $params['hashParameters'][$expectedKey]);
+        self::assertStringContainsString('hash_test', (string) $params['hashParameters'][$expectedKey]);
     }
 
     #[Test]
@@ -211,8 +211,8 @@ final class FrontendControllerServiceTest extends UnitTestCase
 
         $service->configArrayPostProc($params, $mockTsfe);
 
-        self::assertStringContainsString('link_var_test', $params['config']['linkVars']);
-        self::assertStringContainsString('L', $params['config']['linkVars']);
+        self::assertStringContainsString('link_var_test', (string) $params['config']['linkVars']);
+        self::assertStringContainsString('L', (string) $params['config']['linkVars']);
     }
 
     #[Test]
@@ -230,7 +230,7 @@ final class FrontendControllerServiceTest extends UnitTestCase
 
         $service->configArrayPostProc($params, $mockTsfe);
 
-        self::assertStringContainsString('only_param', $params['config']['linkVars']);
+        self::assertStringContainsString('only_param', (string) $params['config']['linkVars']);
     }
 
     #[Test]

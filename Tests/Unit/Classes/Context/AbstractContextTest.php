@@ -1356,101 +1356,18 @@ final class AbstractContextTest extends UnitTestCase
     /**
      * Creates a testable concrete implementation of AbstractContext.
      *
-     * @param array $row Database row for context initialization
-     * @return AbstractContext&object Anonymous class extending AbstractContext
+     * @param array<string, mixed> $row Database row for context initialization
      */
-    private function createTestableContext(array $row = []): AbstractContext
+    private function createTestableContext(array $row = []): TestableAbstractContext
     {
-        return new class ($row) extends AbstractContext {
-            private ?TypoScriptFrontendController $mockTsfe = null;
-
-            private mixed $mockIndpEnv = null;
-
-            private bool $mockIndpEnvSet = false;
-
-            public function match(array $arDependencies = []): bool
-            {
-                // Test implementation: Use session if enabled, then invert
-                [$useSession, $sessionResult] = $this->getMatchFromSession();
-                if ($useSession) {
-                    return $this->invert($sessionResult);
-                }
-
-                return $this->invert($this->storeInSession(true));
-            }
-
-            // Expose protected methods for testing
-            public function exposeGetConfValue(
-                string $fieldName,
-                string $default = '',
-                string $sheet = 'sDEF',
-                string $lang = 'lDEF',
-                string $value = 'vDEF',
-            ): string {
-                return $this->getConfValue($fieldName, $default, $sheet, $lang, $value);
-            }
-
-            public function exposeGetMatchFromSession(): array
-            {
-                return $this->getMatchFromSession();
-            }
-
-            public function exposeStoreInSession(bool $bMatch): bool
-            {
-                return $this->storeInSession($bMatch);
-            }
-
-            public function exposeInvert(bool $bMatch): bool
-            {
-                return $this->invert($bMatch);
-            }
-
-            public function exposeGetRemoteAddress(): string
-            {
-                return $this->getRemoteAddress();
-            }
-
-            public function exposeGetIndpEnv(string $key): mixed
-            {
-                return $this->getIndpEnv($key);
-            }
-
-            public function exposeGetSession(): mixed
-            {
-                return $this->getSession();
-            }
-
-            public function setMockTsfe(?TypoScriptFrontendController $tsfe): void
-            {
-                $this->mockTsfe = $tsfe;
-            }
-
-            public function setMockIndpEnv(mixed $value): void
-            {
-                $this->mockIndpEnv = $value;
-                $this->mockIndpEnvSet = true;
-            }
-
-            protected function getTypoScriptFrontendController(): ?TypoScriptFrontendController
-            {
-                return $this->mockTsfe ?? parent::getTypoScriptFrontendController();
-            }
-
-            protected function getIndpEnv(string $strKey): mixed
-            {
-                if ($this->mockIndpEnvSet) {
-                    return $this->mockIndpEnv;
-                }
-                return parent::getIndpEnv($strKey);
-            }
-        };
+        return new TestableAbstractContext($row);
     }
 
     /**
      * Creates a complete database row for context initialization.
      *
-     * @param array $overrides Values to override defaults
-     * @return array Complete database row
+     * @param array<string, mixed> $overrides Values to override defaults
+     * @return array<string, mixed> Complete database row
      */
     private function createContextRow(array $overrides = []): array
     {
@@ -1467,5 +1384,101 @@ final class AbstractContextTest extends UnitTestCase
             'hide_in_backend' => 0,
             'tstamp' => time(),
         ], $overrides);
+    }
+}
+
+/**
+ * Testable concrete implementation of AbstractContext for unit tests.
+ *
+ * Exposes protected methods and allows mock injection for TSFE and getIndpEnv.
+ *
+ * @internal Only for testing
+ */
+class TestableAbstractContext extends AbstractContext
+{
+    private ?TypoScriptFrontendController $mockTsfe = null;
+
+    private mixed $mockIndpEnv = null;
+
+    private bool $mockIndpEnvSet = false;
+
+    public function match(array $arDependencies = []): bool
+    {
+        // Test implementation: Use session if enabled, then invert
+        [$useSession, $sessionResult] = $this->getMatchFromSession();
+        if ($useSession) {
+            return $this->invert((bool) $sessionResult);
+        }
+
+        return $this->invert($this->storeInSession(true));
+    }
+
+    // Expose protected methods for testing
+    public function exposeGetConfValue(
+        string $fieldName,
+        string $default = '',
+        string $sheet = 'sDEF',
+        string $lang = 'lDEF',
+        string $value = 'vDEF',
+    ): string {
+        return $this->getConfValue($fieldName, $default, $sheet, $lang, $value);
+    }
+
+    /**
+     * @return array{0: bool, 1: bool|null}
+     */
+    public function exposeGetMatchFromSession(): array
+    {
+        return $this->getMatchFromSession();
+    }
+
+    public function exposeStoreInSession(bool $bMatch): bool
+    {
+        return $this->storeInSession($bMatch);
+    }
+
+    public function exposeInvert(bool $bMatch): bool
+    {
+        return $this->invert($bMatch);
+    }
+
+    public function exposeGetRemoteAddress(): string
+    {
+        return $this->getRemoteAddress();
+    }
+
+    public function exposeGetIndpEnv(string $key): mixed
+    {
+        return $this->getIndpEnv($key);
+    }
+
+    public function exposeGetSession(): mixed
+    {
+        return $this->getSession();
+    }
+
+    public function setMockTsfe(?TypoScriptFrontendController $tsfe): void
+    {
+        $this->mockTsfe = $tsfe;
+    }
+
+    public function setMockIndpEnv(mixed $value): void
+    {
+        $this->mockIndpEnv = $value;
+        $this->mockIndpEnvSet = true;
+    }
+
+    protected function getTypoScriptFrontendController(): ?TypoScriptFrontendController
+    {
+        return $this->mockTsfe ?? parent::getTypoScriptFrontendController();
+    }
+
+    protected function getIndpEnv(string $strKey): mixed
+    {
+        if ($this->mockIndpEnvSet) {
+            return $this->mockIndpEnv;
+        }
+
+        return parent::getIndpEnv($strKey);
     }
 }
