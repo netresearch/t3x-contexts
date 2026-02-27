@@ -52,7 +52,7 @@ class Record
         }
 
         foreach ($enableSettings as $setting) {
-            if (!self::isSettingEnabled($table, $setting, $row)) {
+            if (!self::isSettingEnabled($table, (string) $setting, $row)) {
                 return false;
             }
         }
@@ -126,6 +126,7 @@ class Record
         $flatColumnContents = [];
 
         foreach ($flatColumns as $i => $flatColumn) {
+            $flatColumn = (string) $flatColumn;
             if (!\array_key_exists($flatColumn, $row) || ($row[$flatColumn] === null)) {
                 $rowValid = false;
             } elseif ($row[$flatColumn] !== '') {

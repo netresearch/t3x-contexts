@@ -45,13 +45,13 @@ class DefaultSettingsFormElement extends AbstractFormElement
      */
     public function render(): array
     {
-        $table = $this->data['parameterArray']['fieldConf']['config']['table'];
+        $table = (string) $this->data['parameterArray']['fieldConf']['config']['table'];
         $content = '';
 
         $namePre = str_replace(
             '[default_settings_',
             '[default_settings][',
-            $this->data['parameterArray']['itemFormElName'],
+            (string) $this->data['parameterArray']['itemFormElName'],
         );
 
         // This fails
@@ -64,10 +64,11 @@ class DefaultSettingsFormElement extends AbstractFormElement
             : null;
 
         // Generate base ID from itemFormElName (itemFormElID removed in TYPO3 v12)
-        $baseId = str_replace(['[', ']'], '_', $this->data['parameterArray']['itemFormElName']);
+        $baseId = str_replace(['[', ']'], '_', (string) $this->data['parameterArray']['itemFormElName']);
         $baseId = trim($baseId, '_');
 
         foreach ($this->data['parameterArray']['fieldConf']['config']['settings'] as $configKey => $config) {
+            $configKey = (string) $configKey;
             $id = $baseId . '-' . $configKey;
             $name = $namePre . '[' . $configKey . ']';
             $checked = '';
@@ -87,7 +88,7 @@ class DefaultSettingsFormElement extends AbstractFormElement
                 $checked = 'checked="checked"';
             }
 
-            $label = htmlspecialchars($this->getLanguageService()->sL($config['label']));
+            $label = htmlspecialchars($this->getLanguageService()->sL((string) $config['label']));
             $content .= <<<HTML
                 <input type="hidden" name="{$name}" value="0" />
                 <input class="checkbox" type="checkbox" name="{$name}" value="1" id="{$id}" {$checked}/>

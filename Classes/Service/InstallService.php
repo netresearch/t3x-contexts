@@ -49,6 +49,7 @@ class InstallService
 
         $sql = '';
         foreach ($extensionFlatSettings[$strExtKey] as $table => $settings) {
+            $table = (string) $table;
             $sql .= "\nCREATE TABLE {$table} (\n";
 
             $arSql = [];
@@ -56,9 +57,10 @@ class InstallService
                 if (\is_array($setting)) {
                     continue;
                 }
+                $setting = (string) $setting;
                 $flatColumns = Configuration::getFlatColumns($table, $setting);
-                $arSql[] = $flatColumns[0] . ' tinytext';
-                $arSql[] = $flatColumns[1] . ' tinytext';
+                $arSql[] = (string) $flatColumns[0] . ' tinytext';
+                $arSql[] = (string) $flatColumns[1] . ' tinytext';
             }
 
             $sql .= implode(",\n", $arSql);

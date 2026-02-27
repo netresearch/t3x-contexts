@@ -64,6 +64,7 @@ final readonly class PageAccessEventListener
         }
 
         // Check if page is accessible based on context
+        /** @var array<int, array<string, mixed>> $rootLine */
         $result = $this->frontendControllerService->checkEnableFieldsForRootLine($rootLine);
 
         // If the page is not accessible, deny access

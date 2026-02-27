@@ -63,7 +63,7 @@ class RecordSettingsFormElement extends AbstractFormElement
         $contexts = new Container();
         $contexts->initAll();
 
-        $namePre = 'data' . $this->data['elementBaseName'];
+        $namePre = 'data' . (string) $this->data['elementBaseName'];
         $settings = $this->data['parameterArray']['fieldConf']['config']['settings'];
 
         $contextsLabel = $this->getLanguageService()->sL('LLL:' . Configuration::LANG_FILE . ':tx_contexts_contexts');
@@ -78,7 +78,7 @@ class RecordSettingsFormElement extends AbstractFormElement
             HTML;
 
         foreach ($settings as $config) {
-            $settingLabel = $this->getLanguageService()->sL($config['label']);
+            $settingLabel = $this->getLanguageService()->sL((string) $config['label']);
             $content .= <<<HTML
                 <td class="tx_contexts_setting">{$settingLabel}</td>
                 HTML;
@@ -103,12 +103,13 @@ class RecordSettingsFormElement extends AbstractFormElement
             $bHasSetting = false;
 
             foreach ($settings as $settingName => $config) {
+                $settingName = (string) $settingName;
                 $setting = $uid > 0
                     ? $context->getSetting(
-                        $this->data['tableName'],
+                        (string) $this->data['tableName'],
                         $settingName,
                         $uid,
-                        $this->data['databaseRow'],
+                        \is_array($this->data['databaseRow']) ? $this->data['databaseRow'] : null,
                     )
                     : null;
 
@@ -128,10 +129,10 @@ class RecordSettingsFormElement extends AbstractFormElement
             [$icon, $title] = $this->getRecordPreview($context);
             $content .= '<tr class="db_list_normal">'
                 . '<td class="tx_contexts_context col-icon"">'
-                    . $icon
+                    . (string) $icon
                 . '</td>'
                 . '<td class="tx_contexts_context">'
-                    . '<span class="context-' . ($bHasSetting ? 'active' : 'inactive') . '">' . $title . '</span>'
+                    . '<span class="context-' . ($bHasSetting ? 'active' : 'inactive') . '">' . (string) $title . '</span>'
                 . '</td>'
                 . $contSettings
                 . '</tr>';

@@ -39,7 +39,11 @@ final readonly class IconOverlayEventListener
     {
         $iconOverlay = $event->getOverlayIconIdentifier();
         $table = $event->getTable();
+
+        /** @var array<string, mixed> $row */
         $row = $event->getRow();
+
+        /** @var array<string, mixed> $status */
         $status = $event->getStatus();
 
         if ($table !== '' && $row !== []) {
