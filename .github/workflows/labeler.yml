@@ -4,24 +4,11 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-permissions:
-  contents: read
-  pull-requests: write
+permissions: {}
 
 jobs:
-  label:
-    name: Label PR
-    runs-on: ubuntu-latest
+  labeler:
+    uses: netresearch/typo3-ci-workflows/.github/workflows/labeler.yml@main
     permissions:
       contents: read
       pull-requests: write
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/labeler@634933edcd8ababfe52f92936142cc22ac488b1b # v6.0.1
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          configuration-path: .github/labeler.yml

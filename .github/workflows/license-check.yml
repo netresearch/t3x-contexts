@@ -13,43 +13,10 @@ on:
   schedule:
     - cron: '0 9 * * 1'
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
-  php-licenses:
-    name: PHP License Audit
-    runs-on: ubuntu-latest
+  license-check:
+    uses: netresearch/typo3-ci-workflows/.github/workflows/license-check.yml@main
     permissions:
       contents: read
-
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
-        with:
-          egress-policy: audit
-
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
-        with:
-          php-version: '8.4'
-          coverage: none
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
-
-      - name: Check licenses
-        run: |
-          composer licenses --format=json > licenses.json
-          echo "## PHP Dependency Licenses" >> $GITHUB_STEP_SUMMARY
-          echo '```json' >> $GITHUB_STEP_SUMMARY
-          cat licenses.json | head -100 >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-
-          # This extension is AGPL-3.0, so check for incompatible licenses
-          if grep -E '"(SSPL|BSL)"' licenses.json; then
-            echo "::warning::Found potentially problematic licenses. Please review."
-          fi
