@@ -23,6 +23,8 @@ use Netresearch\Contexts\Context\Setting;
 use Netresearch\Contexts\Form\RecordSettingsFormElement;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionClass;
+use ReflectionMethod;
+use TYPO3\CMS\Backend\Form\AbstractNode;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Imaging\IconFactory;
@@ -118,7 +120,7 @@ final class RecordSettingsFormElementTest extends UnitTestCase
         // TYPO3 v12: AbstractNode constructor calls GeneralUtility::makeInstance(IconFactory::class)
         // which requires constructor arguments unavailable in unit tests.
         // v13 removed AbstractNode::__construct(), so direct instantiation works there.
-        if ((new ReflectionClass(\TYPO3\CMS\Backend\Form\AbstractNode::class))->getConstructor() !== null) {
+        if ((new ReflectionClass(AbstractNode::class))->getConstructor() instanceof ReflectionMethod) {
             self::markTestSkipped('TYPO3 v12: AbstractNode constructor requires dependencies unavailable in unit tests');
         }
 
