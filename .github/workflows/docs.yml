@@ -10,6 +10,7 @@ on:
     branches: [main]
     paths:
       - 'Documentation/**'
+      - '.github/workflows/docs.yml'
   merge_group:
   workflow_dispatch:
 
