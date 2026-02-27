@@ -46,9 +46,9 @@ class Factory implements LoggerAwareInterface
     public function createFromDb(array $arRow): ?AbstractContext
     {
         $classMap = Configuration::getContextTypes();
-        $type = $arRow['type'];
+        $type = (string) $arRow['type'];
 
-        if (!$type || !\array_key_exists($type, $classMap)) {
+        if ($type === '' || !\array_key_exists($type, $classMap)) {
             if ($this->logger instanceof LoggerInterface) {
                 $this->logger->warning('tx_contexts: No class found for context type "' . $type . '"');
             }
@@ -62,10 +62,11 @@ class Factory implements LoggerAwareInterface
 
         $class = $classMap[$type]['class'];
 
-        if (!$class) {
+        if (!\is_string($class) || $class === '') {
             return null;
         }
 
+        /** @var class-string $class */
         $instance = GeneralUtility::makeInstance($class, $arRow);
 
         if ($instance instanceof SingletonInterface) {

@@ -123,10 +123,10 @@ abstract class AbstractContext
     {
         if (\count($arRow) > 0) {
             $this->uid = (int) $arRow['uid'];
-            $this->type = $arRow['type'];
-            $this->title = $arRow['title'];
-            $this->alias = $arRow['alias'];
-            $this->tstamp = $arRow['tstamp'];
+            $this->type = (string) $arRow['type'];
+            $this->title = (string) $arRow['title'];
+            $this->alias = (string) $arRow['alias'];
+            $this->tstamp = (int) $arRow['tstamp'];
             $this->invert = (bool) $arRow['invert'];
             $this->use_session = (bool) $arRow['use_session'];
             $this->disabled = (bool) $arRow['disabled'];
@@ -432,6 +432,7 @@ abstract class AbstractContext
         }
 
         // Check if fe_user is available (may not be initialized in all contexts)
+        /** @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication|null $feUser */
         $feUser = $tsfe->fe_user ?? null;
         if ($feUser === null) {
             return;
@@ -463,6 +464,7 @@ abstract class AbstractContext
         }
 
         // Check if fe_user is available (may not be initialized in all contexts)
+        /** @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication|null $feUser */
         $feUser = $tsfe->fe_user ?? null;
         if ($feUser === null) {
             return $bMatch;

@@ -38,16 +38,21 @@ class SessionContext extends AbstractContext
      */
     public function match(array $arDependencies = []): bool
     {
-        if (!$this->getTypoScriptFrontendController() instanceof TypoScriptFrontendController) {
+        $tsfe = $this->getTypoScriptFrontendController();
+        if (!$tsfe instanceof TypoScriptFrontendController) {
             return false;
         }
 
-        $session = $this->getTypoScriptFrontendController()
-            ->fe_user
-            ->getKey(
-                'ses',
-                $this->getConfValue('field_variable'),
-            );
+        /** @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication|null $feUser */
+        $feUser = $tsfe->fe_user ?? null;
+        if ($feUser === null) {
+            return false;
+        }
+
+        $session = $feUser->getKey(
+            'ses',
+            $this->getConfValue('field_variable'),
+        );
 
         return $this->invert($session !== null);
     }
