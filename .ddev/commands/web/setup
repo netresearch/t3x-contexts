@@ -3,4 +3,6 @@
 ## Usage: setup
 ## Example: ddev setup
 
+set -e
+
 composer install
