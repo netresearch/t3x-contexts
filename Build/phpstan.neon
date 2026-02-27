@@ -3,11 +3,11 @@ includes:
     - ../vendor/phpstan/phpstan-deprecation-rules/rules.neon
     - ../vendor/phpstan/phpstan-phpunit/extension.neon
     - phpat.neon
+    - phpstan-baseline.neon
 
 parameters:
-    # Level 9: Type inference for argument.type errors
-    # Level 10 requires significant refactoring due to mixed types in legacy TYPO3 patterns
-    level: 9
+    # Level 10: Strictest level — remaining legacy issues captured in baseline
+    level: 10
 
     paths:
         - ../Classes/

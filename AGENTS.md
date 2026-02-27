@@ -47,7 +47,7 @@ https://docs.contexts.ddev.site/         # Local documentation
 ```bash
 # Pre-commit checks (automatic via GrumPHP)
 composer ci:test:php:cgl      # PHP-CS-Fixer (PSR-12 + strict types)
-composer ci:test:php:phpstan  # PHPStan level 9
+composer ci:test:php:phpstan  # PHPStan level 10
 
 # Testing
 composer ci:test:php:unit        # PHPUnit unit tests

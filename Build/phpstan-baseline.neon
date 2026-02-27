@@ -1,0 +1,487 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$config of static method Netresearch\\Contexts\\Api\\Configuration\:\:isFlatSetting\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: ../Classes/Api/Configuration.php
+
+		-
+			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Api/Record.php
+
+		-
+			message: '#^Parameter \#2 \$setting of static method Netresearch\\Contexts\\Api\\Record\:\:isSettingEnabled\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Api/Record.php
+
+		-
+			message: '#^Cannot call method getKey\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: ../Classes/Context/AbstractContext.php
+
+		-
+			message: '#^Cannot call method setKey\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: ../Classes/Context/AbstractContext.php
+
+		-
+			message: '#^Cannot call method storeSessionData\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: ../Classes/Context/AbstractContext.php
+
+		-
+			message: '#^Property Netresearch\\Contexts\\Context\\AbstractContext\:\:\$alias \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: ../Classes/Context/AbstractContext.php
+
+		-
+			message: '#^Property Netresearch\\Contexts\\Context\\AbstractContext\:\:\$title \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: ../Classes/Context/AbstractContext.php
+
+		-
+			message: '#^Property Netresearch\\Contexts\\Context\\AbstractContext\:\:\$tstamp \(int\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: ../Classes/Context/AbstractContext.php
+
+		-
+			message: '#^Property Netresearch\\Contexts\\Context\\AbstractContext\:\:\$type \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: ../Classes/Context/AbstractContext.php
+
+		-
+			message: '#^Binary operation "\." between ''tx_contexts\: No…'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: ../Classes/Context/Factory.php
+
+		-
+			message: '#^Binary operation "\." between mixed and '' may not be…'' results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: ../Classes/Context/Factory.php
+
+		-
+			message: '#^Binary operation "\." between mixed and '' must extend Tx…'' results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: ../Classes/Context/Factory.php
+
+		-
+			message: '#^Parameter \#1 \$className of static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:makeInstance\(\) expects class\-string\<object\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Context/Factory.php
+
+		-
+			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Context/Factory.php
+
+		-
+			message: '#^Binary operation "\." between '','' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: ../Classes/Context/Setting.php
+
+		-
+			message: '#^Property Netresearch\\Contexts\\Context\\Setting\:\:\$foreignTable \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: ../Classes/Context/Setting.php
+
+		-
+			message: '#^Property Netresearch\\Contexts\\Context\\Setting\:\:\$name \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: ../Classes/Context/Setting.php
+
+		-
+			message: '#^Binary operation "\." between '' '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: ../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php
+
+		-
+			message: '#^Binary operation "\." between ''\!'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: ../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php
+
+		-
+			message: '#^Binary operation "\." between ''Unexpected "'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: ../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php
+
+		-
+			message: '#^Cannot call method precedenceShiftTokens\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: ../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_flip expects array\<int\|string\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_key_last expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_pop expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php
+
+		-
+			message: '#^Parameter \#1 \$array of function end expects array\|object, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php
+
+		-
+			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php
+
+		-
+			message: '#^Parameter \#1 \$token of method Netresearch\\Contexts\\Context\\Type\\Combination\\LogicalExpressionEvaluator\:\:handleToken\(\) expects array\|int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php
+
+		-
+			message: '#^Parameter \#1 \$token of method Netresearch\\Contexts\\Context\\Type\\Combination\\LogicalExpressionEvaluator\:\:pushToken\(\) expects array\|int\|Netresearch\\Contexts\\Context\\Type\\Combination\\LogicalExpressionEvaluator, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php
+
+		-
+			message: '#^Property Netresearch\\Contexts\\Context\\Type\\Combination\\LogicalExpressionEvaluator\:\:\$operator \(int\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: ../Classes/Context/Type/Combination/LogicalExpressionEvaluator.php
+
+		-
+			message: '#^Cannot access property \$context on mixed\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: ../Classes/Context/Type/CombinationContext.php
+
+		-
+			message: '#^Cannot access property \$matched on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: ../Classes/Context/Type/CombinationContext.php
+
+		-
+			message: '#^Cannot call method getAlias\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: ../Classes/Context/Type/CombinationContext.php
+
+		-
+			message: '#^Cannot call method getUid\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: ../Classes/Context/Type/CombinationContext.php
+
+		-
+			message: '#^Cannot call method getKey\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: ../Classes/Context/Type/SessionContext.php
+
+		-
+			message: '#^Parameter \#2 \$row of method Netresearch\\Contexts\\Service\\IconService\:\:postOverlayPriorityLookup\(\) expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/EventListener/IconOverlayEventListener.php
+
+		-
+			message: '#^Parameter \#3 \$status of method Netresearch\\Contexts\\Service\\IconService\:\:postOverlayPriorityLookup\(\) expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/EventListener/IconOverlayEventListener.php
+
+		-
+			message: '#^Parameter \#1 \$menuItems of method Netresearch\\Contexts\\Service\\PageService\:\:filterMenuItems\(\) expects array\<int, array\<string, mixed\>\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/EventListener/MenuItemFilterEventListener.php
+
+		-
+			message: '#^Parameter \#1 \$rootLine of method Netresearch\\Contexts\\Service\\FrontendControllerService\:\:checkEnableFieldsForRootLine\(\) expects array\<int, array\<string, mixed\>\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/EventListener/PageAccessEventListener.php
+
+		-
+			message: '#^Parameter \#1 \$strContext of method Netresearch\\Contexts\\Api\\ContextMatcher\:\:matches\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/ExpressionLanguage/FunctionsProvider/ContextFunctionsProvider.php
+
+		-
+			message: '#^Parameter \#1 \$expression of method Netresearch\\Contexts\\Context\\Type\\Combination\\LogicalExpressionEvaluator\:\:tokenize\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Form/CombinationFormElement.php
+
+		-
+			message: '#^Part \$text\[''html''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: ../Classes/Form/CombinationFormElement.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: ../Classes/Form/DefaultSettingsFormElement.php
+
+		-
+			message: '#^Parameter \#1 \$input of method TYPO3\\CMS\\Core\\Localization\\LanguageService\:\:sL\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Form/DefaultSettingsFormElement.php
+
+		-
+			message: '#^Parameter \#1 \$table of method Netresearch\\Contexts\\Context\\AbstractContext\:\:getSetting\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Form/DefaultSettingsFormElement.php
+
+		-
+			message: '#^Parameter \#2 \$setting of method Netresearch\\Contexts\\Context\\AbstractContext\:\:getSetting\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Form/DefaultSettingsFormElement.php
+
+		-
+			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: ../Classes/Form/DefaultSettingsFormElement.php
+
+		-
+			message: '#^Binary operation "\." between ''\<tr class\="db_list…'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: ../Classes/Form/RecordSettingsFormElement.php
+
+		-
+			message: '#^Binary operation "\." between ''data'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: ../Classes/Form/RecordSettingsFormElement.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: ../Classes/Form/RecordSettingsFormElement.php
+
+		-
+			message: '#^Parameter \#1 \$input of method TYPO3\\CMS\\Core\\Localization\\LanguageService\:\:sL\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Form/RecordSettingsFormElement.php
+
+		-
+			message: '#^Parameter \#1 \$table of method Netresearch\\Contexts\\Context\\AbstractContext\:\:getSetting\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Form/RecordSettingsFormElement.php
+
+		-
+			message: '#^Parameter \#2 \$setting of method Netresearch\\Contexts\\Context\\AbstractContext\:\:getSetting\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Form/RecordSettingsFormElement.php
+
+		-
+			message: '#^Parameter \#4 \$arRow of method Netresearch\\Contexts\\Context\\AbstractContext\:\:getSetting\(\) expects array\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Form/RecordSettingsFormElement.php
+
+		-
+			message: '#^Parameter \#1 \$fieldName of method TYPO3\\CMS\\Core\\Database\\Query\\Expression\\ExpressionBuilder\:\:eq\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: ../Classes/Query/Restriction/ContextRestriction.php
+
+		-
+			message: '#^Parameter \#1 \$fieldName of method TYPO3\\CMS\\Core\\Database\\Query\\Expression\\ExpressionBuilder\:\:inSet\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: ../Classes/Query/Restriction/ContextRestriction.php
+
+		-
+			message: '#^Parameter \#1 \$fieldName of method TYPO3\\CMS\\Core\\Database\\Query\\Expression\\ExpressionBuilder\:\:isNull\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: ../Classes/Query/Restriction/ContextRestriction.php
+
+		-
+			message: '#^Parameter \#1 \$table of static method Netresearch\\Contexts\\Api\\Configuration\:\:getEnableSettings\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Query/Restriction/ContextRestriction.php
+
+		-
+			message: '#^Parameter \#1 \$table of static method Netresearch\\Contexts\\Api\\Configuration\:\:getFlatColumns\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Query/Restriction/ContextRestriction.php
+
+		-
+			message: '#^Parameter \#2 \$setting of static method Netresearch\\Contexts\\Api\\Configuration\:\:getFlatColumns\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Query/Restriction/ContextRestriction.php
+
+		-
+			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Service/DataHandlerService.php
+
+		-
+			message: '#^Property Netresearch\\Contexts\\Service\\DataHandlerService\:\:\$currentSettings \(array\<int\|string, mixed\>\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: ../Classes/Service/DataHandlerService.php
+
+		-
+			message: '#^Binary operation "\." between mixed and '','' results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: ../Classes/Service/FrontendControllerService.php
+
+		-
+			message: '#^Binary operation "\." between mixed and '' tinytext'' results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: ../Classes/Service/InstallService.php
+
+		-
+			message: '#^Parameter \#1 \$table of static method Netresearch\\Contexts\\Api\\Configuration\:\:getFlatColumns\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Service/InstallService.php
+
+		-
+			message: '#^Parameter \#2 \$setting of static method Netresearch\\Contexts\\Api\\Configuration\:\:getFlatColumns\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Service/InstallService.php
+
+		-
+			message: '#^Part \$table \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: ../Classes/Service/InstallService.php
+
+		-
+			message: '#^Parameter \#1 \$class of function class_exists expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: ../Tests/Functional/Integration/CrossExtensionIntegrationTest.php
+
+		-
+			message: '#^Part \$config\[''class''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: ../Tests/Functional/Integration/CrossExtensionIntegrationTest.php
+
+		-
+			message: '#^Cannot use array destructuring on mixed\.$#'
+			identifier: offsetAccess.nonArray
+			count: 13
+			path: ../Tests/Unit/Classes/Context/AbstractContextTest.php
+
+		-
+			message: '#^Parameter \#1 \$bMatch of method Netresearch\\Contexts\\Context\\AbstractContext\:\:invert\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Tests/Unit/Classes/Context/AbstractContextTest.php
+
+		-
+			message: '#^Parameter \#1 \$arContexts of method Netresearch\\Contexts\\Context\\Container\:\:match\(\) expects array\<Netresearch\\Contexts\\Context\\AbstractContext\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Tests/Unit/Classes/Context/ContainerTest.php
+
+		-
+			message: '#^Parameter \#2 \$values of static method Netresearch\\Contexts\\Tests\\Unit\\Context\\Type\\LogicalExpressionEvaluatorTest\:\:getExpressionResult\(\) expects array\<string, bool\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Tests/Unit/Classes/Context/Type/Combination/LogicalExpressionEvaluatorTest.php
+
+		-
+			message: '#^Parameter \#1 \$arContexts of method Netresearch\\Contexts\\Context\\Container\:\:match\(\) expects array\<Netresearch\\Contexts\\Context\\AbstractContext\>, array given\.$#'
+			identifier: argument.type
+			count: 10
+			path: ../Tests/Unit/Classes/Context/Type/CombinationTest.php
+
+		-
+			message: '#^Parameter \#1 \$array of method ArrayObject\<int\|string,Netresearch\\Contexts\\Context\\AbstractContext\>\:\:__construct\(\) expects array\<int\|string, Netresearch\\Contexts\\Context\\AbstractContext\>\|object, array given\.$#'
+			identifier: argument.type
+			count: 10
+			path: ../Tests/Unit/Classes/Context/Type/CombinationTest.php
+
+		-
+			message: '#^Property Netresearch\\Contexts\\Tests\\Unit\\Context\\Type\\HttpHeaderContextTest\:\:\$originalServerVars \(array\<string, mixed\>\) does not accept array\<mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: ../Tests/Unit/Classes/Context/Type/HttpHeaderContextTest.php
+
+		-
+			message: '#^Part \$column \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 2
+			path: ../Tests/Unit/Classes/Query/Restriction/ContextRestrictionTest.php
+
+		-
+			message: '#^Part \$value \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 2
+			path: ../Tests/Unit/Classes/Query/Restriction/ContextRestrictionTest.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 4
+			path: ../Tests/Unit/Classes/Service/FrontendControllerServiceTest.php
+
+		-
+			message: '#^Parameter \#2 \$row of method Netresearch\\Contexts\\Service\\IconService\:\:postOverlayPriorityLookup\(\) expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Tests/Unit/Classes/Service/IconServiceTest.php
+
+		-
+			message: '#^Cannot call method isRequired\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: ../Tests/Unit/Classes/ViewHelpers/MatchesViewHelperTest.php
