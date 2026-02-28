@@ -44,9 +44,8 @@ class SessionContext extends AbstractContext
             return false;
         }
 
-        /** @var FrontendUserAuthentication|null $feUser */
         $feUser = $tsfe->fe_user ?? null;
-        if ($feUser === null) {
+        if (!$feUser instanceof FrontendUserAuthentication) {
             return false;
         }
 

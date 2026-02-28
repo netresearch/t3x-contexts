@@ -26,6 +26,7 @@ flag_management:
         - type: project
           target: 70%
           threshold: 2%
+          informational: true
       carryforward: true
 
 component_management:

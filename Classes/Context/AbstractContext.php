@@ -438,10 +438,8 @@ abstract class AbstractContext
             return;
         }
 
-        // Check if fe_user is available (may not be initialized in all contexts)
-        /** @var FrontendUserAuthentication|null $feUser */
         $feUser = $tsfe->fe_user ?? null;
-        if ($feUser === null) {
+        if (!$feUser instanceof FrontendUserAuthentication) {
             return;
         }
 
@@ -470,10 +468,8 @@ abstract class AbstractContext
             return $bMatch;
         }
 
-        // Check if fe_user is available (may not be initialized in all contexts)
-        /** @var FrontendUserAuthentication|null $feUser */
         $feUser = $tsfe->fe_user ?? null;
-        if ($feUser === null) {
+        if (!$feUser instanceof FrontendUserAuthentication) {
             return $bMatch;
         }
 
