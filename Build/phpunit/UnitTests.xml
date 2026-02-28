@@ -21,8 +21,5 @@
         <include>
             <directory suffix=".php">../../Classes/</directory>
         </include>
-        <exclude>
-            <directory suffix=".php">../../Classes/Domain/Model/</directory>
-        </exclude>
     </source>
 </phpunit>

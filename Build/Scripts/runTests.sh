@@ -274,6 +274,7 @@ CI_PARAMS="${CI_PARAMS:-}"
 CONTAINER_BIN=""
 CONTAINER_HOST="host.docker.internal"
 EXTRA_TEST_OPTIONS="${EXTRA_TEST_OPTIONS:-}"
+SUITE_EXIT_CODE=1
 
 # Option parsing updates above default vars
 # Reset in case getopts has been used previously in the shell
@@ -337,7 +338,7 @@ done
 if [ ${#INVALID_OPTIONS[@]} -ne 0 ]; then
     echo "Invalid option(s):" >&2
     for I in "${INVALID_OPTIONS[@]}"; do
-        echo "-"${I} >&2
+        echo "-${I}" >&2
     done
     echo >&2
     echo "call \"Build/Scripts/runTests.sh -h\" to display help and valid options"
@@ -398,11 +399,16 @@ shift $((OPTIND - 1))
 
 SUFFIX="${$}-${RANDOM}"
 NETWORK="nr-contexts-${SUFFIX}"
-${CONTAINER_BIN} network create ${NETWORK} >/dev/null
+if ! ${CONTAINER_BIN} network create ${NETWORK} >/dev/null 2>&1; then
+    echo "Error: Failed to create Docker network '${NETWORK}'" >&2
+    exit 1
+fi
 
-if [ ${CONTAINER_BIN} = "docker" ]; then
+if [ "${CONTAINER_BIN}" = "docker" ]; then
     # docker needs the add-host for xdebug remote debugging. podman has host.container.internal built in
-    CONTAINER_COMMON_PARAMS="${CONTAINER_INTERACTIVE} --rm --network ${NETWORK} --add-host "${CONTAINER_HOST}:host-gateway" ${USERSET} -v ${ROOT_DIR}:${ROOT_DIR} -w ${ROOT_DIR}"
+    # Note: CONTAINER_COMMON_PARAMS is intentionally unquoted in docker run commands
+    # to allow word splitting of multiple docker arguments (TYPO3 core convention).
+    CONTAINER_COMMON_PARAMS="${CONTAINER_INTERACTIVE} --rm --network ${NETWORK} --add-host ${CONTAINER_HOST}:host-gateway ${USERSET} -v ${ROOT_DIR}:${ROOT_DIR} -w ${ROOT_DIR}"
 else
     # podman
     CONTAINER_HOST="host.containers.internal"
@@ -573,8 +579,8 @@ case ${TEST_SUITE} in
         ${CONTAINER_BIN} images "${TYPO3_IMAGE_PREFIX}core-testing-*" --format "{{.Repository}}:{{.Tag}}" | xargs -I {} ${CONTAINER_BIN} pull {}
         echo ""
         # remove "dangling" typo3/core-testing-* images (those tagged as <none>)
-        echo "> remove \"dangling\" ${TYPO3_IMAGE_PREFIX}/core-testing-* images (those tagged as <none>)"
-        ${CONTAINER_BIN} images --filter "reference=${TYPO3_IMAGE_PREFIX}/core-testing-*" --filter "dangling=true" --format "{{.ID}}" | xargs -I {} ${CONTAINER_BIN} rmi -f {}
+        echo "> remove \"dangling\" ${TYPO3_IMAGE_PREFIX}core-testing-* images (those tagged as <none>)"
+        ${CONTAINER_BIN} images --filter "reference=${TYPO3_IMAGE_PREFIX}core-testing-*" --filter "dangling=true" --format "{{.ID}}" | xargs -I {} ${CONTAINER_BIN} rmi -f {}
         echo ""
         SUITE_EXIT_CODE=0
         ;;
@@ -587,7 +593,7 @@ case ${TEST_SUITE} in
         ;;
 esac
 
-cleanUp
+# cleanUp is handled by the EXIT trap (line 9)
 
 # Print summary
 echo "" >&2

@@ -287,6 +287,137 @@ final class FactoryTest extends UnitTestCase
 
         self::assertNull($result);
     }
+
+    #[Test]
+    public function createFromDbWarningMessageContainsQuotedTypeName(): void
+    {
+        // Kills all 4 Concat/ConcatOperandRemoval mutants on Factory line 53
+        // Asserts that the type name appears in double quotes within the message
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())
+            ->method('warning')
+            ->with(self::stringContains('"special_context_type"'));
+
+        $factory = new Factory();
+        $factory->setLogger($logger);
+
+        $row = [
+            'uid' => 1,
+            'type' => 'special_context_type',
+            'title' => 'Test',
+            'alias' => 'test',
+            'type_conf' => '',
+        ];
+
+        $factory->createFromDb($row);
+    }
+
+    #[Test]
+    public function createFromDbSingletonExceptionStartsWithClassName(): void
+    {
+        // Kills Concat and ConcatOperandRemoval mutants on Factory line 73
+        // Verifies class name is at the START of the message (not reordered)
+        $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']['singleton'] = [
+            'title' => 'Singleton Test',
+            'class' => SingletonContextStub::class,
+            'flexFile' => '',
+        ];
+
+        $factory = new Factory();
+
+        $row = [
+            'uid' => 1,
+            'type' => 'singleton',
+            'title' => 'Test',
+            'alias' => 'test',
+            'type_conf' => '',
+            'invert' => 0,
+            'use_session' => 0,
+            'disabled' => 0,
+            'hide_in_backend' => 0,
+            'tstamp' => time(),
+        ];
+
+        try {
+            $factory->createFromDb($row);
+            self::fail('Expected ContextException');
+        } catch (ContextException $e) {
+            self::assertStringStartsWith(
+                SingletonContextStub::class,
+                $e->getMessage(),
+                'Exception message must start with the class name',
+            );
+        }
+    }
+
+    #[Test]
+    public function createFromDbNonContextExceptionStartsWithClassName(): void
+    {
+        // Kills Concat and ConcatOperandRemoval mutants on Factory line 78
+        // Verifies class name is at the START of the message (not reordered)
+        $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']['invalid'] = [
+            'title' => 'Invalid Class',
+            'class' => InvalidContextStub::class,
+            'flexFile' => '',
+        ];
+
+        $factory = new Factory();
+
+        $row = [
+            'uid' => 1,
+            'type' => 'invalid',
+            'title' => 'Test',
+            'alias' => 'test',
+            'type_conf' => '',
+            'invert' => 0,
+            'use_session' => 0,
+            'disabled' => 0,
+            'hide_in_backend' => 0,
+            'tstamp' => time(),
+        ];
+
+        try {
+            $factory->createFromDb($row);
+            self::fail('Expected ContextException');
+        } catch (ContextException $e) {
+            self::assertStringStartsWith(
+                InvalidContextStub::class,
+                $e->getMessage(),
+                'Exception message must start with the class name',
+            );
+        }
+    }
+
+    #[Test]
+    public function createFromDbReturnsNullWhenDefaultTypeHasNoClassKey(): void
+    {
+        // Kills ReturnRemoval mutant on Factory line 60
+        // When type falls back to 'default' but classMap['default'] has no 'class' key
+        $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes'] = [
+            'default' => [
+                'title' => 'Default',
+                // Intentionally no 'class' key at all
+            ],
+        ];
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())->method('warning');
+
+        $factory = new Factory();
+        $factory->setLogger($logger);
+
+        $row = [
+            'uid' => 1,
+            'type' => 'nonexistent_type',
+            'title' => 'Test',
+            'alias' => 'test',
+            'type_conf' => '',
+        ];
+
+        $result = $factory->createFromDb($row);
+
+        self::assertNull($result, 'Must return null when classMap entry has no class key');
+    }
 }
 
 /**

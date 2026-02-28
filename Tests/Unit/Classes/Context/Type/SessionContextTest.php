@@ -190,12 +190,12 @@ final class SessionContextTest extends UnitTestCase
                 return $default;
             }
 
-            protected function getTypoScriptFrontendController(): ?TypoScriptFrontendController // @phpstan-ignore return.unusedType
+            protected function getTypoScriptFrontendController(): TypoScriptFrontendController // @phpstan-ignore return.unusedType
             {
                 // Return a TSFE stub with null fe_user
                 return new class extends TypoScriptFrontendController {
                     /** @var FrontendUserAuthentication|null */
-                    public $fe_user = null;
+                    public $fe_user;
 
                     public function __construct()
                     {

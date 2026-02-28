@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Service;
 
+use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Service\FrontendControllerService;
 use PHPUnit\Framework\Attributes\Test;
@@ -261,7 +262,7 @@ final class FrontendControllerServiceTest extends UnitTestCase
     public function checkEnableFieldsForRootLineReturnsFalseWhenDisabledContextIsActive(): void
     {
         // Add a mock context with ID 42 to the Container
-        $mockContext = $this->createMock(\Netresearch\Contexts\Context\AbstractContext::class);
+        $mockContext = $this->createMock(AbstractContext::class);
         Container::get()->offsetSet('42', $mockContext);
 
         // Page disables context 42 which IS active, should deny access

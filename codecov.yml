@@ -50,6 +50,22 @@ component_management:
       name: Services
       paths:
         - Classes/Service/**
+    - component_id: middleware
+      name: Middleware
+      paths:
+        - Classes/Middleware/**
+    - component_id: query
+      name: Query Restrictions
+      paths:
+        - Classes/Query/**
+    - component_id: viewhelpers
+      name: ViewHelpers
+      paths:
+        - Classes/ViewHelpers/**
+    - component_id: expression-language
+      name: ExpressionLanguage
+      paths:
+        - Classes/ExpressionLanguage/**
 
 comment:
   layout: "reach,diff,flags,components,files"
