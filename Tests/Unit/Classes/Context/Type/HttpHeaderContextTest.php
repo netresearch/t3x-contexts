@@ -16,11 +16,13 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
+use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Context\Type\HttpHeaderContext;
 use Netresearch\Contexts\Tests\Unit\TestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Tests for HTTP Header context matching.
@@ -256,6 +258,67 @@ final class HttpHeaderContextTest extends TestBase
         $mock->setInvert(true);
 
         self::assertTrue($mock->match());
+    }
+
+    #[Test]
+    public function getServerParamsFallsBackToGlobalRequestWhenContainerRequestIsNull(): void
+    {
+        // Set up Container without a request
+        Container::reset();
+
+        // Set up TYPO3_REQUEST global
+        $mockRequest = $this->createMock(ServerRequestInterface::class);
+        $mockRequest->method('getServerParams')
+            ->willReturn(['HTTP_X_TEST' => 'global-value']);
+
+        $GLOBALS['TYPO3_REQUEST'] = $mockRequest;
+
+        try {
+            $instance = new HttpHeaderContext();
+            $result = $this->callProtected($instance, 'getServerParams');
+
+            self::assertArrayHasKey('HTTP_X_TEST', $result);
+            self::assertSame('global-value', $result['HTTP_X_TEST']);
+        } finally {
+            unset($GLOBALS['TYPO3_REQUEST']);
+            Container::reset();
+        }
+    }
+
+    #[Test]
+    public function getServerParamsFallsBackToServerSuperGlobal(): void
+    {
+        // Ensure no PSR-7 request is available
+        Container::reset();
+        unset($GLOBALS['TYPO3_REQUEST']);
+
+        $instance = new HttpHeaderContext();
+        $result = $this->callProtected($instance, 'getServerParams');
+
+        // Should return $_SERVER
+        self::assertIsArray($result);
+    }
+
+    #[Test]
+    public function getServerParamsUsesContainerRequestFirst(): void
+    {
+        Container::reset();
+
+        $mockRequest = $this->createMock(ServerRequestInterface::class);
+        $mockRequest->method('getServerParams')
+            ->willReturn(['HTTP_X_CONTAINER' => 'container-value']);
+
+        Container::get()->setRequest($mockRequest);
+
+        try {
+            $instance = new HttpHeaderContext();
+            $result = $this->callProtected($instance, 'getServerParams');
+
+            self::assertArrayHasKey('HTTP_X_CONTAINER', $result);
+            self::assertSame('container-value', $result['HTTP_X_CONTAINER']);
+        } finally {
+            Container::reset();
+        }
     }
 
     /**

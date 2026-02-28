@@ -57,6 +57,8 @@ class RecordSettingsFormElement extends AbstractFormElement
      * @throws ContextException
      * @throws DBALException
      * @throws Exception
+     *
+     * @codeCoverageIgnore Requires TYPO3 backend form framework (AbstractFormElement, LanguageService, etc.)
      */
     public function render(): array
     {
@@ -164,6 +166,8 @@ class RecordSettingsFormElement extends AbstractFormElement
      *
      *
      * @return array First value is click icon, second is title
+     *
+     * @codeCoverageIgnore Requires BackendUtility and IconFactory
      */
     protected function getRecordPreview(AbstractContext $context): array
     {
@@ -196,6 +200,7 @@ class RecordSettingsFormElement extends AbstractFormElement
      *                          absolute path to the file
      * @param int|string $uid   The uid of the record OR if a file, just blank value.
      *
+     * @codeCoverageIgnore Wraps BackendUtility::wrapClickMenuOnIcon
      */
     protected function getClickMenu(string $str, string $table, $uid = 0): string
     {
@@ -209,7 +214,7 @@ class RecordSettingsFormElement extends AbstractFormElement
     /**
      * Get the icon HTML.
      *
-   *
+     * @codeCoverageIgnore Requires IconFactory
      */
     protected function getIcon(array $row): string
     {

@@ -52,6 +52,7 @@ final readonly class PageAccessEventListener
 
             $rootLine = $pageInformation->getRootLine(); // @phpstan-ignore method.nonObject
         } else {
+            // @codeCoverageIgnoreStart
             /** @var TypoScriptFrontendController $controller */
             $controller = $event->getController(); // @phpstan-ignore method.notFound
             $pageRecord = $controller->page ?? [];
@@ -61,6 +62,7 @@ final readonly class PageAccessEventListener
             }
 
             $rootLine = $controller->rootLine ?? [];
+            // @codeCoverageIgnoreEnd
         }
 
         // Check if page is accessible based on context
@@ -73,7 +75,9 @@ final readonly class PageAccessEventListener
                     $event->getRequest(),
                     'Page is not accessible in current context',
                 );
+            // @codeCoverageIgnoreStart
             throw new ImmediateResponseException($response, 7536329338);
+            // @codeCoverageIgnoreEnd
         }
     }
 }

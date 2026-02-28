@@ -16,15 +16,17 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
+use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Context\Type\QueryParameterContext;
+use Netresearch\Contexts\Tests\Unit\TestBase;
 use PHPUnit\Framework\Attributes\Test;
+use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
-use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Tests for QueryParameterContext.
  */
-final class QueryParameterContextTest extends UnitTestCase
+final class QueryParameterContextTest extends TestBase
 {
     /**
      * Simulated GET parameters for testing.
@@ -169,6 +171,96 @@ final class QueryParameterContextTest extends UnitTestCase
         $context->setUseSession(false);
 
         self::assertFalse($context->match(), 'Missing parameter without session should not match');
+    }
+
+    #[Test]
+    public function getQueryParamsFallsBackToGlobalRequestWhenContainerRequestIsNull(): void
+    {
+        Container::reset();
+
+        $mockRequest = $this->createMock(ServerRequestInterface::class);
+        $mockRequest->method('getQueryParams')
+            ->willReturn(['test_param' => 'global-value']);
+
+        $GLOBALS['TYPO3_REQUEST'] = $mockRequest;
+
+        try {
+            $instance = new QueryParameterContext();
+            $result = $this->callProtected($instance, 'getQueryParams');
+
+            self::assertArrayHasKey('test_param', $result);
+            self::assertSame('global-value', $result['test_param']);
+        } finally {
+            unset($GLOBALS['TYPO3_REQUEST']);
+            Container::reset();
+        }
+    }
+
+    #[Test]
+    public function getQueryParamsFallsBackToGetSuperGlobal(): void
+    {
+        Container::reset();
+        unset($GLOBALS['TYPO3_REQUEST']);
+
+        $originalGet = $_GET;
+        $_GET = ['fallback_param' => 'fallback-value'];
+
+        try {
+            $instance = new QueryParameterContext();
+            $result = $this->callProtected($instance, 'getQueryParams');
+
+            self::assertArrayHasKey('fallback_param', $result);
+            self::assertSame('fallback-value', $result['fallback_param']);
+        } finally {
+            $_GET = $originalGet;
+            Container::reset();
+        }
+    }
+
+    #[Test]
+    public function getQueryParamsUsesContainerRequestFirst(): void
+    {
+        Container::reset();
+
+        $mockRequest = $this->createMock(ServerRequestInterface::class);
+        $mockRequest->method('getQueryParams')
+            ->willReturn(['container_param' => 'container-value']);
+
+        Container::get()->setRequest($mockRequest);
+
+        try {
+            $instance = new QueryParameterContext();
+            $result = $this->callProtected($instance, 'getQueryParams');
+
+            self::assertArrayHasKey('container_param', $result);
+            self::assertSame('container-value', $result['container_param']);
+        } finally {
+            Container::reset();
+        }
+    }
+
+    #[Test]
+    public function getQueryParameterReturnsValueFromQueryParams(): void
+    {
+        Container::reset();
+
+        $mockRequest = $this->createMock(ServerRequestInterface::class);
+        $mockRequest->method('getQueryParams')
+            ->willReturn(['my_param' => 'my_value', 'other' => 'data']);
+
+        Container::get()->setRequest($mockRequest);
+
+        try {
+            $instance = new QueryParameterContext();
+
+            $result = $this->callProtected($instance, 'getQueryParameter', 'my_param');
+            self::assertSame('my_value', $result);
+
+            $missing = $this->callProtected($instance, 'getQueryParameter', 'nonexistent');
+            self::assertNull($missing);
+        } finally {
+            Container::reset();
+        }
     }
 
     /**

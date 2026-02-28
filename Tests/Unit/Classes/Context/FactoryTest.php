@@ -157,6 +157,54 @@ final class FactoryTest extends UnitTestCase
     }
 
     #[Test]
+    public function createFromDbReturnsNullWhenClassIsEmptyString(): void
+    {
+        $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']['emptyclass'] = [
+            'title' => 'Empty Class Type',
+            'class' => '',
+            'flexFile' => '',
+        ];
+
+        $factory = new Factory();
+
+        $row = [
+            'uid' => 1,
+            'type' => 'emptyclass',
+            'title' => 'Test',
+            'alias' => 'test',
+            'type_conf' => '',
+        ];
+
+        $result = $factory->createFromDb($row);
+
+        self::assertNull($result);
+    }
+
+    #[Test]
+    public function createFromDbReturnsNullWhenClassIsNotString(): void
+    {
+        $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']['nonstring'] = [
+            'title' => 'Non-String Class Type',
+            'class' => 12345,
+            'flexFile' => '',
+        ];
+
+        $factory = new Factory();
+
+        $row = [
+            'uid' => 1,
+            'type' => 'nonstring',
+            'title' => 'Test',
+            'alias' => 'test',
+            'type_conf' => '',
+        ];
+
+        $result = $factory->createFromDb($row);
+
+        self::assertNull($result);
+    }
+
+    #[Test]
     public function createFromDbThrowsExceptionForSingletonClass(): void
     {
         // Register a singleton class as context type (which is not allowed)

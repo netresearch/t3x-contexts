@@ -42,6 +42,8 @@ class DefaultSettingsFormElement extends AbstractFormElement
      * @throws ContextException
      * @throws DBALException
      * @throws Exception
+     *
+     * @codeCoverageIgnore Requires TYPO3 backend form framework (AbstractFormElement, Container::initAll)
      */
     public function render(): array
     {

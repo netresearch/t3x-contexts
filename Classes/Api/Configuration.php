@@ -318,7 +318,9 @@ class Configuration
     protected static function addToTcaColumns(string $table, array $settings): void
     {
         if (!isset($GLOBALS['TCA'][$table])) {
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         if (\array_key_exists(self::RECORD_SETTINGS_COLUMN, $GLOBALS['TCA'][$table]['columns'])) {

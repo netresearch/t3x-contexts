@@ -430,6 +430,42 @@ final class ContextRestrictionTest extends UnitTestCase
     }
 
     #[Test]
+    public function buildExpressionSkipsSettingsWithoutFlatColumnsInFrontendMode(): void
+    {
+        // Set up frontend mode
+        $this->setupFrontendMode();
+
+        // Table with enableSettings but NO flatSettings for 'tx_contexts'
+        $GLOBALS['TCA']['test_table'] = [
+            'ctrl' => [
+                'tx_contexts' => [
+                    'enableSettings' => ['tx_contexts'],
+                    // No flatSettings - should hit continue on line 60
+                ],
+            ],
+            'columns' => [],
+        ];
+
+        $restriction = new ContextRestriction();
+
+        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $compositeExpression = $this->createMock(CompositeExpression::class);
+
+        // Only final and() call should happen, no constraint building
+        $expressionBuilder->expects(self::once())
+            ->method('and')
+            ->willReturn($compositeExpression);
+
+        // No isNull, eq, inSet etc. should be called since we skip
+        $expressionBuilder->expects(self::never())->method('isNull');
+        $expressionBuilder->expects(self::never())->method('eq');
+
+        $result = $restriction->buildExpression(['test_table'], $expressionBuilder);
+
+        self::assertInstanceOf(CompositeExpression::class, $result);
+    }
+
+    #[Test]
     public function buildExpressionAddsDisableConstraintsCorrectly(): void
     {
         // Set up frontend mode

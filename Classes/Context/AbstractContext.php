@@ -152,6 +152,8 @@ abstract class AbstractContext
      *
      * @throws DBALException
      * @throws Exception
+     *
+     * @codeCoverageIgnore Requires database (ConnectionPool/QueryBuilder)
      */
     final public function getSetting(string $table, string $setting, int $uid, ?array $arRow = null): ?Setting
     {
@@ -192,6 +194,8 @@ abstract class AbstractContext
      *
      * @throws DBALException
      * @throws Exception
+     *
+     * @codeCoverageIgnore Requires database (ConnectionPool/QueryBuilder)
      */
     final public function getSettings(string $table, int $uid): array
     {
@@ -257,6 +261,8 @@ abstract class AbstractContext
      *
      * @throws DBALException
      * @throws Exception
+     *
+     * @codeCoverageIgnore Requires database (ConnectionPool/QueryBuilder)
      */
     final public function hasSetting(string $table, string $setting, int $uid): bool
     {

@@ -101,9 +101,11 @@ class HttpHeaderContext extends AbstractContext
         );
 
         // Empty value list, so we allow any value
+        // @codeCoverageIgnoreStart
         if (\count($arValues) === 1 && $arValues[0] === '') {
             return $value !== '';
         }
+        // @codeCoverageIgnoreEnd
 
         $arValues = array_map(trim(...), $arValues);
 

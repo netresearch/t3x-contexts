@@ -234,6 +234,47 @@ final class FrontendControllerServiceTest extends UnitTestCase
     }
 
     #[Test]
+    public function registerQueryParameterSkipsHookRegistrationWhenAlreadyRegistered(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'] ??= [];
+
+        // First call - registers hooks
+        FrontendControllerService::registerQueryParameter('param1', 'value1', false);
+
+        // Verify hooks were registered
+        self::assertArrayHasKey(
+            FrontendControllerService::class,
+            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'] ?? [],
+        );
+
+        // Second call - should skip hook registration (early return on line 63-64)
+        FrontendControllerService::registerQueryParameter('param2', 'value2', true);
+
+        // Hooks should still be there (not duplicated)
+        self::assertArrayHasKey(
+            FrontendControllerService::class,
+            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'] ?? [],
+        );
+    }
+
+    #[Test]
+    public function checkEnableFieldsForRootLineReturnsFalseWhenDisabledContextIsActive(): void
+    {
+        // Add a mock context with ID 42 to the Container
+        $mockContext = $this->createMock(\Netresearch\Contexts\Context\AbstractContext::class);
+        Container::get()->offsetSet('42', $mockContext);
+
+        // Page disables context 42 which IS active, should deny access
+        $rootLine = [
+            ['uid' => 1, 'title' => 'Home', 'extendToSubpages' => 1, 'tx_contexts_enable' => '', 'tx_contexts_disable' => '42'],
+        ];
+
+        $service = new FrontendControllerService();
+
+        self::assertFalse($service->checkEnableFieldsForRootLine($rootLine));
+    }
+
+    #[Test]
     public function checkEnableFieldsForRootLineProcessesRootLineInReverse(): void
     {
         // The method uses array_reverse, so first item in rootline is processed last

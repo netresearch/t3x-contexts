@@ -44,6 +44,15 @@ final class SessionContextTest extends UnitTestCase
     }
 
     #[Test]
+    public function matchReturnsFalseWhenFeUserIsNull(): void
+    {
+        // Create a context with TSFE but without fe_user
+        $context = $this->createSessionContextWithNullFeUser('my_session_var');
+
+        self::assertFalse($context->match(), 'Without fe_user, context should not match');
+    }
+
+    #[Test]
     public function matchReturnsFalseWhenSessionVariableNotSet(): void
     {
         $context = $this->createSessionContext('my_session_var', null, true);
@@ -153,6 +162,53 @@ final class SessionContextTest extends UnitTestCase
         self::assertTrue($context1->match(), 'Boolean true should match');
         self::assertTrue($context2->match(), 'Integer should match');
         self::assertTrue($context3->match(), 'Array should match');
+    }
+
+    /**
+     * Create a SessionContext with TSFE but null fe_user.
+     */
+    private function createSessionContextWithNullFeUser(string $variableName): SessionContext
+    {
+        return new class ($variableName) extends SessionContext {
+            private readonly string $mockVariableName;
+
+            public function __construct(string $variableName)
+            {
+                $this->mockVariableName = $variableName;
+            }
+
+            protected function getConfValue(
+                string $fieldNameArg,
+                string $default = '',
+                string $sheet = 'sDEF',
+                string $lang = 'lDEF',
+                string $value = 'vDEF',
+            ): string {
+                if ($fieldNameArg === 'field_variable') {
+                    return $this->mockVariableName;
+                }
+                return $default;
+            }
+
+            protected function getTypoScriptFrontendController(): ?TypoScriptFrontendController // @phpstan-ignore return.unusedType
+            {
+                // Return a TSFE stub with null fe_user
+                return new class extends TypoScriptFrontendController {
+                    /** @var FrontendUserAuthentication|null */
+                    public $fe_user = null;
+
+                    public function __construct()
+                    {
+                        // Do not call parent constructor
+                    }
+                };
+            }
+
+            protected function invert(bool $bMatch): bool
+            {
+                return $bMatch;
+            }
+        };
     }
 
     /**

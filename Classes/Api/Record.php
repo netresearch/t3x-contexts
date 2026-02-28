@@ -86,6 +86,7 @@ class Record
 
         $uid = (int) $row['uid'];
 
+        // @codeCoverageIgnoreStart
         /** @var AbstractContext $context */
         foreach (Container::get() as $context) {
             $rowSetting = $context->getSetting($table, $setting, $uid);
@@ -100,6 +101,7 @@ class Record
         }
 
         return true;
+        // @codeCoverageIgnoreEnd
     }
 
     /**

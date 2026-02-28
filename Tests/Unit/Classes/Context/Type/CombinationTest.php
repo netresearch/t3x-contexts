@@ -508,6 +508,31 @@ final class CombinationTest extends TestBase
         self::assertArrayHasKey(4, $matched);
     }
 
+    #[Test]
+    public function matchSkipsNonObjectDependency(): void
+    {
+        // Test that non-object dependencies are skipped with continue (line 93-94)
+        $ctx = $this->createTestContext(1, 'ctx1', false, true);
+
+        $combinationContext = $this->createCombinationContext(
+            2,
+            'combi',
+            'ctx1',
+        );
+
+        // First get dependencies to set up tokens
+        $combinationContext->getDependencies([1 => $ctx, 2 => $combinationContext]);
+
+        // Pass a non-object dependency
+        $result = $combinationContext->match([
+            1 => 'not-an-object',  // non-object value should be skipped
+        ]);
+
+        // With no valid dependencies evaluated, the default is true
+        // (expression with missing values defaults to true for the variable)
+        self::assertTrue($result);
+    }
+
     /**
      * Create a test context with specified properties.
      */

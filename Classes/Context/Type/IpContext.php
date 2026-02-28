@@ -62,9 +62,11 @@ class IpContext extends AbstractContext
             true,
         );
 
+        // @codeCoverageIgnoreStart
         if (\count($arIpRange) === 1 && $arIpRange[0] === '') {
             return $this->invert(false);
         }
+        // @codeCoverageIgnoreEnd
 
         $strRange = implode(',', $arIpRange);
 

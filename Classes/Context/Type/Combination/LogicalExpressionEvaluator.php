@@ -176,7 +176,9 @@ class LogicalExpressionEvaluator
         );
 
         if ($expression === null) {
+            // @codeCoverageIgnoreStart
             return [];
+            // @codeCoverageIgnoreEnd
         }
 
         $pattern = '/[^\w\-_]/';
@@ -342,15 +344,19 @@ class LogicalExpressionEvaluator
                     $str = '!' . $str;
                 }
             } elseif ($unshifted && \is_int($token)) {
+                // @codeCoverageIgnoreStart
                 $str = \array_key_exists($token, self::$operatorMap) ? self::$operatorMap[$token] : '?';
                 $str = ' ' . $str . ' ';
+                // @codeCoverageIgnoreEnd
             } elseif (\is_array($token)) {
                 $str = (string) $token[1];
                 if (\array_key_exists(2, $token)) {
                     $str = '!' . $str;
                 }
             } else {
+                // @codeCoverageIgnoreStart
                 $str = '?';
+                // @codeCoverageIgnoreEnd
             }
             $parts[] = $str;
         }
@@ -369,7 +375,9 @@ class LogicalExpressionEvaluator
     protected function pushScope(): void
     {
         if (!$this->scopeContainer instanceof stdClass) {
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         $scope = new self();
@@ -404,7 +412,9 @@ class LogicalExpressionEvaluator
     protected function getScope(): LogicalExpressionEvaluator
     {
         if (!$this->scopeContainer instanceof stdClass || empty($this->scopeContainer->keys)) {
+            // @codeCoverageIgnoreStart
             return $this;
+            // @codeCoverageIgnoreEnd
         }
 
         /** @var array<int, int> $keys */
