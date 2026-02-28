@@ -14,8 +14,9 @@ echo "Rendering documentation..."
 echo "Source: ${DOCS_SOURCE}"
 echo "Output: ${DOCS_OUTPUT}"
 
-# Clean output directory (needs sudo for Docker-created files)
-sudo rm -rf "${DOCS_OUTPUT}"/* 2>/dev/null || rm -rf "${DOCS_OUTPUT}"/* 2>/dev/null || true
+# Clean output directory (use Docker to remove root-owned files from previous renders)
+mkdir -p "${DOCS_OUTPUT}"
+docker run --rm -v "${DOCS_OUTPUT}:/cleanup" alpine:3 sh -c "rm -rf /cleanup/*"
 
 # Render using TYPO3 render-guides Docker image with current user
 docker run --rm \
