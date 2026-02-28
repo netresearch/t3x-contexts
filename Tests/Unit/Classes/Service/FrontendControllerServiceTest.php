@@ -259,6 +259,60 @@ final class FrontendControllerServiceTest extends UnitTestCase
     }
 
     #[Test]
+    public function checkEnableFieldsForRootLineReturnsFalseForCurrentPageWithoutExtendToSubpages(): void
+    {
+        // Bug fix: current page (index 0) must always be checked for its own
+        // context restrictions, regardless of extendToSubpages.
+        // Previously, pages without extendToSubpages were skipped entirely,
+        // allowing direct access to context-restricted pages.
+        $rootLine = [
+            ['uid' => 3, 'title' => 'Debug Dashboard', 'extendToSubpages' => 0, 'tx_contexts_enable' => '999', 'tx_contexts_disable' => ''],
+            ['uid' => 1, 'title' => 'Home', 'extendToSubpages' => 0],
+        ];
+
+        $service = new FrontendControllerService();
+
+        // Context 999 is not active, so the page should be denied
+        self::assertFalse($service->checkEnableFieldsForRootLine($rootLine));
+    }
+
+    #[Test]
+    public function checkEnableFieldsForRootLineReturnsTrueForCurrentPageWhenContextIsActive(): void
+    {
+        // Current page requires context 42, which IS active
+        $mockContext = $this->createMock(AbstractContext::class);
+        Container::get()->offsetSet('42', $mockContext);
+
+        $rootLine = [
+            ['uid' => 3, 'title' => 'Debug Dashboard', 'extendToSubpages' => 0, 'tx_contexts_enable' => '42', 'tx_contexts_disable' => ''],
+            ['uid' => 1, 'title' => 'Home', 'extendToSubpages' => 0],
+        ];
+
+        $service = new FrontendControllerService();
+
+        // Context 42 is active, so the page should be accessible
+        self::assertTrue($service->checkEnableFieldsForRootLine($rootLine));
+    }
+
+    #[Test]
+    public function checkEnableFieldsForRootLineReturnsFalseForCurrentPageWithDisableContext(): void
+    {
+        // Current page disables context 42, which IS active
+        $mockContext = $this->createMock(AbstractContext::class);
+        Container::get()->offsetSet('42', $mockContext);
+
+        $rootLine = [
+            ['uid' => 3, 'title' => 'Hidden Page', 'extendToSubpages' => 0, 'tx_contexts_enable' => '', 'tx_contexts_disable' => '42'],
+            ['uid' => 1, 'title' => 'Home', 'extendToSubpages' => 0],
+        ];
+
+        $service = new FrontendControllerService();
+
+        // Context 42 is active and page disables it, so page should be denied
+        self::assertFalse($service->checkEnableFieldsForRootLine($rootLine));
+    }
+
+    #[Test]
     public function checkEnableFieldsForRootLineReturnsFalseWhenDisabledContextIsActive(): void
     {
         // Add a mock context with ID 42 to the Container
