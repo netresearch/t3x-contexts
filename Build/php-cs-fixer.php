@@ -20,6 +20,7 @@ $finder = PhpCsFixer\Finder::create()
         '.Build',
         '.ddev',
         'Build',
+        'config',
         'public',
         'var',
         'vendor',

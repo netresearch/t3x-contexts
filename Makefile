@@ -1,24 +1,86 @@
-.PHONY: help cgl cgl-fix phpstan rector test test-unit test-functional
+.DEFAULT_GOAL := help
 
-help: ## Show this help
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+.PHONY: help up down restart install install-v12 install-v13 ssh \
+        cgl cgl-fix phpstan rector lint mutation \
+        test test-unit test-functional ci clean
+
+# ===== DDEV Environment =====
+
+up: ## Start DDEV and install dependencies
+	ddev start
+	ddev setup
+
+down: ## Stop DDEV environment
+	ddev stop
+
+restart: ## Restart DDEV environment
+	ddev restart
+
+install: ## Install TYPO3 v12 and v13 with extension
+	ddev install-all
+
+install-v12: ## Install TYPO3 v12 with extension
+	ddev install-v12
+
+install-v13: ## Install TYPO3 v13 with extension
+	ddev install-v13
+
+ssh: ## Open shell in web container
+	ddev ssh
+
+# ===== Code Quality =====
 
 cgl: ## Check code style (dry-run)
-	composer ci:test:php:cgl
+	ddev exec composer ci:test:php:cgl
 
 cgl-fix: ## Fix code style
-	composer ci:cgl
+	ddev exec composer ci:cgl
 
 phpstan: ## Run PHPStan static analysis
-	composer ci:test:php:phpstan
+	ddev exec composer ci:test:php:phpstan
 
 rector: ## Run Rector dry-run
-	composer ci:test:php:rector
+	ddev exec composer ci:test:php:rector
+
+lint: ## Run PHP syntax lint
+	ddev exec composer ci:test:php:lint
+
+# ===== Testing =====
 
 test: test-unit test-functional ## Run all tests
 
 test-unit: ## Run unit tests
-	composer ci:test:php:unit
+	ddev exec composer ci:test:php:unit
 
 test-functional: ## Run functional tests
-	composer ci:test:php:functional
+	ddev exec composer ci:test:php:functional
+
+mutation: ## Run mutation testing
+	ddev exec composer test:mutation
+
+# ===== CI (all checks) =====
+
+ci: cgl phpstan rector lint test-unit test-functional ## Run all CI checks
+
+# ===== Cleanup =====
+
+clean: ## Remove .Build, caches, vendor
+	ddev exec rm -rf .Build .php-cs-fixer.cache Build/.phpunit.cache vendor composer.lock
+	@echo "Clean complete. Run 'make up' to reinstall."
+
+# ===== Help =====
+
+help: ## Show this help
+	@echo "Usage: make [target]"
+	@echo ""
+	@echo "DDEV Environment:"
+	@grep -E '^(up|down|restart|install|install-v12|install-v13|ssh):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@echo ""
+	@echo "Code Quality:"
+	@grep -E '^(cgl|cgl-fix|phpstan|rector|lint):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@echo ""
+	@echo "Testing:"
+	@grep -E '^(test|test-unit|test-functional|mutation):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@echo ""
+	@echo "Other:"
+	@grep -E '^(ci|clean):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
