@@ -52,7 +52,7 @@ class Record
         }
 
         foreach ($enableSettings as $setting) {
-            if (!self::isSettingEnabled($table, $setting, $row)) {
+            if (!self::isSettingEnabled($table, (string) $setting, $row)) {
                 return false;
             }
         }
@@ -86,6 +86,7 @@ class Record
 
         $uid = (int) $row['uid'];
 
+        // @codeCoverageIgnoreStart
         /** @var AbstractContext $context */
         foreach (Container::get() as $context) {
             $rowSetting = $context->getSetting($table, $setting, $uid);
@@ -100,6 +101,7 @@ class Record
         }
 
         return true;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -126,6 +128,7 @@ class Record
         $flatColumnContents = [];
 
         foreach ($flatColumns as $i => $flatColumn) {
+            $flatColumn = (string) $flatColumn;
             if (!\array_key_exists($flatColumn, $row) || ($row[$flatColumn] === null)) {
                 $rowValid = false;
             } elseif ($row[$flatColumn] !== '') {

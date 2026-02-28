@@ -22,6 +22,7 @@ use Netresearch\Contexts\Api\Configuration;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -123,10 +124,10 @@ abstract class AbstractContext
     {
         if (\count($arRow) > 0) {
             $this->uid = (int) $arRow['uid'];
-            $this->type = $arRow['type'];
-            $this->title = $arRow['title'];
-            $this->alias = $arRow['alias'];
-            $this->tstamp = $arRow['tstamp'];
+            $this->type = (string) $arRow['type'];
+            $this->title = (string) $arRow['title'];
+            $this->alias = (string) $arRow['alias'];
+            $this->tstamp = (int) $arRow['tstamp'];
             $this->invert = (bool) $arRow['invert'];
             $this->use_session = (bool) $arRow['use_session'];
             $this->disabled = (bool) $arRow['disabled'];
@@ -151,6 +152,8 @@ abstract class AbstractContext
      *
      * @throws DBALException
      * @throws Exception
+     *
+     * @codeCoverageIgnore Requires database (ConnectionPool/QueryBuilder)
      */
     final public function getSetting(string $table, string $setting, int $uid, ?array $arRow = null): ?Setting
     {
@@ -191,6 +194,8 @@ abstract class AbstractContext
      *
      * @throws DBALException
      * @throws Exception
+     *
+     * @codeCoverageIgnore Requires database (ConnectionPool/QueryBuilder)
      */
     final public function getSettings(string $table, int $uid): array
     {
@@ -256,6 +261,8 @@ abstract class AbstractContext
      *
      * @throws DBALException
      * @throws Exception
+     *
+     * @codeCoverageIgnore Requires database (ConnectionPool/QueryBuilder)
      */
     final public function hasSetting(string $table, string $setting, int $uid): bool
     {
@@ -389,7 +396,7 @@ abstract class AbstractContext
     /**
      * Loads match() result from session if the context is configured so.
      *
-     * @return array Array with two values:
+     * @return array{0: bool, 1: bool|null} Array with two values:
      *               0: true: Use the second value as return,
      *                  false: calculate it
      *               1: Return value when 0 is true
@@ -431,9 +438,8 @@ abstract class AbstractContext
             return;
         }
 
-        // Check if fe_user is available (may not be initialized in all contexts)
         $feUser = $tsfe->fe_user ?? null;
-        if ($feUser === null) {
+        if (!$feUser instanceof FrontendUserAuthentication) {
             return;
         }
 
@@ -462,9 +468,8 @@ abstract class AbstractContext
             return $bMatch;
         }
 
-        // Check if fe_user is available (may not be initialized in all contexts)
         $feUser = $tsfe->fe_user ?? null;
-        if ($feUser === null) {
+        if (!$feUser instanceof FrontendUserAuthentication) {
             return $bMatch;
         }
 

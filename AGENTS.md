@@ -1,4 +1,4 @@
-<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-31 -->
+<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-02-27 -->
 
 # AGENTS.md
 
@@ -45,9 +45,9 @@ https://docs.contexts.ddev.site/         # Local documentation
 ## Commands
 
 ```bash
-# Pre-commit checks (automatic via GrumPHP)
+# Pre-commit checks (automatic via CaptainHook)
 composer ci:test:php:cgl      # PHP-CS-Fixer (PSR-12 + strict types)
-composer ci:test:php:phpstan  # PHPStan level 9
+composer ci:test:php:phpstan  # PHPStan level 10
 
 # Testing
 composer ci:test:php:unit        # PHPUnit unit tests
@@ -91,9 +91,9 @@ Run tests directly via:
 | Tool | Config | Purpose |
 |------|--------|---------|
 | PHP-CS-Fixer | `.php-cs-fixer.dist.php` | Code style (PSR-12) |
-| PHPStan | `Build/phpstan.neon` | Static analysis (level 9) |
+| PHPStan | `Build/phpstan.neon` | Static analysis (level 10) |
 | PHPUnit | `Build/phpunit/*.xml` | Unit & functional tests |
-| GrumPHP | `grumphp.yml` | Pre-commit hooks |
+| CaptainHook | `Build/captainhook.json` | Git hooks (pre-commit, commit-msg) |
 | Rector | `rector.php` | Automated refactoring |
 | Fractor | `fractor.php` | TYPO3-specific migrations |
 
@@ -109,7 +109,7 @@ Run tests directly via:
 - **Conventional Commits**: `type(scope): subject`
 - **Ask before**: heavy dependencies, architecture changes, new context types
 - **Never commit** secrets, credentials, or PII
-- **GrumPHP** runs pre-commit checks automatically
+- **CaptainHook** runs pre-commit checks automatically
 - **Database queries**: Always use `Connection::PARAM_*` (not `PDO::PARAM_*`)
 - **Testing**: Functional tests need database credentials (auto-detected in DDEV)
 
@@ -149,10 +149,20 @@ Resources/         # Frontend assets, language files
 | Workflow | Trigger | Purpose |
 |----------|---------|---------|
 | `ci.yml` | push/PR | Full test suite (unit, functional, lint, phpstan) |
-| `phpstan.yml` | push/PR | Static analysis |
-| `phpcs.yml` | push/PR | Code style |
-| `security.yml` | schedule | Dependency vulnerability scan |
-| `publish-to-ter.yml` | tag | Publish to TYPO3 Extension Repository |
+| `codeql.yml` | push/PR/schedule | CodeQL security analysis |
+| `dependency-review.yml` | PR | Dependency vulnerability & license review |
+| `docs.yml` | push/PR (Documentation/**) | Render RST documentation |
+| `greetings.yml` | issue/PR opened | Welcome first-time contributors |
+| `labeler.yml` | PR | Auto-label PRs by changed files |
+| `license-check.yml` | push/PR/schedule | PHP dependency license audit |
+| `lock.yml` | schedule | Lock resolved threads after 365 days |
+| `pr-quality.yml` | PR | PR size check + solo-maintainer auto-approve |
+| `publish-to-ter.yml` | release | Publish to TYPO3 Extension Repository |
+| `release.yml` | tag v* | Create signed release with SBOM + cosign |
+| `scorecard.yml` | push/schedule | OpenSSF Scorecard security scan |
+| `security.yml` | push/PR/schedule | Gitleaks + composer audit |
+| `stale.yml` | schedule | Close stale issues/PRs after 60 days |
+| `auto-merge-deps.yml` | PR | Auto-merge Renovate dependency updates |
 
 ## Key Conventions
 

@@ -1,0 +1,23 @@
+name: Documentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Documentation/**'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'Documentation/**'
+      - '.github/workflows/docs.yml'
+  merge_group:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  docs:
+    uses: netresearch/typo3-ci-workflows/.github/workflows/docs.yml@main
+    permissions:
+      contents: read

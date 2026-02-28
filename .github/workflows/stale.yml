@@ -1,0 +1,15 @@
+name: Stale Issues
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  stale:
+    uses: netresearch/typo3-ci-workflows/.github/workflows/stale.yml@main
+    permissions:
+      issues: write
+      pull-requests: write

@@ -373,6 +373,63 @@ final class SettingTest extends UnitTestCase
     }
 
     #[Test]
+    public function fromFlatDataMatchesExactIdAtDisableListEnd(): void
+    {
+        // Kills ConcatOperandRemoval mutant on Setting line 87
+        // (trailing comma removed from disable haystack)
+        // When uid is at the END of the disable column, the trailing comma
+        // in the haystack is essential for matching.
+        $mockContext = $this->createMock(AbstractContext::class);
+        $mockContext->method('getUid')->willReturn(15);
+
+        $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
+        $row = [
+            'tx_contexts_disable' => '5,10,15', // uid 15 at end
+            'tx_contexts_enable' => '',
+        ];
+
+        $setting = Setting::fromFlatData(
+            $mockContext,
+            'pages',
+            'tx_contexts',
+            $flatColumns,
+            $row,
+        );
+
+        self::assertNotNull($setting, 'Context UID at end of disable list must be found');
+        self::assertFalse($setting->getEnabled());
+    }
+
+    #[Test]
+    public function fromFlatDataDoesNotMatchPrefixInEnableColumn(): void
+    {
+        // Kills ConcatOperandRemoval mutant on Setting line 92
+        // (trailing comma removed from enable needle)
+        // UID 2 must NOT match enable column value "20,21"
+        $mockContext = $this->createMock(AbstractContext::class);
+        $mockContext->method('getUid')->willReturn(2);
+
+        $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
+        $row = [
+            'tx_contexts_disable' => '',
+            'tx_contexts_enable' => '20,21', // 2 is a prefix of 20
+        ];
+
+        $setting = Setting::fromFlatData(
+            $mockContext,
+            'pages',
+            'tx_contexts',
+            $flatColumns,
+            $row,
+        );
+
+        self::assertNull(
+            $setting,
+            'UID 2 must not match enable values 20,21 (no partial prefix matching)',
+        );
+    }
+
+    #[Test]
     public function fromFlatDataPrioritizesDisableOverEnable(): void
     {
         // When context appears in BOTH disable and enable, behavior test

@@ -43,6 +43,8 @@ class CombinationFormElement extends AbstractFormElement
      * @throws ContextException
      * @throws DBALException
      * @throws Exception
+     *
+     * @codeCoverageIgnore Requires TYPO3 backend form framework (NodeFactory, TextElement, Container::initAll)
      */
     public function render(): array
     {
@@ -55,7 +57,7 @@ class CombinationFormElement extends AbstractFormElement
         $text = $textElement->render();
 
         $evaluator = new LogicalExpressionEvaluator();
-        $tokens = $evaluator->tokenize($this->data['parameterArray']['itemFormElValue']);
+        $tokens = $evaluator->tokenize((string) $this->data['parameterArray']['itemFormElValue']);
 
         $notFound = [];
         $unknownTokens = [];
@@ -90,8 +92,9 @@ class CombinationFormElement extends AbstractFormElement
             return $text;
         }
 
+        $textHtml = (string) $text['html'];
         $html = <<<HTML
-            {$text['html']}
+            {$textHtml}
             <div class="text-danger">
             HTML;
         if (\count($notFound) > 0) {

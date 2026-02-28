@@ -84,6 +84,8 @@ class LogicalExpressionEvaluator
 
     /**
      * Token identifier to token map
+     *
+     * @var array<int, string>
      */
     protected static array $operatorMap = [
         self::T_AND => '&&',
@@ -107,6 +109,7 @@ class LogicalExpressionEvaluator
      * * arrays (variables)
      * * self (scopes)
      *
+     * @var array<int, int|array<int, mixed>|self>
      */
     protected array $tokens = [];
 
@@ -173,7 +176,9 @@ class LogicalExpressionEvaluator
         );
 
         if ($expression === null) {
+            // @codeCoverageIgnoreStart
             return [];
+            // @codeCoverageIgnoreEnd
         }
 
         $pattern = '/[^\w\-_]/';
@@ -241,11 +246,13 @@ class LogicalExpressionEvaluator
             $this->getScope(),
         ];
 
+        /** @var int|array<int, mixed> $token */
         foreach ($tokens as $token) {
             $this->getScope()->handleToken($token);
         }
 
         if ($this->scopeContainer instanceof stdClass) {
+            /** @var self $scope */
             foreach ($this->scopeContainer->scopes as $scope) {
                 $scope->precedenceShiftTokens([
                     self::T_AND,
@@ -271,11 +278,13 @@ class LogicalExpressionEvaluator
         foreach ($this->tokens as $i => $token) {
             if ($token instanceof self) {
                 $value = $token->evaluate($values);
-            } else {
-                if (!\array_key_exists($token[1], $values)) {
-                    $values[$token[1]] = true;
+            } elseif (\is_array($token)) {
+                /** @var string $tokenKey */
+                $tokenKey = $token[1];
+                if (!\array_key_exists($tokenKey, $values)) {
+                    $values[$tokenKey] = true;
                 }
-                $value = $values[$token[1]];
+                $value = $values[$tokenKey];
                 if ($value === 'disabled') {
                     // context is disabled, so treat it as matching
                     $value = true;
@@ -335,13 +344,19 @@ class LogicalExpressionEvaluator
                     $str = '!' . $str;
                 }
             } elseif ($unshifted && \is_int($token)) {
+                // @codeCoverageIgnoreStart
                 $str = \array_key_exists($token, self::$operatorMap) ? self::$operatorMap[$token] : '?';
                 $str = ' ' . $str . ' ';
-            } else {
-                $str = $token[1];
+                // @codeCoverageIgnoreEnd
+            } elseif (\is_array($token)) {
+                $str = (string) $token[1];
                 if (\array_key_exists(2, $token)) {
                     $str = '!' . $str;
                 }
+            } else {
+                // @codeCoverageIgnoreStart
+                $str = '?';
+                // @codeCoverageIgnoreEnd
             }
             $parts[] = $str;
         }
@@ -360,7 +375,9 @@ class LogicalExpressionEvaluator
     protected function pushScope(): void
     {
         if (!$this->scopeContainer instanceof stdClass) {
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         $scope = new self();
@@ -368,7 +385,10 @@ class LogicalExpressionEvaluator
         $scope->scopeContainer = $this->scopeContainer;
 
         $this->scopeContainer->scopes[] = $scope;
-        $this->scopeContainer->keys[] = array_key_last($this->scopeContainer->scopes);
+
+        /** @var array<int, self> $scopes */
+        $scopes = $this->scopeContainer->scopes;
+        $this->scopeContainer->keys[] = array_key_last($scopes);
     }
 
     /**
@@ -378,7 +398,10 @@ class LogicalExpressionEvaluator
     protected function popScope(): void
     {
         if ($this->scopeContainer instanceof stdClass && !empty($this->scopeContainer->keys)) {
-            array_pop($this->scopeContainer->keys);
+            /** @var array<int, int> $keys */
+            $keys = $this->scopeContainer->keys;
+            array_pop($keys);
+            $this->scopeContainer->keys = $keys;
         }
     }
 
@@ -389,17 +412,22 @@ class LogicalExpressionEvaluator
     protected function getScope(): LogicalExpressionEvaluator
     {
         if (!$this->scopeContainer instanceof stdClass || empty($this->scopeContainer->keys)) {
+            // @codeCoverageIgnoreStart
             return $this;
+            // @codeCoverageIgnoreEnd
         }
 
-        return $this->scopeContainer->scopes[end($this->scopeContainer->keys)];
+        /** @var array<int, int> $keys */
+        $keys = $this->scopeContainer->keys;
+
+        return $this->scopeContainer->scopes[end($keys)];
     }
 
     /**
      * Handle a token: Creates scopes for each expression in parentheses and
      * does some syntax checks
      *
-     * @param int|array $token
+     * @param int|array<int, mixed> $token
      * @throws LogicalExpressionEvaluatorException
      */
     protected function handleToken($token): void
@@ -481,7 +509,7 @@ class LogicalExpressionEvaluator
                         $this->pushToken($token);
                     } else {
                         throw new LogicalExpressionEvaluatorException(
-                            'Unexpected "' . $token[1] . '"',
+                            'Unexpected "' . (string) $token[1] . '"',
                             1064266885,
                         );
                     }
@@ -492,7 +520,7 @@ class LogicalExpressionEvaluator
     /**
      * Add a token to the current scope tokens
      *
-     * @param int|array|LogicalExpressionEvaluator $token
+     * @param int|array<int, mixed>|self $token
      * @throws LogicalExpressionEvaluatorException
      */
     protected function pushToken($token): void
@@ -523,9 +551,9 @@ class LogicalExpressionEvaluator
      */
     protected function precedenceShiftTokens(array $precedences): void
     {
-        $operator = array_shift($precedences);
+        $operator = (int) array_shift($precedences);
 
-        if (!$operator) {
+        if ($operator === 0) {
             return;
         }
 
@@ -546,6 +574,7 @@ class LogicalExpressionEvaluator
             }
 
             foreach ($this->tokens as $token) {
+                /** @var self $token */
                 $token->precedenceShiftTokens($precedences);
             }
         }

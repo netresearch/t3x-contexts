@@ -9,7 +9,66 @@ coverage:
         target: auto
         threshold: 1%
 
+flag_management:
+  individual_flags:
+    - name: unit
+      paths:
+        - Classes/
+      statuses:
+        - type: project
+          target: 95%
+          threshold: 1%
+      carryforward: true
+    - name: functional
+      paths:
+        - Classes/
+      statuses:
+        - type: project
+          target: 70%
+          threshold: 2%
+          informational: true
+      carryforward: true
+
+component_management:
+  individual_components:
+    - component_id: api
+      name: API Layer
+      paths:
+        - Classes/Api/**
+    - component_id: context
+      name: Context Types
+      paths:
+        - Classes/Context/**
+    - component_id: events
+      name: Event Listeners
+      paths:
+        - Classes/EventListener/**
+    - component_id: forms
+      name: Form Elements
+      paths:
+        - Classes/Form/**
+    - component_id: services
+      name: Services
+      paths:
+        - Classes/Service/**
+    - component_id: middleware
+      name: Middleware
+      paths:
+        - Classes/Middleware/**
+    - component_id: query
+      name: Query Restrictions
+      paths:
+        - Classes/Query/**
+    - component_id: viewhelpers
+      name: ViewHelpers
+      paths:
+        - Classes/ViewHelpers/**
+    - component_id: expression-language
+      name: ExpressionLanguage
+      paths:
+        - Classes/ExpressionLanguage/**
+
 comment:
-  layout: "reach,diff,flags,files"
+  layout: "reach,diff,flags,components,files"
   behavior: default
   require_changes: true

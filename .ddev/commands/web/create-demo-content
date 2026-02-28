@@ -1,0 +1,523 @@
+#!/bin/bash
+
+## Description: Create demo contexts and content for a TYPO3 installation
+## Usage: create-demo-content <db_name>
+## Example: ddev create-demo-content db_v13
+
+set -e
+
+DB_NAME="${1:?Usage: create-demo-content <db_name>}"
+DB_USER="db"
+DB_PASS="db"
+DB_HOST="db"
+
+echo "=== Creating demo contexts and content in ${DB_NAME} ==="
+
+mysql -h "${DB_HOST}" -u "${DB_USER}" -p"${DB_PASS}" "${DB_NAME}" << 'SQL_DEMO'
+
+-- =====================================================
+-- CONTEXT RECORDS
+-- =====================================================
+
+-- Context 1: DDEV Development (Domain)
+-- Matches the local DDEV development domain
+INSERT INTO tx_contexts_contexts (uid, pid, tstamp, crdate, deleted, type, title, alias, type_conf, invert, use_session, disabled, hide_in_backend)
+VALUES (1, 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 'domain', 'DDEV Development', 'ddev',
+'<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3FlexForms>
+    <data>
+        <sheet index="sDEF">
+            <language index="lDEF">
+                <field index="field_domains">
+                    <value index="vDEF">.contexts.ddev.site</value>
+                </field>
+            </language>
+        </sheet>
+    </data>
+</T3FlexForms>', 0, 0, 0, 0)
+ON DUPLICATE KEY UPDATE title=VALUES(title), type_conf=VALUES(type_conf), alias=VALUES(alias);
+
+-- Context 2: Internal Network (IP)
+-- Matches common private/local IP ranges
+INSERT INTO tx_contexts_contexts (uid, pid, tstamp, crdate, deleted, type, title, alias, type_conf, invert, use_session, disabled, hide_in_backend)
+VALUES (2, 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 'ip', 'Internal Network', 'internal',
+'<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3FlexForms>
+    <data>
+        <sheet index="sDEF">
+            <language index="lDEF">
+                <field index="field_ip">
+                    <value index="vDEF">127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,::1</value>
+                </field>
+            </language>
+        </sheet>
+    </data>
+</T3FlexForms>', 0, 0, 0, 0)
+ON DUPLICATE KEY UPDATE title=VALUES(title), type_conf=VALUES(type_conf), alias=VALUES(alias);
+
+-- Context 3: Debug Mode (GET parameter)
+-- Activated by adding ?debug=1 to the URL
+INSERT INTO tx_contexts_contexts (uid, pid, tstamp, crdate, deleted, type, title, alias, type_conf, invert, use_session, disabled, hide_in_backend)
+VALUES (3, 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 'getparam', 'Debug Mode', 'debug',
+'<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3FlexForms>
+    <data>
+        <sheet index="sDEF">
+            <language index="lDEF">
+                <field index="field_name">
+                    <value index="vDEF">debug</value>
+                </field>
+                <field index="field_values">
+                    <value index="vDEF">1</value>
+                </field>
+            </language>
+        </sheet>
+    </data>
+</T3FlexForms>', 0, 0, 0, 0)
+ON DUPLICATE KEY UPDATE title=VALUES(title), type_conf=VALUES(type_conf), alias=VALUES(alias);
+
+-- Context 4: Mobile Device (HTTP Header)
+-- Matches mobile user agents (substring match, one pattern per line)
+INSERT INTO tx_contexts_contexts (uid, pid, tstamp, crdate, deleted, type, title, alias, type_conf, invert, use_session, disabled, hide_in_backend)
+VALUES (4, 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 'httpheader', 'Mobile Device', 'mobile',
+'<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3FlexForms>
+    <data>
+        <sheet index="sDEF">
+            <language index="lDEF">
+                <field index="field_name">
+                    <value index="vDEF">User-Agent</value>
+                </field>
+                <field index="field_values">
+                    <value index="vDEF">Mobile
+Android
+iPhone
+iPad</value>
+                </field>
+            </language>
+        </sheet>
+    </data>
+</T3FlexForms>', 0, 0, 0, 0)
+ON DUPLICATE KEY UPDATE title=VALUES(title), type_conf=VALUES(type_conf), alias=VALUES(alias);
+
+-- Context 5: Desktop Device (HTTP Header, inverted mobile)
+-- Matches non-mobile user agents (invert=1, same patterns as mobile)
+INSERT INTO tx_contexts_contexts (uid, pid, tstamp, crdate, deleted, type, title, alias, type_conf, invert, use_session, disabled, hide_in_backend)
+VALUES (5, 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 'httpheader', 'Desktop Device', 'desktop',
+'<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3FlexForms>
+    <data>
+        <sheet index="sDEF">
+            <language index="lDEF">
+                <field index="field_name">
+                    <value index="vDEF">User-Agent</value>
+                </field>
+                <field index="field_values">
+                    <value index="vDEF">Mobile
+Android
+iPhone
+iPad</value>
+                </field>
+            </language>
+        </sheet>
+    </data>
+</T3FlexForms>', 1, 0, 0, 0)
+ON DUPLICATE KEY UPDATE title=VALUES(title), type_conf=VALUES(type_conf), alias=VALUES(alias), invert=VALUES(invert);
+
+-- Context 6: Internal + Debug (Combination)
+-- Active when BOTH internal network AND debug mode are active
+INSERT INTO tx_contexts_contexts (uid, pid, tstamp, crdate, deleted, type, title, alias, type_conf, invert, use_session, disabled, hide_in_backend)
+VALUES (6, 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 'combination', 'Internal + Debug', 'internal_debug',
+'<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3FlexForms>
+    <data>
+        <sheet index="sDEF">
+            <language index="lDEF">
+                <field index="field_expression">
+                    <value index="vDEF">internal &amp;&amp; debug</value>
+                </field>
+            </language>
+        </sheet>
+    </data>
+</T3FlexForms>', 0, 0, 0, 0)
+ON DUPLICATE KEY UPDATE title=VALUES(title), type_conf=VALUES(type_conf), alias=VALUES(alias);
+
+
+-- =====================================================
+-- PAGES
+-- =====================================================
+
+-- Page 1: Root page (site root)
+INSERT INTO pages (uid, pid, tstamp, crdate, deleted, hidden, title, doktype, is_siteroot, slug, sorting, tx_contexts_enable, tx_contexts_disable)
+VALUES (1, 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'Contexts Demo', 1, 1, '/', 256, '', '')
+ON DUPLICATE KEY UPDATE title=VALUES(title), is_siteroot=1, slug=VALUES(slug);
+
+-- Page 2: "How It Works" - always visible
+INSERT INTO pages (uid, pid, tstamp, crdate, deleted, hidden, title, doktype, is_siteroot, slug, sorting, tx_contexts_enable, tx_contexts_disable)
+VALUES (2, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'How It Works', 1, 0, '/how-it-works', 256, '', '')
+ON DUPLICATE KEY UPDATE title=VALUES(title), slug=VALUES(slug);
+
+-- Page 3: "Debug Dashboard" - only visible when ?debug=1
+INSERT INTO pages (uid, pid, tstamp, crdate, deleted, hidden, title, doktype, is_siteroot, slug, sorting, tx_contexts_enable, tx_contexts_disable, tx_contexts_nav_enable)
+VALUES (3, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'Debug Dashboard', 1, 0, '/debug-dashboard', 512, '3', '', '3')
+ON DUPLICATE KEY UPDATE title=VALUES(title), slug=VALUES(slug), tx_contexts_enable=VALUES(tx_contexts_enable), tx_contexts_nav_enable=VALUES(tx_contexts_nav_enable);
+
+-- Page 4: "Internal Tools" - only visible from internal network
+INSERT INTO pages (uid, pid, tstamp, crdate, deleted, hidden, title, doktype, is_siteroot, slug, sorting, tx_contexts_enable, tx_contexts_disable, tx_contexts_nav_enable)
+VALUES (4, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'Internal Tools', 1, 0, '/internal-tools', 768, '2', '', '2')
+ON DUPLICATE KEY UPDATE title=VALUES(title), slug=VALUES(slug), tx_contexts_enable=VALUES(tx_contexts_enable), tx_contexts_nav_enable=VALUES(tx_contexts_nav_enable);
+
+
+-- =====================================================
+-- TYPOSCRIPT TEMPLATE
+-- =====================================================
+
+INSERT INTO sys_template (uid, pid, tstamp, crdate, deleted, hidden, title, root, clear, constants, config)
+VALUES (1, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'Main Template', 1, 3, '', '@import "EXT:fluid_styled_content/Configuration/TypoScript/setup.typoscript"
+
+# Disable page cache to allow context-dependent content rendering.
+# Context state (e.g. ?debug=1) must produce different output per request.
+config.no_cache = 1
+
+page = PAGE
+page {
+  typeNum = 0
+
+  10 = FLUIDTEMPLATE
+  10 {
+    templateRootPaths.10 = EXT:fluid_styled_content/Resources/Private/Templates/
+    layoutRootPaths.10 = EXT:fluid_styled_content/Resources/Private/Layouts/
+    partialRootPaths.10 = EXT:fluid_styled_content/Resources/Private/Partials/
+  }
+
+  # Simple page rendering with content
+  10 = COA
+  10 {
+    # Navigation
+    5 = HMENU
+    5 {
+      wrap = <nav style="background:#2F99A4;padding:12px 20px;display:flex;gap:20px;flex-wrap:wrap;align-items:center"><strong style="color:white;margin-right:20px;font-size:1.1em">[n] Contexts Demo</strong>|</nav>
+      1 = TMENU
+      1 {
+        NO {
+          linkWrap = |
+          ATagParams = style="color:white;text-decoration:none;padding:6px 14px;border-radius:4px;background:rgba(255,255,255,0.15)"
+        }
+        CUR = 1
+        CUR {
+          linkWrap = |
+          ATagParams = style="color:white;text-decoration:none;padding:6px 14px;border-radius:4px;background:rgba(255,255,255,0.3);font-weight:bold"
+        }
+      }
+    }
+
+    # Main content area
+    10 = COA
+    10 {
+      wrap = <div style="max-width:1000px;margin:0 auto;padding:30px 20px">|</div>
+      10 = CONTENT
+      10 {
+        table = tt_content
+        select {
+          orderBy = sorting
+          where = colPos = 0
+        }
+      }
+    }
+  }
+
+  # Base styles
+  headerData.10 = TEXT
+  headerData.10.value (
+<style>
+body { font-family: "Open Sans", -apple-system, sans-serif; margin: 0; padding: 0; background: #f8f9fa; color: #333; }
+h1, h2, h3 { font-family: "Raleway", sans-serif; }
+.ce-textpic, .ce-text, .ce-html { margin-bottom: 20px; }
+.frame-default { margin-bottom: 20px; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;700&display=swap" rel="stylesheet">
+  )
+}
+')
+ON DUPLICATE KEY UPDATE config=VALUES(config), root=1;
+
+
+-- =====================================================
+-- CONTENT ELEMENTS - Home page (pid=1)
+-- =====================================================
+
+-- Always visible: Welcome header
+INSERT INTO tt_content (uid, pid, tstamp, crdate, deleted, hidden, CType, colPos, header, bodytext, sorting, tx_contexts_enable, tx_contexts_disable)
+VALUES (1, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'html', 0, '', '
+<div style="background:linear-gradient(135deg,#2F99A4 0%,#247a83 100%);color:white;padding:50px 30px;border-radius:12px;margin-bottom:30px">
+  <h1 style="margin:0 0 10px 0;font-size:2.2em;font-family:Raleway,sans-serif">Contexts Extension Demo</h1>
+  <p style="margin:0;opacity:0.9;font-size:1.15em">This page demonstrates context-dependent content visibility. Try adding <code style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:4px">?debug=1</code> to the URL to reveal hidden content.</p>
+</div>
+', 128, '', '')
+ON DUPLICATE KEY UPDATE bodytext=VALUES(bodytext), tx_contexts_enable='', tx_contexts_disable='';
+
+-- Always visible: Active contexts indicator
+INSERT INTO tt_content (uid, pid, tstamp, crdate, deleted, hidden, CType, colPos, header, bodytext, sorting, tx_contexts_enable, tx_contexts_disable)
+VALUES (2, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'html', 0, '', '
+<div style="background:white;border-radius:8px;padding:25px;box-shadow:0 2px 4px rgba(0,0,0,0.08);margin-bottom:20px">
+  <h2 style="color:#2F99A4;margin-top:0;border-bottom:2px solid #2F99A4;padding-bottom:10px">Active Contexts</h2>
+  <p>The contexts extension evaluates conditions on every request. Contexts that match your current request are <strong>active</strong> and control what you see.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:15px">
+    <div style="background:#e8f5e9;padding:12px;border-radius:6px;border-left:4px solid #4caf50">
+      <strong style="color:#2e7d32">DDEV Development</strong><br>
+      <small>Domain: .contexts.ddev.site</small>
+    </div>
+    <div style="background:#e8f5e9;padding:12px;border-radius:6px;border-left:4px solid #4caf50">
+      <strong style="color:#2e7d32">Internal Network</strong><br>
+      <small>IP: localhost / private ranges</small>
+    </div>
+    <div style="background:#fff3e0;padding:12px;border-radius:6px;border-left:4px solid #ff9800">
+      <strong style="color:#e65100">Debug Mode</strong><br>
+      <small>Add <code>?debug=1</code> to activate</small>
+    </div>
+    <div style="background:#fff3e0;padding:12px;border-radius:6px;border-left:4px solid #ff9800">
+      <strong style="color:#e65100">Mobile Device</strong><br>
+      <small>Use mobile User-Agent to activate</small>
+    </div>
+  </div>
+</div>
+', 256, '', '')
+ON DUPLICATE KEY UPDATE bodytext=VALUES(bodytext), tx_contexts_enable='', tx_contexts_disable='';
+
+-- DEBUG ONLY: Debug info panel (visible when ?debug=1)
+INSERT INTO tt_content (uid, pid, tstamp, crdate, deleted, hidden, CType, colPos, header, bodytext, sorting, tx_contexts_enable, tx_contexts_disable)
+VALUES (3, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'html', 0, '', '
+<div style="background:#fff8e1;border:2px solid #ffc107;border-radius:8px;padding:25px;margin-bottom:20px">
+  <h2 style="color:#f57f17;margin-top:0">Debug Panel <span style="background:#ffc107;color:#333;padding:2px 10px;border-radius:12px;font-size:0.6em;vertical-align:middle">CONTEXT: debug</span></h2>
+  <p><strong>You can see this because the "Debug Mode" context is active!</strong></p>
+  <p>This content element has <code>tx_contexts_enable = 3</code> (Debug Mode context UID). It is only rendered when the URL contains <code>?debug=1</code>.</p>
+  <p>Remove <code>?debug=1</code> from the URL and this panel will disappear.</p>
+  <div style="background:white;padding:15px;border-radius:6px;margin-top:15px">
+    <h3 style="margin-top:0;color:#f57f17">How it works</h3>
+    <ol style="line-height:2">
+      <li>The "Debug Mode" context checks for GET parameter <code>debug=1</code></li>
+      <li>This content element is configured to require the "Debug Mode" context</li>
+      <li>The extension\'s QueryRestriction hides it from database queries when the context is not active</li>
+      <li>No TypoScript or Fluid changes needed - it works at the database query level</li>
+    </ol>
+  </div>
+</div>
+', 384, '3', '')
+ON DUPLICATE KEY UPDATE bodytext=VALUES(bodytext), tx_contexts_enable='3', tx_contexts_disable='';
+
+-- INTERNAL ONLY: Internal network notice
+INSERT INTO tt_content (uid, pid, tstamp, crdate, deleted, hidden, CType, colPos, header, bodytext, sorting, tx_contexts_enable, tx_contexts_disable)
+VALUES (4, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'html', 0, '', '
+<div style="background:#e3f2fd;border:2px solid #2196f3;border-radius:8px;padding:25px;margin-bottom:20px">
+  <h2 style="color:#1565c0;margin-top:0">Internal Network Notice <span style="background:#2196f3;color:white;padding:2px 10px;border-radius:12px;font-size:0.6em;vertical-align:middle">CONTEXT: internal</span></h2>
+  <p><strong>You can see this because the "Internal Network" context is active!</strong></p>
+  <p>This content is only visible when accessed from a private IP range (127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16).</p>
+  <p>In DDEV, all requests come from localhost, so this is always visible in development.</p>
+</div>
+', 512, '2', '')
+ON DUPLICATE KEY UPDATE bodytext=VALUES(bodytext), tx_contexts_enable='2', tx_contexts_disable='';
+
+-- MOBILE ONLY: Mobile device content
+INSERT INTO tt_content (uid, pid, tstamp, crdate, deleted, hidden, CType, colPos, header, bodytext, sorting, tx_contexts_enable, tx_contexts_disable)
+VALUES (5, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'html', 0, '', '
+<div style="background:#fce4ec;border:2px solid #e91e63;border-radius:8px;padding:25px;margin-bottom:20px">
+  <h2 style="color:#c2185b;margin-top:0">Mobile Content <span style="background:#e91e63;color:white;padding:2px 10px;border-radius:12px;font-size:0.6em;vertical-align:middle">CONTEXT: mobile</span></h2>
+  <p><strong>You can see this because the "Mobile Device" context is active!</strong></p>
+  <p>This content only appears when the User-Agent header matches a mobile device pattern. Use browser DevTools to emulate a mobile device.</p>
+</div>
+', 640, '4', '')
+ON DUPLICATE KEY UPDATE bodytext=VALUES(bodytext), tx_contexts_enable='4', tx_contexts_disable='';
+
+-- DESKTOP ONLY: Desktop-specific content
+INSERT INTO tt_content (uid, pid, tstamp, crdate, deleted, hidden, CType, colPos, header, bodytext, sorting, tx_contexts_enable, tx_contexts_disable)
+VALUES (6, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'html', 0, '', '
+<div style="background:#ede7f6;border:2px solid #673ab7;border-radius:8px;padding:25px;margin-bottom:20px">
+  <h2 style="color:#4527a0;margin-top:0">Desktop Content <span style="background:#673ab7;color:white;padding:2px 10px;border-radius:12px;font-size:0.6em;vertical-align:middle">CONTEXT: desktop</span></h2>
+  <p><strong>You can see this because the "Desktop Device" context is active!</strong> (inverted mobile detection)</p>
+  <p>This demonstrates the <strong>invert</strong> feature: the context uses the same mobile User-Agent check but with invert=true, so it matches when the User-Agent does <em>not</em> contain mobile patterns.</p>
+</div>
+', 768, '5', '')
+ON DUPLICATE KEY UPDATE bodytext=VALUES(bodytext), tx_contexts_enable='5', tx_contexts_disable='';
+
+-- Always visible: Configuration reference
+INSERT INTO tt_content (uid, pid, tstamp, crdate, deleted, hidden, CType, colPos, header, bodytext, sorting, tx_contexts_enable, tx_contexts_disable)
+VALUES (7, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'html', 0, '', '
+<div style="background:white;border-radius:8px;padding:25px;box-shadow:0 2px 4px rgba(0,0,0,0.08);margin-bottom:20px">
+  <h2 style="color:#2F99A4;margin-top:0;border-bottom:2px solid #2F99A4;padding-bottom:10px">Try It Yourself</h2>
+  <table style="width:100%;border-collapse:collapse;margin-top:15px">
+    <thead>
+      <tr style="background:#f5f5f5">
+        <th style="text-align:left;padding:10px;border-bottom:2px solid #ddd">Action</th>
+        <th style="text-align:left;padding:10px;border-bottom:2px solid #ddd">What Happens</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="padding:10px;border-bottom:1px solid #eee"><code>?debug=1</code></td><td style="padding:10px;border-bottom:1px solid #eee">Debug Panel appears + "Debug Dashboard" page shows in menu</td></tr>
+      <tr><td style="padding:10px;border-bottom:1px solid #eee">Mobile emulation in DevTools</td><td style="padding:10px;border-bottom:1px solid #eee">Mobile content appears, Desktop content hides</td></tr>
+      <tr><td style="padding:10px;border-bottom:1px solid #eee">Backend &gt; Contexts module</td><td style="padding:10px;border-bottom:1px solid #eee">View and edit all configured contexts</td></tr>
+      <tr><td style="padding:10px;border-bottom:1px solid #eee">Backend &gt; Page properties</td><td style="padding:10px;border-bottom:1px solid #eee">See context visibility settings on pages</td></tr>
+      <tr><td style="padding:10px;border-bottom:1px solid #eee">Backend &gt; Content element access</td><td style="padding:10px;border-bottom:1px solid #eee">See context visibility on content elements</td></tr>
+    </tbody>
+  </table>
+</div>
+', 896, '', '')
+ON DUPLICATE KEY UPDATE bodytext=VALUES(bodytext), tx_contexts_enable='', tx_contexts_disable='';
+
+
+-- =====================================================
+-- CONTENT ELEMENTS - How It Works page (pid=2)
+-- =====================================================
+
+INSERT INTO tt_content (uid, pid, tstamp, crdate, deleted, hidden, CType, colPos, header, bodytext, sorting, tx_contexts_enable, tx_contexts_disable)
+VALUES (10, 2, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'html', 0, '', '
+<div style="background:white;border-radius:8px;padding:30px;box-shadow:0 2px 4px rgba(0,0,0,0.08);margin-bottom:20px">
+  <h1 style="color:#2F99A4;margin-top:0">How the Contexts Extension Works</h1>
+
+  <h2 style="color:#585961;margin-top:30px">1. Define Contexts</h2>
+  <p>Create context records in the TYPO3 backend. Each context has a <strong>type</strong> that determines how it evaluates:</p>
+  <ul style="line-height:2">
+    <li><strong>IP Address</strong> - Match visitor IPs (e.g., office network)</li>
+    <li><strong>Domain</strong> - Match the accessed domain name</li>
+    <li><strong>GET Parameter</strong> - Match URL query parameters (e.g., <code>?debug=1</code>)</li>
+    <li><strong>HTTP Header</strong> - Match request headers (e.g., User-Agent for mobile)</li>
+    <li><strong>Session</strong> - Match frontend session variables</li>
+    <li><strong>Combination</strong> - Logical AND/OR of other contexts</li>
+  </ul>
+
+  <h2 style="color:#585961;margin-top:30px">2. Assign to Content</h2>
+  <p>Each page and content element gets <strong>Enable in contexts</strong> and <strong>Disable in contexts</strong> fields. Assign contexts to control visibility:</p>
+  <div style="background:#f5f5f5;padding:15px;border-radius:6px;font-family:monospace;margin:15px 0">
+    Page "Debug Dashboard" → Enable in contexts: <span style="color:#2F99A4">Debug Mode</span><br>
+    Content "Mobile CTA" → Enable in contexts: <span style="color:#2F99A4">Mobile Device</span><br>
+    Content "Admin Panel" → Disable in contexts: <span style="color:#e65100">External visitors</span>
+  </div>
+
+  <h2 style="color:#585961;margin-top:30px">3. Automatic Filtering</h2>
+  <p>The extension adds <strong>QueryRestrictions</strong> to TYPO3\'s database layer. When a page or content is requested, the restriction automatically filters records based on active contexts. No TypoScript or Fluid changes needed.</p>
+
+  <h2 style="color:#585961;margin-top:30px">4. Developer Integration</h2>
+  <p>Beyond page/content visibility, developers can use contexts in:</p>
+  <ul style="line-height:2">
+    <li><strong>TypoScript conditions</strong> - <code>[context("alias") == true]</code></li>
+    <li><strong>Fluid ViewHelper</strong> - <code>&lt;contexts:ifContext alias="mobile"&gt;</code></li>
+    <li><strong>PHP API</strong> - <code>ContextContainer::get()->find("mobile")?->getActive()</code></li>
+  </ul>
+</div>
+', 256, '', '')
+ON DUPLICATE KEY UPDATE bodytext=VALUES(bodytext);
+
+
+-- =====================================================
+-- CONTENT ELEMENTS - Debug Dashboard page (pid=3)
+-- =====================================================
+
+INSERT INTO tt_content (uid, pid, tstamp, crdate, deleted, hidden, CType, colPos, header, bodytext, sorting, tx_contexts_enable, tx_contexts_disable)
+VALUES (20, 3, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'html', 0, '', '
+<div style="background:white;border-radius:8px;padding:30px;box-shadow:0 2px 4px rgba(0,0,0,0.08);margin-bottom:20px">
+  <h1 style="color:#f57f17;margin-top:0">Debug Dashboard</h1>
+  <div style="background:#fff8e1;border:1px solid #ffc107;border-radius:6px;padding:15px;margin-bottom:20px">
+    <strong>This entire page is only visible when the "Debug Mode" context is active (<code>?debug=1</code>).</strong>
+  </div>
+  <p>This demonstrates page-level context visibility. The page record itself has <code>tx_contexts_enable = 3</code> and <code>tx_contexts_nav_enable = 3</code>, which means:</p>
+  <ul style="line-height:2">
+    <li>The page is only rendered when the Debug Mode context matches</li>
+    <li>The page only appears in navigation menus when the context matches</li>
+    <li>Direct URL access without <code>?debug=1</code> returns a 404</li>
+  </ul>
+
+  <h2 style="color:#585961;margin-top:30px">Context Configuration</h2>
+  <p>The Debug Mode context is configured as:</p>
+  <div style="background:#f5f5f5;padding:15px;border-radius:6px;font-family:monospace">
+    Type: GET Parameter<br>
+    Parameter: debug<br>
+    Value: 1<br>
+    Alias: debug
+  </div>
+</div>
+', 256, '', '')
+ON DUPLICATE KEY UPDATE bodytext=VALUES(bodytext);
+
+
+-- =====================================================
+-- CONTENT ELEMENTS - Internal Tools page (pid=4)
+-- =====================================================
+
+INSERT INTO tt_content (uid, pid, tstamp, crdate, deleted, hidden, CType, colPos, header, bodytext, sorting, tx_contexts_enable, tx_contexts_disable)
+VALUES (30, 4, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'html', 0, '', '
+<div style="background:white;border-radius:8px;padding:30px;box-shadow:0 2px 4px rgba(0,0,0,0.08);margin-bottom:20px">
+  <h1 style="color:#1565c0;margin-top:0">Internal Tools</h1>
+  <div style="background:#e3f2fd;border:1px solid #2196f3;border-radius:6px;padding:15px;margin-bottom:20px">
+    <strong>This page is only accessible from the internal network.</strong>
+  </div>
+  <p>This page demonstrates IP-based context visibility. The page record has <code>tx_contexts_enable = 2</code> (Internal Network context), which means:</p>
+  <ul style="line-height:2">
+    <li>Only visitors from 127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, or ::1 can see it</li>
+    <li>In the DDEV environment, all requests come from localhost so it is always visible</li>
+    <li>On a production server, only office/VPN users would see this page</li>
+  </ul>
+
+  <h2 style="color:#585961;margin-top:30px">Real-World Use Cases</h2>
+  <ul style="line-height:2">
+    <li>Admin tools only accessible from the office network</li>
+    <li>Staging content previews for internal reviewers</li>
+    <li>Debug information for developers on VPN</li>
+    <li>Employee-only pages on an intranet/internet hybrid site</li>
+  </ul>
+</div>
+', 256, '', '')
+ON DUPLICATE KEY UPDATE bodytext=VALUES(bodytext);
+
+
+-- =====================================================
+-- CONTEXT SETTINGS (flat column bindings)
+-- =====================================================
+
+-- Bind contexts to pages via tx_contexts_settings
+-- Debug Dashboard (page 3) - enabled by Debug Mode (context 3)
+INSERT INTO tx_contexts_settings (pid, tstamp, crdate, context_uid, foreign_table, foreign_uid, name, enabled)
+VALUES (0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 3, 'pages', 3, 'tx_contexts_visibility', 1)
+ON DUPLICATE KEY UPDATE enabled=VALUES(enabled);
+
+-- Internal Tools (page 4) - enabled by Internal Network (context 2)
+INSERT INTO tx_contexts_settings (pid, tstamp, crdate, context_uid, foreign_table, foreign_uid, name, enabled)
+VALUES (0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 2, 'pages', 4, 'tx_contexts_visibility', 1)
+ON DUPLICATE KEY UPDATE enabled=VALUES(enabled);
+
+-- Debug Panel content (uid 3) - enabled by Debug Mode (context 3)
+INSERT INTO tx_contexts_settings (pid, tstamp, crdate, context_uid, foreign_table, foreign_uid, name, enabled)
+VALUES (0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 3, 'tt_content', 3, 'tx_contexts_visibility', 1)
+ON DUPLICATE KEY UPDATE enabled=VALUES(enabled);
+
+-- Internal Network Notice (uid 4) - enabled by Internal (context 2)
+INSERT INTO tx_contexts_settings (pid, tstamp, crdate, context_uid, foreign_table, foreign_uid, name, enabled)
+VALUES (0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 2, 'tt_content', 4, 'tx_contexts_visibility', 1)
+ON DUPLICATE KEY UPDATE enabled=VALUES(enabled);
+
+-- Mobile Content (uid 5) - enabled by Mobile (context 4)
+INSERT INTO tx_contexts_settings (pid, tstamp, crdate, context_uid, foreign_table, foreign_uid, name, enabled)
+VALUES (0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 4, 'tt_content', 5, 'tx_contexts_visibility', 1)
+ON DUPLICATE KEY UPDATE enabled=VALUES(enabled);
+
+-- Desktop Content (uid 6) - enabled by Desktop (context 5)
+INSERT INTO tx_contexts_settings (pid, tstamp, crdate, context_uid, foreign_table, foreign_uid, name, enabled)
+VALUES (0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 5, 'tt_content', 6, 'tx_contexts_visibility', 1)
+ON DUPLICATE KEY UPDATE enabled=VALUES(enabled);
+
+SQL_DEMO
+
+echo "Demo contexts and content created successfully!"
+echo ""
+echo "Contexts created:"
+echo "  1. DDEV Development (domain: .contexts.ddev.site)"
+echo "  2. Internal Network (IP: private ranges)"
+echo "  3. Debug Mode (GET: ?debug=1)"
+echo "  4. Mobile Device (User-Agent: Mobile)"
+echo "  5. Desktop Device (inverted mobile)"
+echo "  6. Internal + Debug (combination: internal && debug)"
+echo ""
+echo "Demo pages:"
+echo "  / ............... Home - context-aware content elements"
+echo "  /how-it-works ... How contexts work (always visible)"
+echo "  /debug-dashboard  Debug page (only with ?debug=1)"
+echo "  /internal-tools   Internal page (only from private IPs)"

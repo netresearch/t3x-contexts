@@ -68,7 +68,7 @@ class DataHandlerService
         }
 
         if (isset($incomingFieldArray[Configuration::RECORD_SETTINGS_COLUMN])) {
-            $this->currentSettings = $incomingFieldArray[Configuration::RECORD_SETTINGS_COLUMN];
+            $this->currentSettings = (array) $incomingFieldArray[Configuration::RECORD_SETTINGS_COLUMN];
             unset($incomingFieldArray[Configuration::RECORD_SETTINGS_COLUMN]);
         }
     }
@@ -276,6 +276,7 @@ class DataHandlerService
             }
             $connenction = $connectionPool->getConnectionForTable('tx_contexts_settings');
             foreach ($fields as $field => $enabled) {
+                $field = (string) $field;
                 if (\array_key_exists($field, $fieldSettings)) {
                     $connenction->update(
                         'tx_contexts_settings',

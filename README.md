@@ -11,13 +11,18 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/netresearch/contexts/releases"><img src="https://img.shields.io/github/v/release/netresearch/contexts?sort=semver" alt="Latest version"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/netresearch/contexts" alt="License"></a>
-  <a href="https://github.com/netresearch/contexts/actions/workflows/ci.yml"><img src="https://github.com/netresearch/contexts/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/netresearch/contexts/actions/workflows/phpstan.yml"><img src="https://github.com/netresearch/contexts/actions/workflows/phpstan.yml/badge.svg" alt="PHPStan"></a>
-  <a href="https://codecov.io/gh/netresearch/contexts"><img src="https://codecov.io/gh/netresearch/contexts/branch/main/graph/badge.svg" alt="Codecov"></a>
-  <a href="https://scorecard.dev/viewer/?uri=github.com/netresearch/contexts"><img src="https://api.scorecard.dev/projects/github.com/netresearch/contexts/badge" alt="OpenSSF Scorecard"></a>
-  <a href="https://www.bestpractices.dev/projects/XXXXX"><img src="https://www.bestpractices.dev/projects/XXXXX/badge" alt="OpenSSF Best Practices"></a>
+  <a href="https://github.com/netresearch/t3x-contexts/actions/workflows/ci.yml"><img src="https://github.com/netresearch/t3x-contexts/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://codecov.io/gh/netresearch/t3x-contexts"><img src="https://codecov.io/gh/netresearch/t3x-contexts/graph/badge.svg" alt="Codecov"></a>
+  <a href="https://github.com/netresearch/t3x-contexts/actions/workflows/docs.yml"><img src="https://github.com/netresearch/t3x-contexts/actions/workflows/docs.yml/badge.svg" alt="Documentation"></a>
+  <a href="https://scorecard.dev/viewer/?uri=github.com/netresearch/t3x-contexts"><img src="https://api.scorecard.dev/projects/github.com/netresearch/t3x-contexts/badge" alt="OpenSSF Scorecard"></a>
+  <a href="https://www.bestpractices.dev/projects/11854"><img src="https://www.bestpractices.dev/projects/11854/badge" alt="OpenSSF Best Practices"></a>
+  <a href="https://phpstan.org/"><img src="https://img.shields.io/badge/PHPStan-level%2010-brightgreen.svg" alt="PHPStan"></a>
+  <a href="https://www.php.net/"><img src="https://img.shields.io/badge/PHP-8.2--8.5-blue.svg" alt="PHP 8.2-8.5"></a>
+  <a href="https://typo3.org/"><img src="https://img.shields.io/badge/TYPO3-v12%20%7C%20v13-orange.svg" alt="TYPO3 v12 | v13"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/netresearch/t3x-contexts" alt="License"></a>
+  <a href="https://github.com/netresearch/t3x-contexts/releases"><img src="https://img.shields.io/github/v/release/netresearch/t3x-contexts?sort=semver" alt="Latest Release"></a>
+  <a href="CODE_OF_CONDUCT.md"><img src="https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg" alt="Contributor Covenant"></a>
+  <a href="https://slsa.dev"><img src="https://slsa.dev/images/gh-badge-level3.svg" alt="SLSA 3"></a>
 </p>
 
 ---
@@ -230,4 +235,4 @@ This project is licensed under the [AGPL-3.0-or-later](LICENSE).
 
 Developed and maintained by [Netresearch DTT GmbH](https://www.netresearch.de/).
 
-**Contributors:** Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag, Benni Mack, and [others](https://github.com/netresearch/contexts/graphs/contributors).
+**Contributors:** Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag, Benni Mack, and [others](https://github.com/netresearch/t3x-contexts/graphs/contributors).

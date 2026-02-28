@@ -90,7 +90,12 @@ class CombinationContext extends AbstractContext
         $this->evaluator->parse($this->tokens);
         $values = [];
         foreach ($arDependencies as $dependency) {
-            if ($dependency->context->getAlias()) {
+            if (!\is_object($dependency)) {
+                continue;
+            }
+
+            /** @var object{context: AbstractContext, matched: bool|string} $dependency */
+            if ($dependency->context->getAlias() !== '') {
                 $values[$dependency->context->getAlias()] = $dependency->matched;
             }
             $values[$dependency->context->getUid()] = $dependency->matched;

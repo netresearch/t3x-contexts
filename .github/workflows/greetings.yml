@@ -1,0 +1,32 @@
+name: Greetings
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions: {}
+
+jobs:
+  greetings:
+    uses: netresearch/typo3-ci-workflows/.github/workflows/greetings.yml@main
+    permissions:
+      issues: write
+      pull-requests: write
+    with:
+      issue-message: |
+        Thanks for opening your first issue! We appreciate you taking the time to report this.
+
+        A maintainer will review your issue soon. In the meantime, please make sure you've:
+        - Checked the [documentation](https://docs.typo3.org/p/netresearch/contexts/main/en-us/)
+        - Searched for [existing issues](https://github.com/netresearch/t3x-contexts/issues)
+      pr-message: |
+        Thanks for your first pull request! We're excited to have you contribute.
+
+        A maintainer will review your PR soon. Please ensure:
+        - All CI checks pass
+        - Your code follows the project's coding standards
+        - Tests are included for new functionality
+
+        Check our [Contributing Guide](https://github.com/netresearch/t3x-contexts/blob/main/CONTRIBUTING.md) for more details.

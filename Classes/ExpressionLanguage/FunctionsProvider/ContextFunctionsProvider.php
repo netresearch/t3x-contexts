@@ -48,7 +48,7 @@ class ContextFunctionsProvider implements ExpressionFunctionProviderInterface
             static function (): void {
                 // Not implemented, we only use the evaluators
             },
-            fn($arguments, $strContext) => ContextMatcher::getInstance()->matches($strContext),
+            fn($arguments, $strContext) => ContextMatcher::getInstance()->matches((string) $strContext),
         );
     }
 }

@@ -16,11 +16,14 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
+use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Context\Type\DomainContext;
 use Netresearch\Contexts\Tests\Unit\TestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Tests for Domain context matching.
@@ -269,6 +272,93 @@ final class DomainContextTest extends TestBase
         $mock->setInvert(false);
 
         self::assertTrue($mock->match());
+    }
+
+    #[Test]
+    public function getCurrentHostFallsBackToGlobalRequestWhenContainerRequestIsNull(): void
+    {
+        Container::reset();
+
+        $mockUri = $this->createMock(UriInterface::class);
+        $mockUri->method('getHost')->willReturn('global-host.example.com');
+
+        $mockRequest = $this->createMock(ServerRequestInterface::class);
+        $mockRequest->method('getUri')->willReturn($mockUri);
+
+        $GLOBALS['TYPO3_REQUEST'] = $mockRequest;
+
+        try {
+            $instance = new DomainContext();
+            $result = $this->callProtected($instance, 'getCurrentHost');
+
+            self::assertSame('global-host.example.com', $result);
+        } finally {
+            unset($GLOBALS['TYPO3_REQUEST']);
+            Container::reset();
+        }
+    }
+
+    #[Test]
+    public function getCurrentHostFallsBackToServerHttpHost(): void
+    {
+        Container::reset();
+        unset($GLOBALS['TYPO3_REQUEST']);
+
+        $_SERVER['HTTP_HOST'] = 'server-host.example.com';
+
+        try {
+            $instance = new DomainContext();
+            $result = $this->callProtected($instance, 'getCurrentHost');
+
+            self::assertSame('server-host.example.com', $result);
+        } finally {
+            Container::reset();
+        }
+    }
+
+    #[Test]
+    public function getCurrentHostReturnsEmptyStringWhenNoSourceAvailable(): void
+    {
+        Container::reset();
+        unset($GLOBALS['TYPO3_REQUEST']);
+
+        $originalHttpHost = $_SERVER['HTTP_HOST'] ?? null;
+        unset($_SERVER['HTTP_HOST']);
+
+        try {
+            $instance = new DomainContext();
+            $result = $this->callProtected($instance, 'getCurrentHost');
+
+            self::assertSame('', $result);
+        } finally {
+            if ($originalHttpHost !== null) {
+                $_SERVER['HTTP_HOST'] = $originalHttpHost;
+            }
+            Container::reset();
+        }
+    }
+
+    #[Test]
+    public function getCurrentHostUsesContainerRequestFirst(): void
+    {
+        Container::reset();
+
+        $mockUri = $this->createMock(UriInterface::class);
+        $mockUri->method('getHost')->willReturn('container-host.example.com');
+
+        $mockRequest = $this->createMock(ServerRequestInterface::class);
+        $mockRequest->method('getUri')->willReturn($mockUri);
+
+        Container::get()->setRequest($mockRequest);
+
+        try {
+            $instance = new DomainContext();
+            $result = $this->callProtected($instance, 'getCurrentHost');
+
+            self::assertSame('container-host.example.com', $result);
+        } finally {
+            Container::reset();
+        }
     }
 
     /**

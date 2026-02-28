@@ -1,0 +1,40 @@
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'Documentation/**'
+          - '*.md'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'Tests/**'
+          - 'Build/phpunit/**'
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/workflows/**'
+          - '.github/dependabot.yml'
+          - 'renovate.json'
+
+configuration:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'Configuration/**'
+          - 'ext_*.php'
+          - 'composer.json'
+
+contexts:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'Classes/Context/**'
+
+services:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'Classes/Service/**'
+
+api:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'Classes/Api/**'

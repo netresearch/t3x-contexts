@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -38,16 +39,20 @@ class SessionContext extends AbstractContext
      */
     public function match(array $arDependencies = []): bool
     {
-        if (!$this->getTypoScriptFrontendController() instanceof TypoScriptFrontendController) {
+        $tsfe = $this->getTypoScriptFrontendController();
+        if (!$tsfe instanceof TypoScriptFrontendController) {
             return false;
         }
 
-        $session = $this->getTypoScriptFrontendController()
-            ->fe_user
-            ->getKey(
-                'ses',
-                $this->getConfValue('field_variable'),
-            );
+        $feUser = $tsfe->fe_user ?? null;
+        if (!$feUser instanceof FrontendUserAuthentication) {
+            return false;
+        }
+
+        $session = $feUser->getKey(
+            'ses',
+            $this->getConfValue('field_variable'),
+        );
 
         return $this->invert($session !== null);
     }

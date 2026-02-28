@@ -24,6 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use ReflectionClass;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 
 /**
  * Tests for MatchesViewHelper.
@@ -70,7 +71,9 @@ final class MatchesViewHelperTest extends UnitTestCase
         $arguments = $property->getValue($viewHelper);
 
         self::assertArrayHasKey('alias', $arguments);
-        self::assertTrue($arguments['alias']->isRequired());
+        $aliasArgument = $arguments['alias'];
+        self::assertInstanceOf(ArgumentDefinition::class, $aliasArgument);
+        self::assertTrue($aliasArgument->isRequired());
     }
 
     #[Test]

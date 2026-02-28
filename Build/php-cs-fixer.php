@@ -20,7 +20,9 @@ $finder = PhpCsFixer\Finder::create()
         '.Build',
         '.ddev',
         'Build',
+        'config',
         'public',
+        'var',
         'vendor',
     ])
     ->notPath([
@@ -33,12 +35,12 @@ return (new PhpCsFixer\Config())
         // PER Coding Style 3.0 (modern PHP coding standard)
         '@PER-CS' => true,
 
-        // Override: Keep braces on separate lines (GrumPHP/PHP_CodeSniffer compatibility)
+        // Override: Keep braces on separate lines (PHP_CodeSniffer compatibility)
         'single_line_empty_body' => false,
 
         // PHP 8.2+ features
-        '@PHP82Migration' => true,
-        '@PHP80Migration:risky' => true,
+        '@PHP8x2Migration' => true,
+        '@PHP8x0Migration:risky' => true,
 
         // Strict typing
         'declare_strict_types' => true,

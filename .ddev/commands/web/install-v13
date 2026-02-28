@@ -21,21 +21,15 @@ if [ -f "${INSTALL_DIR}/composer.json" ] && [ -d "${INSTALL_DIR}/vendor" ]; then
     exit 0
 fi
 
+# Fix volume ownership (Docker volumes mount as root)
+sudo chown "$(id -u):$(id -g)" "${INSTALL_DIR}"
+
 # Clean up existing directory contents if any
-if [ -d "${INSTALL_DIR}" ]; then
-    echo "Cleaning existing directory..."
-    rm -rf "${INSTALL_DIR}"/* "${INSTALL_DIR}"/.[!.]* 2>/dev/null || true
-fi
+rm -rf "${INSTALL_DIR}"/* "${INSTALL_DIR}"/.[!.]* 2>/dev/null || true
 
-# Create TYPO3 project in a temp location then move
+# Create TYPO3 project directly in the install directory
 echo "Creating TYPO3 ${TYPO3_VERSION} project..."
-TEMP_DIR="/tmp/typo3-v13-install-$$"
-composer create-project "typo3/cms-base-distribution:${TYPO3_VERSION}" "${TEMP_DIR}" --no-interaction
-
-# Move to final location
-mkdir -p "${INSTALL_DIR}"
-cp -a "${TEMP_DIR}"/. "${INSTALL_DIR}/"
-rm -rf "${TEMP_DIR}"
+composer create-project "typo3/cms-base-distribution:${TYPO3_VERSION}" "${INSTALL_DIR}" --no-interaction
 cd "${INSTALL_DIR}"
 
 # Add path repository for local extension with priority over Packagist
@@ -48,9 +42,6 @@ composer config prefer-stable true
 # Require the extension from local path
 echo "Installing contexts extension..."
 composer require "netresearch/contexts:*" --no-interaction
-
-# Also require fluid_styled_content for frontend rendering
-composer require "typo3/cms-fluid-styled-content:${TYPO3_VERSION}" --no-interaction
 
 # Re-enable packagist for any other dependencies
 composer config repositories.packagist.org composer https://repo.packagist.org
@@ -65,7 +56,7 @@ DB_PASS="db"
 DB_HOST="db"
 
 # Create database if it doesn't exist
-mysql -h "${DB_HOST}" -u "${DB_USER}" -p"${DB_PASS}" -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
+mysql -h "${DB_HOST}" -u root -proot -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME}; GRANT ALL ON ${DB_NAME}.* TO '${DB_USER}'@'%';"
 
 # Create AdditionalConfiguration.php with DDEV-specific settings
 cat > config/system/additional.php << 'ADDITIONAL_CONFIG'
@@ -104,11 +95,14 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '$argon2i$v=19$m=6553
 // Graphics
 $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor'] = 'ImageMagick';
 $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_path'] = '/usr/bin/';
+
+// Exclude demo context GET parameter from cacheHash
+$GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'debug';
 ADDITIONAL_CONFIG
 
 # Setup TYPO3
 echo "Setting up TYPO3..."
-./vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db_v13 --username=db --password=db --admin-username=admin --admin-user-password=joh316 --admin-email=admin@example.com --project-name="Contexts v13" --server-type=apache --no-interaction --force
+./vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db_v13 --username=db --password=db --admin-username=admin --admin-user-password='Joh316!!' --admin-email=admin@example.com --project-name="Contexts v13" --server-type=apache --no-interaction --force
 
 # Set up extension
 echo "Setting up contexts extension..."
@@ -132,116 +126,9 @@ routes: []
 errorHandling: []
 SITE_CONFIG
 
-# Create root page and content via SQL
-echo "Creating start page with extension information..."
-mysql -h "${DB_HOST}" -u "${DB_USER}" -p"${DB_PASS}" "${DB_NAME}" << 'SQL_CONTENT'
--- Create root page
-INSERT INTO pages (uid, pid, tstamp, crdate, deleted, hidden, title, doktype, is_siteroot, slug)
-VALUES (1, 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'Contexts Extension', 1, 1, '/')
-ON DUPLICATE KEY UPDATE title='Contexts Extension', is_siteroot=1, slug='/';
-
--- Create TypoScript template
-INSERT INTO sys_template (uid, pid, tstamp, crdate, deleted, hidden, title, root, clear, constants, config)
-VALUES (1, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'Main Template', 1, 3, '', '@import \"EXT:fluid_styled_content/Configuration/TypoScript/setup.typoscript\"
-
-page = PAGE
-page {
-  typeNum = 0
-  10 = CONTENT
-  10 {
-    table = tt_content
-    select {
-      orderBy = sorting
-      where = colPos = 0
-    }
-  }
-  headerData.10 = TEXT
-  headerData.10.value (
-<style>
-body { font-family: \"Open Sans\", -apple-system, sans-serif; margin: 0; padding: 0; background: #f5f5f5; color: #333; }
-.header { background: linear-gradient(135deg, #2F99A4 0%, #247a83 100%); color: white; padding: 40px; }
-.header h1 { margin: 0 0 10px 0; font-size: 2.5em; }
-.header p { margin: 0; opacity: 0.9; font-size: 1.2em; }
-.container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
-.card { background: white; border-radius: 8px; padding: 30px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-.card h2 { color: #2F99A4; margin-top: 0; border-bottom: 2px solid #2F99A4; padding-bottom: 10px; }
-.card ul { line-height: 1.8; }
-.card a { color: #2F99A4; }
-.links { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
-.links a { display: inline-block; background: #2F99A4; color: white; padding: 12px 24px; border-radius: 4px; text-decoration: none; }
-.links a:hover { background: #247a83; }
-.badge { display: inline-block; background: #e8f5f5; color: #2F99A4; padding: 4px 12px; border-radius: 4px; font-size: 0.9em; margin-right: 8px; }
-.context-types { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
-.context-type { background: #f9f9f9; padding: 15px; border-radius: 4px; border-left: 3px solid #2F99A4; }
-.context-type strong { color: #2F99A4; }
-</style>
-  )
-}
-')
-ON DUPLICATE KEY UPDATE config=VALUES(config), root=1;
-
--- Header content element
-INSERT INTO tt_content (uid, pid, tstamp, crdate, deleted, hidden, CType, colPos, header, bodytext, sorting)
-VALUES (1, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'html', 0, '', '
-<div class="header">
-  <h1>Contexts Extension</h1>
-  <p>Context-dependent content visibility for TYPO3</p>
-</div>
-', 256)
-ON DUPLICATE KEY UPDATE bodytext=VALUES(bodytext);
-
--- About section
-INSERT INTO tt_content (uid, pid, tstamp, crdate, deleted, hidden, CType, colPos, header, bodytext, sorting)
-VALUES (2, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'html', 0, '', '
-<div class="container">
-  <div class="card">
-    <h2>About</h2>
-    <p>The <strong>Contexts</strong> extension allows you to define contexts that control the visibility of pages and content elements in the TYPO3 frontend based on various conditions.</p>
-    <p>
-      <span class="badge">TYPO3 12.4 LTS</span>
-      <span class="badge">TYPO3 13.4 LTS</span>
-      <span class="badge">PHP 8.2+</span>
-      <span class="badge">AGPL-3.0</span>
-    </p>
-  </div>
-
-  <div class="card">
-    <h2>Context Types</h2>
-    <p>Define when content should be visible based on:</p>
-    <div class="context-types">
-      <div class="context-type"><strong>Domain</strong><br>Match by domain name</div>
-      <div class="context-type"><strong>IP Address</strong><br>Match visitor IP ranges</div>
-      <div class="context-type"><strong>HTTP Header</strong><br>Check request headers</div>
-      <div class="context-type"><strong>GET Parameter</strong><br>URL query parameters</div>
-      <div class="context-type"><strong>Session</strong><br>PHP session variables</div>
-      <div class="context-type"><strong>Combination</strong><br>Logical AND/OR of contexts</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Quick Links</h2>
-    <div class="links">
-      <a href="/typo3">TYPO3 Backend</a>
-      <a href="https://github.com/netresearch/t3x-contexts" target="_blank">GitHub Repository</a>
-      <a href="https://github.com/netresearch/t3x-contexts/issues" target="_blank">Issue Tracker</a>
-      <a href="https://docs.typo3.org" target="_blank">TYPO3 Documentation</a>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Development Info</h2>
-    <ul>
-      <li><strong>Extension Key:</strong> contexts</li>
-      <li><strong>Vendor:</strong> Netresearch DTT GmbH</li>
-      <li><strong>Package:</strong> netresearch/contexts</li>
-      <li><strong>Backend Login:</strong> admin / joh316</li>
-      <li><strong>Install Tool:</strong> password</li>
-    </ul>
-  </div>
-</div>
-', 512)
-ON DUPLICATE KEY UPDATE bodytext=VALUES(bodytext);
-SQL_CONTENT
+# Create demo contexts and content
+echo "Creating demo content..."
+/var/www/html/.ddev/commands/web/create-demo-content db_v13
 
 # Flush cache
 echo "Flushing caches..."
@@ -252,6 +139,6 @@ echo "=== TYPO3 v13 Installation Complete ==="
 echo ""
 echo "Frontend: ${SITE_BASE}"
 echo "Backend:  ${SITE_BASE}typo3"
-echo "Admin:    admin / joh316"
+echo "Admin:    admin / Joh316!!"
 echo "Install:  password"
 echo ""

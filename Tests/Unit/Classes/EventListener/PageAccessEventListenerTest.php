@@ -378,7 +378,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
         // Verify page information was not modified
         self::assertSame(
             $originalPageRecord,
-            $event->getPageInformation()->getPageRecord(),
+            $event->getPageInformation()->getPageRecord(), // @phpstan-ignore method.nonObject
             'Listener should not modify page information',
         );
     }
@@ -520,7 +520,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
         // Verify first event data is unchanged (listener is stateless)
         self::assertSame(
             ['uid' => 1, 'title' => 'Page 1'],
-            $event1->getPageInformation()->getPageRecord(),
+            $event1->getPageInformation()->getPageRecord(), // @phpstan-ignore method.nonObject
             'Listener should be stateless and not affect previous invocations',
         );
     }

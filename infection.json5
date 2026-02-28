@@ -12,10 +12,11 @@
         ]
     },
     "phpUnit": {
-        "configDir": ".",
+        "configDir": "Build",
         "customPath": "vendor/bin/phpunit"
     },
     "testFramework": "phpunit",
+    "testFrameworkOptions": "--testsuite=unit",
     "timeout": 30,
     "threads": 4,
     "logs": {
@@ -40,8 +41,11 @@
                 // Ignore logging calls
                 "Netresearch\\Contexts\\*::setLogger"
             ]
-        }
+        },
+        // Changing protected→private is not testable without subclass tests
+        // and is a standard exclusion in TYPO3 extensions
+        "ProtectedVisibility": false
     },
-    "minMsi": 30,
-    "minCoveredMsi": 50
+    "minMsi": 80,
+    "minCoveredMsi": 80
 }

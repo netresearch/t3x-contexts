@@ -16,11 +16,13 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
+use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Context\Type\HttpHeaderContext;
 use Netresearch\Contexts\Tests\Unit\TestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Tests for HTTP Header context matching.
@@ -35,7 +37,9 @@ final class HttpHeaderContextTest extends TestBase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->originalServerVars = $_SERVER;
+        /** @var array<string, mixed> $serverVars */
+        $serverVars = $_SERVER;
+        $this->originalServerVars = $serverVars;
     }
 
     protected function tearDown(): void
@@ -52,9 +56,12 @@ final class HttpHeaderContextTest extends TestBase
         return [
             'exact match' => ['mobile', "mobile\ndesktop", true],
             'no match' => ['tablet', "mobile\ndesktop", false],
-            'empty config returns false' => ['something', '', false],
+            'empty config matches non-empty value' => ['something', '', true],
             'empty value with empty config' => ['', '', false],
             'whitespace trimmed' => ['mobile', " mobile \n desktop ", true],
+            'substring match' => ['Mozilla/5.0 (iPhone; CPU)', "iPhone\nAndroid", true],
+            'case-insensitive match' => ['MOBILE-DEVICE', "mobile\ndesktop", true],
+            'no substring match' => ['Windows NT 10.0', "iPhone\nAndroid", false],
         ];
     }
 
@@ -75,7 +82,7 @@ final class HttpHeaderContextTest extends TestBase
     {
         $_SERVER['HTTP_X_CUSTOM_HEADER'] = 'different-value';
 
-        $mock = $this->createHttpHeaderContextMock(['expected-value']);
+        $mock = $this->createHttpHeaderContextMock(['completely-unrelated']);
         $mock->setInvert(false);
         $mock->setUseSession(false);
 
@@ -99,7 +106,7 @@ final class HttpHeaderContextTest extends TestBase
     {
         $_SERVER['HTTP_X_CUSTOM_HEADER'] = 'different-value';
 
-        $mock = $this->createHttpHeaderContextMock(['expected-value']);
+        $mock = $this->createHttpHeaderContextMock(['completely-unrelated']);
         $mock->setInvert(true);
         $mock->setUseSession(false);
 
@@ -107,10 +114,9 @@ final class HttpHeaderContextTest extends TestBase
     }
 
     #[Test]
-    public function matchReturnsFalseForEmptyConfigEvenWithValue(): void
+    public function matchReturnsFalseForEmptyConfigEvenWithEmptyValue(): void
     {
-        // Empty config (no allowed values) means NO values are allowed
-        $_SERVER['HTTP_X_CUSTOM_HEADER'] = 'any-value';
+        $_SERVER['HTTP_X_CUSTOM_HEADER'] = '';
 
         $mock = $this->createHttpHeaderContextMock([], 'HTTP_X_CUSTOM_HEADER', '');
         $mock->setInvert(false);
@@ -182,14 +188,7 @@ final class HttpHeaderContextTest extends TestBase
         $mock->setInvert(false);
         $mock->setUseSession(false);
 
-        // Wait, the behavior is: empty config returns false for empty value
-        // but should return true for any non-empty value
-        // Let me check the actual implementation again
-        // Actually, empty values config with empty header value = false
-        // but empty values config with non-empty header value = true (any value)
-        // Looking at the code: count($arValues) === 1 && $arValues[0] === ''
-        // then return $value !== '' - so any non-empty value matches
-        self::assertFalse($mock->match());
+        self::assertTrue($mock->match());
     }
 
     #[Test]
@@ -254,6 +253,171 @@ final class HttpHeaderContextTest extends TestBase
         $mock->setInvert(true);
 
         self::assertTrue($mock->match());
+    }
+
+    #[Test]
+    public function matchReturnsFalseForEmptyHeaderName(): void
+    {
+        $mock = $this->getMockBuilder(HttpHeaderContext::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getConfValue'])
+            ->getMock();
+
+        $mock->method('getConfValue')
+            ->willReturnMap([
+                ['field_name', '', 'sDEF', 'lDEF', 'vDEF', ''],
+                ['field_values', '', 'sDEF', 'lDEF', 'vDEF', 'any-value'],
+            ]);
+
+        $mock->setInvert(false);
+
+        self::assertFalse($mock->match());
+    }
+
+    #[Test]
+    public function matchSupportsStandardHeaderNameViaPsr7(): void
+    {
+        Container::reset();
+
+        $mockRequest = $this->createMock(ServerRequestInterface::class);
+        $mockRequest->method('hasHeader')
+            ->with('User-Agent')
+            ->willReturn(true);
+        $mockRequest->method('getHeaderLine')
+            ->with('User-Agent')
+            ->willReturn('Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)');
+
+        Container::get()->setRequest($mockRequest);
+
+        try {
+            $mock = $this->getMockBuilder(HttpHeaderContext::class)
+                ->disableOriginalConstructor()
+                ->onlyMethods(['getConfValue'])
+                ->getMock();
+
+            $mock->method('getConfValue')
+                ->willReturnMap([
+                    ['field_name', '', 'sDEF', 'lDEF', 'vDEF', 'User-Agent'],
+                    ['field_values', '', 'sDEF', 'lDEF', 'vDEF', "iPhone\nAndroid"],
+                ]);
+
+            $mock->setInvert(false);
+            $mock->setUseSession(false);
+
+            self::assertTrue($mock->match());
+        } finally {
+            Container::reset();
+        }
+    }
+
+    #[Test]
+    public function matchSubstringMatchesUserAgent(): void
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Linux; Android 12) AppleWebKit/537.36';
+
+        $mock = $this->createHttpHeaderContextMock(
+            ['Mobile', 'Android', 'iPhone', 'iPad'],
+            'HTTP_USER_AGENT',
+        );
+        $mock->setInvert(false);
+        $mock->setUseSession(false);
+
+        self::assertTrue($mock->match());
+    }
+
+    #[Test]
+    public function matchSubstringDoesNotMatchUnrelatedUserAgent(): void
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120';
+
+        $mock = $this->createHttpHeaderContextMock(
+            ['Mobile', 'Android', 'iPhone', 'iPad'],
+            'HTTP_USER_AGENT',
+        );
+        $mock->setInvert(false);
+        $mock->setUseSession(false);
+
+        self::assertFalse($mock->match());
+    }
+
+    #[Test]
+    public function getRequestFallsBackToGlobalRequest(): void
+    {
+        Container::reset();
+
+        $mockRequest = $this->createMock(ServerRequestInterface::class);
+        $GLOBALS['TYPO3_REQUEST'] = $mockRequest;
+
+        try {
+            $instance = new HttpHeaderContext();
+            $result = $this->callProtected($instance, 'getRequest');
+
+            self::assertSame($mockRequest, $result);
+        } finally {
+            unset($GLOBALS['TYPO3_REQUEST']);
+            Container::reset();
+        }
+    }
+
+    #[Test]
+    public function getRequestReturnsNullWithNoRequest(): void
+    {
+        Container::reset();
+        unset($GLOBALS['TYPO3_REQUEST']);
+
+        try {
+            $instance = new HttpHeaderContext();
+            $result = $this->callProtected($instance, 'getRequest');
+
+            self::assertNull($result);
+        } finally {
+            Container::reset();
+        }
+    }
+
+    #[Test]
+    public function getRequestUsesContainerRequestFirst(): void
+    {
+        Container::reset();
+
+        $mockRequest = $this->createMock(ServerRequestInterface::class);
+        Container::get()->setRequest($mockRequest);
+
+        try {
+            $instance = new HttpHeaderContext();
+            $result = $this->callProtected($instance, 'getRequest');
+
+            self::assertSame($mockRequest, $result);
+        } finally {
+            Container::reset();
+        }
+    }
+
+    #[Test]
+    public function findInServerParamsIsCaseInsensitive(): void
+    {
+        $serverParams = [
+            'HTTP_X_CUSTOM' => 'value123',
+            'OTHER_KEY' => 'other',
+        ];
+
+        $instance = new HttpHeaderContext();
+        $result = $this->callProtected($instance, 'findInServerParams', $serverParams, 'http_x_custom');
+
+        self::assertSame('value123', $result);
+    }
+
+    #[Test]
+    public function findInServerParamsReturnsNullForMissingKey(): void
+    {
+        $serverParams = [
+            'HTTP_X_CUSTOM' => 'value123',
+        ];
+
+        $instance = new HttpHeaderContext();
+        $result = $this->callProtected($instance, 'findInServerParams', $serverParams, 'HTTP_X_MISSING');
+
+        self::assertNull($result);
     }
 
     /**

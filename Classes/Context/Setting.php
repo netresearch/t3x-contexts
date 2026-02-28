@@ -61,8 +61,8 @@ final class Setting
     {
         $this->context = $context;
         $this->uid = (int) $row['uid'];
-        $this->foreignTable = $row['foreign_table'];
-        $this->name = $row['name'];
+        $this->foreignTable = (string) $row['foreign_table'];
+        $this->name = (string) $row['name'];
         $this->foreignUid = (int) $row['foreign_uid'];
         $this->enabled = (bool) $row['enabled'];
     }
@@ -84,11 +84,11 @@ final class Setting
         array $arRow,
     ): ?Setting {
         $bDisabled = str_contains(
-            ',' . $arRow[$arFlatColumns[0]] . ',',
+            ',' . (string) $arRow[$arFlatColumns[0]] . ',',
             ',' . $context->getUid() . ',',
         );
         $bEnabled = str_contains(
-            ',' . $arRow[$arFlatColumns[1]] . ',',
+            ',' . (string) $arRow[$arFlatColumns[1]] . ',',
             ',' . $context->getUid() . ',',
         );
 

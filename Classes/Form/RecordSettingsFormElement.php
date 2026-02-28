@@ -57,13 +57,15 @@ class RecordSettingsFormElement extends AbstractFormElement
      * @throws ContextException
      * @throws DBALException
      * @throws Exception
+     *
+     * @codeCoverageIgnore Requires TYPO3 backend form framework (AbstractFormElement, LanguageService, etc.)
      */
     public function render(): array
     {
         $contexts = new Container();
         $contexts->initAll();
 
-        $namePre = 'data' . $this->data['elementBaseName'];
+        $namePre = 'data' . (string) $this->data['elementBaseName'];
         $settings = $this->data['parameterArray']['fieldConf']['config']['settings'];
 
         $contextsLabel = $this->getLanguageService()->sL('LLL:' . Configuration::LANG_FILE . ':tx_contexts_contexts');
@@ -78,7 +80,7 @@ class RecordSettingsFormElement extends AbstractFormElement
             HTML;
 
         foreach ($settings as $config) {
-            $settingLabel = $this->getLanguageService()->sL($config['label']);
+            $settingLabel = $this->getLanguageService()->sL((string) $config['label']);
             $content .= <<<HTML
                 <td class="tx_contexts_setting">{$settingLabel}</td>
                 HTML;
@@ -103,12 +105,13 @@ class RecordSettingsFormElement extends AbstractFormElement
             $bHasSetting = false;
 
             foreach ($settings as $settingName => $config) {
+                $settingName = (string) $settingName;
                 $setting = $uid > 0
                     ? $context->getSetting(
-                        $this->data['tableName'],
+                        (string) $this->data['tableName'],
                         $settingName,
                         $uid,
-                        $this->data['databaseRow'],
+                        \is_array($this->data['databaseRow']) ? $this->data['databaseRow'] : null,
                     )
                     : null;
 
@@ -128,10 +131,10 @@ class RecordSettingsFormElement extends AbstractFormElement
             [$icon, $title] = $this->getRecordPreview($context);
             $content .= '<tr class="db_list_normal">'
                 . '<td class="tx_contexts_context col-icon"">'
-                    . $icon
+                    . (string) $icon
                 . '</td>'
                 . '<td class="tx_contexts_context">'
-                    . '<span class="context-' . ($bHasSetting ? 'active' : 'inactive') . '">' . $title . '</span>'
+                    . '<span class="context-' . ($bHasSetting ? 'active' : 'inactive') . '">' . (string) $title . '</span>'
                 . '</td>'
                 . $contSettings
                 . '</tr>';
@@ -163,6 +166,8 @@ class RecordSettingsFormElement extends AbstractFormElement
      *
      *
      * @return array First value is click icon, second is title
+     *
+     * @codeCoverageIgnore Requires BackendUtility and IconFactory
      */
     protected function getRecordPreview(AbstractContext $context): array
     {
@@ -195,6 +200,7 @@ class RecordSettingsFormElement extends AbstractFormElement
      *                          absolute path to the file
      * @param int|string $uid   The uid of the record OR if a file, just blank value.
      *
+     * @codeCoverageIgnore Wraps BackendUtility::wrapClickMenuOnIcon
      */
     protected function getClickMenu(string $str, string $table, $uid = 0): string
     {
@@ -208,7 +214,7 @@ class RecordSettingsFormElement extends AbstractFormElement
     /**
      * Get the icon HTML.
      *
-   *
+     * @codeCoverageIgnore Requires IconFactory
      */
     protected function getIcon(array $row): string
     {

@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Service;
 
+use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Service\FrontendControllerService;
 use PHPUnit\Framework\Attributes\Test;
@@ -193,7 +194,7 @@ final class FrontendControllerServiceTest extends UnitTestCase
 
         $expectedKey = strtolower(FrontendControllerService::class);
         self::assertArrayHasKey($expectedKey, $params['hashParameters']);
-        self::assertStringContainsString('hash_test', $params['hashParameters'][$expectedKey]);
+        self::assertStringContainsString('hash_test', (string) $params['hashParameters'][$expectedKey]);
     }
 
     #[Test]
@@ -211,8 +212,8 @@ final class FrontendControllerServiceTest extends UnitTestCase
 
         $service->configArrayPostProc($params, $mockTsfe);
 
-        self::assertStringContainsString('link_var_test', $params['config']['linkVars']);
-        self::assertStringContainsString('L', $params['config']['linkVars']);
+        self::assertStringContainsString('link_var_test', (string) $params['config']['linkVars']);
+        self::assertStringContainsString('L', (string) $params['config']['linkVars']);
     }
 
     #[Test]
@@ -230,7 +231,102 @@ final class FrontendControllerServiceTest extends UnitTestCase
 
         $service->configArrayPostProc($params, $mockTsfe);
 
-        self::assertStringContainsString('only_param', $params['config']['linkVars']);
+        self::assertStringContainsString('only_param', (string) $params['config']['linkVars']);
+    }
+
+    #[Test]
+    public function registerQueryParameterSkipsHookRegistrationWhenAlreadyRegistered(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'] ??= [];
+
+        // First call - registers hooks
+        FrontendControllerService::registerQueryParameter('param1', 'value1', false);
+
+        // Verify hooks were registered
+        self::assertArrayHasKey(
+            FrontendControllerService::class,
+            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'] ?? [],
+        );
+
+        // Second call - should skip hook registration (early return on line 63-64)
+        FrontendControllerService::registerQueryParameter('param2', 'value2', true);
+
+        // Hooks should still be there (not duplicated)
+        self::assertArrayHasKey(
+            FrontendControllerService::class,
+            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'] ?? [],
+        );
+    }
+
+    #[Test]
+    public function checkEnableFieldsForRootLineReturnsFalseForCurrentPageWithoutExtendToSubpages(): void
+    {
+        // Bug fix: current page (index 0) must always be checked for its own
+        // context restrictions, regardless of extendToSubpages.
+        // Previously, pages without extendToSubpages were skipped entirely,
+        // allowing direct access to context-restricted pages.
+        $rootLine = [
+            ['uid' => 3, 'title' => 'Debug Dashboard', 'extendToSubpages' => 0, 'tx_contexts_enable' => '999', 'tx_contexts_disable' => ''],
+            ['uid' => 1, 'title' => 'Home', 'extendToSubpages' => 0],
+        ];
+
+        $service = new FrontendControllerService();
+
+        // Context 999 is not active, so the page should be denied
+        self::assertFalse($service->checkEnableFieldsForRootLine($rootLine));
+    }
+
+    #[Test]
+    public function checkEnableFieldsForRootLineReturnsTrueForCurrentPageWhenContextIsActive(): void
+    {
+        // Current page requires context 42, which IS active
+        $mockContext = $this->createMock(AbstractContext::class);
+        Container::get()->offsetSet('42', $mockContext);
+
+        $rootLine = [
+            ['uid' => 3, 'title' => 'Debug Dashboard', 'extendToSubpages' => 0, 'tx_contexts_enable' => '42', 'tx_contexts_disable' => ''],
+            ['uid' => 1, 'title' => 'Home', 'extendToSubpages' => 0],
+        ];
+
+        $service = new FrontendControllerService();
+
+        // Context 42 is active, so the page should be accessible
+        self::assertTrue($service->checkEnableFieldsForRootLine($rootLine));
+    }
+
+    #[Test]
+    public function checkEnableFieldsForRootLineReturnsFalseForCurrentPageWithDisableContext(): void
+    {
+        // Current page disables context 42, which IS active
+        $mockContext = $this->createMock(AbstractContext::class);
+        Container::get()->offsetSet('42', $mockContext);
+
+        $rootLine = [
+            ['uid' => 3, 'title' => 'Hidden Page', 'extendToSubpages' => 0, 'tx_contexts_enable' => '', 'tx_contexts_disable' => '42'],
+            ['uid' => 1, 'title' => 'Home', 'extendToSubpages' => 0],
+        ];
+
+        $service = new FrontendControllerService();
+
+        // Context 42 is active and page disables it, so page should be denied
+        self::assertFalse($service->checkEnableFieldsForRootLine($rootLine));
+    }
+
+    #[Test]
+    public function checkEnableFieldsForRootLineReturnsFalseWhenDisabledContextIsActive(): void
+    {
+        // Add a mock context with ID 42 to the Container
+        $mockContext = $this->createMock(AbstractContext::class);
+        Container::get()->offsetSet('42', $mockContext);
+
+        // Page disables context 42 which IS active, should deny access
+        $rootLine = [
+            ['uid' => 1, 'title' => 'Home', 'extendToSubpages' => 1, 'tx_contexts_enable' => '', 'tx_contexts_disable' => '42'],
+        ];
+
+        $service = new FrontendControllerService();
+
+        self::assertFalse($service->checkEnableFieldsForRootLine($rootLine));
     }
 
     #[Test]

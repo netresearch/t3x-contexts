@@ -512,6 +512,142 @@ final class ContainerTest extends UnitTestCase
         // All disabled, none matched
         self::assertCount(0, $result);
     }
+
+    #[Test]
+    public function matchPassesObjectDependenciesToContext(): void
+    {
+        // Kills CastObject mutants on Container lines 223, 236
+        // Dependencies must be passed as objects with 'context' and 'matched' properties
+        $context1 = $this->createMock(AbstractContext::class);
+        $context1->method('getUid')->willReturn(1);
+        $context1->method('getDisabled')->willReturn(false);
+        $context1->method('getDependencies')->willReturn([]);
+        $context1->method('match')->willReturn(true);
+
+        // Context 2 depends on context 1 and verifies it receives objects
+        $context2 = $this->createMock(AbstractContext::class);
+        $context2->method('getUid')->willReturn(2);
+        $context2->method('getDisabled')->willReturn(false);
+        $context2->method('getDependencies')->willReturn([1 => true]);
+        $context2->method('match')->willReturnCallback(
+            function (array $arDeps): bool {
+                // Verify the dependency is an object, not an array
+                self::assertIsObject(
+                    $arDeps[1],
+                    'Dependency must be an object, not an array',
+                );
+                self::assertTrue(
+                    property_exists($arDeps[1], 'context'),
+                    'Dependency object must have "context" property',
+                );
+                self::assertTrue(
+                    property_exists($arDeps[1], 'matched'),
+                    'Dependency object must have "matched" property',
+                );
+                return true;
+            },
+        );
+
+        $container = new TestableContainer();
+        $result = $container->exposeMatch([1 => $context1, 2 => $context2]);
+
+        self::assertCount(2, $result);
+    }
+
+    #[Test]
+    public function matchPassesObjectDependenciesForNotMatchedContext(): void
+    {
+        // Kills CastObject mutant on Container line 229 (notMatched branch)
+        $context1 = $this->createMock(AbstractContext::class);
+        $context1->method('getUid')->willReturn(1);
+        $context1->method('getDisabled')->willReturn(false);
+        $context1->method('getDependencies')->willReturn([]);
+        $context1->method('match')->willReturn(false); // not matched
+
+        $context2 = $this->createMock(AbstractContext::class);
+        $context2->method('getUid')->willReturn(2);
+        $context2->method('getDisabled')->willReturn(false);
+        $context2->method('getDependencies')->willReturn([1 => true]);
+        $context2->method('match')->willReturnCallback(
+            function (array $arDeps): bool {
+                self::assertIsObject(
+                    $arDeps[1],
+                    'Dependency for not-matched context must be an object',
+                );
+                self::assertFalse($arDeps[1]->matched); // @phpstan-ignore property.notFound
+                return true;
+            },
+        );
+
+        $container = new TestableContainer();
+        $container->exposeMatch([1 => $context1, 2 => $context2]);
+    }
+
+    #[Test]
+    public function matchPassesObjectDependenciesForDisabledDependency(): void
+    {
+        // Kills CastObject mutant on Container line 236 (disabled dep branch)
+        $context1 = $this->createMock(AbstractContext::class);
+        $context1->method('getUid')->willReturn(1);
+        $context1->method('getDisabled')->willReturn(false);
+        $context1->method('getDependencies')->willReturn([]);
+        $context1->method('match')->willReturn(true);
+
+        $context2 = $this->createMock(AbstractContext::class);
+        $context2->method('getUid')->willReturn(2);
+        $context2->method('getDisabled')->willReturn(false);
+        // enabled=false means the dependency is disabled
+        $context2->method('getDependencies')->willReturn([1 => false]);
+        $context2->method('match')->willReturnCallback(
+            function (array $arDeps): bool {
+                self::assertIsObject(
+                    $arDeps[1],
+                    'Disabled dependency must be an object',
+                );
+                self::assertSame('disabled', $arDeps[1]->matched); // @phpstan-ignore property.notFound
+                return true;
+            },
+        );
+
+        $container = new TestableContainer();
+        $container->exposeMatch([1 => $context1, 2 => $context2]);
+    }
+
+    #[Test]
+    public function matchLoopLimitStopsAtTenIterations(): void
+    {
+        // Kills DecrementInteger on $loops=0 (line 208) and loop boundary
+        // mutations on line 259 (++$loops < 10)
+        // Create a chain of 11 contexts each depending on the previous one
+        // but ordered so they need multiple loop iterations
+        $contexts = [];
+        for ($i = 1; $i <= 11; $i++) {
+            $context = $this->createMock(AbstractContext::class);
+            $context->method('getUid')->willReturn($i);
+            $context->method('getDisabled')->willReturn(false);
+            // Each context depends on the previous one
+            $context->method('getDependencies')->willReturn(
+                $i > 1 ? [$i - 1 => true] : [],
+            );
+            $context->method('match')->willReturn(true);
+            $contexts[$i] = $context;
+        }
+
+        // Reverse order so dependencies must be resolved across iterations
+        $reversed = array_reverse($contexts, true);
+
+        $container = new TestableContainer();
+        $result = $container->exposeMatch($reversed);
+
+        // With loop limit of 10 and $loops starting at 0, exactly 10 iterations.
+        // In reverse order (11,10,...,1), context 1 resolves in first iteration,
+        // context 2 in second, etc. Context 11 needs 11 iterations but only 10
+        // are allowed. So context 11 should NOT be matched.
+        self::assertArrayHasKey(1, $result);
+        self::assertArrayHasKey(10, $result);
+        self::assertArrayNotHasKey(11, $result, 'Context 11 should not be matched due to loop limit of 10');
+        self::assertCount(10, $result);
+    }
 }
 
 /**
@@ -519,6 +655,9 @@ final class ContainerTest extends UnitTestCase
  */
 class TestableContainer extends Container
 {
+    /**
+     * @param array<AbstractContext> $arContexts
+     */
     public function exposeMatch(array $arContexts): array
     {
         return $this->match($arContexts);

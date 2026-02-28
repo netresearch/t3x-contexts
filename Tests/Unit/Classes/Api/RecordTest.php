@@ -863,4 +863,99 @@ final class RecordTest extends UnitTestCase
         // Should initialize empty arrays and not find any context UIDs
         self::assertTrue(Record::isSettingEnabled('test_table', 'tx_contexts', $row));
     }
+
+    // ========================================
+    // Mutation-killing tests
+    // ========================================
+
+    #[Test]
+    public function isSettingEnabledFlatReturnsNullWhenNullColumnFallsThroughToUidCheck(): void
+    {
+        // Target mutant: Line 131 FalseValue ($rowValid = false -> true)
+        // and Line 140 ReturnRemoval (return null removed)
+        // When a flat column is null, the flat check must return null (fall through).
+        // Without uid in the row, the fallthrough returns false.
+        $GLOBALS['TCA']['test_table'] = [
+            'ctrl' => [
+                'tx_contexts' => [
+                    'flatSettings' => [
+                        'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
+                    ],
+                ],
+            ],
+            'columns' => [],
+        ];
+
+        $mockContext = $this->createMock(AbstractContext::class);
+        $mockContext->method('getUid')->willReturn(5);
+
+        $container = Container::get();
+        $container->append($mockContext);
+
+        // Row with null flat column AND no uid - flat check returns null,
+        // then uid check on line 83 returns false
+        $row = [
+            'title' => 'Test Record',
+            'tx_contexts_disable' => null,
+            'tx_contexts_enable' => '',
+            // No uid - falls through to uid check which returns false
+        ];
+
+        // If $rowValid mutation (false->true) happens, the code would try to access
+        // flatColumnContents[0] which wouldn't have the null column's data,
+        // and would return true instead of the expected false
+        self::assertFalse(Record::isSettingEnabled('test_table', 'tx_contexts', $row));
+    }
+
+    #[Test]
+    public function isSettingEnabledFlatReturnsNullWhenMissingColumnFallsThroughToUidCheck(): void
+    {
+        // Target mutant: Line 131 FalseValue, Line 140 ReturnRemoval
+        // Missing flat column must fall through; without uid returns false
+        $GLOBALS['TCA']['test_table'] = [
+            'ctrl' => [
+                'tx_contexts' => [
+                    'flatSettings' => [
+                        'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
+                    ],
+                ],
+            ],
+            'columns' => [],
+        ];
+
+        $mockContext = $this->createMock(AbstractContext::class);
+        $mockContext->method('getUid')->willReturn(5);
+
+        $container = Container::get();
+        $container->append($mockContext);
+
+        // Row missing flat columns AND no uid
+        $row = [
+            'title' => 'Test Record',
+            // No flat columns and no uid
+        ];
+
+        // Flat check returns null (row invalid), uid check returns false
+        self::assertFalse(Record::isSettingEnabled('test_table', 'tx_contexts', $row));
+    }
+
+    #[Test]
+    public function isSettingEnabledReturnValueFromFlatCheckIsUsed(): void
+    {
+        // Target mutant: Line 51 ReturnRemoval (return true when no enableSettings)
+        // Verify the actual return value is used (true) not just falling through
+        $GLOBALS['TCA']['test_table'] = [
+            'ctrl' => [
+                // No enableSettings at all
+            ],
+            'columns' => [],
+        ];
+
+        $row = ['uid' => 1, 'title' => 'Test Record'];
+
+        $result = Record::isEnabled('test_table', $row);
+
+        // Must be exactly boolean true
+        self::assertTrue($result);
+    }
 }

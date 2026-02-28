@@ -51,17 +51,22 @@ class ContextRestriction implements EnforceableQueryRestrictionInterface, QueryR
 
         if ($this->isEnvironmentInFrontendMode()) {
             foreach ($queriedTables as $table) {
+                $table = (string) $table;
                 foreach (Configuration::getEnableSettings($table) as $setting) {
+                    $setting = (string) $setting;
                     $flatColumns = Configuration::getFlatColumns($table, $setting);
 
                     if (\count($flatColumns) === 0) {
                         continue;
                     }
 
+                    $disableColumn = (string) $flatColumns[0];
+                    $enableColumn = (string) $flatColumns[1];
+
                     $enableConstraints = [
-                        $expressionBuilder->isNull($flatColumns[1]),
+                        $expressionBuilder->isNull($enableColumn),
                         $expressionBuilder->eq(
-                            $flatColumns[1],
+                            $enableColumn,
                             $expressionBuilder->literal(''),
                         ),
                     ];
@@ -70,11 +75,11 @@ class ContextRestriction implements EnforceableQueryRestrictionInterface, QueryR
                     /** @var AbstractContext $context */
                     foreach (Container::get() as $context) {
                         $enableConstraints[] = $expressionBuilder->inSet(
-                            $flatColumns[1],
+                            $enableColumn,
                             (string) $context->getUid(),
                         );
                         $disableConstraints[] = 'NOT ' . $expressionBuilder->inSet(
-                            $flatColumns[0],
+                            $disableColumn,
                             (string) $context->getUid(),
                         );
                     }
@@ -85,9 +90,9 @@ class ContextRestriction implements EnforceableQueryRestrictionInterface, QueryR
 
                     if (\count($disableConstraints) > 0) {
                         $constraints[] = $expressionBuilder->or(
-                            $expressionBuilder->isNull($flatColumns[0]),
+                            $expressionBuilder->isNull($disableColumn),
                             $expressionBuilder->eq(
-                                $flatColumns[0],
+                                $disableColumn,
                                 $expressionBuilder->literal(''),
                             ),
                             $expressionBuilder->and(...$disableConstraints),

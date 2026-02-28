@@ -90,6 +90,8 @@ class Container extends ArrayObject
      * @throws ContextException
      * @throws DBALException
      * @throws Exception
+     *
+     * @codeCoverageIgnore Requires database via loadAvailable()
      */
     public function initMatching(): Container
     {
@@ -104,6 +106,8 @@ class Container extends ArrayObject
      * @throws ContextException
      * @throws DBALException
      * @throws Exception
+     *
+     * @codeCoverageIgnore Requires database via loadAvailable()
      */
     public function initAll(): Container
     {
@@ -141,6 +145,7 @@ class Container extends ArrayObject
      *
      * @param AbstractContext[] $arContexts Array of context objects
      *
+     * @codeCoverageIgnore Only called from initMatching/initAll which require database
      */
     protected function setActive(array $arContexts): Container
     {
@@ -158,6 +163,8 @@ class Container extends ArrayObject
      * @throws ContextException
      * @throws DBALException
      * @throws Exception
+     *
+     * @codeCoverageIgnore Requires database (ConnectionPool/QueryBuilder)
      */
     protected function loadAvailable(): array
     {

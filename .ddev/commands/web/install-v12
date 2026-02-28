@@ -8,41 +8,50 @@ set -e
 
 TYPO3_VERSION="^12.4"
 INSTALL_DIR="/var/www/html/v12"
-EXTENSION_DIR="/var/www/html/extension"
+EXTENSION_DIR="/var/www/html"
+SITE_IDENTIFIER="contexts"
+SITE_BASE="https://v12.contexts.ddev.site/"
 
 echo "=== Installing TYPO3 ${TYPO3_VERSION} ==="
-
-# Create installation directory if needed
-mkdir -p "${INSTALL_DIR}"
-cd "${INSTALL_DIR}"
 
 # Check if already installed
 if [ -f "${INSTALL_DIR}/composer.json" ] && [ -d "${INSTALL_DIR}/vendor" ]; then
     echo "TYPO3 v12 already installed. Use 'ddev composer update' in v12 directory to update."
-    echo "Or remove ${INSTALL_DIR} and run this command again for fresh install."
+    echo "Or remove ${INSTALL_DIR} contents and run this command again for fresh install."
     exit 0
 fi
 
-# Create TYPO3 project
+# Fix volume ownership (Docker volumes mount as root)
+sudo chown "$(id -u):$(id -g)" "${INSTALL_DIR}"
+
+# Clean up existing directory contents if any
+rm -rf "${INSTALL_DIR}"/* "${INSTALL_DIR}"/.[!.]* 2>/dev/null || true
+
+# Create TYPO3 project directly in the install directory
 echo "Creating TYPO3 ${TYPO3_VERSION} project..."
-composer create-project "typo3/cms-base-distribution:${TYPO3_VERSION}" . --no-interaction
+composer create-project "typo3/cms-base-distribution:${TYPO3_VERSION}" "${INSTALL_DIR}" --no-interaction
+cd "${INSTALL_DIR}"
 
 # Fix PHP platform version to match actual runtime (required for extension compatibility)
 echo "Configuring PHP platform version..."
 composer config platform.php 8.2
 
-# Add path repository for local extension
+# Add path repository for local extension with priority over Packagist
 echo "Configuring local extension repository..."
+composer config repositories.packagist.org false
 composer config repositories.local path "${EXTENSION_DIR}"
 composer config minimum-stability dev
 composer config prefer-stable true
 
-# Require the extension
+# Require the extension from local path
 echo "Installing contexts extension..."
 composer require "netresearch/contexts:@dev" --no-interaction
 
+# Re-enable packagist for any other dependencies
+composer config repositories.packagist.org composer https://repo.packagist.org
+
 # Create necessary directories
-mkdir -p public/typo3conf public/fileadmin public/uploads var/log var/cache config/system
+mkdir -p public/typo3conf public/fileadmin public/uploads var/log var/cache config/system config/sites/${SITE_IDENTIFIER}
 
 # Database configuration
 DB_NAME="db_v12"
@@ -51,7 +60,7 @@ DB_PASS="db"
 DB_HOST="db"
 
 # Create database if it doesn't exist
-mysql -h "${DB_HOST}" -u "${DB_USER}" -p"${DB_PASS}" -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
+mysql -h "${DB_HOST}" -u root -proot -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME}; GRANT ALL ON ${DB_NAME}.* TO '${DB_USER}'@'%';"
 
 # Create AdditionalConfiguration.php
 cat > config/system/additional.php << 'ADDITIONAL_CONFIG'
@@ -78,6 +87,9 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors'] = 1;
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['exceptionalErrors'] = E_ALL;
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = '.*';
 
+// DDEV: Disable backend referrer enforcement for multi-site development
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['features']['security.backend.enforceReferrer'] = false;
+
 // Caching - use database for development
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['hash']['backend'] = \TYPO3\CMS\Core\Cache\Backend\Typo3DatabaseBackend::class;
 
@@ -87,19 +99,50 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '$argon2i$v=19$m=6553
 // Graphics
 $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor'] = 'ImageMagick';
 $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_path'] = '/usr/bin/';
+
+// Exclude demo context GET parameter from cacheHash
+$GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'debug';
 ADDITIONAL_CONFIG
+
+# Create site configuration
+echo "Creating site configuration..."
+cat > config/sites/${SITE_IDENTIFIER}/config.yaml << SITE_CONFIG
+base: /
+rootPageId: 1
+languages:
+  -
+    title: English
+    enabled: true
+    languageId: 0
+    base: /
+    locale: en_US.UTF-8
+    navigationTitle: English
+    flag: us
+routes: []
+errorHandling: []
+SITE_CONFIG
 
 # Setup TYPO3
 echo "Setting up TYPO3..."
-./vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db_v12 --username=db --password=db --admin-username=admin --admin-user-password='Password:joh316' --admin-email=admin@example.com --project-name="Contexts v12" --server-type=apache --no-interaction --force
+./vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db_v12 --username=db --password=db --admin-username=admin --admin-user-password='Joh316!!' --admin-email=admin@example.com --project-name="Contexts v12" --server-type=apache --no-interaction --force
 
-# Note: Extensions installed via Composer are auto-loaded in TYPO3 12+
-echo "Contexts extension installed via Composer (auto-loaded)..."
+# Set up extension
+echo "Setting up contexts extension..."
+./vendor/bin/typo3 extension:setup || true
+
+# Create demo contexts and content
+echo "Creating demo content..."
+/var/www/html/.ddev/commands/web/create-demo-content db_v12
+
+# Flush cache
+echo "Flushing caches..."
+./vendor/bin/typo3 cache:flush
 
 echo ""
 echo "=== TYPO3 v12 Installation Complete ==="
-echo "URL: https://v12.contexts.ddev.site"
-echo "Backend: https://v12.contexts.ddev.site/typo3"
-echo "Admin: admin / Password123!"
-echo "Install Tool Password: password"
+echo ""
+echo "Frontend: ${SITE_BASE}"
+echo "Backend:  ${SITE_BASE}typo3"
+echo "Admin:    admin / Joh316!!"
+echo "Install:  password"
 echo ""

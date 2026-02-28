@@ -29,9 +29,9 @@
         "allow-plugins": {
             "typo3/cms-composer-installers": true,
             "typo3/class-alias-loader": true,
-            "phpro/grumphp": true,
             "a9f/fractor-extension-installer": true,
-            "infection/extension-installer": true
+            "infection/extension-installer": true,
+            "captainhook/hook-installer": true
         },
         "audit": {
             "abandoned": "ignore",
@@ -53,11 +53,12 @@
     },
     "require-dev": {
         "a9f/typo3-fractor": "^0.5.8",
+        "captainhook/captainhook": "^5.28",
+        "captainhook/hook-installer": "^1.0",
         "friendsofphp/php-cs-fixer": "^3.92",
         "infection/infection": "*",
         "nikic/php-fuzzer": "^0.0.11",
         "phpat/phpat": "^0.12",
-        "phpro/grumphp": "^2.0",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",
@@ -105,6 +106,9 @@
     "extra": {
         "branch-alias": {
             "dev-master": "4.0.x-dev"
+        },
+        "captainhook": {
+            "config": "Build/captainhook.json"
         },
         "typo3/cms": {
             "extension-key": "contexts"

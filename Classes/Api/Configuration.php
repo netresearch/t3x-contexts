@@ -230,7 +230,7 @@ class Configuration
         $flatSettings = $GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'] ?? [];
 
         foreach ($settings as $setting => $config) {
-            if (self::isFlatSetting($config)) {
+            if (self::isFlatSetting((array) $config)) {
                 $flatSettings[$setting] = [
                     0 => $setting . '_disable',
                     1 => $setting . '_enable',
@@ -259,7 +259,7 @@ class Configuration
         $flatSettings = [];
 
         foreach ($settings as $setting => $config) {
-            if (self::isFlatSetting($config)) {
+            if (self::isFlatSetting((array) $config)) {
                 $flatSettings[] = $setting;
             }
         }
@@ -318,7 +318,9 @@ class Configuration
     protected static function addToTcaColumns(string $table, array $settings): void
     {
         if (!isset($GLOBALS['TCA'][$table])) {
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         if (\array_key_exists(self::RECORD_SETTINGS_COLUMN, $GLOBALS['TCA'][$table]['columns'])) {

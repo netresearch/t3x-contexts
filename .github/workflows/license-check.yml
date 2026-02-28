@@ -1,0 +1,22 @@
+name: License Check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'composer.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'composer.json'
+  merge_group:
+  schedule:
+    - cron: '0 9 * * 1'
+
+permissions: {}
+
+jobs:
+  license-check:
+    uses: netresearch/typo3-ci-workflows/.github/workflows/license-check.yml@main
+    permissions:
+      contents: read

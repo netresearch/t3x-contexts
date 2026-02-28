@@ -324,7 +324,7 @@ final class ContextRestrictionTest extends UnitTestCase
         // Should build inSet for both enable and disable columns
         $expressionBuilder->expects(self::exactly(2))
             ->method('inSet')
-            ->willReturnCallback(fn($column, $value) => "FIND_IN_SET({$value}, {$column})");
+            ->willReturnCallback(fn($column, $value) => 'FIND_IN_SET(' . (string) $value . ', ' . (string) $column . ')');
 
         // Should create OR expressions: one for enable, one for disable
         $expressionBuilder->expects(self::exactly(2))
@@ -430,6 +430,42 @@ final class ContextRestrictionTest extends UnitTestCase
     }
 
     #[Test]
+    public function buildExpressionSkipsSettingsWithoutFlatColumnsInFrontendMode(): void
+    {
+        // Set up frontend mode
+        $this->setupFrontendMode();
+
+        // Table with enableSettings but NO flatSettings for 'tx_contexts'
+        $GLOBALS['TCA']['test_table'] = [
+            'ctrl' => [
+                'tx_contexts' => [
+                    'enableSettings' => ['tx_contexts'],
+                    // No flatSettings - should hit continue on line 60
+                ],
+            ],
+            'columns' => [],
+        ];
+
+        $restriction = new ContextRestriction();
+
+        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $compositeExpression = $this->createMock(CompositeExpression::class);
+
+        // Only final and() call should happen, no constraint building
+        $expressionBuilder->expects(self::once())
+            ->method('and')
+            ->willReturn($compositeExpression);
+
+        // No isNull, eq, inSet etc. should be called since we skip
+        $expressionBuilder->expects(self::never())->method('isNull');
+        $expressionBuilder->expects(self::never())->method('eq');
+
+        $result = $restriction->buildExpression(['test_table'], $expressionBuilder);
+
+        self::assertInstanceOf(CompositeExpression::class, $result);
+    }
+
+    #[Test]
     public function buildExpressionAddsDisableConstraintsCorrectly(): void
     {
         // Set up frontend mode
@@ -464,7 +500,7 @@ final class ContextRestrictionTest extends UnitTestCase
             ->method('inSet')
             ->willReturnCallback(function ($column, $value) use (&$inSetCalls) {
                 $inSetCalls[] = ['column' => $column, 'value' => $value];
-                return "FIND_IN_SET({$value}, {$column})";
+                return 'FIND_IN_SET(' . (string) $value . ', ' . (string) $column . ')';
             });
 
         $expressionBuilder->method('isNull')->willReturn('IS NULL');
