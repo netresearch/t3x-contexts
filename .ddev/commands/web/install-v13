@@ -21,21 +21,15 @@ if [ -f "${INSTALL_DIR}/composer.json" ] && [ -d "${INSTALL_DIR}/vendor" ]; then
     exit 0
 fi
 
+# Fix volume ownership (Docker volumes mount as root)
+sudo chown "$(id -u):$(id -g)" "${INSTALL_DIR}"
+
 # Clean up existing directory contents if any
-if [ -d "${INSTALL_DIR}" ]; then
-    echo "Cleaning existing directory..."
-    rm -rf "${INSTALL_DIR}"/* "${INSTALL_DIR}"/.[!.]* 2>/dev/null || true
-fi
+rm -rf "${INSTALL_DIR}"/* "${INSTALL_DIR}"/.[!.]* 2>/dev/null || true
 
-# Create TYPO3 project in a temp location then move
+# Create TYPO3 project directly in the install directory
 echo "Creating TYPO3 ${TYPO3_VERSION} project..."
-TEMP_DIR="/tmp/typo3-v13-install-$$"
-composer create-project "typo3/cms-base-distribution:${TYPO3_VERSION}" "${TEMP_DIR}" --no-interaction
-
-# Move to final location
-mkdir -p "${INSTALL_DIR}"
-cp -a "${TEMP_DIR}"/. "${INSTALL_DIR}/"
-rm -rf "${TEMP_DIR}"
+composer create-project "typo3/cms-base-distribution:${TYPO3_VERSION}" "${INSTALL_DIR}" --no-interaction
 cd "${INSTALL_DIR}"
 
 # Add path repository for local extension with priority over Packagist
@@ -48,9 +42,6 @@ composer config prefer-stable true
 # Require the extension from local path
 echo "Installing contexts extension..."
 composer require "netresearch/contexts:*" --no-interaction
-
-# Also require fluid_styled_content for frontend rendering
-composer require "typo3/cms-fluid-styled-content:${TYPO3_VERSION}" --no-interaction
 
 # Re-enable packagist for any other dependencies
 composer config repositories.packagist.org composer https://repo.packagist.org
@@ -65,7 +56,7 @@ DB_PASS="db"
 DB_HOST="db"
 
 # Create database if it doesn't exist
-mysql -h "${DB_HOST}" -u "${DB_USER}" -p"${DB_PASS}" -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
+mysql -h "${DB_HOST}" -u root -proot -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME}; GRANT ALL ON ${DB_NAME}.* TO '${DB_USER}'@'%';"
 
 # Create AdditionalConfiguration.php with DDEV-specific settings
 cat > config/system/additional.php << 'ADDITIONAL_CONFIG'
@@ -108,7 +99,7 @@ ADDITIONAL_CONFIG
 
 # Setup TYPO3
 echo "Setting up TYPO3..."
-./vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db_v13 --username=db --password=db --admin-username=admin --admin-user-password=joh316 --admin-email=admin@example.com --project-name="Contexts v13" --server-type=apache --no-interaction --force
+./vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db_v13 --username=db --password=db --admin-username=admin --admin-user-password='Joh316!!' --admin-email=admin@example.com --project-name="Contexts v13" --server-type=apache --no-interaction --force
 
 # Set up extension
 echo "Setting up contexts extension..."
@@ -234,7 +225,7 @@ VALUES (2, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 0, 'html', 0, '', '
       <li><strong>Extension Key:</strong> contexts</li>
       <li><strong>Vendor:</strong> Netresearch DTT GmbH</li>
       <li><strong>Package:</strong> netresearch/contexts</li>
-      <li><strong>Backend Login:</strong> admin / joh316</li>
+      <li><strong>Backend Login:</strong> admin / Joh316!!</li>
       <li><strong>Install Tool:</strong> password</li>
     </ul>
   </div>
@@ -252,6 +243,6 @@ echo "=== TYPO3 v13 Installation Complete ==="
 echo ""
 echo "Frontend: ${SITE_BASE}"
 echo "Backend:  ${SITE_BASE}typo3"
-echo "Admin:    admin / joh316"
+echo "Admin:    admin / Joh316!!"
 echo "Install:  password"
 echo ""
