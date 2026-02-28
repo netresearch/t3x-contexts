@@ -42,19 +42,19 @@ class HttpHeaderContext extends AbstractContext
     {
         // Determine which HTTP header has been configured
         $configValue = $this->getConfValue('field_name');
-        $httpHeaderName = strtolower(trim($configValue));
+        $httpHeaderName = trim($configValue);
 
-        // Get server params from PSR-7 request
-        $serverParams = $this->getServerParams();
+        if ($httpHeaderName === '') {
+            return $this->invert(false);
+        }
 
-        // Check, if header exists in HTTP request
-        foreach ($serverParams as $header => $value) {
-            if (strtolower((string) $header) === $httpHeaderName) {
-                // header exists - check if any configured values match
-                return $this->invert($this->storeInSession(
-                    $this->matchValues((string) $value),
-                ));
-            }
+        // Try PSR-7 header lookup first (supports standard header names like "User-Agent")
+        $headerValue = $this->getHeaderValue($httpHeaderName);
+
+        if ($headerValue !== null) {
+            return $this->invert($this->storeInSession(
+                $this->matchValues($headerValue),
+            ));
         }
 
         // HTTP header does not exist
@@ -62,35 +62,90 @@ class HttpHeaderContext extends AbstractContext
     }
 
     /**
-     * Get server parameters from the current request.
+     * Get the value of an HTTP header from the current request.
      *
-     * @return array<string, mixed> Server parameters
+     * Supports both standard HTTP header names (e.g., "User-Agent") and
+     * $_SERVER key format (e.g., "HTTP_USER_AGENT") for backward compatibility.
+     *
+     * @param string $headerName The header name to look up
+     *
+     * @return string|null The header value, or null if the header doesn't exist
      */
-    protected function getServerParams(): array
+    protected function getHeaderValue(string $headerName): ?string
     {
-        // Try to get from PSR-7 request first (preferred in TYPO3 v12+)
-        $request = Container::get()->getRequest();
+        $request = $this->getRequest();
+
         if ($request instanceof ServerRequestInterface) {
-            return $request->getServerParams();
+            // Try PSR-7 header lookup first (standard HTTP header names)
+            if ($request->hasHeader($headerName)) {
+                return $request->getHeaderLine($headerName);
+            }
+
+            // Fall back to server params ($_SERVER key format)
+            /** @var array<string, mixed> $serverParams */
+            $serverParams = $request->getServerParams();
+
+            return $this->findInServerParams($serverParams, $headerName);
         }
 
-        // Fallback to GLOBALS['TYPO3_REQUEST'] if available
-        $globalRequest = $GLOBALS['TYPO3_REQUEST'] ?? null;
-        if ($globalRequest instanceof ServerRequestInterface) {
-            return $globalRequest->getServerParams();
-        }
+        // Ultimate fallback to $_SERVER
+        /** @var array<string, mixed> $fallbackParams */
+        $fallbackParams = $_SERVER;
 
-        // Fallback to $_SERVER
-        return $_SERVER;
+        return $this->findInServerParams($fallbackParams, $headerName);
     }
 
     /**
-     * Checks if the given value is one of the configured allowed values
+     * Get the PSR-7 request from the Container or TYPO3_REQUEST global.
+     */
+    protected function getRequest(): ?ServerRequestInterface
+    {
+        $request = Container::get()->getRequest();
+        if ($request instanceof ServerRequestInterface) {
+            return $request;
+        }
+
+        $globalRequest = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if ($globalRequest instanceof ServerRequestInterface) {
+            return $globalRequest;
+        }
+
+        return null;
+    }
+
+    /**
+     * Find a header value in server params by case-insensitive key matching.
      *
-     * @param string $value Current parameter value
+     * @param array<string, mixed> $serverParams Server parameters ($_SERVER style)
+     * @param string               $headerName   Header name to find
      *
-     * @return bool True if the current parameter value is one of the
-     *                 configured values
+     * @return string|null The header value, or null if not found
+     */
+    protected function findInServerParams(array $serverParams, string $headerName): ?string
+    {
+        $lowerName = strtolower($headerName);
+
+        foreach ($serverParams as $key => $value) {
+            if (strtolower((string) $key) === $lowerName) {
+                return (string) $value;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Checks if the actual header value contains any of the configured values
+     * as a substring (case-insensitive).
+     *
+     * Each line in the configuration is treated as a pattern. The match succeeds
+     * if any pattern is found as a substring of the actual header value.
+     * This enables matching complex values like User-Agent strings against
+     * simple patterns like "iPhone" or "Mobile".
+     *
+     * @param string $value Current header value
+     *
+     * @return bool True if the current header value contains any configured pattern
      */
     protected function matchValues(string $value): bool
     {
@@ -100,15 +155,22 @@ class HttpHeaderContext extends AbstractContext
             true,
         );
 
-        // Empty value list, so we allow any value
-        // @codeCoverageIgnoreStart
-        if (\count($arValues) === 1 && $arValues[0] === '') {
+        if (\count($arValues) === 0) {
             return $value !== '';
         }
-        // @codeCoverageIgnoreEnd
 
         $arValues = array_map(trim(...), $arValues);
 
-        return \in_array($value, $arValues, true);
+        foreach ($arValues as $pattern) {
+            if ($pattern === '') {
+                continue;
+            }
+
+            if (str_contains(strtolower($value), strtolower($pattern))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
