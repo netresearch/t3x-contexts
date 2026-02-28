@@ -22,6 +22,7 @@ use Netresearch\Contexts\Api\Configuration;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -432,7 +433,7 @@ abstract class AbstractContext
         }
 
         // Check if fe_user is available (may not be initialized in all contexts)
-        /** @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication|null $feUser */
+        /** @var FrontendUserAuthentication|null $feUser */
         $feUser = $tsfe->fe_user ?? null;
         if ($feUser === null) {
             return;
@@ -464,7 +465,7 @@ abstract class AbstractContext
         }
 
         // Check if fe_user is available (may not be initialized in all contexts)
-        /** @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication|null $feUser */
+        /** @var FrontendUserAuthentication|null $feUser */
         $feUser = $tsfe->fe_user ?? null;
         if ($feUser === null) {
             return $bMatch;

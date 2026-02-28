@@ -14,6 +14,7 @@
 
 declare(strict_types=1);
 
+use Rector\DeadCode\Rector\Concat\RemoveConcatAutocastRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPublicMethodParameterRector;
 use Rector\DeadCode\Rector\StaticCall\RemoveParentCallWithoutParentRector;
@@ -65,6 +66,10 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->skip([
         // Skip constructor promotion - keep explicit property declarations for clarity
         ClassPropertyAssignToConstructorPromotionRector::class,
+
+        // Skip removing (string) casts in concatenation — PHPStan level 10 requires
+        // explicit casts when concatenating mixed values (from $arRow, $GLOBALS, etc.)
+        RemoveConcatAutocastRector::class,
 
         // Skip removing parent calls - may be needed for TYPO3 hooks
         RemoveParentCallWithoutParentRector::class,

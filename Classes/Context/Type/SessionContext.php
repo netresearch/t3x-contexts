@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -43,7 +44,7 @@ class SessionContext extends AbstractContext
             return false;
         }
 
-        /** @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication|null $feUser */
+        /** @var FrontendUserAuthentication|null $feUser */
         $feUser = $tsfe->fe_user ?? null;
         if ($feUser === null) {
             return false;
