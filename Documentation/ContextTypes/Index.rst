@@ -109,6 +109,7 @@ Configuration
    The GET parameter name to check.
 
 .. confval:: Expected Value
+   :name: getparam-expected-value
 
    :type: string
    :required: false
@@ -117,6 +118,7 @@ Configuration
    value activates the context.
 
 .. confval:: Store in Session
+   :name: getparam-store-in-session
 
    :type: boolean
    :default: false
@@ -159,6 +161,7 @@ Configuration
    The HTTP header name to check (case-insensitive).
 
 .. confval:: Expected Value
+   :name: httpheader-expected-value
 
    :type: string
    :required: false
@@ -167,6 +170,7 @@ Configuration
    value activates the context.
 
 .. confval:: Store in Session
+   :name: httpheader-store-in-session
 
    :type: boolean
    :default: false
@@ -207,6 +211,7 @@ Configuration
    Key in the session data to check.
 
 .. confval:: Expected Value
+   :name: session-expected-value
 
    :type: string
    :required: false

@@ -6,7 +6,7 @@
 Sitemap
 =======
 
-.. toctree::
+.. menu::
    :maxdepth: 5
    :glob:
    :titlesonly:
