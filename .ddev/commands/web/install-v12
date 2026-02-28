@@ -99,6 +99,9 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '$argon2i$v=19$m=6553
 // Graphics
 $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor'] = 'ImageMagick';
 $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_path'] = '/usr/bin/';
+
+// Exclude demo context GET parameter from cacheHash
+$GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'debug';
 ADDITIONAL_CONFIG
 
 # Create site configuration
@@ -126,6 +129,10 @@ echo "Setting up TYPO3..."
 # Set up extension
 echo "Setting up contexts extension..."
 ./vendor/bin/typo3 extension:setup || true
+
+# Create demo contexts and content
+echo "Creating demo content..."
+/var/www/html/.ddev/commands/web/create-demo-content db_v12
 
 # Flush cache
 echo "Flushing caches..."
