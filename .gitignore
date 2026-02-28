@@ -4,6 +4,7 @@ vendor/
 .phpunit.result.cache
 .php-cs-fixer.cache
 .Build/
+Build/.phpunit.cache/
 
 # AI assistant working directories
 claudedocs/
