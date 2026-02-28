@@ -3,10 +3,9 @@ includes:
     - ../vendor/phpstan/phpstan-deprecation-rules/rules.neon
     - ../vendor/phpstan/phpstan-phpunit/extension.neon
     - phpat.neon
-    - phpstan-baseline.neon
 
 parameters:
-    # Level 10: Strictest level — remaining legacy issues captured in baseline
+    # Level 10: Strictest level — all issues resolved with inline @phpstan-ignore
     level: 10
 
     paths:

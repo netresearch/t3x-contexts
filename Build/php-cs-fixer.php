@@ -38,8 +38,8 @@ return (new PhpCsFixer\Config())
         'single_line_empty_body' => false,
 
         // PHP 8.2+ features
-        '@PHP82Migration' => true,
-        '@PHP80Migration:risky' => true,
+        '@PHP8x2Migration' => true,
+        '@PHP8x0Migration:risky' => true,
 
         // Strict typing
         'declare_strict_types' => true,

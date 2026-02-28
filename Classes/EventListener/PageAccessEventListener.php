@@ -44,13 +44,13 @@ final readonly class PageAccessEventListener
         // TYPO3 13+: getPageInformation(), TYPO3 12: getController()
         if (method_exists($event, 'getPageInformation')) {
             $pageInformation = $event->getPageInformation();
-            $pageRecord = $pageInformation->getPageRecord();
+            $pageRecord = $pageInformation->getPageRecord(); // @phpstan-ignore method.nonObject (TYPO3 12: PageInformation class does not exist)
 
             if ($pageRecord === []) {
                 return;
             }
 
-            $rootLine = $pageInformation->getRootLine();
+            $rootLine = $pageInformation->getRootLine(); // @phpstan-ignore method.nonObject
         } else {
             /** @var TypoScriptFrontendController $controller */
             $controller = $event->getController(); // @phpstan-ignore method.notFound
@@ -64,8 +64,7 @@ final readonly class PageAccessEventListener
         }
 
         // Check if page is accessible based on context
-        /** @var array<int, array<string, mixed>> $rootLine */
-        $result = $this->frontendControllerService->checkEnableFieldsForRootLine($rootLine);
+        $result = $this->frontendControllerService->checkEnableFieldsForRootLine($rootLine); // @phpstan-ignore argument.type
 
         // If the page is not accessible, deny access
         if ($result === false) {

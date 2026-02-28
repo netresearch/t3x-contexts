@@ -48,10 +48,10 @@ final readonly class IconOverlayEventListener
 
         if ($table !== '' && $row !== []) {
             $modifiedOverlay = $this->iconService->postOverlayPriorityLookup(
-                $table,
-                $row,
-                $status,
-                $iconOverlay,
+                $table, // @phpstan-ignore argument.type (TYPO3 12: event methods return mixed)
+                $row, // @phpstan-ignore argument.type
+                $status, // @phpstan-ignore argument.type
+                $iconOverlay, // @phpstan-ignore argument.type
             );
 
             if ($modifiedOverlay !== $iconOverlay) {

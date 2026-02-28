@@ -5,7 +5,8 @@
 # Following TYPO3 core testing conventions.
 #
 
-trap 'cleanUp;exit 2' SIGINT
+trap 'cleanUp;exit 2' SIGINT SIGTERM
+trap 'cleanUp' EXIT
 
 waitFor() {
     local HOST=${1}
@@ -348,7 +349,7 @@ handleDbmsOptions
 COMPOSER_ROOT_VERSION="4.x-dev"
 HOST_UID=$(id -u)
 USERSET=""
-if [ $(uname) != "Darwin" ]; then
+if [ "$(uname)" != "Darwin" ]; then
     USERSET="--user $HOST_UID"
 fi
 
@@ -387,7 +388,7 @@ if [[ -z "${CONTAINER_BIN}" ]]; then
 fi
 
 IMAGE_PHP="${TYPO3_IMAGE_PREFIX}core-testing-$(echo "php${PHP_VERSION}" | sed -e 's/\.//'):latest"
-IMAGE_ALPINE="${IMAGE_PREFIX}alpine:3.8"
+IMAGE_ALPINE="${IMAGE_PREFIX}alpine:3.21"
 IMAGE_MARIADB="docker.io/mariadb:${DBMS_VERSION}"
 IMAGE_MYSQL="docker.io/mysql:${DBMS_VERSION}"
 IMAGE_POSTGRES="docker.io/postgres:${DBMS_VERSION}-alpine"
@@ -395,7 +396,7 @@ IMAGE_POSTGRES="docker.io/postgres:${DBMS_VERSION}-alpine"
 # Set $1 to first mass argument, this is the optional test file or test directory to execute
 shift $((OPTIND - 1))
 
-SUFFIX=$(echo $RANDOM)
+SUFFIX="${$}-${RANDOM}"
 NETWORK="nr-contexts-${SUFFIX}"
 ${CONTAINER_BIN} network create ${NETWORK} >/dev/null
 
