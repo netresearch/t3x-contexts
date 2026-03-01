@@ -30,7 +30,7 @@ Update your deployment and CI pipelines accordingly.
 TYPO3 Version
 ~~~~~~~~~~~~~
 
-**Before:** TYPO3 v10 - v11
+**Before:** TYPO3 v11
 
 **After:** TYPO3 v12.4 LTS and v13.4 LTS only
 
@@ -106,15 +106,20 @@ Step-by-Step Migration
 Event Migration Reference
 -------------------------
 
-+------------------------------------------+----------------------------------------+
-| Old Hook (SC_OPTIONS)                    | New PSR-14 Event                       |
-+==========================================+========================================+
-| processDatamapClass                      | AfterDatabaseOperationsEvent           |
-+------------------------------------------+----------------------------------------+
-| filterMenuPages                          | FilterMenuItemsEvent                   |
-+------------------------------------------+----------------------------------------+
-| hook_checkEnableFields                   | ModifyRecordOverlayEvent               |
-+------------------------------------------+----------------------------------------+
+.. list-table::
+   :header-rows: 1
+   :widths: 50 50
+
+   * - Old Hook (SC_OPTIONS)
+     - New PSR-14 Event
+   * - hook_checkEnableFields
+     - AfterPageAndLanguageIsResolvedEvent
+   * - filterMenuPages
+     - FilterMenuItemsEvent
+   * - overrideIconOverlay (IconFactory)
+     - ModifyRecordOverlayIconIdentifierEvent
+   * - createHashBase
+     - ModifyCacheLifetimeForPageEvent
 
 .. _migration-site-sets:
 
@@ -142,30 +147,24 @@ Migration Steps
       imports:
         - { resource: "EXT:contexts/Configuration/Sets/Contexts/config.yaml" }
 
-2. Move TypoScript constants to site settings:
-
-   **Before (TypoScript Constants):**
-
-   .. code-block:: typoscript
-
-      plugin.tx_contexts.settings.debug = 1
-
-   **After (Site Settings):**
+2. Configure settings in your site configuration:
 
    .. code-block:: yaml
 
       settings:
         contexts:
-          debug: true
+          debug: false
+          matchMode: 'all'
 
-3. Remove the static TypoScript include (no longer needed with Site Sets)
+3. Remove any static TypoScript include (no longer needed with
+   Site Sets)
 
 .. _migration-testing:
 
 Updating Tests
 ==============
 
-Test code must be updated for PHPUnit 10/11 compatibility.
+Test code must be updated for PHPUnit 10/11/12/13 compatibility.
 
 Annotation to Attribute Migration
 ---------------------------------

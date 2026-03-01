@@ -166,8 +166,11 @@ Configuration
    :type: string
    :required: false
 
-   Value to match. Supports regular expressions. If empty, any non-empty
-   value activates the context.
+   Value(s) to match against the header. One value per line.
+   Matching uses **case-insensitive substring** comparison: if any
+   configured value appears anywhere in the actual header value,
+   the context matches. If empty, any non-empty header value
+   activates the context.
 
 .. confval:: Store in Session
    :name: httpheader-store-in-session
@@ -176,6 +179,38 @@ Configuration
    :default: false
 
    When enabled, the context state persists in the user session.
+
+.. versionadded:: 4.0.0
+   PSR-7 header support and case-insensitive substring matching.
+
+Header Name Resolution
+~~~~~~~~~~~~~~~~~~~~~~
+
+The extension supports both standard HTTP header names and
+``$_SERVER`` parameter keys:
+
+- **PSR-7 header names** (recommended): ``User-Agent``,
+  ``Accept-Language``, ``X-Forwarded-For``
+- **$_SERVER keys** (legacy): ``HTTP_USER_AGENT``,
+  ``HTTP_ACCEPT_LANGUAGE``
+
+The lookup order is:
+
+1. PSR-7 ``$request->getHeaderLine()`` (standard header name)
+2. ``$request->getServerParams()`` (``$_SERVER`` key format)
+
+Value Matching
+~~~~~~~~~~~~~~
+
+Values are matched using **case-insensitive substring** comparison.
+For example, with header ``User-Agent`` and configured values::
+
+    Mobile
+    Android
+    iPhone
+
+A User-Agent string like ``Mozilla/5.0 (iPhone; CPU iPhone OS)``
+matches because it contains ``iPhone`` (case-insensitive).
 
 Examples:
 

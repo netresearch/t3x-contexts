@@ -72,6 +72,7 @@ contexts in your own extensions.
 composer require netresearch/contexts
 vendor/bin/typo3 extension:activate contexts
 vendor/bin/typo3 cache:flush
+vendor/bin/typo3 database:updateschema
 ```
 
 **Optional Extensions:**
@@ -113,7 +114,7 @@ Match based on the accessed domain name.
 - Without leading dot: exact match only (`www.example.org` ≠ `example.org`)
 - With leading dot: matches all subdomains (`.example.org` matches `www.example.org`)
 
-### GET Parameter
+### Query Parameter
 
 Match based on URL query parameters.
 
@@ -162,7 +163,7 @@ Example: `mobile && !tablet`
 
 ```html
 <html xmlns:contexts="http://typo3.org/ns/Netresearch/Contexts/ViewHelpers">
-    <f:if condition="{contexts:matches(alias:'mobile')}">
+    <f:if condition="{contexts:matches(alias: 'mobile')}">
         <f:then>Mobile content</f:then>
         <f:else>Desktop content</f:else>
     </f:if>
@@ -172,7 +173,7 @@ Example: `mobile && !tablet`
 ### TypoScript Conditions
 
 ```typoscript
-[contextMatch("mobile")]
+[contextMatch('mobile')]
     page.10.template = EXT:site/Resources/Private/Templates/Mobile.html
 [END]
 ```
@@ -202,12 +203,17 @@ composer ci:test:php:functional
 
 # Run with coverage
 composer test:coverage
+
+# Docker-based testing (no local PHP needed)
+./Build/Scripts/runTests.sh -s unit
+./Build/Scripts/runTests.sh -s phpstan
+./Build/Scripts/runTests.sh -h  # Show all options
 ```
 
 ### Code Quality
 
 ```bash
-# Static analysis (level 9)
+# Static analysis (level 10)
 composer ci:test:php:phpstan
 
 # Code style check
@@ -219,8 +225,8 @@ composer ci:cgl
 
 | Tool | Version | Purpose |
 |------|---------|---------|
-| PHPUnit | 10/11/12 | Unit and functional tests |
-| PHPStan | 2.x | Static analysis (level 9) |
+| PHPUnit | 10/11/12/13 | Unit and functional tests |
+| PHPStan | 2.x | Static analysis (level 10) |
 | PHP-CS-Fixer | 3.x | Code style (PSR-12) |
 
 ## Documentation

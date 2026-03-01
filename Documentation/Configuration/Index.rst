@@ -6,104 +6,94 @@
 Configuration
 =============
 
-Extension Configuration
-=======================
-
-The extension can be configured via the TYPO3 Extension Configuration
-(:guilabel:`Admin Tools > Settings > Extension Configuration > contexts`).
-
-.. confval:: enableContexts
-
-   :type: boolean
-   :Default: true
-
-   Enable or disable context processing globally.
-
-.. confval:: contextMatchMode
-
-   :type: string
-   :Default: all
-
-   How multiple contexts are evaluated:
-
-   - ``all``: All assigned contexts must match (AND logic)
-   - ``any``: At least one context must match (OR logic)
-
 Site Set Settings (TYPO3 v13+)
 ==============================
 
-When using Site Sets, configure contexts in your site's settings:
+When using Site Sets, the extension provides configurable settings
+in your site configuration. Add the contexts Site Set to your site:
 
 .. code-block:: yaml
+   :caption: config/sites/<identifier>/config.yaml
+
+   imports:
+     - { resource: "EXT:contexts/Configuration/Sets/Contexts/config.yaml" }
 
    settings:
      contexts:
        debug: false
-       matchMode: 'all'
+
+The following settings are available:
 
 .. confval:: contexts.debug
+   :name: siteset-contexts-debug
 
    :type: boolean
    :Default: false
 
-   Enable debug output for context matching (development only).
+   Enable debug output in the frontend. When enabled, an HTML comment
+   ``<!-- Contexts Extension Debug Mode Active -->`` is added to the
+   page header. Use in development only.
 
 .. confval:: contexts.matchMode
 
    :type: string
    :Default: all
 
-   Context match logic: ``all`` (AND) or ``any`` (OR).
+   How multiple contexts are evaluated when checking visibility:
 
-TypoScript Configuration
-========================
+   - ``all``: All assigned contexts must match (AND logic)
+   - ``any``: At least one context must match (OR logic)
 
-Basic TypoScript settings for the contexts extension:
+.. confval:: contexts.cacheLifetimeModifier
 
-.. code-block:: typoscript
+   :type: integer
+   :Default: 0
 
-   plugin.tx_contexts {
-       settings {
-           # Enable debug mode
-           debug = 0
+   Modify cache lifetime when contexts are active (in seconds).
+   ``0`` means no modification.
 
-           # Default match mode
-           matchMode = all
-       }
-   }
+Page and Content Element Settings
+=================================
 
-Page TSconfig
-=============
+Context visibility is configured directly on page and content element
+records via the **Contexts** tab in the TYPO3 backend.
 
-Control context field visibility in the backend:
+Each context record appears with two options:
 
-.. code-block:: typoscript
+- **Visible: yes** — record is only shown when the context is active
+- **Visible: no** — record is hidden when the context is active
 
-   # Hide context fields from certain user groups
-   TCEFORM.pages.tx_contexts_visibility.disabled = 1
-   TCEFORM.tt_content.tx_contexts_visibility.disabled = 1
+The extension adds two database columns to controlled tables:
 
-User TSconfig
-=============
+``tx_contexts_enable``
+   Comma-separated list of context UIDs that must be active for the
+   record to be visible.
 
-Per-user context field configuration:
+``tx_contexts_disable``
+   Comma-separated list of context UIDs that hide the record when
+   active.
 
-.. code-block:: typoscript
-
-   # Allow specific contexts only
-   options.contexts.allowedTypes = ip,domain,getparam
+.. _configuration-caching:
 
 Caching Considerations
 ======================
 
-Context-dependent content affects caching. The extension automatically:
+Context-dependent content affects page caching. The extension handles
+this through several mechanisms:
 
-1. Adds context identifiers to cache tags
-2. Varies cache entries by active contexts
-3. Clears affected caches when context definitions change
+1. **Query restriction**: The ``ContextRestriction`` class
+   automatically adds WHERE clauses to database queries, filtering
+   records based on active contexts.
 
-For optimal performance:
+2. **Cache hash modification**: When query parameter contexts are
+   active, the extension adds context identifiers to the page cache
+   hash, ensuring separate cache entries per context combination.
 
-- Use a reverse proxy (Varnish) with context-aware VCL
-- Consider context values in your caching strategy
-- Use appropriate cache lifetimes for dynamic contexts
+3. **Menu filtering**: Menu items are filtered based on context
+   visibility settings, so navigation reflects the current context.
+
+.. tip::
+
+   For pages that depend heavily on context state, consider using
+   ``config.no_cache = 1`` in TypoScript or use context-aware
+   cache tags to ensure correct content delivery.
