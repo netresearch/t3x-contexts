@@ -18,4 +18,8 @@ jobs:
       contents: read
       security-events: write
     secrets:
+
+  gitleaks:
+    uses: netresearch/.github/.github/workflows/gitleaks.yml@main
+    secrets:
       GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
