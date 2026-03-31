@@ -9,7 +9,7 @@ permissions: {}
 
 jobs:
   lock:
-    uses: netresearch/.github/.github/workflows/lock.yml@f87ee244a6e0d78c24e0bd58794563ab8d916943 # main
+    uses: netresearch/.github/.github/workflows/lock.yml@main
     permissions:
       issues: write
       pull-requests: write

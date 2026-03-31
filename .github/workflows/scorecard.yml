@@ -7,7 +7,7 @@ on:
 permissions: {}
 jobs:
   scorecard:
-    uses: netresearch/.github/.github/workflows/scorecard.yml@f87ee244a6e0d78c24e0bd58794563ab8d916943 # main
+    uses: netresearch/.github/.github/workflows/scorecard.yml@main
     permissions:
       contents: read
       security-events: write
