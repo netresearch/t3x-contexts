@@ -418,7 +418,7 @@ final class ConfigurationTest extends UnitTestCase
 
         $enableSettings = Configuration::getEnableSettings('test_table');
         // Count occurrences of tx_contexts
-        $count = array_count_values($enableSettings)['tx_contexts'] ?? 0;
+        $count = array_count_values(array_map(static fn(mixed $v): string => (string) $v, $enableSettings))['tx_contexts'] ?? 0;
         self::assertSame(1, $count, 'tx_contexts should not be duplicated');
     }
 

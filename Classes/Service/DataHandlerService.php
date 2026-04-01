@@ -89,10 +89,7 @@ class DataHandlerService
         array $fieldArray,
         DataHandler $reference,
     ): void {
-        if (
-            isset($this->currentSettings)
-            && (\count($this->currentSettings) > 0)
-        ) {
+        if (\count($this->currentSettings) > 0) {
             if (!is_numeric($id)) {
                 $id = $reference->substNEWwithIDs[$id];
             }
@@ -104,7 +101,7 @@ class DataHandlerService
                 $this->saveFlatSettings($table, (int) $id, $this->currentSettings);
             }
 
-            unset($this->currentSettings);
+            $this->currentSettings = [];
         }
     }
 
