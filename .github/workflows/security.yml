@@ -18,10 +18,3 @@ jobs:
       contents: read
       security-events: write
     secrets:
-
-  gitleaks:
-    permissions:
-      contents: read
-      security-events: write
-    uses: netresearch/.github/.github/workflows/gitleaks.yml@main
-    secrets:
