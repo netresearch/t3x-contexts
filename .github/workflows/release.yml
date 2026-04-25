@@ -9,7 +9,7 @@ permissions: {}
 
 jobs:
   release:
-    uses: netresearch/typo3-ci-workflows/.github/workflows/release.yml@main
+    uses: netresearch/typo3-ci-workflows/.github/workflows/release-typo3-extension.yml@main
     permissions:
       contents: write
       id-token: write
@@ -17,3 +17,6 @@ jobs:
     with:
       archive-prefix: contexts
       package-name: netresearch/contexts
+      extension-key: contexts
+    secrets:
+      TYPO3_TER_ACCESS_TOKEN: ${{ secrets.TYPO3_TER_ACCESS_TOKEN }}
