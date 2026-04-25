@@ -27,7 +27,13 @@ declare(strict_types=1);
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $file = __DIR__ . '/../../.Build/Web' . $path;
 
-// Serve static files directly
+// Serve static files directly.
+// nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
+// Rationale: this script is the PHP built-in server router used only for
+// local E2E tests (`php -S 0.0.0.0:8080 -t .Build/Web Build/Scripts/router.php`).
+// It is never deployed and never internet-facing. `is_file()` only performs a
+// stat probe — no file contents are read or included based on the request URI;
+// the actual `require` below targets a hardcoded path. Tracked in issue #141.
 if (is_file($file)) {
     return false;
 }
