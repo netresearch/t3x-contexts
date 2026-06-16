@@ -1,33 +1,49 @@
-# Dependabot configuration for automated dependency updates
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
-
+# Managed by netresearch/.github/templates/typo3-extension/
+#
+# Declares only the ecosystems every typo3-extension consumer is guaranteed to
+# have: composer (the extension's composer.json) and github-actions.
+#
+# npm is OPT-IN: an extension that actually ships a package.json (frontend
+# assets) adds the block below to its own dependabot.yml and lists
+# `.github/dependabot.yml` under `intentional-drift:` in .github/template.yaml
+# so the template sync stops managing the file. Declaring an ecosystem without
+# its manifest makes the Dependabot run fail with `dependency_file_not_found`.
+#
+# Opt-in npm:
+#   - package-ecosystem: npm
+#     directory: /
+#     schedule:
+#       interval: weekly
+#       day: monday
+#     open-pull-requests-limit: 5
+#     groups:
+#       npm:
+#         patterns: ['*']
+#     cooldown:
+#       default-days: 7
 version: 2
 updates:
-    # Maintain dependencies for GitHub Actions
-    - package-ecosystem: "github-actions"
-      directory: "/"
-      schedule:
-          interval: "weekly"
-      commit-message:
-          prefix: "ci"
+  - package-ecosystem: composer
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    versioning-strategy: increase-if-necessary
+    groups:
+      composer:
+        patterns: ['*']
+    cooldown:
+      default-days: 7
 
-    # Maintain dependencies for npm (Playwright E2E tests)
-    - package-ecosystem: "npm"
-      directory: "/Build/playwright"
-      schedule:
-          interval: "weekly"
-      commit-message:
-          prefix: "deps(npm)"
-
-    # Maintain dependencies for Composer
-    - package-ecosystem: "composer"
-      directory: "/"
-      schedule:
-          interval: "weekly"
-      versioning-strategy: increase-if-necessary
-      commit-message:
-          prefix: "deps"
-      ignore:
-          # Don't auto-update major versions of TYPO3 core packages
-          - dependency-name: "typo3/cms-*"
-            update-types: ["version-update:semver-major"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns: ['*']
+    cooldown:
+      default-days: 7

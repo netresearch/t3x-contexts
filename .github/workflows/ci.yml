@@ -1,9 +1,17 @@
 name: CI
+
 on:
   push:
+    branches: [main]
   pull_request:
   merge_group:
-permissions: {}
+  schedule:
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+# Per-extension test matrix (intentional-drift). Security/quality jobs are in checks.yml.
 jobs:
   ci:
     uses: netresearch/typo3-ci-workflows/.github/workflows/ci.yml@main
@@ -14,7 +22,7 @@ jobs:
       typo3-versions: '["^12.4", "^13.4"]'
       typo3-packages: '["typo3/cms-backend", "typo3/cms-core", "typo3/cms-extbase", "typo3/cms-extensionmanager", "typo3/cms-frontend"]'
       run-functional-tests: true
-      functional-test-db: mysql
+      functional-test-db: 'mysql'
       db-image: 'mysql:9.6'
       upload-coverage: true
     secrets:

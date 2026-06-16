@@ -15,8 +15,8 @@ jobs:
       id-token: write
       attestations: write
     with:
-      archive-prefix: contexts
-      package-name: netresearch/contexts
-      extension-key: contexts
+      archive-prefix: 'contexts'
+      package-name: 'netresearch/contexts'
+      extension-key: 'contexts'
     secrets:
       TYPO3_TER_ACCESS_TOKEN: ${{ secrets.TYPO3_TER_ACCESS_TOKEN }}
