@@ -24,16 +24,21 @@
 
 declare(strict_types=1);
 
-$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$file = __DIR__ . '/../../.Build/Web' . $path;
+$path    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$path    = is_string($path) ? $path : ''; // parse_url() returns false on a malformed URI, null when absent
+$docRoot = realpath(__DIR__ . '/../../.Build/Web');
+$file    = $docRoot === false ? false : realpath($docRoot . $path);
 
-// Serve static files directly.
-// Rationale for nosemgrep below: this script is the PHP built-in server router
-// used only for local E2E tests (`php -S 0.0.0.0:8080 -t .Build/Web Build/Scripts/router.php`).
-// It is never deployed and never internet-facing. `is_file()` only performs a
-// stat probe — no file contents are read or included based on the request URI;
-// the actual `require` below targets a hardcoded path. Tracked in issue #141.
-if (is_file($file)) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
+// Serve existing static files directly, but only when the resolved real path
+// stays inside the document root. Confining the request-derived path with
+// realpath() both hardens this dev server against path traversal and breaks the
+// taint flow from REQUEST_URI to the is_file() sink (resolves issue #141).
+if (
+    $file !== false
+    && $docRoot !== false
+    && str_starts_with($file, $docRoot . DIRECTORY_SEPARATOR)
+    && is_file($file)
+) {
     return false;
 }
 
