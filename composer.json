@@ -52,7 +52,7 @@
         "typo3/cms-frontend": "^12.4 || ^13.4"
     },
     "require-dev": {
-        "a9f/typo3-fractor": "^0.5.8",
+        "a9f/typo3-fractor": "^0.5.8 || ^1.0.0",
         "captainhook/captainhook": "^5.28",
         "captainhook/hook-installer": "^1.0",
         "friendsofphp/php-cs-fixer": "^3.92",
