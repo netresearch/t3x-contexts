@@ -30,11 +30,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 final class SessionContextTest extends UnitTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
     #[Test]
     public function matchReturnsFalseWithoutFrontendController(): void
     {
