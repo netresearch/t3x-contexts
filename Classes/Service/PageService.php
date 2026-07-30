@@ -22,9 +22,10 @@ use TYPO3\CMS\Core\SingletonInterface;
 
 /**
  * Service for page-related context operations.
- * Provides methods for cache hash modification and page filtering.
+ * Provides the active-context signature for page cache differentiation and
+ * page/menu filtering.
  *
- * Note: In TYPO3 v12+, menu filtering is handled via PSR-14 events
+ * Menu filtering is handled via PSR-14 events
  * (see MenuItemFilterEventListener) rather than hook interfaces.
  *
  * @author  Christian Weiske <christian.weiske@netresearch.de>
@@ -34,18 +35,6 @@ use TYPO3\CMS\Core\SingletonInterface;
  */
 class PageService implements SingletonInterface
 {
-    /**
-     * Modify the cache hash
-     *
-     * @param array<string, mixed> $params Array of parameters: hashParameters, createLockHashBase
-     * @param object|null          $ref    Reference object
-     */
-    public function createHashBase(array &$params, ?object $ref = null): void
-    {
-        $params['hashParameters']['tx_contexts-contexts']
-            = $this->getHashString();
-    }
-
     /**
      * Checks if a page record should be visible in the current context.
      * Used by MenuItemFilterEventListener for PSR-14 event handling.
@@ -79,11 +68,13 @@ class PageService implements SingletonInterface
     /**
      * Creates a string that can be used to identify the current
      * context combination.
-     * Used for cache hash modification.
      *
-     * @return string Hash modificator
+     * Consumed by PageCacheIdentifierEventListener so that pages rendered with
+     * different active contexts get separate page cache entries.
+     *
+     * @return string Comma separated list of active context UIDs
      */
-    protected function getHashString(): string
+    public function getHashString(): string
     {
         $keys = array_keys(
             Container::get()->getArrayCopy(),

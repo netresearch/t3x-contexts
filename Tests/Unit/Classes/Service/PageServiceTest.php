@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Service;
 
+use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Service\PageService;
 use PHPUnit\Framework\Attributes\Test;
@@ -26,7 +27,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  * Tests for PageService.
  *
  * PageService provides methods for:
- * - Cache hash modification based on active contexts
+ * - The active-context signature used for page cache differentiation
  * - Page visibility filtering in menus based on contexts
  */
 final class PageServiceTest extends UnitTestCase
@@ -70,31 +71,40 @@ final class PageServiceTest extends UnitTestCase
     }
 
     #[Test]
-    public function createHashBaseModifiesParams(): void
+    public function getHashStringReturnsEmptyStringWhenNoContextsAreActive(): void
     {
-        $params = [
-            'hashParameters' => [],
-            'createLockHashBase' => false,
-        ];
-
         $service = new PageService();
-        $service->createHashBase($params);
 
-        self::assertArrayHasKey('tx_contexts-contexts', $params['hashParameters']);
+        self::assertSame('', $service->getHashString());
     }
 
     #[Test]
-    public function createHashBaseAddsEmptyStringWhenNoContexts(): void
+    public function getHashStringListsTheActiveContextUids(): void
     {
-        $params = [
-            'hashParameters' => [],
-        ];
+        Container::get()->offsetSet('7', $this->createMock(AbstractContext::class));
+        Container::get()->offsetSet('3', $this->createMock(AbstractContext::class));
 
         $service = new PageService();
-        $service->createHashBase($params);
 
-        // With no contexts in Container, should be empty string
-        self::assertSame('', $params['hashParameters']['tx_contexts-contexts']);
+        self::assertSame('3,7', $service->getHashString(), 'UIDs are sorted numerically');
+    }
+
+    #[Test]
+    public function getHashStringDiffersBetweenContextCombinations(): void
+    {
+        $service = new PageService();
+
+        Container::get()->offsetSet('3', $this->createMock(AbstractContext::class));
+        $withOneContext = $service->getHashString();
+
+        Container::get()->offsetSet('7', $this->createMock(AbstractContext::class));
+        $withTwoContexts = $service->getHashString();
+
+        self::assertNotSame(
+            $withOneContext,
+            $withTwoContexts,
+            'The signature must change when the active context combination changes',
+        );
     }
 
     #[Test]

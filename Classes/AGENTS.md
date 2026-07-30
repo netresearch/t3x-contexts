@@ -71,14 +71,22 @@ $queryBuilder->createNamedParameter($value, Connection::PARAM_STR);
 // Never use PDO::PARAM_* directly
 ```
 
-### TSFE Access
+### Request Access
+
+`TypoScriptFrontendController` was removed in TYPO3 v14 (#107831). Everything it
+used to carry is read from the PSR-7 request instead.
 
 ```php
-// Safe access pattern (may be null in CLI/backend contexts)
-$tsfe = $GLOBALS['TSFE'] ?? null;
-if ($tsfe instanceof TypoScriptFrontendController) {
-    // ...
-}
+// AbstractContext::getRequest() prefers the request the middleware handed to
+// the container and falls back to $GLOBALS['TYPO3_REQUEST'].
+$request = $this->getRequest();
+
+// Frontend user (former $TSFE->fe_user), set by the core
+// FrontendUserAuthenticator middleware:
+$frontendUser = $this->getFrontendUser();
+
+// Environment values (former GeneralUtility::getIndpEnv(), deprecated in v14.3):
+$remoteAddress = $this->getNormalizedParams()->getRemoteAddress();
 ```
 
 ## Security & Safety

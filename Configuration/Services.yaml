@@ -9,28 +9,9 @@ services:
         exclude:
             - '../Classes/Domain/Model/*'
 
-    # Event Listeners registered via Services.yaml for TYPO3 12 compatibility
-    # (TYPO3 13+ also supports #[AsEventListener] attributes in the classes)
-    Netresearch\Contexts\EventListener\CacheHashEventListener:
-        tags:
-            - name: event.listener
-              identifier: 'contexts/cache-hash-modifier'
-              event: TYPO3\CMS\Frontend\Event\ModifyCacheLifetimeForPageEvent
-
-    Netresearch\Contexts\EventListener\PageAccessEventListener:
-        tags:
-            - name: event.listener
-              identifier: 'contexts/page-access-check'
-              event: TYPO3\CMS\Frontend\Event\AfterPageAndLanguageIsResolvedEvent
-
-    Netresearch\Contexts\EventListener\MenuItemFilterEventListener:
-        tags:
-            - name: event.listener
-              identifier: 'contexts/menu-item-filter'
-              event: TYPO3\CMS\Frontend\Event\FilterMenuItemsEvent
-
-    # IconOverlayEventListener uses ModifyRecordOverlayIconIdentifierEvent (TYPO3 13+ only)
-    # Not registered here as the event does not exist in TYPO3 12
+    # Event listeners are registered exclusively via #[AsEventListener]
+    # attributes on the listener classes (TYPO3 v13+). Duplicating them here
+    # was only needed for TYPO3 v12, which is no longer supported.
 
     # Services that need to be public for TYPO3's service locator
     Netresearch\Contexts\Service\DataHandlerService:

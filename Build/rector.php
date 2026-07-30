@@ -53,9 +53,9 @@ return static function (RectorConfig $rectorConfig): void {
         // PHP level upgrades
         LevelSetList::UP_TO_PHP_82,
 
-        // TYPO3 v12 migrations only (extension supports ^12.4 || ^13.4)
-        // Note: Don't use UP_TO_TYPO3_13 as it introduces v13-only APIs
-        Typo3LevelSetList::UP_TO_TYPO3_12,
+        // TYPO3 v13 migrations only (extension supports ^13.4 || ^14.3)
+        // Note: Don't use UP_TO_TYPO3_14 as it introduces v14-only APIs
+        Typo3LevelSetList::UP_TO_TYPO3_13,
 
         // TYPO3 code quality and general improvements
         Typo3SetList::CODE_QUALITY,

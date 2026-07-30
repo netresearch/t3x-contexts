@@ -26,6 +26,7 @@ use Netresearch\Contexts\ContextException;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Imaging\IconSize;
 
 /**
  * USER function to render the record settings fields
@@ -224,7 +225,7 @@ class RecordSettingsFormElement extends AbstractFormElement
             return (string) $iconFactory->getIconForRecord(
                 'tx_contexts_contexts',
                 $row,
-                'small',
+                IconSize::SMALL,
             );
         }
 

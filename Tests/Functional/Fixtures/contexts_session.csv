@@ -1,0 +1,4 @@
+"tx_contexts_contexts"
+,"uid","pid","title","alias","type","type_conf","invert","use_session","disabled","hide_in_backend"
+,10,1,"session channel","sessionchannel","session","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_variable""><value index=""vDEF"">nr_channel</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
+,11,1,"channel param","channelparam","getparam","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_name""><value index=""vDEF"">channel</value></field><field index=""field_values""><value index=""vDEF"">mobile</value></field></language></sheet></data></T3FlexForms>",0,0,0,0

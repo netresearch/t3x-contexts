@@ -18,7 +18,6 @@ namespace Netresearch\Contexts\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
-use Netresearch\Contexts\Service\FrontendControllerService;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -45,8 +44,7 @@ class QueryParameterContext extends AbstractContext
      */
     public function match(array $arDependencies = []): bool
     {
-        $configValue = $this->getConfValue('field_name');
-        $param = trim($configValue);
+        $param = $this->getParameterName();
 
         if ($param === '') {
             throw new RuntimeException(
@@ -65,13 +63,6 @@ class QueryParameterContext extends AbstractContext
 
         $value = $this->getQueryParameter($param);
 
-        // Register param on TSFE service for cache and linkVars management
-        FrontendControllerService::registerQueryParameter(
-            $param,
-            $value,
-            !$this->use_session,
-        );
-
         $values = GeneralUtility::trimExplode(
             "\n",
             $this->getConfValue('field_values'),
@@ -81,6 +72,30 @@ class QueryParameterContext extends AbstractContext
         return $this->invert($this->storeInSession(
             (\count($values) === 0) || \in_array($value, $values, true),
         ));
+    }
+
+    /**
+     * Name of the GET parameter this context evaluates.
+     *
+     * Public so that the cache-identifier and TypoScript "config.linkVars"
+     * event listeners can determine the request parameters this extension
+     * makes the rendering depend on.
+     */
+    public function getParameterName(): string
+    {
+        return trim($this->getConfValue('field_name'));
+    }
+
+    /**
+     * Whether the GET parameter has to be carried over to all generated links
+     * via "config.linkVars".
+     *
+     * Session-backed contexts do not need it: the match result is remembered
+     * in the frontend user session instead of the URL.
+     */
+    public function addsToLinkVars(): bool
+    {
+        return !$this->use_session;
     }
 
     /**

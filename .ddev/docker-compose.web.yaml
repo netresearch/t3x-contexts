@@ -2,15 +2,15 @@ services:
   web:
     volumes:
       # Persistent volumes for TYPO3 installations (separate from main project)
-      - "v12-data:/var/www/html/v12"
       - "v13-data:/var/www/html/v13"
+      - "v14-data:/var/www/html/v14"
     environment:
       - EXTENSION_KEY=contexts
       - PACKAGE_NAME=netresearch/contexts
       - VENDOR_NAMESPACE=Netresearch\\Contexts
 
 volumes:
-  v12-data:
-    name: "contexts-v12-data"
   v13-data:
     name: "contexts-v13-data"
+  v14-data:
+    name: "contexts-v14-data"

@@ -6,8 +6,8 @@
     theme="typo3docs"
 >
     <project title="Contexts"
-             version="4.0"
-             release="4.0.0"
+             version="5.0"
+             release="5.0.0"
              copyright="Netresearch DTT GmbH"
     />
 

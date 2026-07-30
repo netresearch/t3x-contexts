@@ -1,22 +1,22 @@
 #!/bin/bash
 
-## Description: Install TYPO3 v12 with the contexts extension
-## Usage: install-v12
-## Example: ddev install-v12
+## Description: Install TYPO3 v14 with the contexts extension
+## Usage: install-v14
+## Example: ddev install-v14
 
 set -e
 
-TYPO3_VERSION="^12.4"
-INSTALL_DIR="/var/www/html/v12"
+TYPO3_VERSION="^14.3"
+INSTALL_DIR="/var/www/html/v14"
 EXTENSION_DIR="/var/www/html"
 SITE_IDENTIFIER="contexts"
-SITE_BASE="https://v12.contexts.ddev.site/"
+SITE_BASE="https://v14.contexts.ddev.site/"
 
 echo "=== Installing TYPO3 ${TYPO3_VERSION} ==="
 
 # Check if already installed
 if [ -f "${INSTALL_DIR}/composer.json" ] && [ -d "${INSTALL_DIR}/vendor" ]; then
-    echo "TYPO3 v12 already installed. Use 'ddev composer update' in v12 directory to update."
+    echo "TYPO3 v14 already installed. Use 'ddev composer update' in v14 directory to update."
     echo "Or remove ${INSTALL_DIR} contents and run this command again for fresh install."
     exit 0
 fi
@@ -54,7 +54,7 @@ composer config repositories.packagist.org composer https://repo.packagist.org
 mkdir -p public/typo3conf public/fileadmin public/uploads var/log var/cache config/system config/sites/${SITE_IDENTIFIER}
 
 # Database configuration
-DB_NAME="db_v12"
+DB_NAME="db_v14"
 DB_USER="db"
 DB_PASS="db"
 DB_HOST="db"
@@ -70,7 +70,7 @@ $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default'] = [
     'driver' => 'mysqli',
     'host' => 'db',
     'port' => 3306,
-    'dbname' => 'db_v12',
+    'dbname' => 'db_v14',
     'user' => 'db',
     'password' => 'db',
     'tableoptions' => [
@@ -124,7 +124,7 @@ SITE_CONFIG
 
 # Setup TYPO3
 echo "Setting up TYPO3..."
-./vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db_v12 --username=db --password=db --admin-username=admin --admin-user-password='Joh316!!' --admin-email=admin@example.com --project-name="Contexts v12" --server-type=apache --no-interaction --force
+./vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db_v14 --username=db --password=db --admin-username=admin --admin-user-password='Joh316!!' --admin-email=admin@example.com --project-name="Contexts v14" --server-type=apache --no-interaction --force
 
 # Set up extension
 echo "Setting up contexts extension..."
@@ -132,14 +132,14 @@ echo "Setting up contexts extension..."
 
 # Create demo contexts and content
 echo "Creating demo content..."
-/var/www/html/.ddev/commands/web/create-demo-content db_v12
+/var/www/html/.ddev/commands/web/create-demo-content db_v14
 
 # Flush cache
 echo "Flushing caches..."
 ./vendor/bin/typo3 cache:flush
 
 echo ""
-echo "=== TYPO3 v12 Installation Complete ==="
+echo "=== TYPO3 v14 Installation Complete ==="
 echo ""
 echo "Frontend: ${SITE_BASE}"
 echo "Backend:  ${SITE_BASE}typo3"

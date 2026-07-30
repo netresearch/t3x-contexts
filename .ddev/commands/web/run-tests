@@ -2,8 +2,8 @@
 
 ## Description: Run extension tests against specified TYPO3 version
 ## Usage: run-tests [version]
-## Example: ddev run-tests v12
 ## Example: ddev run-tests v13
+## Example: ddev run-tests v14
 ## Example: ddev run-tests all
 
 set -e
@@ -41,20 +41,20 @@ run_tests_for_version() {
 }
 
 case "${VERSION}" in
-    v12|12)
-        run_tests_for_version "v12"
-        ;;
     v13|13)
         run_tests_for_version "v13"
         ;;
+    v14|14)
+        run_tests_for_version "v14"
+        ;;
     all|both)
-        run_tests_for_version "v12"
         run_tests_for_version "v13"
+        run_tests_for_version "v14"
         ;;
     *)
-        echo "Usage: ddev run-tests [v12|v13|all]"
-        echo "  v12  - Run tests against TYPO3 v12"
+        echo "Usage: ddev run-tests [v13|v14|all]"
         echo "  v13  - Run tests against TYPO3 v13"
+        echo "  v14  - Run tests against TYPO3 v14"
         echo "  all  - Run tests against both versions"
         exit 1
         ;;

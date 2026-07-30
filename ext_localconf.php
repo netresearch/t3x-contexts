@@ -22,14 +22,10 @@ use Netresearch\Contexts\Xclass\Backend\Tree\Repository\PageTreeRepository;
 
 defined('TYPO3') || die('Access denied.');
 
-// Add context fields to rootline
-// TYPO3 v13: addRootLineFields may not be initialized by default
-if (!isset($GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'])) {
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] = '';
-}
-$GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields']
-    = (string) $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields']
-    . ',tx_contexts_enable,tx_contexts_disable';
+// Note: $TYPO3_CONF_VARS['FE']['addRootLineFields'] is not set here anymore.
+// The setting was removed in TYPO3 v13.2 (#103752); all relations on "pages"
+// are resolved for the rootline unconditionally since then, which includes the
+// tx_contexts_enable/tx_contexts_disable columns.
 
 // XClass: This is needed for the context fields in the page tree
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][TYPO3\CMS\Backend\Tree\Repository\PageTreeRepository::class] = [
@@ -61,6 +57,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1700000003] = [
 ];
 
 // DataHandler hooks for processing context settings during record save/update
-// Note: TYPO3 v12/v13 DataHandler still uses SC_OPTIONS hooks, not PSR-14 events
+// Note: DataHandler still uses SC_OPTIONS hooks in v14, not PSR-14 events
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['contexts']
     = Netresearch\Contexts\Service\DataHandlerService::class;

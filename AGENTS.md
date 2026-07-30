@@ -3,7 +3,7 @@
 # AGENTS.md
 
 **Project:** netresearch/contexts — Multi-channel content visibility for TYPO3
-**Type:** TYPO3 CMS Extension (PHP 8.2+, TYPO3 12.4/13.4)
+**Type:** TYPO3 CMS Extension (PHP 8.2+, TYPO3 13.4/14.3)
 
 ## Overview
 
@@ -25,18 +25,18 @@ Context types are extensible - developers can create custom context implementati
 # DDEV setup (recommended)
 cd main && composer install
 ddev start
-ddev install-all          # Install TYPO3 v12 and v13
+ddev install-all          # Install TYPO3 v13 and v14
 
 # Or install specific version
-ddev install-v12          # TYPO3 v12 only
 ddev install-v13          # TYPO3 v13 only
+ddev install-v14          # TYPO3 v14 only
 
 # Render documentation locally
 ddev render-docs
 
 # Access
-https://v12.contexts.ddev.site/typo3/    # TYPO3 v12 backend
 https://v13.contexts.ddev.site/typo3/    # TYPO3 v13 backend
+https://v14.contexts.ddev.site/typo3/    # TYPO3 v14 backend
 https://docs.contexts.ddev.site/         # Local documentation
 
 # Credentials: admin / joh316
