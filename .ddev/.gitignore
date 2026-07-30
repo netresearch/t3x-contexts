@@ -1,4 +1,5 @@
 # DDEV local files - do not commit
+addon-metadata/
 .ddev-docker-compose-full.yaml
 .ddev-docker-compose-base.yaml
 .global_commands

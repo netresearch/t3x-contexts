@@ -24,6 +24,7 @@ use Rector\Set\ValueObject\SetList;
 use Ssch\TYPO3Rector\CodeQuality\General\InjectMethodToConstructorInjectionRector;
 use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
+use Ssch\TYPO3Rector\TYPO314\v0\MigrateLabelReferenceToDomainSyntaxRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
@@ -42,7 +43,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importNames();
     $rectorConfig->removeUnusedImports();
 
-    // Define what rule sets will be applied - upgrade to PHP 8.2 and TYPO3 v13
+    // Define what rule sets will be applied - upgrade to PHP 8.2 and TYPO3 v14
     $rectorConfig->sets([
         // Dead code removal
         SetList::DEAD_CODE,
@@ -53,9 +54,17 @@ return static function (RectorConfig $rectorConfig): void {
         // PHP level upgrades
         LevelSetList::UP_TO_PHP_82,
 
-        // TYPO3 v13 migrations only (extension supports ^13.4 || ^14.3)
-        // Note: Don't use UP_TO_TYPO3_14 as it introduces v14-only APIs
-        Typo3LevelSetList::UP_TO_TYPO3_13,
+        // TYPO3 v14 migrations (extension supports ^13.4 || ^14.3).
+        //
+        // UP_TO_TYPO3_14 is UP_TO_TYPO3_13 plus the TYPO3_14 set. The only
+        // rules in that set that would emit v14-only API are the class renames
+        // for upgrade wizards (TYPO3\CMS\Install\Updates\* -> Core\Upgrades\*)
+        // and for Extbase annotations (Extbase\Annotation -> Extbase\Attribute).
+        // This extension ships neither an upgrade wizard nor any Extbase code,
+        // so nothing can be rewritten to a class that TYPO3 v13.4 does not have.
+        // Everything else in the set is TCA cleanup and removal of APIs that no
+        // longer exist in v14 either way.
+        Typo3LevelSetList::UP_TO_TYPO3_14,
 
         // TYPO3 code quality and general improvements
         Typo3SetList::CODE_QUALITY,
@@ -80,10 +89,17 @@ return static function (RectorConfig $rectorConfig): void {
         ],
 
         // Skip inject-to-constructor conversion for RecordSettingsFormElement
-        // because TYPO3 12 AbstractFormElement declares protected $iconFactory
+        // because TYPO3 13 AbstractFormElement declares protected $iconFactory
         // which conflicts with constructor promotion
         InjectMethodToConstructorInjectionRector::class => [
             __DIR__ . '/../Classes/Form/RecordSettingsFormElement.php',
         ],
+
+        // The only rule of the TYPO3 v14 set that may not be applied while the
+        // extension still supports TYPO3 v13.4: translation domain syntax
+        // ("contexts.db:key" instead of "LLL:EXT:contexts/.../locallang_db.xlf:key")
+        // was introduced with TYPO3 v14 (#93334) and is not resolvable on v13.4.
+        // Remove this skip once TYPO3 v13.4 support is dropped.
+        MigrateLabelReferenceToDomainSyntaxRector::class,
     ]);
 };
