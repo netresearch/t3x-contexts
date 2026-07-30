@@ -1,3 +1,14 @@
+# 5.0.1
+
+## Fixed
+
+- Re-release of 5.0.0 with the correct content. The `v5.0.0` tag was pushed against
+  the pre-merge `main` branch by mistake, so it points at the TYPO3 v12/v13 code base
+  and does not contain the v14.3 upgrade at all. Its TER publish failed on the version
+  mismatch and no GitHub release was created, but the tag did reach Packagist.
+  **Do not use 5.0.0 - use 5.0.1.** There are no code changes relative to the
+  intended 5.0.0 release described below.
+
 # 5.0.0
 
 ## Breaking Changes
