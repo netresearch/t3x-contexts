@@ -18,30 +18,35 @@ namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
 use Netresearch\Contexts\Context\Type\SessionContext;
 use PHPUnit\Framework\Attributes\Test;
+use Psr\Http\Message\ServerRequestInterface;
 use stdClass;
+use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Tests for SessionContext.
  *
  * SessionContext checks if a specific session variable is set in the frontend user session.
+ *
+ * Since TYPO3 v14 (#107831) the frontend user is read from the "frontend.user"
+ * request attribute instead of the removed TypoScriptFrontendController, so all
+ * fixtures below drive the context through a PSR-7 request.
  */
 final class SessionContextTest extends UnitTestCase
 {
     #[Test]
-    public function matchReturnsFalseWithoutFrontendController(): void
+    public function matchReturnsFalseWithoutRequest(): void
     {
         $context = $this->createSessionContext('my_session_var', null);
 
-        self::assertFalse($context->match(), 'Without TSFE, context should not match');
+        self::assertFalse($context->match(), 'Without a request, context should not match');
     }
 
     #[Test]
     public function matchReturnsFalseWhenFeUserIsNull(): void
     {
-        // Create a context with TSFE but without fe_user
+        // Create a context with a request that carries no "frontend.user"
         $context = $this->createSessionContextWithNullFeUser('my_session_var');
 
         self::assertFalse($context->match(), 'Without fe_user, context should not match');
@@ -160,93 +165,68 @@ final class SessionContextTest extends UnitTestCase
     }
 
     /**
-     * Create a SessionContext with TSFE but null fe_user.
+     * Create a SessionContext driven by a request that carries no frontend user.
      */
     private function createSessionContextWithNullFeUser(string $variableName): SessionContext
     {
-        return new class ($variableName) extends SessionContext {
-            private readonly string $mockVariableName;
-
-            public function __construct(string $variableName)
-            {
-                $this->mockVariableName = $variableName;
-            }
-
-            protected function getConfValue(
-                string $fieldNameArg,
-                string $default = '',
-                string $sheet = 'sDEF',
-                string $lang = 'lDEF',
-                string $value = 'vDEF',
-            ): string {
-                if ($fieldNameArg === 'field_variable') {
-                    return $this->mockVariableName;
-                }
-                return $default;
-            }
-
-            protected function getTypoScriptFrontendController(): TypoScriptFrontendController // @phpstan-ignore return.unusedType
-            {
-                // Return a TSFE stub with null fe_user
-                return new class extends TypoScriptFrontendController {
-                    /** @var FrontendUserAuthentication|null */
-                    public $fe_user;
-
-                    public function __construct()
-                    {
-                        // Do not call parent constructor
-                    }
-                };
-            }
-
-            protected function invert(bool $bMatch): bool
-            {
-                return $bMatch;
-            }
-        };
+        return $this->createContext(
+            $variableName,
+            new ServerRequest('https://example.com/'),
+            false,
+        );
     }
 
     /**
-     * Create a SessionContext with mocked TSFE and session.
+     * Create a SessionContext driven by a request carrying a frontend user with
+     * the given session value.
      *
-     * @param string $variableName The session variable name to check
-     * @param mixed $sessionValue The value to return from session (null = not set)
-     * @param bool $hasTsfe Whether to provide a mock TSFE
-     * @param bool $invert Whether to invert the match result
+     * @param string $variableName  The session variable name to check
+     * @param mixed  $sessionValue  The value to return from session (null = not set)
+     * @param bool   $hasFeUser     Whether the request carries a frontend user
+     * @param bool   $invert        Whether to invert the match result
      */
     private function createSessionContext(
         string $variableName,
         mixed $sessionValue,
-        bool $hasTsfe = false,
+        bool $hasFeUser = false,
         bool $invert = false,
     ): SessionContext {
-        $mockFeUser = null;
+        $request = null;
 
-        if ($hasTsfe) {
+        if ($hasFeUser) {
             $mockFeUser = $this->createMock(FrontendUserAuthentication::class);
             $mockFeUser->method('getKey')
                 ->with('ses', $variableName)
                 ->willReturn($sessionValue);
+
+            // Exactly how the core FrontendUserAuthenticator middleware
+            // publishes the frontend user since TYPO3 v13.
+            $request = (new ServerRequest('https://example.com/'))
+                ->withAttribute('frontend.user', $mockFeUser);
         }
 
-        return new class ($variableName, $mockFeUser, $hasTsfe, $invert) extends SessionContext {
+        return $this->createContext($variableName, $request, $invert);
+    }
+
+    private function createContext(
+        string $variableName,
+        ?ServerRequestInterface $request,
+        bool $invert,
+    ): SessionContext {
+        return new class ($variableName, $request, $invert) extends SessionContext {
             private readonly string $mockVariableName;
 
-            private readonly ?FrontendUserAuthentication $mockFeUser;
-
-            private readonly bool $hasTsfe;
+            private readonly ?ServerRequestInterface $mockRequest;
 
             private readonly bool $mockInvert;
 
             public function __construct(
                 string $variableName,
-                ?FrontendUserAuthentication $feUser,
-                bool $hasTsfe,
+                ?ServerRequestInterface $request,
                 bool $invert,
             ) {
                 $this->mockVariableName = $variableName;
-                $this->mockFeUser = $feUser;
-                $this->hasTsfe = $hasTsfe;
+                $this->mockRequest = $request;
                 $this->mockInvert = $invert;
             }
 
@@ -263,23 +243,9 @@ final class SessionContextTest extends UnitTestCase
                 return $default;
             }
 
-            protected function getTypoScriptFrontendController(): ?TypoScriptFrontendController
+            protected function getRequest(): ?ServerRequestInterface
             {
-                if (!$this->hasTsfe) {
-                    return null;
-                }
-
-                // Create a stub TSFE with fe_user property properly declared
-                // Note: Cannot use native type - TYPO3 12.4 has untyped $fe_user property
-                return new class ($this->mockFeUser) extends TypoScriptFrontendController {
-                    /** @var FrontendUserAuthentication */
-                    public $fe_user;
-
-                    public function __construct(FrontendUserAuthentication $feUser)
-                    {
-                        $this->fe_user = $feUser;
-                    }
-                };
+                return $this->mockRequest;
             }
 
             protected function invert(bool $bMatch): bool

@@ -20,18 +20,19 @@ use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Service\FrontendControllerService;
 use PHPUnit\Framework\Attributes\Test;
-use ReflectionClass;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Tests for FrontendControllerService.
  *
- * FrontendControllerService provides methods for:
- * - Query parameter registration for context-based caching
- * - Rootline-based page access checking
- * - Cache hash modification
+ * FrontendControllerService performs the rootline-based page access check.
+ *
+ * The query parameter registration and cache hash modification it used to carry
+ * were bound to the TypoScriptFrontendController hooks removed in TYPO3 v13.0
+ * (#102932). They now live in QueryParameterService plus the
+ * PageCacheIdentifierEventListener / TypoScriptConfigEventListener PSR-14
+ * listeners and are covered by their own tests.
  */
 final class FrontendControllerServiceTest extends UnitTestCase
 {
@@ -49,19 +50,12 @@ final class FrontendControllerServiceTest extends UnitTestCase
             'extensionFlatSettings' => [],
             'columns' => [],
         ];
-
-        // Reset static state
-        $this->resetStaticProperties();
     }
 
     protected function tearDown(): void
     {
-        unset(
-            $GLOBALS['TCA']['tx_contexts_contexts'],
-            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'],
-        );
+        unset($GLOBALS['TCA']['tx_contexts_contexts']);
         Container::reset();
-        $this->resetStaticProperties();
         parent::tearDown();
     }
 
@@ -150,115 +144,6 @@ final class FrontendControllerServiceTest extends UnitTestCase
     }
 
     #[Test]
-    public function registerQueryParameterStoresParam(): void
-    {
-        // Initialize TYPO3_CONF_VARS if not set
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'] ??= [];
-
-        FrontendControllerService::registerQueryParameter('test_param', 'test_value', false);
-
-        // Check that hooks were registered
-        self::assertArrayHasKey(
-            FrontendControllerService::class,
-            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'] ?? [],
-        );
-    }
-
-    #[Test]
-    public function registerQueryParameterAddsToLinkVarsWhenRequested(): void
-    {
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'] ??= [];
-
-        FrontendControllerService::registerQueryParameter('link_param', 'value', true);
-
-        self::assertArrayHasKey(
-            FrontendControllerService::class,
-            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'] ?? [],
-        );
-    }
-
-    #[Test]
-    public function createHashBaseSerializesParams(): void
-    {
-        $this->resetStaticProperties();
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'] ??= [];
-
-        FrontendControllerService::registerQueryParameter('hash_test', 'hash_value', false);
-
-        $params = ['hashParameters' => []];
-
-        $service = new FrontendControllerService();
-        $mockTsfe = $this->createMock(TypoScriptFrontendController::class);
-
-        $service->createHashBase($params, $mockTsfe);
-
-        $expectedKey = strtolower(FrontendControllerService::class);
-        self::assertArrayHasKey($expectedKey, $params['hashParameters']);
-        self::assertStringContainsString('hash_test', (string) $params['hashParameters'][$expectedKey]);
-    }
-
-    #[Test]
-    public function configArrayPostProcAddsLinkVars(): void
-    {
-        $this->resetStaticProperties();
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'] ??= [];
-
-        FrontendControllerService::registerQueryParameter('link_var_test', 'value', true);
-
-        $params = ['config' => ['linkVars' => 'L']];
-
-        $service = new FrontendControllerService();
-        $mockTsfe = $this->createMock(TypoScriptFrontendController::class);
-
-        $service->configArrayPostProc($params, $mockTsfe);
-
-        self::assertStringContainsString('link_var_test', (string) $params['config']['linkVars']);
-        self::assertStringContainsString('L', (string) $params['config']['linkVars']);
-    }
-
-    #[Test]
-    public function configArrayPostProcHandlesEmptyLinkVars(): void
-    {
-        $this->resetStaticProperties();
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'] ??= [];
-
-        FrontendControllerService::registerQueryParameter('only_param', 'value', true);
-
-        $params = ['config' => []]; // No existing linkVars
-
-        $service = new FrontendControllerService();
-        $mockTsfe = $this->createMock(TypoScriptFrontendController::class);
-
-        $service->configArrayPostProc($params, $mockTsfe);
-
-        self::assertStringContainsString('only_param', (string) $params['config']['linkVars']);
-    }
-
-    #[Test]
-    public function registerQueryParameterSkipsHookRegistrationWhenAlreadyRegistered(): void
-    {
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'] ??= [];
-
-        // First call - registers hooks
-        FrontendControllerService::registerQueryParameter('param1', 'value1', false);
-
-        // Verify hooks were registered
-        self::assertArrayHasKey(
-            FrontendControllerService::class,
-            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'] ?? [],
-        );
-
-        // Second call - should skip hook registration (early return on line 63-64)
-        FrontendControllerService::registerQueryParameter('param2', 'value2', true);
-
-        // Hooks should still be there (not duplicated)
-        self::assertArrayHasKey(
-            FrontendControllerService::class,
-            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'] ?? [],
-        );
-    }
-
-    #[Test]
     public function checkEnableFieldsForRootLineReturnsFalseForCurrentPageWithoutExtendToSubpages(): void
     {
         // Bug fix: current page (index 0) must always be checked for its own
@@ -344,22 +229,5 @@ final class FrontendControllerServiceTest extends UnitTestCase
 
         // With extendToSubpages on root, and no context requirements, should pass
         self::assertTrue($service->checkEnableFieldsForRootLine($rootLine));
-    }
-
-    /**
-     * Reset static properties using reflection.
-     */
-    private function resetStaticProperties(): void
-    {
-        $reflection = new ReflectionClass(FrontendControllerService::class);
-
-        $hooksRegistered = $reflection->getProperty('hooksRegistered');
-        $hooksRegistered->setValue(null, false);
-
-        $params = $reflection->getProperty('params');
-        $params->setValue(null, []);
-
-        $linkVarParams = $reflection->getProperty('linkVarParams');
-        $linkVarParams->setValue(null, []);
     }
 }

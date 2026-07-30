@@ -18,42 +18,15 @@ namespace Netresearch\Contexts\Tests\Unit\Context;
 
 use Netresearch\Contexts\Context\AbstractContext;
 use PHPUnit\Framework\Attributes\Test;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
+use TYPO3\CMS\Core\Http\NormalizedParams;
+use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
-
-/**
- * Stub class for TypoScriptFrontendController that properly defines fe_user property.
- *
- * This avoids PHP 8.2+ deprecation warnings about dynamic property creation
- * when testing code that accesses $tsfe->fe_user.
- *
- * @internal Only for testing
- */
-class TypoScriptFrontendControllerStub extends TypoScriptFrontendController
-{
-    /**
-     * @var FrontendUserAuthentication|null
-     */
-    public $fe_user;
-
-    /**
-     * @var array<int, array<string, mixed>>
-     */
-    public array $rootLine = [];
-
-    /**
-     * Empty constructor that bypasses parent dependencies.
-     */
-    public function __construct()
-    {
-        // Don't call parent - TSFE has complex dependencies we don't need for testing
-    }
-}
 
 /**
  * Tests for AbstractContext class.
@@ -238,7 +211,7 @@ final class AbstractContextTest extends UnitTestCase
     public function getMatchFromSessionReturnsFalseNullWhenNoTsfe(): void
     {
         $context = $this->createTestableContext($this->createContextRow(['use_session' => 1]));
-        $context->setMockTsfe(null);
+        $context->setMockRequest(null);
 
         [$shouldUse, $value] = $context->exposeGetMatchFromSession();
 
@@ -259,53 +232,55 @@ final class AbstractContextTest extends UnitTestCase
     public function storeInSessionReturnsMatchValueWhenNoTsfe(): void
     {
         $context = $this->createTestableContext($this->createContextRow(['use_session' => 1]));
-        $context->setMockTsfe(null);
+        $context->setMockRequest(null);
 
         self::assertTrue($context->exposeStoreInSession(true));
         self::assertFalse($context->exposeStoreInSession(false));
     }
 
     #[Test]
-    public function getRemoteAddressReturnsStringFromIndpEnv(): void
+    public function getRemoteAddressReadsNormalizedParamsFromRequest(): void
     {
         $context = $this->createTestableContext($this->createContextRow());
-        $context->setMockIndpEnv('192.168.1.100');
+        $context->setRemoteAddress('192.168.1.100');
 
         self::assertSame('192.168.1.100', $context->exposeGetRemoteAddress());
     }
 
     #[Test]
-    public function getRemoteAddressReturnsEmptyStringWhenNotString(): void
+    public function getRemoteAddressReturnsEmptyStringWhenRequestHasNoRemoteAddress(): void
     {
         $context = $this->createTestableContext($this->createContextRow());
-        $context->setMockIndpEnv(false);
+        $context->setRemoteAddress('');
 
         self::assertSame('', $context->exposeGetRemoteAddress());
     }
 
     #[Test]
-    public function getRemoteAddressReturnsEmptyStringWhenNull(): void
+    public function getRemoteAddressFallsBackToServerParamsWithoutRequest(): void
     {
         $context = $this->createTestableContext($this->createContextRow());
-        $context->setMockIndpEnv(null);
+        $context->setMockRequest(null);
 
-        self::assertSame('', $context->exposeGetRemoteAddress());
-    }
+        $backup = $_SERVER['REMOTE_ADDR'] ?? null;
+        $_SERVER['REMOTE_ADDR'] = '203.0.113.9';
 
-    #[Test]
-    public function getRemoteAddressReturnsEmptyStringWhenArray(): void
-    {
-        $context = $this->createTestableContext($this->createContextRow());
-        $context->setMockIndpEnv(['some' => 'array']);
-
-        self::assertSame('', $context->exposeGetRemoteAddress());
+        try {
+            self::assertSame('203.0.113.9', $context->exposeGetRemoteAddress());
+        } finally {
+            if ($backup === null) {
+                unset($_SERVER['REMOTE_ADDR']);
+            } else {
+                $_SERVER['REMOTE_ADDR'] = $backup;
+            }
+        }
     }
 
     #[Test]
     public function getSessionReturnsNullWhenNoTsfe(): void
     {
         $context = $this->createTestableContext($this->createContextRow());
-        $context->setMockTsfe(null);
+        $context->setMockRequest(null);
 
         self::assertNull($context->exposeGetSession());
     }
@@ -315,10 +290,8 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow());
 
-        // Create TSFE mock without fe_user property
-        $mockTsfe = $this->createMock(TypoScriptFrontendController::class);
-        // fe_user is not set, so it will be null
-        $context->setMockTsfe($mockTsfe);
+        // A request without a "frontend.user" attribute
+        $context->setMockRequest(new ServerRequest('https://example.com/'));
 
         self::assertNull($context->exposeGetSession());
     }
@@ -328,9 +301,8 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow(['use_session' => 1]));
 
-        // Create TSFE mock without fe_user property
-        $mockTsfe = $this->createMock(TypoScriptFrontendController::class);
-        $context->setMockTsfe($mockTsfe);
+        // A request without a "frontend.user" attribute
+        $context->setMockRequest(new ServerRequest('https://example.com/'));
 
         // Should return match value directly since fe_user is unavailable
         self::assertTrue($context->exposeStoreInSession(true));
@@ -342,9 +314,8 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow(['use_session' => 1]));
 
-        // Create TSFE mock without fe_user property
-        $mockTsfe = $this->createMock(TypoScriptFrontendController::class);
-        $context->setMockTsfe($mockTsfe);
+        // A request without a "frontend.user" attribute
+        $context->setMockRequest(new ServerRequest('https://example.com/'));
 
         [$shouldUse, $value] = $context->exposeGetMatchFromSession();
 
@@ -632,7 +603,7 @@ final class AbstractContextTest extends UnitTestCase
         $context->setUseSession(true);
 
         // Now session check should proceed further (but still fail without TSFE)
-        $context->setMockTsfe(null);
+        $context->setMockRequest(null);
         [$useSession2, $value2] = $context->exposeGetMatchFromSession();
         self::assertFalse($useSession2); // false because no TSFE
         self::assertNull($value2);
@@ -685,7 +656,7 @@ final class AbstractContextTest extends UnitTestCase
     public function getMatchFromSessionReturnsFalseNullWhenUseSessionIsTrueButSessionIsNull(): void
     {
         $context = $this->createTestableContext($this->createContextRow(['use_session' => 1]));
-        $context->setMockTsfe(null);
+        $context->setMockRequest(null);
 
         [$shouldUse, $value] = $context->exposeGetMatchFromSession();
 
@@ -708,9 +679,7 @@ final class AbstractContextTest extends UnitTestCase
             ->with('ses', 'contexts-123-1234567890')
             ->willReturn(true);
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-        $context->setMockTsfe($stubTsfe);
+        $context->setFrontendUser($mockFeUser);
 
         [$shouldUse, $value] = $context->exposeGetMatchFromSession();
 
@@ -733,9 +702,7 @@ final class AbstractContextTest extends UnitTestCase
             ->with('ses', 'contexts-456-9876543210')
             ->willReturn(false);
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-        $context->setMockTsfe($stubTsfe);
+        $context->setFrontendUser($mockFeUser);
 
         [$shouldUse, $value] = $context->exposeGetMatchFromSession();
 
@@ -758,9 +725,7 @@ final class AbstractContextTest extends UnitTestCase
             ->with('ses', 'contexts-789-1111111111')
             ->willReturn(1);
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-        $context->setMockTsfe($stubTsfe);
+        $context->setFrontendUser($mockFeUser);
 
         [$shouldUse, $value] = $context->exposeGetMatchFromSession();
 
@@ -773,7 +738,7 @@ final class AbstractContextTest extends UnitTestCase
     public function getSessionReturnsNullWhenTsfeIsNull(): void
     {
         $context = $this->createTestableContext($this->createContextRow());
-        $context->setMockTsfe(null);
+        $context->setMockRequest(null);
 
         $result = $context->exposeGetSession();
 
@@ -785,9 +750,8 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow());
 
-        $mockTsfe = $this->createMock(TypoScriptFrontendController::class);
-        // fe_user property is not set, defaults to null
-        $context->setMockTsfe($mockTsfe);
+        // A request without a "frontend.user" attribute
+        $context->setMockRequest(new ServerRequest('https://example.com/'));
 
         $result = $context->exposeGetSession();
 
@@ -807,9 +771,7 @@ final class AbstractContextTest extends UnitTestCase
             ->with('ses', 'contexts-100-2222222222')
             ->willReturn(true);
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-        $context->setMockTsfe($stubTsfe);
+        $context->setFrontendUser($mockFeUser);
 
         $result = $context->exposeGetSession();
 
@@ -829,9 +791,7 @@ final class AbstractContextTest extends UnitTestCase
             ->with('ses', 'contexts-200-3333333333')
             ->willReturn(null);
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-        $context->setMockTsfe($stubTsfe);
+        $context->setFrontendUser($mockFeUser);
 
         $result = $context->exposeGetSession();
 
@@ -852,9 +812,7 @@ final class AbstractContextTest extends UnitTestCase
             ->with('ses', 'contexts-42-1234567890')
             ->willReturn(true);
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-        $context->setMockTsfe($stubTsfe);
+        $context->setFrontendUser($mockFeUser);
 
         $context->exposeGetSession();
     }
@@ -872,7 +830,7 @@ final class AbstractContextTest extends UnitTestCase
     public function storeInSessionReturnsMatchWhenTsfeIsNull(): void
     {
         $context = $this->createTestableContext($this->createContextRow(['use_session' => 1]));
-        $context->setMockTsfe(null);
+        $context->setMockRequest(null);
 
         self::assertTrue($context->exposeStoreInSession(true), 'Should return true without storing when TSFE is null');
         self::assertFalse($context->exposeStoreInSession(false), 'Should return false without storing when TSFE is null');
@@ -883,9 +841,8 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow(['use_session' => 1]));
 
-        $mockTsfe = $this->createMock(TypoScriptFrontendController::class);
-        // fe_user is not set, defaults to null
-        $context->setMockTsfe($mockTsfe);
+        // A request without a "frontend.user" attribute
+        $context->setMockRequest(new ServerRequest('https://example.com/'));
 
         self::assertTrue($context->exposeStoreInSession(true), 'Should return true without storing when fe_user is null');
         self::assertFalse($context->exposeStoreInSession(false), 'Should return false without storing when fe_user is null');
@@ -907,9 +864,7 @@ final class AbstractContextTest extends UnitTestCase
         $mockFeUser->expects(self::once())
             ->method('storeSessionData');
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-        $context->setMockTsfe($stubTsfe);
+        $context->setFrontendUser($mockFeUser);
 
         $result = $context->exposeStoreInSession(true);
 
@@ -932,9 +887,7 @@ final class AbstractContextTest extends UnitTestCase
         $mockFeUser->expects(self::once())
             ->method('storeSessionData');
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-        $context->setMockTsfe($stubTsfe);
+        $context->setFrontendUser($mockFeUser);
 
         $result = $context->exposeStoreInSession(false);
 
@@ -963,9 +916,7 @@ final class AbstractContextTest extends UnitTestCase
                 $callOrder[] = 'storeSessionData';
             });
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-        $context->setMockTsfe($stubTsfe);
+        $context->setFrontendUser($mockFeUser);
 
         $context->exposeStoreInSession(true);
 
@@ -976,7 +927,7 @@ final class AbstractContextTest extends UnitTestCase
     public function getRemoteAddressReturnsValidIpString(): void
     {
         $context = $this->createTestableContext($this->createContextRow());
-        $context->setMockIndpEnv('192.168.1.100');
+        $context->setRemoteAddress('192.168.1.100');
 
         $result = $context->exposeGetRemoteAddress();
 
@@ -987,58 +938,11 @@ final class AbstractContextTest extends UnitTestCase
     public function getRemoteAddressReturnsIpv6String(): void
     {
         $context = $this->createTestableContext($this->createContextRow());
-        $context->setMockIndpEnv('2001:0db8:85a3:0000:0000:8a2e:0370:7334');
+        $context->setRemoteAddress('2001:0db8:85a3:0000:0000:8a2e:0370:7334');
 
         $result = $context->exposeGetRemoteAddress();
 
         self::assertSame('2001:0db8:85a3:0000:0000:8a2e:0370:7334', $result, 'Should return IPv6 address string');
-    }
-
-    #[Test]
-    public function getRemoteAddressReturnsEmptyStringWhenIndpEnvReturnsNull(): void
-    {
-        $context = $this->createTestableContext($this->createContextRow());
-        $context->setMockIndpEnv(null);
-
-        $result = $context->exposeGetRemoteAddress();
-
-        self::assertSame('', $result, 'Should return empty string when getIndpEnv returns null');
-    }
-
-    #[Test]
-    public function getRemoteAddressReturnsEmptyStringWhenIndpEnvReturnsFalse(): void
-    {
-        $context = $this->createTestableContext($this->createContextRow());
-        $context->setMockIndpEnv(false);
-
-        $result = $context->exposeGetRemoteAddress();
-
-        self::assertSame('', $result, 'Should return empty string when getIndpEnv returns false');
-    }
-
-    #[Test]
-    public function getRemoteAddressReturnsEmptyStringWhenIndpEnvReturnsInteger(): void
-    {
-        $context = $this->createTestableContext($this->createContextRow());
-        $context->setMockIndpEnv(123);
-
-        $result = $context->exposeGetRemoteAddress();
-
-        self::assertSame('', $result, 'Should return empty string when getIndpEnv returns integer');
-    }
-
-    #[Test]
-    public function getRemoteAddressCallsGetIndpEnvWithRemoteAddrConstant(): void
-    {
-        $context = $this->createTestableContext($this->createContextRow());
-        $context->setMockIndpEnv('10.0.0.1');
-
-        $result = $context->exposeGetRemoteAddress();
-
-        self::assertSame('10.0.0.1', $result);
-        // Verify exposeGetIndpEnv was called with REMOTE_ADDR
-        $indpEnvResult = $context->exposeGetIndpEnv(AbstractContext::REMOTE_ADDR);
-        self::assertSame('10.0.0.1', $indpEnvResult);
     }
 
     #[Test]
@@ -1057,9 +961,7 @@ final class AbstractContextTest extends UnitTestCase
         $mockFeUser1->expects(self::once())->method('setKey');
         $mockFeUser1->expects(self::once())->method('storeSessionData');
 
-        $stubTsfe1 = new TypoScriptFrontendControllerStub();
-        $stubTsfe1->fe_user = $mockFeUser1;
-        $context->setMockTsfe($stubTsfe1);
+        $context->setFrontendUser($mockFeUser1);
 
         $result1 = $context->match();
         self::assertTrue($result1, 'First match should calculate and store result');
@@ -1081,9 +983,7 @@ final class AbstractContextTest extends UnitTestCase
         // Should NOT call setKey since we're using stored value
         $mockFeUser->expects(self::never())->method('setKey');
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-        $context->setMockTsfe($stubTsfe);
+        $context->setFrontendUser($mockFeUser);
 
         $result = $context->match();
         self::assertTrue($result, 'Match should use stored session value');
@@ -1116,11 +1016,8 @@ final class AbstractContextTest extends UnitTestCase
                 }
             });
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-
-        $context1->setMockTsfe($stubTsfe);
-        $context2->setMockTsfe($stubTsfe);
+        $context1->setFrontendUser($mockFeUser);
+        $context2->setFrontendUser($mockFeUser);
 
         $session1 = $context1->exposeGetSession();
         $session2 = $context2->exposeGetSession();
@@ -1163,9 +1060,7 @@ final class AbstractContextTest extends UnitTestCase
             ->with('ses', 'contexts-555-5555555555')
             ->willReturn(true);
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-        $context->setMockTsfe($stubTsfe);
+        $context->setFrontendUser($mockFeUser);
 
         // With use_session enabled, session should be checked
         [$shouldUse, $value] = $context->exposeGetMatchFromSession();
@@ -1320,9 +1215,7 @@ final class AbstractContextTest extends UnitTestCase
         $mockFeUser->expects(self::once())->method('setKey');
         $mockFeUser->expects(self::once())->method('storeSessionData');
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-        $context->setMockTsfe($stubTsfe);
+        $context->setFrontendUser($mockFeUser);
 
         // Store false value
         $result = $context->exposeStoreInSession(false);
@@ -1346,9 +1239,7 @@ final class AbstractContextTest extends UnitTestCase
             ->with('ses', 'contexts-777-7777777777', true);
         $mockFeUser->expects(self::once())->method('storeSessionData');
 
-        $stubTsfe = new TypoScriptFrontendControllerStub();
-        $stubTsfe->fe_user = $mockFeUser;
-        $context->setMockTsfe($stubTsfe);
+        $context->setFrontendUser($mockFeUser);
 
         $context->exposeStoreInSession(true);
     }
@@ -1390,17 +1281,16 @@ final class AbstractContextTest extends UnitTestCase
 /**
  * Testable concrete implementation of AbstractContext for unit tests.
  *
- * Exposes protected methods and allows mock injection for TSFE and getIndpEnv.
+ * Exposes protected methods and allows injecting the PSR-7 request the base
+ * class reads the frontend user and the normalized parameters from.
  *
  * @internal Only for testing
  */
 class TestableAbstractContext extends AbstractContext
 {
-    private ?TypoScriptFrontendController $mockTsfe = null;
+    private ?ServerRequestInterface $mockRequest = null;
 
-    private mixed $mockIndpEnv = null;
-
-    private bool $mockIndpEnvSet = false;
+    private bool $mockRequestSet = false;
 
     public function match(array $arDependencies = []): bool
     {
@@ -1447,38 +1337,57 @@ class TestableAbstractContext extends AbstractContext
         return $this->getRemoteAddress();
     }
 
-    public function exposeGetIndpEnv(string $key): mixed
-    {
-        return $this->getIndpEnv($key);
-    }
-
     public function exposeGetSession(): mixed
     {
         return $this->getSession();
     }
 
-    public function setMockTsfe(?TypoScriptFrontendController $tsfe): void
+    /**
+     * Inject the request the context works on. Pass null to simulate a context
+     * that runs without any request at all.
+     */
+    public function setMockRequest(?ServerRequestInterface $request): void
     {
-        $this->mockTsfe = $tsfe;
+        $this->mockRequest = $request;
+        $this->mockRequestSet = true;
     }
 
-    public function setMockIndpEnv(mixed $value): void
+    /**
+     * Convenience wrapper: a request carrying the given frontend user in the
+     * "frontend.user" attribute, exactly like the core
+     * FrontendUserAuthenticator middleware sets it.
+     */
+    public function setFrontendUser(?FrontendUserAuthentication $feUser): void
     {
-        $this->mockIndpEnv = $value;
-        $this->mockIndpEnvSet = true;
-    }
+        $request = new ServerRequest('https://example.com/');
 
-    protected function getTypoScriptFrontendController(): ?TypoScriptFrontendController
-    {
-        return $this->mockTsfe ?? parent::getTypoScriptFrontendController();
-    }
-
-    protected function getIndpEnv(string $strKey): mixed
-    {
-        if ($this->mockIndpEnvSet) {
-            return $this->mockIndpEnv;
+        if ($feUser instanceof FrontendUserAuthentication) {
+            $request = $request->withAttribute('frontend.user', $feUser);
         }
 
-        return parent::getIndpEnv($strKey);
+        $this->setMockRequest($request);
+    }
+
+    /**
+     * Convenience wrapper: a request whose normalized parameters report the
+     * given client IP.
+     */
+    public function setRemoteAddress(string $remoteAddress): void
+    {
+        $this->setMockRequest(
+            (new ServerRequest('https://example.com/'))
+                ->withAttribute(
+                    'normalizedParams',
+                    NormalizedParams::createFromServerParams(
+                        ['REMOTE_ADDR' => $remoteAddress],
+                        [],
+                    ),
+                ),
+        );
+    }
+
+    protected function getRequest(): ?ServerRequestInterface
+    {
+        return $this->mockRequestSet ? $this->mockRequest : parent::getRequest();
     }
 }

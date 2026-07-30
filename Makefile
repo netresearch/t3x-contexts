@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help up down restart install install-v12 install-v13 ssh docs \
+.PHONY: help up down restart install install-v13 install-v14 ssh docs \
         cgl cgl-fix phpstan rector lint mutation \
         test test-unit test-functional ci clean
 
@@ -18,14 +18,14 @@ down: ## Stop DDEV environment
 restart: ## Restart DDEV environment
 	ddev restart
 
-install: ## Install TYPO3 v12 and v13 with extension
+install: ## Install TYPO3 v13 and v14 with extension
 	ddev install-all
-
-install-v12: ## Install TYPO3 v12 with extension
-	ddev install-v12
 
 install-v13: ## Install TYPO3 v13 with extension
 	ddev install-v13
+
+install-v14: ## Install TYPO3 v14 with extension
+	ddev install-v14
 
 ssh: ## Open shell in web container
 	ddev ssh
@@ -79,7 +79,7 @@ help: ## Show this help
 	@echo "Usage: make [target]"
 	@echo ""
 	@echo "DDEV Environment:"
-	@grep -E '^(up|down|restart|install|install-v12|install-v13|ssh|docs):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^(up|down|restart|install|install-v13|install-v14|ssh|docs):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 	@echo ""
 	@echo "Code Quality:"
 	@grep -E '^(cgl|cgl-fix|phpstan|rector|lint):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'

@@ -19,11 +19,12 @@ namespace Netresearch\Contexts\Context;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\Api\Configuration;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Abstract context - must be extended by the context types
@@ -420,10 +421,43 @@ abstract class AbstractContext
     }
 
     /**
+     * Get the current server request.
+     *
+     * Prefers the request the middleware handed to the context container and
+     * falls back to the global request, which is available in contexts that
+     * run outside of the extension's own middleware (e.g. backend requests).
      */
-    protected function getTypoScriptFrontendController(): ?TypoScriptFrontendController
+    protected function getRequest(): ?ServerRequestInterface
     {
-        return $GLOBALS['TSFE'] ?? null;
+        $request = Container::get()->getRequest();
+
+        if ($request instanceof ServerRequestInterface) {
+            return $request;
+        }
+
+        $globalRequest = $GLOBALS['TYPO3_REQUEST'] ?? null;
+
+        return $globalRequest instanceof ServerRequestInterface ? $globalRequest : null;
+    }
+
+    /**
+     * Get the frontend user of the current request.
+     *
+     * The "frontend.user" request attribute is set by the core
+     * FrontendUserAuthenticator middleware and replaces the removed
+     * TypoScriptFrontendController::$fe_user (TYPO3 v14, #107831).
+     */
+    protected function getFrontendUser(): ?FrontendUserAuthentication
+    {
+        $request = $this->getRequest();
+
+        if (!$request instanceof ServerRequestInterface) {
+            return null;
+        }
+
+        $frontendUser = $request->getAttribute('frontend.user');
+
+        return $frontendUser instanceof FrontendUserAuthentication ? $frontendUser : null;
     }
 
     /**
@@ -433,12 +467,8 @@ abstract class AbstractContext
      */
     protected function getSession()
     {
-        $tsfe = $this->getTypoScriptFrontendController();
-        if (!$tsfe instanceof TypoScriptFrontendController) {
-            return;
-        }
+        $feUser = $this->getFrontendUser();
 
-        $feUser = $tsfe->fe_user ?? null;
         if (!$feUser instanceof FrontendUserAuthentication) {
             return;
         }
@@ -463,12 +493,8 @@ abstract class AbstractContext
             return $bMatch;
         }
 
-        $tsfe = $this->getTypoScriptFrontendController();
-        if (!$tsfe instanceof TypoScriptFrontendController) {
-            return $bMatch;
-        }
+        $feUser = $this->getFrontendUser();
 
-        $feUser = $tsfe->fe_user ?? null;
         if (!$feUser instanceof FrontendUserAuthentication) {
             return $bMatch;
         }
@@ -500,15 +526,24 @@ abstract class AbstractContext
     }
 
     /**
-     * Returns the value for the passed key
+     * Returns the normalized parameters of the current request.
      *
-     * @param string $strKey the key, e.g. REMOTE_ADDR
-     *
-     * @return string|bool|array<string, string|bool|null>|null
+     * Replaces GeneralUtility::getIndpEnv(), deprecated in TYPO3 v14.3.
+     * If no request is available - CLI context, or a caller running before the
+     * NormalizedParamsAttribute middleware - the parameters are derived from
+     * $_SERVER, which keeps the reverse proxy configuration in
+     * $TYPO3_CONF_VARS['SYS'] applied.
      */
-    protected function getIndpEnv(string $strKey)
+    protected function getNormalizedParams(): NormalizedParams
     {
-        return GeneralUtility::getIndpEnv($strKey);
+        $request = $this->getRequest();
+        $normalizedParams = $request?->getAttribute('normalizedParams');
+
+        if ($normalizedParams instanceof NormalizedParams) {
+            return $normalizedParams;
+        }
+
+        return NormalizedParams::createFromServerParams($_SERVER);
     }
 
     /**
@@ -517,12 +552,6 @@ abstract class AbstractContext
      */
     protected function getRemoteAddress(): string
     {
-        $result = $this->getIndpEnv(self::REMOTE_ADDR);
-
-        if (\is_string($result)) {
-            return $result;
-        }
-
-        return '';
+        return $this->getNormalizedParams()->getRemoteAddress();
     }
 }

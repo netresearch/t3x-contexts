@@ -35,13 +35,17 @@ class PageTreeRepository extends \TYPO3\CMS\Backend\Tree\Repository\PageTreeRepo
     /**
      * @param int $workspaceId the workspace ID to be checked for.
      * @param array $additionalFieldsToQuery an array with more fields that should be accessed.
+     * @param array $additionalQueryRestrictions an array with more restrictions to add
      *
      * @codeCoverageIgnore Requires TYPO3 DI container (EventDispatcherInterface)
      */
-    public function __construct(int $workspaceId = 0, array $additionalFieldsToQuery = [])
-    {
+    public function __construct(
+        int $workspaceId = 0,
+        array $additionalFieldsToQuery = [],
+        array $additionalQueryRestrictions = [],
+    ) {
         $additionalFieldsToQuery = array_merge($this->contextFields, $additionalFieldsToQuery);
 
-        parent::__construct($workspaceId, $additionalFieldsToQuery);
+        parent::__construct($workspaceId, $additionalFieldsToQuery, $additionalQueryRestrictions);
     }
 }

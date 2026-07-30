@@ -141,21 +141,11 @@ class Container extends ArrayObject
     }
 
     /**
-     * Make the given contexts active (available in this container)
+     * Loads all available contexts from database and instantiates them.
      *
-     * @param AbstractContext[] $arContexts Array of context objects
-     *
-     * @codeCoverageIgnore Only called from initMatching/initAll which require database
-     */
-    protected function setActive(array $arContexts): Container
-    {
-        $this->exchangeArray($arContexts);
-        return $this;
-    }
-
-    /**
-     * Loads all available contexts from database and instantiates them
-     * and checks if they match.
+     * This does *not* activate them - the returned contexts are neither matched
+     * nor stored in this container. Use it to inspect the configured contexts
+     * without disturbing the active (matched) set.
      *
      * @return AbstractContext[] Array of available Tx_Contexts_Context_Abstract objects,
      *                           key is their uid
@@ -166,7 +156,7 @@ class Container extends ArrayObject
      *
      * @codeCoverageIgnore Requires database (ConnectionPool/QueryBuilder)
      */
-    protected function loadAvailable(): array
+    public function loadAvailable(): array
     {
         $factory = GeneralUtility::makeInstance(Factory::class);
         $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
@@ -190,6 +180,19 @@ class Container extends ArrayObject
         }
 
         return $contexts;
+    }
+
+    /**
+     * Make the given contexts active (available in this container)
+     *
+     * @param AbstractContext[] $arContexts Array of context objects
+     *
+     * @codeCoverageIgnore Only called from initMatching/initAll which require database
+     */
+    protected function setActive(array $arContexts): Container
+    {
+        $this->exchangeArray($arContexts);
+        return $this;
     }
 
     /**

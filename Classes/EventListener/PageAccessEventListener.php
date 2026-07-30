@@ -21,7 +21,6 @@ use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Http\ImmediateResponseException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Event\AfterPageAndLanguageIsResolvedEvent;
 
 /**
@@ -41,32 +40,18 @@ final readonly class PageAccessEventListener
 
     public function __invoke(AfterPageAndLanguageIsResolvedEvent $event): void
     {
-        // TYPO3 13+: getPageInformation(), TYPO3 12: getController()
-        if (method_exists($event, 'getPageInformation')) {
-            $pageInformation = $event->getPageInformation();
-            $pageRecord = $pageInformation->getPageRecord(); // @phpstan-ignore method.nonObject (TYPO3 12: PageInformation class does not exist)
+        $pageInformation = $event->getPageInformation();
+        $pageRecord = $pageInformation->getPageRecord();
 
-            if ($pageRecord === []) {
-                return;
-            }
-
-            $rootLine = $pageInformation->getRootLine(); // @phpstan-ignore method.nonObject
-        } else {
-            // @codeCoverageIgnoreStart
-            /** @var TypoScriptFrontendController $controller */
-            $controller = $event->getController(); // @phpstan-ignore method.notFound
-            $pageRecord = $controller->page ?? [];
-
-            if ($pageRecord === []) {
-                return;
-            }
-
-            $rootLine = $controller->rootLine ?? [];
-            // @codeCoverageIgnoreEnd
+        if ($pageRecord === []) {
+            return;
         }
 
+        /** @var array<int, array<string, mixed>> $rootLine */
+        $rootLine = $pageInformation->getRootLine();
+
         // Check if page is accessible based on context
-        $result = $this->frontendControllerService->checkEnableFieldsForRootLine($rootLine); // @phpstan-ignore argument.type
+        $result = $this->frontendControllerService->checkEnableFieldsForRootLine($rootLine);
 
         // If the page is not accessible, deny access
         if ($result === false) {

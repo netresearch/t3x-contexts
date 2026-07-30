@@ -5,8 +5,8 @@ php_version: "8.2"
 webserver_type: nginx-fpm
 xdebug_enabled: false
 additional_hostnames:
-    - v12.contexts
     - v13.contexts
+    - v14.contexts
     - docs.contexts
 additional_fqdns: []
 database:
@@ -14,7 +14,7 @@ database:
     version: "10.11"
 hooks:
     post-start:
-        - exec: mkdir -p /var/www/html/v12 /var/www/html/v13
+        - exec: mkdir -p /var/www/html/v13 /var/www/html/v14
 use_dns_when_possible: true
 timezone: Europe/Berlin
 composer_version: "2"

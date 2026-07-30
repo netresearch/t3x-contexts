@@ -32,7 +32,7 @@ return FractorConfiguration::configure()
         __DIR__ . '/../vendor',
     ])
     ->withSets([
-        // TYPO3 v12 migrations for FlexForms, TypoScript, YAML, Fluid
-        // Note: Don't use UP_TO_TYPO3_13 if extension supports both ^12.4 || ^13.4
-        Typo3LevelSetList::UP_TO_TYPO3_12,
+        // TYPO3 v13 migrations for FlexForms, TypoScript, YAML, Fluid
+        // Note: Don't use UP_TO_TYPO3_14 while the extension supports ^13.4 || ^14.3
+        Typo3LevelSetList::UP_TO_TYPO3_13,
     ]);

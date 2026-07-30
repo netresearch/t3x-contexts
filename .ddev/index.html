@@ -151,7 +151,7 @@
             font-weight: 600;
             text-transform: uppercase;
         }
-        .version-tag.v12 { background: #c5e1a5; color: #33691e; }
+        .version-tag.v14 { background: #c5e1a5; color: #33691e; }
         .version-tag.v13 { background: #b3e5fc; color: #01579b; }
         .commands {
             background: var(--nr-anthracite);
@@ -198,22 +198,10 @@
             </div>
             <h1>Contexts Extension</h1>
             <p>TYPO3 Multi-Version Development Environment</p>
-            <span class="badge">netresearch/contexts v4.0.0-dev</span>
+            <span class="badge">netresearch/contexts v5.0.0-dev</span>
         </header>
 
         <div class="grid">
-            <div class="card">
-                <h2>
-                    <span>TYPO3 v12</span>
-                    <span class="version-tag v12">LTS</span>
-                </h2>
-                <p>TYPO3 12.4 LTS development instance with the contexts extension installed.</p>
-                <div class="links">
-                    <a href="https://v12.contexts.ddev.site/typo3" target="_blank">Backend</a>
-                    <a href="https://v12.contexts.ddev.site/" target="_blank" class="frontend">Frontend</a>
-                </div>
-            </div>
-
             <div class="card">
                 <h2>
                     <span>TYPO3 v13</span>
@@ -223,6 +211,18 @@
                 <div class="links">
                     <a href="https://v13.contexts.ddev.site/typo3" target="_blank">Backend</a>
                     <a href="https://v13.contexts.ddev.site/" target="_blank" class="frontend">Frontend</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>
+                    <span>TYPO3 v14</span>
+                    <span class="version-tag v14">LTS</span>
+                </h2>
+                <p>TYPO3 14.3 LTS development instance with the contexts extension installed.</p>
+                <div class="links">
+                    <a href="https://v14.contexts.ddev.site/typo3" target="_blank">Backend</a>
+                    <a href="https://v14.contexts.ddev.site/" target="_blank" class="frontend">Frontend</a>
                 </div>
             </div>
 
@@ -242,9 +242,9 @@
         <div class="commands">
             <h3>Quick Commands</h3>
             <code><span class="cmd">ddev start</span> <span class="comment"># Start the development environment</span></code>
-            <code><span class="cmd">ddev install-all</span> <span class="comment"># Install TYPO3 v12 and v13</span></code>
-            <code><span class="cmd">ddev install-v12</span> <span class="comment"># Install only TYPO3 v12</span></code>
+            <code><span class="cmd">ddev install-all</span> <span class="comment"># Install TYPO3 v13 and v14</span></code>
             <code><span class="cmd">ddev install-v13</span> <span class="comment"># Install only TYPO3 v13</span></code>
+            <code><span class="cmd">ddev install-v14</span> <span class="comment"># Install only TYPO3 v14</span></code>
             <code><span class="cmd">ddev run-tests all</span> <span class="comment"># Run tests against both versions</span></code>
             <code><span class="cmd">ddev lint</span> <span class="comment"># Run PHPStan, PHP-CS-Fixer, Rector</span></code>
             <code><span class="cmd">ddev ssh</span> <span class="comment"># SSH into the web container</span></code>
