@@ -38,6 +38,11 @@ use TYPO3\CMS\Core\SingletonInterface;
  * matched ones: "config.linkVars" is written into the cached TypoScript config,
  * so it must not depend on the current request.
  *
+ * Because that TypoScript cache is keyed by the TypoScript sources and not by
+ * the context records, DataHandlerService flushes the "pages" cache group
+ * whenever a context record is written or removed. Otherwise a new "getparam"
+ * context would never reach "config.linkVars".
+ *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license Netresearch https://www.netresearch.de
  * @link    https://www.netresearch.de
@@ -107,8 +112,10 @@ class QueryParameterService implements SingletonInterface
     }
 
     /**
-     * Reset the internal cache. Only needed in tests and after context records
-     * have been modified within the same request.
+     * Reset the internal cache.
+     *
+     * Called by DataHandlerService::flushContextCaches() whenever a context
+     * record was written in this request, and by the tests.
      */
     public function reset(): void
     {

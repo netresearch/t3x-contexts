@@ -19,6 +19,7 @@ namespace Netresearch\Contexts\Service;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\Api\Configuration;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
@@ -39,8 +40,11 @@ class DataHandlerService
      */
     protected array $currentSettings = [];
 
-    public function __construct(private readonly ConnectionPool $connectionPool)
-    {
+    public function __construct(
+        private readonly ConnectionPool $connectionPool,
+        private readonly CacheManager $cacheManager,
+        private readonly QueryParameterService $queryParameterService,
+    ) {
     }
 
     /**
@@ -103,6 +107,57 @@ class DataHandlerService
 
             $this->currentSettings = [];
         }
+
+        if ($table === 'tx_contexts_contexts') {
+            $this->flushContextCaches();
+        }
+    }
+
+    /**
+     * Delete, undelete, copy, move, localize, ... of a context record.
+     *
+     * $pasteUpdate is false unless the command carried an "update" payload,
+     * see DataHandler::process_cmdmap().
+     *
+     * @param array<int|string, mixed>|false $pasteUpdate
+     * @param array<int|string, mixed>       $pasteDatamap
+     */
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function processCmdmap_postProcess(
+        string $command,
+        string $table,
+        int|string $id,
+        mixed $value,
+        DataHandler $reference,
+        array|false $pasteUpdate,
+        array $pasteDatamap,
+    ): void {
+        if ($table === 'tx_contexts_contexts') {
+            $this->flushContextCaches();
+        }
+    }
+
+    /**
+     * Invalidate everything that was rendered against the previous set of
+     * context records.
+     *
+     * This is not optional bookkeeping: TypoScriptConfigEventListener writes
+     * "config.linkVars" into the TypoScript cache, whose identifier is derived
+     * from the TypoScript sources only. Without this flush, adding, renaming or
+     * deleting a "getparam" context would not reach "config.linkVars" (and the
+     * page cache identifier) until somebody flushed the caches by hand.
+     *
+     * The "pages" cache group covers the "hash", "pages", "rootline" and
+     * "typoscript" caches, i.e. exactly the frontend caches a context record
+     * feeds into.
+     */
+    protected function flushContextCaches(): void
+    {
+        // Context records changed within this request, so the collected
+        // parameter names are stale for any later consumer in this request.
+        $this->queryParameterService->reset();
+
+        $this->cacheManager->flushCachesInGroup('pages');
     }
 
     /**

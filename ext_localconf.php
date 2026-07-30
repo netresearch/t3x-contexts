@@ -60,3 +60,8 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1700000003] = [
 // Note: DataHandler still uses SC_OPTIONS hooks in v14, not PSR-14 events
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['contexts']
     = Netresearch\Contexts\Service\DataHandlerService::class;
+
+// Command map hook: a deleted, undeleted, copied or moved context record must
+// invalidate the frontend caches just like an edited one does.
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['contexts']
+    = Netresearch\Contexts\Service\DataHandlerService::class;
