@@ -242,9 +242,9 @@ final class AbstractContextTest extends UnitTestCase
     public function getRemoteAddressReadsNormalizedParamsFromRequest(): void
     {
         $context = $this->createTestableContext($this->createContextRow());
-        $context->setRemoteAddress('192.168.1.100');
+        $context->setRemoteAddress('203.0.113.100');
 
-        self::assertSame('192.168.1.100', $context->exposeGetRemoteAddress());
+        self::assertSame('203.0.113.100', $context->exposeGetRemoteAddress());
     }
 
     #[Test]
@@ -927,11 +927,11 @@ final class AbstractContextTest extends UnitTestCase
     public function getRemoteAddressReturnsValidIpString(): void
     {
         $context = $this->createTestableContext($this->createContextRow());
-        $context->setRemoteAddress('192.168.1.100');
+        $context->setRemoteAddress('203.0.113.100');
 
         $result = $context->exposeGetRemoteAddress();
 
-        self::assertSame('192.168.1.100', $result, 'Should return IP address string');
+        self::assertSame('203.0.113.100', $result, 'Should return IP address string');
     }
 
     #[Test]
