@@ -35,8 +35,9 @@ Multi-channel content visibility for TYPO3. Define contexts based on various
 conditions (IP address, domain, query parameters, HTTP headers, sessions, etc.)
 and control content visibility across your entire TYPO3 installation.
 
-.. versionadded:: 4.0.0
-   TYPO3 12.4/13.4 LTS support, PHP 8.2+ requirement, PSR-14 events.
+.. versionadded:: 5.0.0
+   TYPO3 13.4/14.3 LTS support, context aware page caching and
+   ``config.linkVars`` on PSR-14 events.
 
 ----
 
@@ -54,7 +55,7 @@ and control content visibility across your entire TYPO3 installation.
 
    .. card:: :ref:`Installation <installation>`
 
-      Install and configure the extension for TYPO3 12.4 or 13.4 LTS.
+      Install and configure the extension for TYPO3 13.4 or 14.3 LTS.
 
    .. card:: :ref:`Configuration <configuration>`
 
