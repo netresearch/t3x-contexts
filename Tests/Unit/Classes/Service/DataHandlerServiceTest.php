@@ -19,10 +19,12 @@ namespace Netresearch\Contexts\Tests\Unit\Service;
 use Doctrine\DBAL\Result;
 use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\Service\DataHandlerService;
+use Netresearch\Contexts\Service\QueryParameterService;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
@@ -38,10 +40,15 @@ use TYPO3\CMS\Core\DataHandling\DataHandler;
  * Public methods under test:
  * - processDatamap_preProcessFieldArray()
  * - processDatamap_afterDatabaseOperations()
+ * - processCmdmap_postProcess()
  */
 final class DataHandlerServiceTest extends TestCase
 {
     private ConnectionPool&MockObject $connectionPool;
+
+    private CacheManager&MockObject $cacheManager;
+
+    private QueryParameterService&MockObject $queryParameterService;
 
     private DataHandler&MockObject $dataHandler;
 
@@ -52,8 +59,14 @@ final class DataHandlerServiceTest extends TestCase
         parent::setUp();
 
         $this->connectionPool = $this->createMock(ConnectionPool::class);
+        $this->cacheManager = $this->createMock(CacheManager::class);
+        $this->queryParameterService = $this->createMock(QueryParameterService::class);
         $this->dataHandler = $this->createMock(DataHandler::class);
-        $this->subject = new DataHandlerService($this->connectionPool);
+        $this->subject = new DataHandlerService(
+            $this->connectionPool,
+            $this->cacheManager,
+            $this->queryParameterService,
+        );
 
         // Initialize minimal TCA structure required by Configuration::getFlatColumns
         $GLOBALS['TCA']['tx_contexts_contexts'] = [
@@ -86,6 +99,22 @@ final class DataHandlerServiceTest extends TestCase
         return [
             'enabled setting (1) inserts record' => ['pages', '1', ['enabled' => 1]],
             'disabled setting (0) inserts record' => ['pages', '0', ['enabled' => 0]],
+        ];
+    }
+
+    /**
+     * DataHandler commands that change the set of available context records.
+     *
+     * @return array<string, array{0: string}>
+     */
+    public static function cmdmapCommandDataProvider(): array
+    {
+        return [
+            'delete' => ['delete'],
+            'undelete' => ['undelete'],
+            'copy' => ['copy'],
+            'move' => ['move'],
+            'localize' => ['localize'],
         ];
     }
 
@@ -294,6 +323,95 @@ final class DataHandlerServiceTest extends TestCase
             '1',
             [],
             $this->dataHandler,
+        );
+    }
+
+    // =========================================================================
+    // Cache invalidation for context records
+    //
+    // TypoScriptConfigEventListener writes "config.linkVars" into the
+    // TypoScript cache, whose identifier is derived from the TypoScript
+    // sources and not from tx_contexts_contexts. A changed context record
+    // therefore has to flush the "pages" cache group (hash, pages, rootline,
+    // typoscript) explicitly, otherwise it never reaches the frontend.
+    // =========================================================================
+
+    #[Test]
+    public function afterDatabaseOperationsFlushesFrontendCachesForContextRecords(): void
+    {
+        // Arrange: no settings captured, so only the cache flush must happen
+        $this->cacheManager
+            ->expects(self::once())
+            ->method('flushCachesInGroup')
+            ->with('pages');
+
+        $this->queryParameterService
+            ->expects(self::once())
+            ->method('reset');
+
+        // Act
+        $this->subject->processDatamap_afterDatabaseOperations(
+            'update',
+            'tx_contexts_contexts',
+            '5',
+            [],
+            $this->dataHandler,
+        );
+    }
+
+    #[Test]
+    public function afterDatabaseOperationsDoesNotFlushCachesForOtherTables(): void
+    {
+        $this->cacheManager->expects(self::never())->method('flushCachesInGroup');
+        $this->queryParameterService->expects(self::never())->method('reset');
+
+        $this->subject->processDatamap_afterDatabaseOperations(
+            'update',
+            'pages',
+            '1',
+            [],
+            $this->dataHandler,
+        );
+    }
+
+    #[Test]
+    #[DataProvider('cmdmapCommandDataProvider')]
+    public function cmdmapPostProcessFlushesFrontendCachesForContextRecords(string $command): void
+    {
+        $this->cacheManager
+            ->expects(self::once())
+            ->method('flushCachesInGroup')
+            ->with('pages');
+
+        $this->queryParameterService
+            ->expects(self::once())
+            ->method('reset');
+
+        $this->subject->processCmdmap_postProcess(
+            $command,
+            'tx_contexts_contexts',
+            5,
+            '',
+            $this->dataHandler,
+            false,
+            [],
+        );
+    }
+
+    #[Test]
+    public function cmdmapPostProcessDoesNotFlushCachesForOtherTables(): void
+    {
+        $this->cacheManager->expects(self::never())->method('flushCachesInGroup');
+        $this->queryParameterService->expects(self::never())->method('reset');
+
+        $this->subject->processCmdmap_postProcess(
+            'delete',
+            'pages',
+            1,
+            '',
+            $this->dataHandler,
+            false,
+            [],
         );
     }
 

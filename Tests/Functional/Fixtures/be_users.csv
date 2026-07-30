@@ -1,0 +1,3 @@
+"be_users"
+,"uid","pid","tstamp","username","password","admin","disable","starttime","endtime","lang","deleted"
+,1,0,1700000000,"admin","$argon2i$v=19$m=65536,t=16,p=1$b1JqZTVFdmxaSFNhTjFjMg$g/PGkVwWmtoTP1YKAG5o7v/ol9OaeXAiKIS3D/rndZo",1,0,0,0,"default",0
