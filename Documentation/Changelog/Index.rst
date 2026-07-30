@@ -8,6 +8,59 @@ Changelog
 
 All notable changes to this project are documented here.
 
+Version 5.0.0
+=============
+
+This is a major release targeting TYPO3 v13.4 LTS and v14.3 LTS. It also fixes
+two defects that were already silent on TYPO3 v13.
+
+Breaking Changes
+----------------
+
+- **Dropped TYPO3 v12.4 support** - use version 4.x for TYPO3 v12.4
+- **Removed** :file:`ext_tables.php` - deprecated in TYPO3 v14.3
+  (:issue:`109438`)
+- **Removed** ``FrontendControllerService::registerQueryParameter()``,
+  ``::createHashBase()`` and ``::configArrayPostProc()``
+- **Removed** ``PageService::createHashBase()`` - use the public
+  ``PageService::getHashString()``
+- **Removed** the empty ``CacheHashEventListener``
+- **Removed** the protected ``AbstractContext::getTypoScriptFrontendController()``
+  and ``AbstractContext::getIndpEnv()`` - custom context types use
+  ``getRequest()``, ``getFrontendUser()`` and ``getNormalizedParams()``
+- **Dropped** the unused ``typo3/cms-extbase`` and ``typo3/cms-extensionmanager``
+  requirements - no class of either package is referenced
+
+Bug Fixes
+---------
+
+- **Session context matches again** - the frontend user is read from the
+  ``frontend.user`` request attribute instead of the ``TypoScriptFrontendController``
+  removed in TYPO3 v14 (:issue:`107831`). The same applies to the
+  ``use_session`` persistence of the GET parameter context
+- **Context-aware page caching works again** - the active contexts and the
+  values of all context GET parameters are added to the page cache identifier
+  via :php:`\TYPO3\CMS\Frontend\Event\BeforePageCacheIdentifierIsHashedEvent`,
+  replacing the ``createHashBase`` hook removed in TYPO3 v13.0
+  (:issue:`102932`)
+- **config.linkVars works again** - the GET parameters of all query parameter
+  contexts are appended via
+  :php:`\TYPO3\CMS\Frontend\Event\ModifyTypoScriptConfigEvent`, replacing the
+  removed ``configArrayPostProc`` hook
+- **Page tree restrictions are no longer dropped** - the ``PageTreeRepository``
+  XCLASS forwards the third ``$additionalQueryRestrictions`` constructor
+  argument, so ``options.pageTree.excludeDoktypes`` is honoured again
+- **Removed** the write to ``$TYPO3_CONF_VARS['FE']['addRootLineFields']``,
+  removed in TYPO3 v13.2 (:issue:`103752`)
+
+Improvements
+------------
+
+- CI matrix covers TYPO3 ``^13.4`` and ``^14.3`` on PHP 8.2 - 8.5
+- :file:`composer.json` declares ``extra.typo3/cms.version`` and
+  ``extra.typo3/cms.Package.providesPackages`` (:issue:`108345`)
+- DDEV development environment provides TYPO3 v13 and v14 instances
+
 Version 4.0.0
 =============
 

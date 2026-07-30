@@ -15,6 +15,7 @@ Requirements
    :header: "Extension Version", "TYPO3", "PHP"
    :widths: 20, 30, 30
 
+   "5.x", "13.4 LTS, 14.3 LTS", "8.2 - 8.5"
    "4.x", "12.4 LTS, 13.4 LTS", "8.2 - 8.5"
    "3.x", "11.5 LTS", "7.4 - 8.1"
 
@@ -60,7 +61,7 @@ Alternatively, add it to your site's :file:`config/sites/<identifier>/config.yam
 
 .. _installation-classic:
 
-Classic TypoScript Include (TYPO3 v12+)
+Classic TypoScript Include (TYPO3 v13+)
 =======================================
 
 For traditional TypoScript setup, include the static template:

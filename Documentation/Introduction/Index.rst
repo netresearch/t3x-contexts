@@ -48,12 +48,13 @@ Use Cases
 Requirements
 ============
 
-- TYPO3 v12.4 LTS or v13.4 LTS
+- TYPO3 v13.4 LTS or v14.3 LTS
 - PHP 8.2 or higher
 
 .. tip::
 
-   For TYPO3 v11 support, use version 3.x of this extension.
+   For TYPO3 v12.4 support, use version 4.x of this extension; for TYPO3 v11,
+   use version 3.x.
 
 Related Extensions
 ==================

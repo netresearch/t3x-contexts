@@ -8,6 +8,115 @@ Migration Guide
 
 This guide covers migrating from previous versions of the Contexts extension.
 
+.. _migration-v4-to-v5:
+
+Migrating from v4.x to v5.0
+===========================
+
+Version 5.0 targets TYPO3 v13.4 LTS and v14.3 LTS and completes the removal of
+the frontend APIs that TYPO3 dropped in v13 and v14.
+
+Breaking Changes
+----------------
+
+TYPO3 Version
+~~~~~~~~~~~~~
+
+**Before:** TYPO3 v12.4 LTS and v13.4 LTS
+
+**After:** TYPO3 v13.4 LTS and v14.3 LTS
+
+TYPO3 v12.4 is no longer supported. Use version 4.x for TYPO3 v12.4
+installations.
+
+Removed API
+~~~~~~~~~~~
+
+The following methods were bound to the ``TypoScriptFrontendController`` hooks
+removed in TYPO3 v13.0 (:issue:`102932`) and are gone:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 60 40
+
+   * - Removed
+     - Replacement
+   * - ``FrontendControllerService::registerQueryParameter()``
+     - :php:`Netresearch\Contexts\Service\QueryParameterService`
+   * - ``FrontendControllerService::createHashBase()``
+     - ``PageCacheIdentifierEventListener``
+   * - ``FrontendControllerService::configArrayPostProc()``
+     - ``TypoScriptConfigEventListener``
+   * - ``PageService::createHashBase()``
+     - ``PageService::getHashString()``
+   * - ``CacheHashEventListener`` (empty stub)
+     - ``PageCacheIdentifierEventListener``
+
+Custom context types that extend
+:php:`Netresearch\Contexts\Context\AbstractContext` are affected by the removal
+of the ``TypoScriptFrontendController``
+(:issue:`107831`) and of :php:`GeneralUtility::getIndpEnv()`
+(deprecated in TYPO3 v14.3):
+
+.. list-table::
+   :header-rows: 1
+   :widths: 60 40
+
+   * - Removed protected method
+     - Replacement
+   * - ``getTypoScriptFrontendController()``
+     - ``getRequest()`` / ``getFrontendUser()``
+   * - ``getIndpEnv()``
+     - ``getNormalizedParams()``
+
+Fixed Behaviour
+---------------
+
+Two defects that were silent on v13 are fixed by this release:
+
+*   The **session context** and the ``use_session`` persistence of the GET
+    parameter context read the frontend user from the removed
+    ``TypoScriptFrontendController``. They now read the ``frontend.user``
+    request attribute and match again.
+*   **Context-aware page caching and** ``config.linkVars`` were registered on
+    hooks removed in TYPO3 v13.0, so every context variant of a page shared one
+    page cache entry and the switching GET parameter was dropped from generated
+    links. They now use
+    :php:`\TYPO3\CMS\Frontend\Event\BeforePageCacheIdentifierIsHashedEvent`
+    and :php:`\TYPO3\CMS\Frontend\Event\ModifyTypoScriptConfigEvent`.
+
+Removed Files
+-------------
+
+``ext_tables.php`` has been removed - it only held a TYPO3 v12 code path and the
+file itself is deprecated since TYPO3 v14.3 (:issue:`109438`). The v13+
+equivalent lives in ``Configuration/TCA/tx_contexts_contexts.php`` via
+``ctrl.security.ignorePageTypeRestriction``.
+
+``$GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields']`` is no longer written
+in ``ext_localconf.php``; the setting was removed in TYPO3 v13.2
+(:issue:`103752`) and rootline relations on ``pages`` are always resolved since.
+
+Step-by-Step Migration
+----------------------
+
+1. **Update TYPO3** to v13.4 or v14.3
+
+2. **Update extension** via Composer:
+
+   .. code-block:: bash
+
+      composer require netresearch/contexts:^5.0
+
+3. **Clear all caches**:
+
+   .. code-block:: bash
+
+      vendor/bin/typo3 cache:flush
+
+4. **Review custom context types** for the removed protected methods listed
+   above
+
 .. _migration-v3-to-v4:
 
 Migrating from v3.x to v4.0
@@ -119,7 +228,9 @@ Event Migration Reference
    * - overrideIconOverlay (IconFactory)
      - ModifyRecordOverlayIconIdentifierEvent
    * - createHashBase
-     - ModifyCacheLifetimeForPageEvent
+     - BeforePageCacheIdentifierIsHashedEvent (since v5.0)
+   * - configArrayPostProc
+     - ModifyTypoScriptConfigEvent (since v5.0)
 
 .. _migration-site-sets:
 
