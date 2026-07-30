@@ -119,6 +119,11 @@ class Configuration
      * @param string $class    Name of class implementing context type
      * @param string $flexFile Flexform configuration file of context type
      *
+     * The FlexForm file is not written into
+     * TCA[tx_contexts_contexts][columns][type_conf][config][ds] anymore: TYPO3
+     * v14 removed the "ds_pointerField" mechanism together with the multi-entry
+     * "ds" array (#107047). FlexFormDataStructureEventListener resolves the
+     * data structure from this registry instead, on both v13.4 and v14.3.
      */
     public static function registerContextType(
         string $key,
@@ -135,8 +140,6 @@ class Configuration
         if (isset($GLOBALS['TCA']['tx_contexts_contexts']['columns']['type'])) {
             $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type']['config']
                 ['items'][] = ['label' => $title, 'value' => $key];
-            $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type_conf']['config']
-                ['ds'][$key] = $flexFile;
         }
     }
 

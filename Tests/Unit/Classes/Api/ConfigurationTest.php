@@ -103,7 +103,7 @@ final class ConfigurationTest extends UnitTestCase
             'config' => ['items' => []],
         ];
         $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type_conf'] = [
-            'config' => ['ds' => []],
+            'config' => ['type' => 'flex'],
         ];
 
         Configuration::registerContextType(
@@ -117,9 +117,40 @@ final class ConfigurationTest extends UnitTestCase
             ['label' => 'Custom Type', 'value' => 'custom'],
             $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type']['config']['items'],
         );
+    }
+
+    /**
+     * TYPO3 v14 removed "ds_pointerField" and the multi-entry "ds" array
+     * (#107047), and TYPO3 v13 iterates "ds" as an array in RelationMapBuilder.
+     * The FlexForm file therefore stays in the context type registry, which
+     * FlexFormDataStructureEventListener reads, and no "ds" configuration is
+     * created at all.
+     */
+    #[Test]
+    public function registerContextTypeDoesNotWriteTheFlexFormIntoTheDataStructureConfiguration(): void
+    {
+        $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type'] = [
+            'config' => ['items' => []],
+        ];
+        $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type_conf'] = [
+            'config' => ['type' => 'flex'],
+        ];
+
+        Configuration::registerContextType(
+            'custom',
+            'Custom Type',
+            'CustomClass',
+            'EXT:custom/flex.xml',
+        );
+
+        self::assertArrayNotHasKey(
+            'ds',
+            $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type_conf']['config'],
+            'The data structure must not be baked into the TCA',
+        );
         self::assertSame(
             'EXT:custom/flex.xml',
-            $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type_conf']['config']['ds']['custom'],
+            Configuration::getContextTypes()['custom']['flexFile'],
         );
     }
 

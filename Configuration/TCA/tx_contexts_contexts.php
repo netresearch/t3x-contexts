@@ -91,8 +91,13 @@ return [
             'label' => 'LLL:EXT:contexts/Resources/Private/Language/locallang_db.xlf:tx_contexts_contexts.type_conf',
             'config' => [
                 'type' => 'flex',
-                'ds_pointerField' => 'type',
-                'ds' => [],
+                // Intentionally no "ds": the data structure of this field
+                // depends on the context type of the record and is resolved by
+                // FlexFormDataStructureEventListener through the PSR-14
+                // DataStructure* events. TYPO3 v14 removed "ds_pointerField"
+                // and the multi-entry "ds" array (#107047), and TYPO3 v13
+                // iterates "ds" as an array in RelationMapBuilder, so a static
+                // value would either be wrong or raise a warning.
             ],
         ],
         'invert' => [

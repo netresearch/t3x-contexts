@@ -39,6 +39,22 @@ final class TcaTest extends FunctionalTestCase
         self::assertArrayHasKey('session', $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']);
     }
 
+    /**
+     * "ds_pointerField" and the multi-entry "ds" array were removed in TYPO3
+     * v14.0 (#107047), and TYPO3 v13 iterates "ds" as an array in
+     * RelationMapBuilder. The data structure of "type_conf" is resolved by
+     * FlexFormDataStructureEventListener instead, so neither key may reappear.
+     */
+    #[Test]
+    public function typeConfHasNoStaticDataStructureConfiguration(): void
+    {
+        $config = $GLOBALS['TCA']['tx_contexts_contexts']['columns']['type_conf']['config'];
+
+        self::assertSame('flex', $config['type']);
+        self::assertArrayNotHasKey('ds_pointerField', $config);
+        self::assertArrayNotHasKey('ds', $config);
+    }
+
     #[Test]
     public function tcaHasExtensionFlatSettings(): void
     {
