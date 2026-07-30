@@ -25,15 +25,16 @@ parameters:
 
     # TYPO3-specific configuration (PHPStan 2.x compatible)
     treatPhpDocTypesAsCertain: false
-    reportUnmatchedIgnoredErrors: false
+
+    # Every entry below has to earn its place: an ignore that stops matching is
+    # reported as an error instead of silently rotting in the config.
+    reportUnmatchedIgnoredErrors: true
 
     # Temporary ignores for legacy code patterns
     # TODO: These should be addressed incrementally
     ignoreErrors:
         # Legacy code array type specifications
         - '#no value type specified in iterable type array#'
-        - '#return type has no value type specified in iterable type#'
-        - '#type has no value type specified in iterable type#'
 
         # TYPO3 TCA/GLOBALS access patterns - inherently untyped
         -
@@ -49,48 +50,11 @@ parameters:
         # PHPDoc type issues with Doctrine exceptions
         - '#PHPDoc tag @throws with type Doctrine\\DBAL\\.*Exception is not subtype of Throwable#'
 
-        # Legacy API remnants - to be addressed incrementally
-        - '#Call to an undefined method TYPO3\\CMS\\Core\\Database\\Query\\QueryBuilder::execute#'
-        - '#Call to an undefined static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility::_GET#'
-        - '#Unable to resolve the template type T in call to static method#'
-        - '#Access to deprecated property \$nodeFactory#'
-        - '#Access to deprecated property \$iconFactory#'
-        - '#PHPDoc type .* of property .* is not the same as PHPDoc type .* of overridden property#'
-        # Doctrine DBAL 4.x type parameter changes (int → ParameterType enum)
-        - '~Parameter \#2 \$type of method .* expects .*, int given~'
-
         # PHPStan strict rules violations in legacy code
         - '#Construct empty\(\) is not allowed#'
         - '#Strict comparison using .* will always evaluate to#'
-        - '#is never read, only written#'
-        - '#should return .* but return statement is missing#'
-        - '#is not covariant with return type#'
-        - '#invoked with .* parameters, .* required#'
         - '#should return .* but returns#'
         - '#requires parameter .* to be passed to avoid loose comparison#'
-
-        # PHPUnit test issues - tests work but have strict mode violations
-        - '#has no return type specified#'
-        - '#Dynamic call to static method PHPUnit#'
-        - '#Call to deprecated method .* of class PHPUnit#'
-
-        # Mock object type inference issues in tests
-        -
-            message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\MockObject::(.*).$#'
-            paths:
-                - ../Tests/*
-
-        # Allow dynamic method calls on mock objects
-        -
-            message: '#^Call to an undefined method object::(.*).$#'
-            paths:
-                - ../Tests/*
-
-        # Test helper methods not visible to PHPStan
-        -
-            message: '#^Call to an undefined method Netresearch\\Contexts\\Context\\AbstractContext::(.*).$#'
-            paths:
-                - ../Tests/*
 
         # PHPStan strict assertions in tests (assertInstanceOf with known types, etc.)
         -
@@ -106,35 +70,13 @@ parameters:
 
         # Expressions in fuzz tests for analysis
         -
-            message: '#does not do anything#'
-            paths:
-                - ../Tests/Fuzz/*
-        -
             message: '#on a separate line has no effect#'
             paths:
                 - ../Tests/Fuzz/*
 
-        # Offset access on array|false patterns in tests
-        -
-            message: '#Cannot access offset .* on array.*\|false#'
-            paths:
-                - ../Tests/*
-
         # Parent constructor not called (intentional in test stubs)
         -
             message: '#does not call parent constructor#'
-            paths:
-                - ../Tests/*
-
-        # Test file offset access
-        -
-            message: '#Offset .* does not exist on array#'
-            paths:
-                - ../Tests/*
-
-        # Casting already-typed values (fine in tests)
-        -
-            message: '#Casting to string something that.s already string#'
             paths:
                 - ../Tests/*
 
@@ -147,12 +89,6 @@ parameters:
         # Invalid type for foreach (test edge cases with array|false)
         -
             message: '#Argument of an invalid type .* supplied for foreach#'
-            paths:
-                - ../Tests/*
-
-        # Unused constructor parameters (test stubs)
-        -
-            message: '#has an unused parameter#'
             paths:
                 - ../Tests/*
 
@@ -174,12 +110,6 @@ parameters:
             paths:
                 - ../Tests/*
 
-        # Anonymous class constructor type mismatches (test mocks)
-        -
-            message: '#constructor expects .*, .* given#'
-            paths:
-                - ../Tests/*
-
         # PHPUnit assertion parameter types (mixed values in tests)
         -
             message: '#Parameter \#\d+ \$.* of static method PHPUnit\\Framework\\Assert::\w+\(\) expects .*, mixed given#'
@@ -198,12 +128,6 @@ parameters:
             paths:
                 - ../Tests/*
 
-        # isset() on non-nullable properties in test stubs
-        -
-            message: '#Property .* in isset\(\) is not nullable#'
-            paths:
-                - ../Tests/*
-
         # Encapsed string part type issues in tests
         -
             message: '#Part .* of encapsed string cannot be cast to string#'
@@ -215,9 +139,3 @@ parameters:
             message: '#expects string, mixed given#'
             paths:
                 - ../Tests/*
-
-        # TYPO3 globals access patterns
-        -
-            message: '#^Variable \$GLOBALS is never used.$#'
-            paths:
-                - ../ext_localconf.php
