@@ -36,7 +36,7 @@ This repository contains a TYPO3 extension for multi-channel contexts that show/
 ## TYPO3-Specific Patterns
 
 ### Extension Structure
-- This is a TYPO3 v12.4/v13.4 extension (`typo3/cms-core: ^12.4 || ^13.4`)
+- This is a TYPO3 v13.4/v14.3 extension (`typo3/cms-core: ^13.4 || ^14.3`)
 - Follow TYPO3 extension conventions for file naming and structure
 - Use TYPO3's dependency injection and service container
 - Implement TYPO3 interfaces where appropriate (e.g., `SingletonInterface`)
@@ -63,14 +63,20 @@ $qb->createNamedParameter($uid, \PDO::PARAM_INT); // DON'T USE
 
 ### Frontend Integration
 - Contexts integrate with TYPO3 frontend rendering
-- Use `TypoScriptFrontendController` for frontend operations (null-safe access)
+- **NEVER use `TypoScriptFrontendController` or `$GLOBALS['TSFE']`** — the class was
+  removed in TYPO3 v14 (#107831) and does not exist in v14.3
+- Read everything it used to carry from the PSR-7 request instead:
+  - `AbstractContext::getRequest()` — the request the middleware handed to the `Container`
+  - `AbstractContext::getFrontendUser()` — `$request->getAttribute('frontend.user')`
+  - `AbstractContext::getNormalizedParams()` — replaces `GeneralUtility::getIndpEnv()`,
+    which is deprecated since v14.3
 - Provide Fluid ViewHelpers for template integration
 - Support TypoScript conditions via ExpressionLanguage
 
 ## Quality Assurance
 
 ### Static Analysis
-- **PHPStan**: Level 9 analysis with strict rules (see `Build/phpstan.neon`)
+- **PHPStan**: Level 10 analysis with strict rules (see `Build/phpstan.neon`)
 - Run: `composer ci:test:php:phpstan`
 - Address all PHPStan errors before committing
 
@@ -80,7 +86,7 @@ $qb->createNamedParameter($uid, \PDO::PARAM_INT); // DON'T USE
 - Run: `composer ci:test:php:cgl` (check) or `composer ci:cgl` (auto-fix)
 
 ### Testing
-- **PHPUnit**: 10.5+/11/12 supported
+- **PHPUnit**: 10.5/11/12/13 supported
 - **Unit Tests**: `composer ci:test:php:unit`
 - **Functional Tests**: `composer ci:test:php:functional` (requires database)
 - **Coverage**: `composer test:coverage`
@@ -92,8 +98,8 @@ $qb->createNamedParameter($uid, \PDO::PARAM_INT); // DON'T USE
 - **Fractor**: TYPO3-specific migrations
 
 ### Pre-commit Quality Gates
-- **GrumPHP**: Automated quality checks on commit (see `grumphp.yml`)
-- Runs composer validation, YAML/JSON/XML linting, PHPStan, and PHPCS
+- **CaptainHook**: Automated quality checks on commit (see `Build/captainhook.json`)
+- Runs `composer ci:test:php:cgl`, `composer ci:test:php:phpstan` and `composer ci:test:php:unit`
 - All checks must pass before code can be committed
 
 ## Testing
@@ -102,7 +108,7 @@ $qb->createNamedParameter($uid, \PDO::PARAM_INT); // DON'T USE
 - **Unit Tests**: `Tests/Unit/` for isolated component testing
 - **Functional Tests**: `Tests/Functional/` for integration testing
 - **Fuzz Tests**: `Tests/Fuzz/` for property-based testing
-- Use PHPUnit 10.5+ (`vendor/bin/phpunit`)
+- Use PHPUnit 10.5/11/12/13 (`vendor/bin/phpunit`)
 - Follow TYPO3 testing patterns and extend TYPO3 test base classes
 
 ### Test Requirements
@@ -171,7 +177,9 @@ declare(strict_types=1);
 ### DDEV Environment
 ```bash
 ddev start
-ddev install-v13  # or ddev install-v12
+ddev install-all  # TYPO3 v13 and v14
+ddev install-v13  # TYPO3 v13 only
+ddev install-v14  # TYPO3 v14 only
 ```
 
 ### Adding New Context Types
@@ -193,7 +201,7 @@ ddev install-v13  # or ddev install-v12
 
 ## Compatibility
 
-- Maintain TYPO3 v12.4+ and v13.4+ compatibility
+- Maintain TYPO3 v13.4 and v14.3 compatibility (TYPO3 v12.4 was dropped in version 5.0.0)
 - Support PHP 8.2 - 8.5
 - Test with different TYPO3 configurations
 - Consider backwards compatibility when making changes
@@ -225,7 +233,7 @@ When making changes, always run the full quality suite and ensure all tests pass
 - Use TYPO3's dependency injection container for service registration
 - Implement `SingletonInterface` for stateless services
 - Use `LoggerAwareInterface` and inject PSR-3 loggers
-- Follow TYPO3 v12/v13 patterns and deprecation guidelines
+- Follow TYPO3 v13/v14 patterns and deprecation guidelines
 - Register services in `Configuration/Services.yaml` when needed
 
 ### PSR-14 Event Listeners

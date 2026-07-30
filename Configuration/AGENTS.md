@@ -48,10 +48,11 @@ ddev exec vendor/bin/typo3 cache:warmup
 ### TCA Patterns
 
 ```php
-// Use modern TCA (TYPO3 12+)
+// Use modern TCA (TYPO3 13.4/14.3)
 return [
     'ctrl' => [
-        // TYPO3 v13: Use security array instead of ExtensionManagementUtility
+        // Use the security array; ExtensionManagementUtility::allowTableOnStandardPages()
+        // was deprecated in v12.0 (#98487) and removed in v13.0 (#100963)
         'security' => [
             'ignorePageTypeRestriction' => true,
         ],
@@ -195,13 +196,13 @@ settings:
 ### TCA Security
 
 ```php
-// Good: TYPO3 v13+ security array
+// Good: declare it in the TCA of the table itself
 'security' => [
     'ignorePageTypeRestriction' => true,
 ],
 
-// Bad: Deprecated method call
-ExtensionManagementUtility::allowTableOnStandardPages('tx_contexts_contexts');
+// Bad: ExtensionManagementUtility::allowTableOnStandardPages() no longer exists
+// (removed in v13.0, #100963) — never reintroduce this call or an ext_tables.php for it
 ```
 
 ## When Stuck
@@ -215,4 +216,4 @@ ExtensionManagementUtility::allowTableOnStandardPages('tx_contexts_contexts');
 - All new context types need both TCA registration and FlexForm
 - Keep FlexForm fields minimal - complex logic belongs in PHP
 - Use `onChange => 'reload'` for type selectors
-- Test configuration changes in both v12 and v13
+- Test configuration changes in both v13.4 and v14.3

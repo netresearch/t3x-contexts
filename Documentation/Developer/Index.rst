@@ -126,7 +126,7 @@ PSR-14 Event Listeners
 .. versionadded:: 4.0.0
    PSR-14 event listeners replace legacy SC_OPTIONS hooks.
 
-The extension registers four PSR-14 event listeners that handle
+The extension registers six PSR-14 event listeners that handle
 context-based behavior in the frontend and backend. These listeners
 are registered via PHP attributes and cannot be removed, but you
 can register your own listeners on the same events.
@@ -161,12 +161,65 @@ Icon Overlay Modification
 overlays for records that have context-based visibility
 settings, providing visual feedback in the backend.
 
-Cache Lifetime Modification
----------------------------
+Page Cache Identifier
+---------------------
 
-``CacheHashEventListener`` listens to
-``ModifyCacheLifetimeForPageEvent`` and can adjust cache
-lifetime based on active contexts.
+.. versionadded:: 5.0.0
+
+``PageCacheIdentifierEventListener`` listens to
+``BeforePageCacheIdentifierIsHashedEvent`` and adds the current
+values of all GET parameters used by a "getparam" context to the
+page cache identifier. Without it, a page rendered with a
+context-switching parameter would overwrite the cache entry of the
+same page rendered without it.
+
+TypoScript ``config.linkVars``
+------------------------------
+
+.. versionadded:: 5.0.0
+
+``TypoScriptConfigEventListener`` listens to
+``ModifyTypoScriptConfigEvent`` and appends the GET parameters of
+all "getparam" contexts to :typoscript:`config.linkVars`, so the
+active channel survives following a link. It replaces the
+``configArrayPostProc`` hook that was removed in TYPO3 v13.0
+(#102932).
+
+The parameter list is derived from the *configured* contexts, never
+from the current request, because the event result is written into
+the TypoScript cache. See :ref:`configuration-caching` for how that
+cache is invalidated when a context record changes.
+
+.. _developer-flexform-data-structure:
+
+FlexForm Data Structure
+-----------------------
+
+.. versionadded:: 5.0.0
+
+``FlexFormDataStructureEventListener`` listens to
+``BeforeFlexFormDataStructureIdentifierInitializedEvent`` and
+``BeforeFlexFormDataStructureParsedEvent`` and resolves the FlexForm
+of :sql:`tx_contexts_contexts.type_conf` from the context type of the
+record.
+
+TYPO3 v14 removed the ``ds_pointerField`` mechanism and the
+multi-entry ``ds`` array (Breaking #107047) that this used to rely on.
+The replacement core suggests, record types plus
+``types.<type>.columnsOverrides``, cannot be used here: TYPO3 v13.4
+resolves the data structure from the raw TCA in ``DataHandler`` and
+``ReferenceIndex``, where ``columnsOverrides`` is not applied. These
+two events are dispatched by ``FlexFormTools`` for every caller and
+have an identical API in v13.4 and v14.3.
+
+For extension authors this is transparent:
+:php:`Configuration::registerContextType()` keeps its signature, and
+the FlexForm file passed as its fourth argument is still the data
+structure used for that type. Only code that read the FlexForm file
+back out of
+:php:`$GLOBALS['TCA']['tx_contexts_contexts']['columns']['type_conf']['config']['ds']`
+has to switch to
+:php:`Configuration::getContextTypes()[$type]['flexFile']`.
 
 .. _developer-architecture:
 

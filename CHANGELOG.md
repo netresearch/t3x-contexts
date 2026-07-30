@@ -9,12 +9,16 @@
 - Removed the empty `CacheHashEventListener`
 - Removed the protected `AbstractContext::getTypoScriptFrontendController()` and `AbstractContext::getIndpEnv()` - custom context types use `getRequest()`, `getFrontendUser()` and `getNormalizedParams()` instead
 - Dropped the unused `typo3/cms-extbase` and `typo3/cms-extensionmanager` requirements; no class of either package is referenced. On TYPO3 v14 they were pulled into the package dependency graph and forced both system extensions to be loaded
+- `Configuration::registerContextType()` no longer writes the FlexForm file into `TCA[tx_contexts_contexts][columns][type_conf][config][ds]`; the data structure is resolved from the registry by `FlexFormDataStructureEventListener`. Custom context types keep working unchanged, code reading that `ds` array does not
+- Removed the site set settings `contexts.matchMode` and `contexts.cacheLifetimeModifier`. Neither was ever read by the extension; remove them from your site configuration. There is no replacement
 
 ## Bug Fixes
 
 - Fixed the session context and the `use_session` persistence of the GET parameter context: they read the frontend user from the `frontend.user` request attribute instead of the removed `TypoScriptFrontendController` (#107831), so they match again
 - Fixed context-aware page caching: the active context combination and the values of all context GET parameters are added to the page cache identifier via `BeforePageCacheIdentifierIsHashedEvent`, replacing the `createHashBase` hook removed in TYPO3 v13.0 (Breaking #102932). Context variants of a page no longer share one cache entry
 - Fixed `config.linkVars`: the GET parameters of all query parameter contexts are appended via `ModifyTypoScriptConfigEvent`, replacing the removed `configArrayPostProc` hook, so the active channel survives following a link
+- Fixed the FlexForm of the context type configuration on TYPO3 v14.3: `ds_pointerField` and the multi-entry `ds` array were removed in v14.0 (Breaking #107047), so every read of `tx_contexts_contexts.type_conf` threw an `InvalidTcaException` - context records could neither be rendered nor saved. The new `FlexFormDataStructureEventListener` resolves the data structure through `BeforeFlexFormDataStructureIdentifierInitializedEvent` and `BeforeFlexFormDataStructureParsedEvent`, which behave identically on v13.4 and v14.3
+- Fixed stale frontend caches after a context record changed: adding, renaming or deleting a context now flushes the `pages` cache group (`hash`, `pages`, `rootline`, `typoscript`). Without it, `config.linkVars` never reached the frontend, because TYPO3 caches the `ModifyTypoScriptConfigEvent` result under an identifier derived from the TypoScript sources only
 - Fixed the `PageTreeRepository` XCLASS constructor signature, which silently dropped the third `$additionalQueryRestrictions` parameter of TYPO3 v13.4/v14.3 and thereby `options.pageTree.excludeDoktypes` for the whole installation
 - Removed the write to `$TYPO3_CONF_VARS['FE']['addRootLineFields']`, removed in TYPO3 v13.2 (#103752)
 
@@ -26,6 +30,9 @@
 - `composer.json` declares `extra.typo3/cms.version` and `extra.typo3/cms.Package.providesPackages` to satisfy TYPO3 v14.3 package metadata (#108345)
 - CI matrix runs TYPO3 `^13.4` and `^14.3` against PHP 8.2 - 8.5
 - Removed the TYPO3 v12 PHPStan ignore entries; static analysis stays at level 10 with no new ignores
+- Rector and Fractor run the TYPO3 v14 rule sets (`UP_TO_TYPO3_14`). The single rule that may not be applied while TYPO3 v13.4 is supported, `MigrateLabelReferenceToDomainSyntaxRector`, is skipped explicitly: translation domain syntax was introduced with TYPO3 v14 (#93334)
+- PHPStan enables `reportUnmatchedIgnoredErrors` and drops the 27 ignore patterns that no longer matched anything
+- Agent instructions (`AGENTS.md`, `Configuration/AGENTS.md`, `.github/copilot-instructions.md`) describe the v13.4/v14.3 APIs; the removed `TypoScriptFrontendController` and `allowTableOnStandardPages()` patterns are marked as forbidden
 - DDEV development environment provides TYPO3 v13 and v14 instances
 
 ---
