@@ -69,12 +69,34 @@ return [
             'displayCond' => 'FIELD:type:REQ:true',  // Show only when type selected
             'config' => [
                 'type' => 'flex',
-                'ds_pointerField' => 'type',  // FlexForm source depends on type
-                'ds' => [],  // Populated dynamically
+                // No 'ds' and no 'ds_pointerField': the data structure depends
+                // on the context type and is resolved by
+                // FlexFormDataStructureEventListener via the PSR-14
+                // BeforeFlexFormDataStructure* events.
             ],
         ],
     ],
 ];
+```
+
+### FlexForm Data Structure per Context Type
+
+`ds_pointerField` and the multi-entry `ds` array were removed in TYPO3 v14
+(#107047), and TYPO3 v13 iterates `ds` as an array in `RelationMapBuilder`.
+Never reintroduce either of them.
+
+```php
+// Good: register the type, the listener picks the FlexForm up from there
+Configuration::registerContextType(
+    'getparam',
+    'GET parameter',
+    QueryParameterContext::class,
+    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/GetParam.xml',
+);
+
+// Bad: a per-type 'ds' array plus a pointer field
+'ds_pointerField' => 'type',
+'ds' => ['getparam' => 'FILE:...'],
 ```
 
 ### FlexForm Patterns
