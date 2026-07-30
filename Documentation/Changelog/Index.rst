@@ -12,7 +12,7 @@ Version 5.0.0
 =============
 
 This is a major release targeting TYPO3 v13.4 LTS and v14.3 LTS. It also fixes
-two defects that were already silent on TYPO3 v13.
+several defects, two of which were already silent on TYPO3 v13.
 
 Breaking Changes
 ----------------
@@ -30,9 +30,26 @@ Breaking Changes
   ``getRequest()``, ``getFrontendUser()`` and ``getNormalizedParams()``
 - **Dropped** the unused ``typo3/cms-extbase`` and ``typo3/cms-extensionmanager``
   requirements - no class of either package is referenced
+- **Removed** the site set settings ``contexts.matchMode`` and
+  ``contexts.cacheLifetimeModifier`` - neither was ever read by the extension
+- :php:`Configuration::registerContextType()` **no longer writes** the FlexForm
+  file into ``TCA[tx_contexts_contexts][columns][type_conf][config][ds]``; the
+  data structure is resolved from the context type registry instead
 
 Bug Fixes
 ---------
+
+- **Context records can be edited on TYPO3 v14.3 again** - ``ds_pointerField``
+  and the multi-entry ``ds`` array were removed in TYPO3 v14.0
+  (:issue:`107047`), so every read of ``tx_contexts_contexts.type_conf`` threw
+  an ``InvalidTcaException``. ``FlexFormDataStructureEventListener`` resolves
+  the data structure through the PSR-14 ``BeforeFlexFormDataStructure*`` events,
+  which behave identically on v13.4 and v14.3
+- **Frontend caches are invalidated when a context record changes** - saving,
+  deleting or restoring a context flushes the ``pages`` cache group. TYPO3
+  caches the :php:`ModifyTypoScriptConfigEvent` result under an identifier
+  derived from the TypoScript sources, so a new or renamed GET parameter
+  context previously never reached :typoscript:`config.linkVars`
 
 - **Session context matches again** - the frontend user is read from the
   ``frontend.user`` request attribute instead of the ``TypoScriptFrontendController``
@@ -59,6 +76,10 @@ Improvements
 - CI matrix covers TYPO3 ``^13.4`` and ``^14.3`` on PHP 8.2 - 8.5
 - :file:`composer.json` declares ``extra.typo3/cms.version`` and
   ``extra.typo3/cms.Package.providesPackages`` (:issue:`108345`)
+- Rector and Fractor run the TYPO3 v14 rule sets; the one rule that may not be
+  applied while TYPO3 v13.4 is supported is skipped explicitly
+- PHPStan enables ``reportUnmatchedIgnoredErrors`` and drops the 27 ignore
+  patterns that no longer matched anything
 - DDEV development environment provides TYPO3 v13 and v14 instances
 
 Version 4.0.0

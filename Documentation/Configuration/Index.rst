@@ -22,7 +22,7 @@ in your site configuration. Add the contexts Site Set to your site:
      contexts:
        debug: false
 
-The following settings are available:
+The following setting is available:
 
 .. confval:: contexts.debug
    :name: siteset-contexts-debug
@@ -34,23 +34,12 @@ The following settings are available:
    ``<!-- Contexts Extension Debug Mode Active -->`` is added to the
    page header. Use in development only.
 
-.. confval:: contexts.matchMode
+.. note::
 
-   :type: string
-   :Default: all
-
-   How multiple contexts are evaluated when checking visibility:
-
-   - ``all``: All assigned contexts must match (AND logic)
-   - ``any``: At least one context must match (OR logic)
-
-.. confval:: contexts.cacheLifetimeModifier
-
-   :type: integer
-   :Default: 0
-
-   Modify cache lifetime when contexts are active (in seconds).
-   ``0`` means no modification.
+   Version 5.0.0 removed the ``contexts.matchMode`` and
+   ``contexts.cacheLifetimeModifier`` settings. Neither of them was ever
+   read by the extension. Remove them from your site configuration; they
+   have no replacement.
 
 Page and Content Element Settings
 =================================
@@ -91,6 +80,19 @@ this through several mechanisms:
 
 3. **Menu filtering**: Menu items are filtered based on context
    visibility settings, so navigation reflects the current context.
+
+4. **Cache invalidation on context changes**: TYPO3 caches the result
+   of :php:`ModifyTypoScriptConfigEvent` - and with it the
+   :typoscript:`config.linkVars` entries this extension adds - under an
+   identifier derived from the TypoScript sources, not from the context
+   records. Saving, deleting or restoring a context record therefore
+   flushes the ``pages`` cache group (``hash``, ``pages``, ``rootline``
+   and ``typoscript``) from the DataHandler hook. No manual cache flush
+   is needed after adding a GET parameter context.
+
+.. versionadded:: 5.0.0
+   Before 5.0.0 a new or renamed GET parameter context did not reach
+   :typoscript:`config.linkVars` until the caches were flushed by hand.
 
 .. tip::
 

@@ -72,7 +72,7 @@ of the ``TypoScriptFrontendController``
 Fixed Behaviour
 ---------------
 
-Two defects that were silent on v13 are fixed by this release:
+Four defects are fixed by this release:
 
 *   The **session context** and the ``use_session`` persistence of the GET
     parameter context read the frontend user from the removed
@@ -84,6 +84,24 @@ Two defects that were silent on v13 are fixed by this release:
     links. They now use
     :php:`\TYPO3\CMS\Frontend\Event\BeforePageCacheIdentifierIsHashedEvent`
     and :php:`\TYPO3\CMS\Frontend\Event\ModifyTypoScriptConfigEvent`.
+*   The **FlexForm of the context type configuration** was selected via
+    ``ds_pointerField``, removed in TYPO3 v14.0 (:issue:`107047`). On v14.3
+    every read of ``tx_contexts_contexts.type_conf`` threw an
+    ``InvalidTcaException``, so context records could neither be rendered nor
+    saved. See :ref:`developer-flexform-data-structure`.
+*   **Frontend caches are invalidated when a context record changes.** The
+    result of :php:`ModifyTypoScriptConfigEvent` is cached under an identifier
+    derived from the TypoScript sources, so a new or renamed GET parameter
+    context previously did not reach ``config.linkVars`` until the caches were
+    flushed by hand. See :ref:`configuration-caching`.
+
+Removed Site Set Settings
+-------------------------
+
+``contexts.matchMode`` and ``contexts.cacheLifetimeModifier`` have been removed
+from ``Configuration/Sets/Contexts/``. Neither setting was ever read by the
+extension. Remove them from your site configuration; there is no replacement.
+``contexts.debug`` is unchanged.
 
 Removed Files
 -------------
@@ -265,7 +283,6 @@ Migration Steps
       settings:
         contexts:
           debug: false
-          matchMode: 'all'
 
 3. Remove any static TypoScript include (no longer needed with
    Site Sets)
