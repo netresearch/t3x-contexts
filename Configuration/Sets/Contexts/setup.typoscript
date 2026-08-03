@@ -1,11 +1,21 @@
 # TypoScript setup for contexts extension Site Set
 # This file is automatically included when the Site Set is activated
 
-# Context debugging output (only when enabled via Site Set settings)
-[{$contexts.debug} == 1]
+# Context debugging output, gated by the site setting.
+#
+# Deliberately NOT a TypoScript condition. Conditions have been Symfony
+# ExpressionLanguage since TYPO3 12 and do not resolve {$constant}, so the
+# previous `[{$contexts.debug} == 1]` could not be parsed — and because the
+# include tree is walked per request, it logged that failure twice on every
+# single hit, in the backend as well as the frontend. It never gated anything
+# either: a condition that fails to parse does not match, so the debug output
+# was unreachable regardless of the setting.
+#
+# A value-level `if` needs no condition: constants are substituted in TypoScript
+# values as they always were. Both states are covered by
+# Tests/Functional/SiteSetTypoScriptTest.php.
 page.headerData.1700000001 = TEXT
 page.headerData.1700000001 {
     value = <!-- Contexts Extension Debug Mode Active -->
-    wrap = |
+    if.isTrue = {$contexts.debug}
 }
-[global]
