@@ -544,7 +544,7 @@ class LogicalExpressionEvaluator
                 $token->negated = true;
             } else {
                 throw new LogicalExpressionEvaluatorException(
-                    "! can't preceded operators",
+                    "! can't precede operators",
                     4778280443,
                 );
             }
