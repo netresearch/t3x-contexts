@@ -46,6 +46,7 @@ final class DomainContextTest extends TestBase
         } else {
             unset($_SERVER['HTTP_HOST']);
         }
+
         parent::tearDown();
     }
 
@@ -334,6 +335,7 @@ final class DomainContextTest extends TestBase
             if ($originalHttpHost !== null) {
                 $_SERVER['HTTP_HOST'] = $originalHttpHost;
             }
+
             Container::reset();
         }
     }

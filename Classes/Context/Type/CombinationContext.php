@@ -98,8 +98,10 @@ class CombinationContext extends AbstractContext
             if ($dependency->context->getAlias() !== '') {
                 $values[$dependency->context->getAlias()] = $dependency->matched;
             }
+
             $values[$dependency->context->getUid()] = $dependency->matched;
         }
+
         // TODO: Should we try/catch parsing and evaluation?
         return $this->invert($this->evaluator->evaluate($values));
     }

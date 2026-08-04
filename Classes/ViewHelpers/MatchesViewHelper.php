@@ -69,6 +69,7 @@ class MatchesViewHelper extends AbstractViewHelper
         if ($alias !== null) {
             return (int) ContextMatcher::getInstance()->matches($alias);
         }
+
         return 0;
     }
 }

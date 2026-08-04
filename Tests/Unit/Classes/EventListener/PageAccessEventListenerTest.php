@@ -459,6 +459,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
         $pageInformation1 = new PageInformation();
         $pageInformation1->setPageRecord([]);
         $pageInformation1->setRootLine([]);
+
         $event1 = new AfterPageAndLanguageIsResolvedEvent($request, $pageInformation1);
         $listener($event1);
 
@@ -507,6 +508,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
         $pageInfo1 = new PageInformation();
         $pageInfo1->setPageRecord(['uid' => 1, 'title' => 'Page 1']);
         $pageInfo1->setRootLine([1 => ['uid' => 1, 'title' => 'Page 1']]);
+
         $event1 = new AfterPageAndLanguageIsResolvedEvent($request, $pageInfo1);
         $listener($event1);
 
@@ -514,6 +516,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
         $pageInfo2 = new PageInformation();
         $pageInfo2->setPageRecord(['uid' => 2, 'title' => 'Page 2']);
         $pageInfo2->setRootLine([1 => ['uid' => 2, 'title' => 'Page 2']]);
+
         $event2 = new AfterPageAndLanguageIsResolvedEvent($request, $pageInfo2);
         $listener($event2);
 

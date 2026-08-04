@@ -427,7 +427,7 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
     public function runWithExceptionNegatedOperator(): void
     {
         $this->expectException(LogicalExpressionEvaluatorException::class);
-        $this->expectExceptionMessage("! can't preceded operators");
+        $this->expectExceptionMessage("! can't precede operators");
 
         // This creates a situation where ! precedes an operator
         $strExpression = 'a !&& b';

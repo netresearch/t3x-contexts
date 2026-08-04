@@ -71,6 +71,7 @@ final class CrossExtensionIntegrationTest extends FunctionalTestCase
         if ($this->hasGeolocationExtension) {
             $this->testExtensionsToLoad[] = 'netresearch/contexts-geolocation';
         }
+
         if ($this->hasDeviceExtension) {
             $this->testExtensionsToLoad[] = 'netresearch/contexts-wurfl';
         }
@@ -280,7 +281,11 @@ final class CrossExtensionIntegrationTest extends FunctionalTestCase
 
         foreach ($contextTypes as $type => $config) {
             $className = (string) ($config['class'] ?? '');
-            if ($className === '' || !class_exists($className)) {
+            if ($className === '') {
+                continue;
+            }
+
+            if (!class_exists($className)) {
                 continue;
             }
 

@@ -59,6 +59,7 @@ return function (string $data): void {
         if (isset($_GET[$paramName])) {
             unset($_GET[$paramName]);
         }
+
         if (isset($_REQUEST[$paramName])) {
             unset($_REQUEST[$paramName]);
         }

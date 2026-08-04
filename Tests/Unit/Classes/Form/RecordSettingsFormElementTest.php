@@ -922,7 +922,11 @@ class TestableRecordSettingsFormElement extends RecordSettingsFormElement
         $visibleContexts = 0;
 
         foreach ($contexts as $context) {
-            if ($context->getDisabled() || $context->getHideInBackend()) {
+            if ($context->getDisabled()) {
+                continue;
+            }
+
+            if ($context->getHideInBackend()) {
                 continue;
             }
 

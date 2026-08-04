@@ -52,6 +52,7 @@ class ContextMatcher
         if (!self::$instance instanceof ContextMatcher) {
             self::$instance = new self();
         }
+
         return self::$instance;
     }
 

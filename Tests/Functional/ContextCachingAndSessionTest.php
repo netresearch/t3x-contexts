@@ -173,6 +173,7 @@ final class ContextCachingAndSessionTest extends FunctionalTestCase
         $configTree = new RootNode();
         $linkVars = new ChildNode('linkVars');
         $linkVars->setValue('L');
+
         $configTree->addChild($linkVars);
 
         $event = new ModifyTypoScriptConfigEvent(

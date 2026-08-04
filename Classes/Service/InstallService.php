@@ -57,6 +57,7 @@ class InstallService
                 if (\is_array($setting)) {
                     continue;
                 }
+
                 $setting = (string) $setting;
                 $flatColumns = Configuration::getFlatColumns($table, $setting);
                 $arSql[] = (string) $flatColumns[0] . ' tinytext';
