@@ -18,6 +18,7 @@ use Netresearch\Contexts\Form\CombinationFormElement;
 use Netresearch\Contexts\Form\DefaultSettingsFormElement;
 use Netresearch\Contexts\Form\RecordSettingsFormElement;
 use Netresearch\Contexts\Query\Restriction\ContextRestriction;
+use Netresearch\Contexts\Service\DataHandlerService;
 use Netresearch\Contexts\Xclass\Backend\Tree\Repository\PageTreeRepository;
 
 defined('TYPO3') || die('Access denied.');
@@ -59,9 +60,9 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1700000003] = [
 // DataHandler hooks for processing context settings during record save/update
 // Note: DataHandler still uses SC_OPTIONS hooks in v14, not PSR-14 events
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['contexts']
-    = Netresearch\Contexts\Service\DataHandlerService::class;
+    = DataHandlerService::class;
 
 // Command map hook: a deleted, undeleted, copied or moved context record must
 // invalidate the frontend caches just like an edited one does.
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['contexts']
-    = Netresearch\Contexts\Service\DataHandlerService::class;
+    = DataHandlerService::class;

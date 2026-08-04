@@ -14,46 +14,35 @@
 
 declare(strict_types=1);
 
-use Rector\DeadCode\Rector\Concat\RemoveConcatAutocastRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPublicMethodParameterRector;
+use Rector\DeadCode\Rector\Concat\RemoveConcatAutocastRector;
 use Rector\DeadCode\Rector\StaticCall\RemoveParentCallWithoutParentRector;
-use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
-use Rector\Set\ValueObject\LevelSetList;
-use Rector\Set\ValueObject\SetList;
 use Ssch\TYPO3Rector\CodeQuality\General\InjectMethodToConstructorInjectionRector;
 use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
 use Ssch\TYPO3Rector\TYPO314\v0\MigrateLabelReferenceToDomainSyntaxRector;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->paths([
-        __DIR__ . '/../Classes',
-        __DIR__ . '/../Configuration',
-        __DIR__ . '/../Tests',
-    ]);
+$configure = require_once __DIR__ . '/../vendor/netresearch/typo3-ci-workflows/config/rector/rector.php';
 
-    $rectorConfig->skip([
-        __DIR__ . '/../ext_emconf.php',
-        __DIR__ . '/../.Build',
-        __DIR__ . '/../vendor',
-    ]);
+return static function (RectorConfig $rectorConfig) use ($configure): void {
+    // Shared org base config: paths, code-quality sets, rule skips,
+    // and the package's ergebnis-free phpstan-rector.neon.
+    $configure($rectorConfig, __DIR__ . '/..');
 
-    $rectorConfig->phpstanConfig(__DIR__ . '/phpstan.neon');
-    $rectorConfig->importNames();
-    $rectorConfig->removeUnusedImports();
+    // paths() replaces the shared list — re-declared to keep Tests/ in scope,
+    // which the shared $projectRoot default leaves out.
+    $rectorConfig->paths(array_merge(
+        [
+            __DIR__ . '/../Classes',
+            __DIR__ . '/../Configuration',
+            __DIR__ . '/../Resources',
+            __DIR__ . '/../Tests',
+        ],
+        glob(__DIR__ . '/../ext_*.php') ?: [],
+    ));
 
-    // Define what rule sets will be applied - upgrade to PHP 8.2 and TYPO3 v14
     $rectorConfig->sets([
-        // Dead code removal
-        SetList::DEAD_CODE,
-
-        // Code quality improvements
-        SetList::CODE_QUALITY,
-
-        // PHP level upgrades
-        LevelSetList::UP_TO_PHP_82,
-
         // TYPO3 v14 migrations (extension supports ^13.4 || ^14.3).
         //
         // UP_TO_TYPO3_14 is UP_TO_TYPO3_13 plus the TYPO3_14 set. The only
@@ -71,11 +60,7 @@ return static function (RectorConfig $rectorConfig): void {
         Typo3SetList::GENERAL,
     ]);
 
-    // Skip some rules that may cause issues or require manual review
     $rectorConfig->skip([
-        // Skip constructor promotion - keep explicit property declarations for clarity
-        ClassPropertyAssignToConstructorPromotionRector::class,
-
         // Skip removing (string) casts in concatenation — PHPStan level 10 requires
         // explicit casts when concatenating mixed values (from $arRow, $GLOBALS, etc.)
         RemoveConcatAutocastRector::class,

@@ -43,6 +43,7 @@ final class IpContextTest extends TestBase
         } else {
             unset($_SERVER['REMOTE_ADDR']);
         }
+
         parent::tearDown();
     }
 

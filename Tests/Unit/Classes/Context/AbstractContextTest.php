@@ -1011,6 +1011,7 @@ final class AbstractContextTest extends UnitTestCase
                 if ($key === 'contexts-101-1000000001') {
                     return true;
                 }
+
                 if ($key === 'contexts-102-1000000002') {
                     return false;
                 }

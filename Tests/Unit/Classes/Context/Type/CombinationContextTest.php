@@ -54,6 +54,7 @@ final class CombinationContextTest extends TestBase
             'XOR both false' => ['ctx1 >< ctx2', false, false, false],
         ];
     }
+
     // -----------------------------------------------------------------------
     // getDependencies() tests
     // -----------------------------------------------------------------------

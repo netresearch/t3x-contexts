@@ -23,37 +23,37 @@ namespace Netresearch\Contexts\Context;
  * @license Netresearch https://www.netresearch.de
  * @link    https://www.netresearch.de
  */
-final class Setting
+final readonly class Setting
 {
     /**
      */
-    protected AbstractContext $context;
+    private AbstractContext $context;
 
     /**
      * The uid of the setting record
      */
-    protected int $uid;
+    private int $uid;
 
     /**
      * The name of table the setting is for
      */
-    protected string $foreignTable;
+    private string $foreignTable;
 
     /**
      * The uid of the record the setting is for
      * (0 for default setting)
      */
-    protected int $foreignUid;
+    private int $foreignUid;
 
     /**
      * The name of the setting
      */
-    protected string $name;
+    private string $name;
 
     /**
      * Whether the record is enabled by this setting
      */
-    protected bool $enabled;
+    private bool $enabled;
 
     /**
      */

@@ -242,9 +242,11 @@ class Container extends ArrayObject
                         ];
                         $unresolvedDeps--;
                     }
+
                     // FIXME: what happens when dependency context is not
                     // available at all (e.g. deleted)?
                 }
+
                 if ($unresolvedDeps > 0) {
                     // not all dependencies available yet, so skip this
                     // one for now

@@ -180,6 +180,7 @@ class DataHandlerService
                 if (isset($flatSettingColumns[$field])) {
                     continue;
                 }
+
                 $queryBuilder = $connectionPool->getQueryBuilderForTable('tx_contexts_contexts');
                 $row = $queryBuilder->select('uid')
                     ->from('tx_contexts_settings')
@@ -326,6 +327,7 @@ class DataHandlerService
                     $fieldSettings[$setting['name']] = $setting['uid'];
                 }
             }
+
             $connenction = $connectionPool->getConnectionForTable('tx_contexts_settings');
             foreach ($fields as $field => $enabled) {
                 $field = (string) $field;

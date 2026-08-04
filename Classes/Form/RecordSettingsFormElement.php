@@ -97,7 +97,11 @@ class RecordSettingsFormElement extends AbstractFormElement
 
         /* @var AbstractContext $context */
         foreach ($contexts as $context) {
-            if ($context->getDisabled() || $context->getHideInBackend()) {
+            if ($context->getDisabled()) {
+                continue;
+            }
+
+            if ($context->getHideInBackend()) {
                 continue;
             }
 
@@ -140,6 +144,7 @@ class RecordSettingsFormElement extends AbstractFormElement
                 . $contSettings
                 . '</tr>';
         }
+
         if ($visibleContexts === 0) {
             $noContextsLabel = $this->getLanguageService()->sL('LLL:' . Configuration::LANG_FILE . ':no_contexts');
             $content .= <<<HTML

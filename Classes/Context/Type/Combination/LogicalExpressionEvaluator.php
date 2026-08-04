@@ -202,6 +202,7 @@ class LogicalExpressionEvaluator
                         $lastOperator,
                     ];
                 }
+
                 $operator[0] = '';
             }
 
@@ -284,6 +285,7 @@ class LogicalExpressionEvaluator
                 if (!\array_key_exists($tokenKey, $values)) {
                     $values[$tokenKey] = true;
                 }
+
                 $value = $values[$tokenKey];
                 if ($value === 'disabled') {
                     // context is disabled, so treat it as matching
@@ -292,34 +294,40 @@ class LogicalExpressionEvaluator
                     $value = !$value;
                 }
             }
+
             switch ($this->operator) {
                 case self::T_AND:
                     if (!$value) {
                         break 2;
                     }
+
                     break;
                 case self::T_OR:
                     if ($value) {
                         break 2;
                     }
+
                     break;
                 case self::T_XOR:
                     if ($i > 1) {
                         throw new LogicalExpressionEvaluatorException(
-                            'Can\'t evaluate more than two items by xor',
+                            "Can't evaluate more than two items by xor",
                             3563712913,
                         );
                     }
+
                     if ($i === 0) {
                         $lastValue = $value;
                     } else {
                         $value = $value !== $lastValue;
                     }
+
                     break;
                 default:
                     break 2;
             }
         }
+
         return $this->negated ? !$value : $value;
     }
 
@@ -340,6 +348,7 @@ class LogicalExpressionEvaluator
                 if ($token->parentScope instanceof LogicalExpressionEvaluator) {
                     $str = '(' . $str . ')';
                 }
+
                 if ($token->negated) {
                     $str = '!' . $str;
                 }
@@ -358,6 +367,7 @@ class LogicalExpressionEvaluator
                 $str = '?';
                 // @codeCoverageIgnoreEnd
             }
+
             $parts[] = $str;
         }
 
@@ -474,6 +484,7 @@ class LogicalExpressionEvaluator
                         1651471071,
                     );
                 }
+
                 $this->pushToken($token);
                 break;
 
@@ -506,6 +517,7 @@ class LogicalExpressionEvaluator
                                 7706253055,
                             );
                         }
+
                         $this->pushToken($token);
                     } else {
                         throw new LogicalExpressionEvaluatorException(
@@ -532,12 +544,14 @@ class LogicalExpressionEvaluator
                 $token->negated = true;
             } else {
                 throw new LogicalExpressionEvaluatorException(
-                    '! can\'t preceded operators',
+                    "! can't preceded operators",
                     4778280443,
                 );
             }
+
             $this->nextTokenNegated = false;
         }
+
         $this->tokens[] = $token;
     }
 

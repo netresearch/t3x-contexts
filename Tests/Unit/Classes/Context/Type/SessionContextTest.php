@@ -122,6 +122,7 @@ final class SessionContextTest extends UnitTestCase
     {
         $obj = new stdClass();
         $obj->property = 'value';
+
         $context = $this->createSessionContext('my_session_var', $obj, true);
 
         self::assertTrue($context->match(), 'Object value session variable should match (is set)');
@@ -240,6 +241,7 @@ final class SessionContextTest extends UnitTestCase
                 if ($fieldNameArg === 'field_variable') {
                     return $this->mockVariableName;
                 }
+
                 return $default;
             }
 

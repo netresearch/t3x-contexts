@@ -20,6 +20,7 @@ use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Query\Restriction\ContextRestriction;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
@@ -253,13 +254,13 @@ final class ContextRestrictionTest extends UnitTestCase
 
         $expressionBuilder->expects(self::once())
             ->method('eq')
-            ->with('tx_contexts_enable', '\'\'')
-            ->willReturn('= \'\'');
+            ->with('tx_contexts_enable', "''")
+            ->willReturn("= ''");
 
         $expressionBuilder->expects(self::once())
             ->method('literal')
             ->with('')
-            ->willReturn('\'\'');
+            ->willReturn("''");
 
         // Should create OR expression for enable constraints only
         $expressionBuilder->expects(self::once())
@@ -314,17 +315,17 @@ final class ContextRestrictionTest extends UnitTestCase
 
         $expressionBuilder->expects(self::exactly(2))
             ->method('eq')
-            ->willReturn('= \'\'');
+            ->willReturn("= ''");
 
         $expressionBuilder->expects(self::exactly(2))
             ->method('literal')
             ->with('')
-            ->willReturn('\'\'');
+            ->willReturn("''");
 
         // Should build inSet for both enable and disable columns
         $expressionBuilder->expects(self::exactly(2))
             ->method('inSet')
-            ->willReturnCallback(fn($column, $value) => 'FIND_IN_SET(' . (string) $value . ', ' . (string) $column . ')');
+            ->willReturnCallback(fn($column, $value): string => 'FIND_IN_SET(' . (string) $value . ', ' . (string) $column . ')');
 
         // Should create OR expressions: one for enable, one for disable
         $expressionBuilder->expects(self::exactly(2))
@@ -498,14 +499,14 @@ final class ContextRestrictionTest extends UnitTestCase
         $inSetCalls = [];
         $expressionBuilder->expects(self::exactly(2))
             ->method('inSet')
-            ->willReturnCallback(function ($column, $value) use (&$inSetCalls) {
+            ->willReturnCallback(function ($column, $value) use (&$inSetCalls): string {
                 $inSetCalls[] = ['column' => $column, 'value' => $value];
                 return 'FIND_IN_SET(' . (string) $value . ', ' . (string) $column . ')';
             });
 
         $expressionBuilder->method('isNull')->willReturn('IS NULL');
-        $expressionBuilder->method('eq')->willReturn('= \'\'');
-        $expressionBuilder->method('literal')->willReturn('\'\'');
+        $expressionBuilder->method('eq')->willReturn("= ''");
+        $expressionBuilder->method('literal')->willReturn("''");
         $expressionBuilder->method('or')->willReturn($orExpression);
         $expressionBuilder->method('and')->willReturn($compositeExpression);
 
@@ -538,7 +539,7 @@ final class ContextRestrictionTest extends UnitTestCase
     /**
      * Create a mock context with specified UID
      */
-    private function createMockContext(int $uid): object
+    private function createMockContext(int $uid): MockObject
     {
         $context = $this->getMockBuilder(AbstractContext::class)
             ->disableOriginalConstructor()
