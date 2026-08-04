@@ -230,3 +230,7 @@ Nearest AGENTS.md wins. User prompts override files.
 - [TYPO3 Coding Guidelines](https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/CodingGuidelines/Index.html)
 - [Extension Documentation](https://docs.typo3.org/p/netresearch/contexts/main/en-us/)
 - [GitHub Issues](https://github.com/netresearch/t3x-contexts/issues)
+
+## Commit Signing
+
+Signed commits are required: `git commit -S --signoff`. The `require-signed-commits` ruleset on the default branch rejects unsigned commits at merge time, and the DCO check additionally requires the `Signed-off-by` trailer. Quickest setup is SSH signing — register your SSH key as a *signing key* on your GitHub account, then `git config gpg.format ssh && git config user.signingkey ~/.ssh/<key>.pub`.
