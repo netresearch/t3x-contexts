@@ -590,9 +590,12 @@ final class DataHandlerServiceTest extends TestCase
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResultFalse();
         $connection = $this->createMock(Connection::class);
 
+        // The lookup queries tx_contexts_settings, so the QueryBuilder must be
+        // created for that table (issue #168: was tx_contexts_contexts before).
         $this->connectionPool
+            ->expects(self::once())
             ->method('getQueryBuilderForTable')
-            ->with('tx_contexts_contexts')
+            ->with('tx_contexts_settings')
             ->willReturn($queryBuilder);
 
         $this->connectionPool
@@ -846,7 +849,7 @@ final class DataHandlerServiceTest extends TestCase
 
         $this->connectionPool
             ->method('getQueryBuilderForTable')
-            ->with('tx_contexts_contexts')
+            ->with('tx_contexts_settings')
             ->willReturn($queryBuilder);
 
         $this->connectionPool
