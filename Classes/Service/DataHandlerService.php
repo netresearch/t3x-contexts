@@ -181,7 +181,7 @@ class DataHandlerService
                     continue;
                 }
 
-                $queryBuilder = $connectionPool->getQueryBuilderForTable('tx_contexts_contexts');
+                $queryBuilder = $connectionPool->getQueryBuilderForTable('tx_contexts_settings');
                 $row = $queryBuilder->select('uid')
                     ->from('tx_contexts_settings')
                     ->where(
@@ -328,18 +328,18 @@ class DataHandlerService
                 }
             }
 
-            $connenction = $connectionPool->getConnectionForTable('tx_contexts_settings');
+            $connection = $connectionPool->getConnectionForTable('tx_contexts_settings');
             foreach ($fields as $field => $enabled) {
                 $field = (string) $field;
                 if (\array_key_exists($field, $fieldSettings)) {
-                    $connenction->update(
+                    $connection->update(
                         'tx_contexts_settings',
                         ['enabled' => (int) $enabled],
                         ['uid' => (int) $fieldSettings[$field]],
                         [Connection::PARAM_INT],
                     );
                 } else {
-                    $connenction->insert(
+                    $connection->insert(
                         'tx_contexts_settings',
                         [
                             'context_uid' => $contextId,
