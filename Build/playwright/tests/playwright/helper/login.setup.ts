@@ -113,6 +113,10 @@ setup('authenticate with TYPO3 backend', async ({ page }) => {
     const field = page.locator(selector).first();
     if (await field.isVisible({ timeout: 1000 }).catch(() => false)) {
       passwordField = field;
+      // The value logged is the CSS selector that matched, not a credential —
+      // `passwordSelectors` holds strings like `input[type="password"]`. The
+      // alert comes from the variable name, not from the data.
+      // codeql[js/clear-text-logging]
       console.log(`Found password field with selector: ${selector}`);
       break;
     }
@@ -122,8 +126,10 @@ setup('authenticate with TYPO3 backend', async ({ page }) => {
     throw new Error('Could not find password field');
   }
 
-  // Fill login credentials
-  console.log(`Logging in as: ${config.admin.username}`);
+  // Fill login credentials. The user name is not echoed: it comes from the
+  // environment, it ends up in a public CI log, and knowing which account was
+  // used adds nothing to a failure that the screenshot does not already show.
+  console.log('Logging in as the configured admin user');
   await usernameField.fill(config.admin.username);
   await passwordField.fill(config.admin.password);
 
