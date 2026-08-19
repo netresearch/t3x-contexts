@@ -1,4 +1,4 @@
-<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-28 -->
+<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-08-19 -->
 
 # AGENTS.md — Tests/
 
@@ -35,8 +35,8 @@ export typo3DatabasePassword=root
 ## Build & Tests
 
 ```bash
-# Run all tests
-composer test
+# Run all tests (unit + functional)
+make test
 
 # Run specific suites
 composer ci:test:php:unit           # Unit tests only (~fast)
@@ -91,7 +91,7 @@ self::assertInstanceOf(Context::class, $object);
 ## PR/Commit Checklist
 
 - [ ] New functionality has corresponding tests
-- [ ] All tests pass: `composer test`
+- [ ] All tests pass: `make test`
 - [ ] No skipped tests without justification
 - [ ] Fixtures use `use_session=0` for session-based features
 

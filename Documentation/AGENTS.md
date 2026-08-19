@@ -1,4 +1,4 @@
-<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-28 -->
+<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-08-19 -->
 
 # AGENTS.md — Documentation/
 
@@ -22,8 +22,8 @@ Documentation/
 ## Setup & Environment
 
 ```bash
-# Render locally with DDEV
-ddev docs
+# Render locally with DDEV (or: make docs)
+ddev render-docs
 
 # Or with Docker directly
 docker run --rm \
@@ -39,7 +39,7 @@ open Documentation-GENERATED-temp/Index.html
 
 ```bash
 # Validate RST syntax
-ddev docs  # Warnings shown during render
+ddev render-docs  # Warnings shown during render
 
 # Check output directory (TYPO3 convention)
 ls Documentation-GENERATED-temp/
@@ -131,7 +131,7 @@ Query Parameter Context
 
 ## PR/Commit Checklist
 
-- [ ] RST renders without warnings: `ddev docs`
+- [ ] RST renders without warnings: `ddev render-docs`
 - [ ] Cross-references resolve (no broken `:ref:` links)
 - [ ] Code examples have language specified
 - [ ] Sentence case headings

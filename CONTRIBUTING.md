@@ -6,7 +6,7 @@ Thank you for your interest in contributing to the TYPO3 Contexts extension!
 
 1. Clone the repository
 2. Install dependencies: `composer install`
-3. Run tests: `composer test`
+3. Run tests: `composer ci:test:php:unit` (or `make test` inside DDEV)
 
 ## Code Quality
 
