@@ -1,4 +1,4 @@
-<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-28 -->
+<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-08-19 -->
 
 # AGENTS.md — Classes/
 
@@ -7,6 +7,7 @@ Backend PHP code for the Contexts extension.
 ## Overview
 
 This directory contains the core PHP implementation:
+- **Api/**: Public extension API (`Configuration`, `ContextMatcher`, `Record`)
 - **Context/**: Context type implementations (GetParam, Domain, IP, etc.)
 - **Context/Type/**: Concrete context type classes extending AbstractContext
 - **Service/**: Business logic (matching, data handling)
@@ -16,6 +17,7 @@ This directory contains the core PHP implementation:
 - **Query/Restriction/**: Doctrine DBAL query restrictions for context-based filtering
 - **ExpressionLanguage/**: Symfony ExpressionLanguage providers for TypoScript conditions
 - **ViewHelpers/**: Fluid ViewHelpers for context-aware rendering
+- **Xclass/**: Core class extensions (backend page tree repository)
 
 ## Setup & Environment
 
@@ -28,7 +30,7 @@ ddev start && ddev install-v13
 
 ```bash
 composer ci:test:php:cgl      # PHP-CS-Fixer
-composer ci:test:php:phpstan  # PHPStan level 9
+composer ci:test:php:phpstan  # PHPStan level 10
 composer ci:test:php:unit     # Unit tests for this code
 ```
 

@@ -1,4 +1,4 @@
-<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-28 -->
+<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-08-19 -->
 
 # AGENTS.md - Configuration/
 
@@ -32,6 +32,10 @@ Configuration/
 ├── RequestMiddlewares.php # PSR-15 middleware config
 └── ExpressionLanguage.php # Symfony ExpressionLanguage providers
 ```
+
+## Setup
+
+Configuration files here are loaded by TYPO3 at bootstrap — there is no separate build step. Test changes against the DDEV instances (`ddev start`, `ddev install-v13` / `ddev install-v14`, backend at `https://v13.contexts.ddev.site/typo3/`). TCA, FlexForm, and Services.yaml changes only take effect after a cache flush (see below).
 
 ## Build & Tests
 
