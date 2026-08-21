@@ -3,17 +3,22 @@
 
 # Context debugging output, gated by the site setting.
 #
-# Deliberately NOT a TypoScript condition. Conditions have been Symfony
-# ExpressionLanguage since TYPO3 12 and do not resolve {$constant}, so the
-# previous `[{$contexts.debug} == 1]` could not be parsed — and because the
-# include tree is walked per request, it logged that failure twice on every
-# single hit, in the backend as well as the frontend. It never gated anything
-# either: a condition that fails to parse does not match, so the debug output
-# was unreachable regardless of the setting.
+# Deliberately a value-level `if`, not a TypoScript condition — but not because
+# conditions cannot read constants. They can: IncludeTreeSetupConditionConstant-
+# SubstitutionVisitor replaces {$constant} before the ExpressionLanguage ever
+# sees the expression, and `[{$contexts.debug} == 1]` works once the setting
+# resolves to a scalar.
 #
-# A value-level `if` needs no condition: constants are substituted in TypoScript
-# values as they always were. Both states are covered by
-# Tests/Functional/SiteSetTypoScriptTest.php.
+# The reason is what happens when it does NOT. A constant with no scalar value
+# is substituted with the empty string, and the condition becomes `[ == 1]` — a
+# syntax error. The include tree is walked per request, so that error is logged
+# twice on every single hit, in the backend as well as the frontend, and the
+# gated output is unreachable regardless of the setting. That is not a
+# hypothetical: it is what this extension shipped, because the settings
+# definitions lived under the wrong file name (see settings.definitions.yaml).
+#
+# A value-level `if` fails quietly in the same situation instead of flooding the
+# log. Both states are covered by Tests/Functional/SiteSetTypoScriptTest.php.
 page.headerData.1700000001 = TEXT
 page.headerData.1700000001 {
     value = <!-- Contexts Extension Debug Mode Active -->
