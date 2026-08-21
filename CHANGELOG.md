@@ -1,3 +1,19 @@
+# 5.0.2
+
+## Bug Fixes
+
+- Fixed the site set's settings file name. Definitions - `type`, `default`, `label` - are read from `settings.definitions.yaml`, while `settings.yaml` supplies plain default values. The file carried definition syntax under the value name, so `contexts.debug` never resolved to a scalar. In a TypoScript condition the constant was then substituted with the empty string, leaving `[ == 1]`; the include tree is walked per request, so this syntax error was logged twice on every single hit, in the backend as well as the frontend, and the debug output it guarded was unreachable whatever the setting said
+- Changed the debug output to a value-level `if.isTrue` instead of a TypoScript condition. A condition reading a constant is valid - the core substitutes `{$constant}` before evaluating - but it fails loudly when the constant has no scalar value, which is how the flood above came about. A value-level `if` fails quietly in the same situation
+- Fixed `DataHandlerService::saveRecordSettings()`, which built its QueryBuilder for `tx_contexts_contexts` although the query runs against `tx_contexts_settings`. Both tables on one connection made this work by accident; it selects the wrong connection as soon as they are mapped to different ones (#168)
+- Corrected the grammar of the combination evaluator's exception message
+
+## Technical Changes
+
+- Dropped the dev dependencies the shared `netresearch/typo3-ci-workflows` package already provides
+- Adopted the shared org Rector configuration
+- CI: gitleaks and zizmor scanners, the fork-PR labeler fix, and the `checks.yml` gate synchronised from the organisation's TYPO3 extension template
+- AGENTS.md files synchronised, agent-harness verification adopted
+
 # 5.0.1
 
 ## Fixed
