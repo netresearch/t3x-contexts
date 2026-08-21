@@ -57,8 +57,12 @@ final class SiteSetTypoScriptTest extends FunctionalTestCase
             \dirname(__DIR__, 2) . '/Configuration/Sets/Contexts/setup.typoscript',
         );
 
-        // A condition line is `[...]` at the start of a line. The parser rejects
-        // a constant inside one, so the set must not contain any.
+        // A condition line is `[...]` at the start of a line. The parser accepts
+        // a constant inside one — core substitutes it first — but an unresolvable
+        // constant substitutes to nothing, and `[ == 1]` is then a syntax error
+        // logged on every request, front end and back end alike. A value-level
+        // `if` fails quietly instead. This is a robustness choice, not a
+        // limitation of TypoScript.
         self::assertSame(
             0,
             preg_match('/^\[[^\]]*\{\$/m', $setup),
