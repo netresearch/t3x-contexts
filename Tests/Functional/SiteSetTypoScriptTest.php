@@ -78,7 +78,23 @@ final class SiteSetTypoScriptTest extends FunctionalTestCase
         self::assertStringNotContainsString(self::DEBUG_MARKER, $this->renderWithDebug(false));
     }
 
-    private function renderWithDebug(bool $debug): string
+    /**
+     * The case the two tests above cannot see: both write the site's own
+     * settings.yaml, and that value masks whatever the set contributes. A site
+     * that only enables the set falls back to the set's default — and that
+     * default only exists if the definitions file carries the name TYPO3 reads
+     * definitions from, settings.definitions.yaml. Under any other name the set
+     * contributes the definition map itself as the value, `{$contexts.debug}`
+     * substitutes to a non-empty string, isTrue matches and the marker ships to
+     * every page of every site that enabled the set.
+     */
+    #[Test]
+    public function theDebugMarkerIsAbsentWhenTheSettingIsNotConfigured(): void
+    {
+        self::assertStringNotContainsString(self::DEBUG_MARKER, $this->renderWithDebug(null));
+    }
+
+    private function renderWithDebug(?bool $debug): string
     {
         $this->importCSVDataSet(__DIR__ . '/Fixtures/pages.csv');
 
@@ -99,10 +115,12 @@ final class SiteSetTypoScriptTest extends FunctionalTestCase
                 ]],
             ], 99, 2),
         );
-        file_put_contents(
-            $siteConfigPath . '/settings.yaml',
-            Yaml::dump(['contexts' => ['debug' => $debug]], 99, 2),
-        );
+        if ($debug !== null) {
+            file_put_contents(
+                $siteConfigPath . '/settings.yaml',
+                Yaml::dump(['contexts' => ['debug' => $debug]], 99, 2),
+            );
+        }
 
         // The site configuration, its settings and the resolved TypoScript are
         // cached, and the cache outlives a single test in the shared instance —

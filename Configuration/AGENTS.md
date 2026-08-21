@@ -25,7 +25,7 @@ Configuration/
 │       └── Empty.xml     # Empty/default context
 ├── Sets/Contexts/        # TYPO3 v13+ Site Sets
 │   ├── config.yaml       # Set metadata
-│   ├── settings.yaml     # Configurable settings
+│   ├── settings.definitions.yaml  # Setting definitions (type, default, label)
 │   └── setup.typoscript  # TypoScript setup
 ├── Services.yaml         # Symfony DI configuration
 ├── Icons.php             # Icon registry
@@ -177,10 +177,16 @@ label: Contexts - Multi-channel content visibility
 dependencies:
   - typo3/fluid-styled-content
 
-# Configuration/Sets/Contexts/settings.yaml
+# Configuration/Sets/Contexts/settings.definitions.yaml
+# A definition — type, default, label — belongs in this file and no other name.
+# TYPO3 reads plain default VALUES from a set's settings.yaml, so definition
+# syntax under that name becomes the value itself: the site then resolves
+# contexts.debug to the map, not to false.
 settings:
-  contexts:
-    enableCache: true
+  contexts.enableCache:
+    type: bool
+    default: true
+    label: 'Cache resolved contexts'
 ```
 
 ## Security & Safety
