@@ -99,7 +99,7 @@
         },
         "typo3/cms": {
             "extension-key": "contexts",
-            "version": "5.0.1",
+            "version": "5.0.2",
             "Package": {
                 "providesPackages": {}
             }
