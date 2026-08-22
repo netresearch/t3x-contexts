@@ -15,8 +15,8 @@ in your site configuration. Add the contexts Site Set to your site:
 .. code-block:: yaml
    :caption: config/sites/<identifier>/config.yaml
 
-   imports:
-     - { resource: "EXT:contexts/Configuration/Sets/Contexts/config.yaml" }
+   dependencies:
+     - netresearch/contexts
 
    settings:
      contexts:
