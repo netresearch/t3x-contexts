@@ -56,20 +56,8 @@ Alternatively, add it to your site's :file:`config/sites/<identifier>/config.yam
 
 .. code-block:: yaml
 
-   imports:
-     - { resource: "EXT:contexts/Configuration/Sets/Contexts/config.yaml" }
-
-.. _installation-classic:
-
-Classic TypoScript Include (TYPO3 v13+)
-=======================================
-
-For traditional TypoScript setup, include the static template:
-
-1. Go to :guilabel:`Web > Template`
-2. Select your root page
-3. Edit the template record
-4. In :guilabel:`Includes`, add "Contexts" to the selected items
+   dependencies:
+     - netresearch/contexts
 
 .. _installation-database:
 

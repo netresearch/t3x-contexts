@@ -273,8 +273,8 @@ Migration Steps
 
    .. code-block:: yaml
 
-      imports:
-        - { resource: "EXT:contexts/Configuration/Sets/Contexts/config.yaml" }
+      dependencies:
+        - netresearch/contexts
 
 2. Configure settings in your site configuration:
 
