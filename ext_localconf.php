@@ -34,9 +34,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][TYPO3\CMS\Backend\Tree\Repository\
 ];
 
 // Contexts query restriction - applied to all database queries
-if (!isset($GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][ContextRestriction::class])) {
-    $GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][ContextRestriction::class] = [];
-}
+$GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][ContextRestriction::class] ??= [];
 
 // Register custom form elements for TCA
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1700000001] = [
