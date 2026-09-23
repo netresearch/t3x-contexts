@@ -13,7 +13,7 @@ This project uses automated quality gates as compensating controls for human cod
 4. **Architecture Tests** — PHPat enforces layer boundaries
 5. **Mutation Testing** — Infection verifies test quality
 6. **CodeQL** — Automated security vulnerability scanning
-7. **Gitleaks** — Secret scanning in code and history
+7. **Betterleaks** — Secret scanning in code and history
 8. **Dependency Review** — License and vulnerability checking
 9. **CaptainHook** — Pre-commit hooks enforce local quality gates
 

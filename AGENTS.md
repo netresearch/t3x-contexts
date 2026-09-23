@@ -108,7 +108,7 @@ Component map and dependency rules: see [docs/ARCHITECTURE.md](docs/ARCHITECTURE
 | Workflow | Purpose |
 |----------|---------|
 | `ci.yml` | Test matrix via reusable `netresearch/typo3-ci-workflows` (PHP 8.2–8.5 × TYPO3 ^13.4/^14.3, MySQL functional tests, coverage upload) |
-| `checks.yml` | Consolidated security/quality gate (gitleaks, zizmor, fuzz, license check, CodeQL, Scorecard, dependency review, PR quality) |
+| `checks.yml` | Consolidated security/quality gate (betterleaks, zizmor, fuzz, license check, CodeQL, Scorecard, dependency review, PR quality) |
 | `harness-verify.yml` | Agent-harness consistency (AGENTS.md budget, references, docs/ structure) |
 | `docs.yml` | Render RST documentation |
 | `release.yml` | Signed release with SBOM + cosign on tag `v*` |
