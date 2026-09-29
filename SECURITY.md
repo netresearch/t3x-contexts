@@ -21,6 +21,10 @@ We will acknowledge your report within 48 hours and provide a more detailed resp
 
 After the initial reply to your report, we will endeavor to keep you informed of the progress towards a fix and full announcement, and may ask for additional information or guidance.
 
+## Security Guarantees and Limitations
+
+What the extension does and does not protect, its threat model and the countermeasures in the code are described in [docs/SECURITY-ASSURANCE.md](docs/SECURITY-ASSURANCE.md). In short: contexts select content for personalisation; they are not an access control, because visitors can set the headers and parameters that contexts match on.
+
 ## Security Update Process
 
 1. Security issues are handled with high priority
