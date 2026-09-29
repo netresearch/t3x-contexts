@@ -6,6 +6,7 @@
 
 | Version | Supported          |
 |---------|--------------------|
+| 5.x     | :white_check_mark: |
 | 4.x     | :white_check_mark: |
 | 3.x     | :white_check_mark: |
 | < 3.0   | :x:                |
@@ -16,7 +17,7 @@ If you discover a security vulnerability within this extension, please report vi
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-We will acknowledge your email within 48 hours and provide a more detailed response within 7 days indicating the next steps in handling your report.
+We will acknowledge your report within 48 hours and provide a more detailed response within 7 days indicating the next steps in handling your report.
 
 After the initial reply to your report, we will endeavor to keep you informed of the progress towards a fix and full announcement, and may ask for additional information or guidance.
 

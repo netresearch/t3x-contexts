@@ -13,7 +13,7 @@ This project uses automated quality gates as compensating controls for human cod
 2. **PHP-CS-Fixer** — Enforces consistent code style (PSR-12)
 3. **PHPUnit** — Unit and functional tests with coverage reporting
 4. **Architecture Tests** — PHPat enforces layer boundaries
-5. **Mutation Testing** — Infection verifies test quality
+5. **Mutation Testing** — Infection verifies test quality (`composer test:mutation`, run locally; no CI workflow runs it)
 6. **CodeQL** — Automated security vulnerability scanning
 7. **Betterleaks** — Secret scanning in code and history
 8. **Dependency Review** — License and vulnerability checking
