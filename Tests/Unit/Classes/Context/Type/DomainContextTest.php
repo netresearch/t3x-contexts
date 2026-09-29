@@ -62,6 +62,8 @@ final class DomainContextTest extends TestBase
             'wildcard subdomain exact' => ['example.com', '.example.com', true],
             'wildcard no match' => ['www.other.com', '.example.com', false],
             'wildcard deep subdomain' => ['sub.www.example.com', '.example.com', true],
+            'wildcard other domain with same suffix' => ['notexample.com', '.example.com', false],
+            'wildcard other subdomain with same suffix' => ['www.notexample.com', '.example.com', false],
             'empty domain' => ['example.com', '', false],
             'empty host' => ['', 'example.com', false],
         ];
