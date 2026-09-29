@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+
 ## Description: Run extension tests against specified TYPO3 version
 ## Usage: run-tests [version]
 ## Example: ddev run-tests v13

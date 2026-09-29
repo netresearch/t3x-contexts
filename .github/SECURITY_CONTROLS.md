@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
 # Compensating Security Controls
 
 This document describes the compensating controls for the solo-maintainer auto-approval workflow,

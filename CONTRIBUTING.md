@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
 # Contributing to TYPO3 Contexts Extension
 
 Thank you for your interest in contributing to the TYPO3 Contexts extension!

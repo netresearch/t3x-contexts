@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
 ## Description: Setup project for development
 ## Usage: setup
 ## Example: ddev setup

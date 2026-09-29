@@ -1,4 +1,6 @@
 <?xml version="1.0"?>
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
 <ruleset name="Netresearch Contexts">
     <description>PSR-12 coding standard with test-specific allowances</description>
 

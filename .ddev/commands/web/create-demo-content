@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+
 ## Description: Create demo contexts and content for a TYPO3 installation
 ## Usage: create-demo-content <db_name>
 ## Example: ddev create-demo-content db_v13

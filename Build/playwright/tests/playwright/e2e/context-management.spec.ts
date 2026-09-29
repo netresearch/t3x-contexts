@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: Netresearch DTT GmbH
+
 /**
  * E2E Tests for Context Management in TYPO3 Backend
  *
