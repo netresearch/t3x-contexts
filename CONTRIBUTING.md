@@ -27,6 +27,8 @@ To auto-fix code style issues: `composer ci:cgl`
 - **Coverage report**: `composer test:coverage`
 - **Mutation testing**: `composer test:mutation`
 
+PHPUnit and the other development tools are installed by Composer from `require-dev` in `composer.json` (partly through `netresearch/typo3-ci-workflows`). The repository ships no tool binaries, and `composer.lock` is not committed.
+
 ## Pull Request Process
 
 1. Fork the repository
@@ -49,6 +51,26 @@ Use [Conventional Commits](https://www.conventionalcommits.org/):
 ## Reporting Issues
 
 Please use [GitHub Issues](https://github.com/netresearch/t3x-contexts/issues) to report bugs or request features.
+
+## Governance and policies
+
+This extension follows the organisation-wide Netresearch policies:
+
+- [Governance](https://github.com/netresearch/.github/blob/main/GOVERNANCE.md): ownership, roles, how decisions are made and conflicts resolved.
+- [Roadmap](https://github.com/netresearch/.github/blob/main/ROADMAP.md): planned and excluded work for the next twelve months.
+- [Handling of dependency and code analysis findings](https://github.com/netresearch/.github/blob/main/SECURITY.md#handling-of-dependency-and-code-analysis-findings): which vulnerability, licence and static-analysis findings must be fixed, by when, and how exceptions are recorded.
+- [Secret management](https://github.com/netresearch/.github/blob/main/SECURITY.md#secret-management): where project, CI and release credentials are stored, who may use them, and how they are rotated or revoked.
+- [Access roster](https://github.com/netresearch/.github/blob/main/docs/access-roster.md): the people and teams with administrative or write access to this repository.
+
+What the extension guarantees in terms of security, and what it does not, is described in [docs/SECURITY-ASSURANCE.md](docs/SECURITY-ASSURANCE.md).
+
+Checks that run on every pull request in this repository:
+
+- `.github/workflows/checks.yml` (gate `All security checks`): Composer Audit (fails on any advisory for an installed package) and Opengrep SAST (fails on findings of severity WARNING or higher), both through `typo3-ci-workflows`' `security.yml`; Dependency Review (fails on newly added dependencies with a vulnerability of severity high or higher); PHP License Audit (fails on an SSPL or BSL licensed Composer dependency); CodeQL; Betterleaks secret scanning; zizmor for the workflow files.
+- `.github/workflows/ci.yml`: PHP lint, code style (`Build/php-cs-fixer.php`), PHPStan (`Build/phpstan.neon`), Rector, unit tests and functional tests against MySQL for PHP 8.2 to 8.5 and TYPO3 13.4 and 14.3, and a documentation render.
+- `.github/workflows/harness-verify.yml` and `check-template-drift.yml`: consistency of the agent documentation and of the files managed by the organisation's TYPO3 extension template.
+
+The one recorded exception to the Composer Audit is `config.audit.ignore` in `composer.json`, with its reason next to the advisory ID. Fuzz targets in `Tests/Fuzz/` and mutation testing (`composer test:mutation`) are run locally, not in CI.
 
 ## License
 
