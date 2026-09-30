@@ -31,7 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @author  Marian Pollzien <marian.pollzien@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license AGPL-3.0-or-later
  * @link    https://www.netresearch.de
  */
 class CombinationFormElement extends AbstractFormElement

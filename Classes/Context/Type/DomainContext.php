@@ -25,7 +25,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Matches on the current domain name
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license AGPL-3.0-or-later
  * @link    https://www.netresearch.de
  */
 class DomainContext extends AbstractContext
@@ -87,7 +87,9 @@ class DomainContext extends AbstractContext
             return $domain === $curHost;
         }
 
+        // ".example.org" matches "example.org" itself and every host that
+        // ends in ".example.org", but not "notexample.org".
         return substr($domain, 1) === $curHost
-            || substr($curHost, -\strlen($domain) + 1) === substr($domain, 1);
+            || str_ends_with($curHost, $domain);
     }
 }

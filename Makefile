@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+
 .DEFAULT_GOAL := help
 
 .PHONY: help up down restart install install-v13 install-v14 ssh docs \

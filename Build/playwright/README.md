@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
 # Playwright E2E Tests for TYPO3 Contexts Extension
 
 End-to-end tests for the TYPO3 contexts extension using Playwright.

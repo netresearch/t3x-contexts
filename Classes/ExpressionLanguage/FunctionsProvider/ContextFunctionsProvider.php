@@ -24,7 +24,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
  * Class ContextConditionProvider
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license AGPL-3.0-or-later
  * @link    https://www.netresearch.de
  */
 class ContextFunctionsProvider implements ExpressionFunctionProviderInterface

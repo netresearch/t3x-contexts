@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+
 ## Description: Install TYPO3 v14 with the contexts extension
 ## Usage: install-v14
 ## Example: ddev install-v14

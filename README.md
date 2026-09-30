@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
 <p align="center">
   <a href="https://www.netresearch.de/">
     <img src="Resources/Public/Icons/Extension.svg" alt="Netresearch" width="80" height="80">

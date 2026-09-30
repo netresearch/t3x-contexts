@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
 # Copilot Instructions for t3x-contexts
 
 This repository contains a TYPO3 extension for multi-channel contexts that show/hide content based on configurable rules (screen size, location, browser, GET parameters, etc.).

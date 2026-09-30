@@ -20,7 +20,7 @@ namespace Netresearch\Contexts\Xclass\Backend\Tree\Repository;
  * Need the context fields in the page tree
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
- * @license Netresearch https://www.netresearch.de
+ * @license AGPL-3.0-or-later
  * @link    https://www.netresearch.de
  */
 class PageTreeRepository extends \TYPO3\CMS\Backend\Tree\Repository\PageTreeRepository
