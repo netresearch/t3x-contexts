@@ -77,7 +77,6 @@ parameters:
 
         # PHPStan strict rules violations in legacy code
         - '#Construct empty\(\) is not allowed#'
-        - '#Strict comparison using .* will always evaluate to#'
         - '#is never read, only written#'
         - '#should return .* but return statement is missing#'
         - '#is not covariant with return type#'
