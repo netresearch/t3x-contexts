@@ -51,10 +51,12 @@ class HttpHeaderContext extends AbstractContext
         // Try PSR-7 header lookup first (supports standard header names like "User-Agent")
         $headerValue = $this->getHeaderValue($httpHeaderName);
 
+        // The header is evaluated on every request. The result is not kept
+        // in the session ("use_session" has no effect for this type): a
+        // header that is sent on some requests only must not keep the
+        // context active on the requests that lack it.
         if ($headerValue !== null) {
-            return $this->invert($this->storeInSession(
-                $this->matchValues($headerValue),
-            ));
+            return $this->invert($this->matchValues($headerValue));
         }
 
         // HTTP header does not exist
