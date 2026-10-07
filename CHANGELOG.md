@@ -1,5 +1,20 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+# 5.0.3
+
+## Bug Fixes
+
+- Context settings submitted with a page or content element are saved only when the backend user has the permission for the context settings field (an exclude field, like the core requires for every other exclude field), and only for the record they were submitted with. Admins are unaffected
+- A leading-dot domain pattern such as `.example.org` matches `example.org` and its subdomains only, no longer every host that ends in the same characters (`notexample.org`)
+- `IpContext` tests for an empty address list directly, which PHPStan 2.3.0 requires; matching is unchanged
+
+## Technical Changes
+
+- `@license` docblocks state the declared licence, `AGPL-3.0-or-later`; source files carry SPDX licence and copyright notices
+- Added a security assurance case (`docs/SECURITY-ASSURANCE.md`) and `.bestpractices.json`
+- Removed the bundled `Tests/phpunit.phar` and the Dependabot configuration (Renovate updates the dependencies)
+- Adopted the shared test runner; CI synchronised from the organisation's TYPO3 extension template
+
 # 5.0.2
 
 ## Bug Fixes
