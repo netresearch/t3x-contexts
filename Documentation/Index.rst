@@ -5,9 +5,9 @@
 
 .. _start:
 
-===================
-Contexts Extension
-===================
+======================
+Multi-channel Contexts
+======================
 
 :Extension key:
    contexts

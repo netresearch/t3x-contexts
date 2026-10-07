@@ -6,7 +6,7 @@
   </a>
 </p>
 
-<h1 align="center">Multi-channel Contexts</h1>
+<h1 align="center">Multi-channel Contexts for TYPO3</h1>
 
 <p align="center">
   <strong>Content visibility control for TYPO3 based on configurable contexts</strong>

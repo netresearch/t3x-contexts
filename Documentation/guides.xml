@@ -7,7 +7,7 @@
     xsi:schemaLocation="https://www.phpdoc.org/guides ../vendor/phpdocumentor/guides-cli/resources/schema/guides.xsd"
     theme="typo3docs"
 >
-    <project title="Contexts"
+    <project title="Multi-channel Contexts"
              version="5.0"
              release="5.0.3"
              copyright="Netresearch DTT GmbH"

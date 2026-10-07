@@ -1,7 +1,7 @@
 {
     "name": "netresearch/contexts",
     "type": "typo3-cms-extension",
-    "description": "Multi-channel content visibility for TYPO3 - by Netresearch",
+    "description": "Multi-channel Contexts - Show, hide or change pages and content in the frontend depending on configurable conditions (contexts).",
     "homepage": "https://github.com/netresearch/t3x-contexts/",
     "license": [
         "AGPL-3.0-or-later"
