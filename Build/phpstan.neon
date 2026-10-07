@@ -55,7 +55,6 @@ parameters:
 
         # PHPStan strict rules violations in legacy code
         - '#Construct empty\(\) is not allowed#'
-        - '#Strict comparison using .* will always evaluate to#'
         - '#should return .* but returns#'
         - '#requires parameter .* to be passed to avoid loose comparison#'
 
