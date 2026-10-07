@@ -1,0 +1,15 @@
+"be_groups"
+,"uid","pid","title","tables_select","tables_modify","non_exclude_fields","db_mountpoints","deleted"
+,1,0,"editors without context fields","pages,tx_contexts_contexts","pages,tx_contexts_contexts","","1",0
+,2,0,"editors with context fields","pages,tx_contexts_contexts","pages,tx_contexts_contexts","pages:tx_contexts_settings","1",0
+"be_users"
+,"uid","pid","tstamp","username","password","admin","usergroup","disable","starttime","endtime","lang","deleted","workspace_perms"
+,2,0,1700000000,"editor","$argon2i$v=19$m=65536,t=16,p=1$b1JqZTVFdmxaSFNhTjFjMg$g/PGkVwWmtoTP1YKAG5o7v/ol9OaeXAiKIS3D/rndZo",0,"1",0,0,0,"default",0,1
+,3,0,1700000000,"contexteditor","$argon2i$v=19$m=65536,t=16,p=1$b1JqZTVFdmxaSFNhTjFjMg$g/PGkVwWmtoTP1YKAG5o7v/ol9OaeXAiKIS3D/rndZo",0,"2",0,0,0,"default",0,1
+"pages"
+,"uid","pid","title","deleted","perms_userid","perms_groupid","perms_user","perms_group","perms_everybody","tx_contexts_enable","tx_contexts_disable","tx_contexts_nav_enable","tx_contexts_nav_disable"
+,1,0,"Editable page",0,0,0,0,0,31,"","","",""
+,2,1,"Locked page",0,0,0,0,0,0,"","","",""
+"tx_contexts_contexts"
+,"uid","pid","title","alias","type","type_conf","invert","use_session","disabled","hide_in_backend"
+,11,1,"channel param","channelparam","getparam","<?xml version=""1.0"" encoding=""utf-8""?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""field_name""><value index=""vDEF"">channel</value></field><field index=""field_values""><value index=""vDEF"">mobile</value></field></language></sheet></data></T3FlexForms>",0,0,0,0
