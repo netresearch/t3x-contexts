@@ -20,6 +20,7 @@ use Netresearch\Contexts\Context\Container;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -121,6 +122,9 @@ final class ContextSettingsPermissionTest extends FunctionalTestCase
     private function runDataMap(int $backendUserUid, array $dataMap): DataHandler
     {
         $backendUser = $this->setUpBackendUser($backendUserUid);
+        // DataHandler on TYPO3 12.4 needs a language service for its messages.
+        $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageServiceFactory::class)
+            ->createFromUserPreferences($backendUser);
 
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
         $dataHandler->start($dataMap, [], $backendUser);
