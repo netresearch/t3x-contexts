@@ -13,7 +13,7 @@ Tests/
 ├── Unit/           # Fast, isolated unit tests
 ├── Functional/     # Integration tests requiring TYPO3 + database
 ├── Architecture/   # PHPat architecture tests (layer dependencies)
-└── Fuzz/           # Property-based fuzz testing (nikic/php-fuzzer)
+└── Fuzz/           # PHPUnit fuzz suite (CI) and nikic/php-fuzzer targets
 ```
 
 ## Setup & Environment

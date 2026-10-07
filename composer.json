@@ -75,7 +75,7 @@
         "ci:test:php:rector": "rector process --dry-run --config=Build/rector.php",
         "ci:test:php:unit": "phpunit -c Build/phpunit/UnitTests.xml",
         "test:coverage": "phpunit -c Build/phpunit/UnitTests.xml --coverage-html .Build/coverage/html --coverage-clover .Build/coverage/clover.xml",
-        "test:fuzz": "@php -r \"echo 'Run individual fuzz tests with: vendor/bin/php-fuzzer fuzz Tests/Fuzz/<target>.php';\"",
+        "test:fuzz": "phpunit -c Build/phpunit.xml --testsuite Fuzz --no-coverage",
         "test:mutation": "infection --threads=4"
     },
     "scripts-descriptions": {
@@ -87,7 +87,7 @@
         "ci:test:php:rector": "Run Rector in dry-run mode",
         "ci:test:php:unit": "Run unit tests",
         "test:coverage": "Run unit tests with code coverage",
-        "test:fuzz": "Show instructions for running fuzz tests",
+        "test:fuzz": "Run the PHPUnit fuzz suite (Tests/Fuzz/*FuzzTest.php)",
         "test:mutation": "Run mutation testing with Infection"
     },
     "extra": {

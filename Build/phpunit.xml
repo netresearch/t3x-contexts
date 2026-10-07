@@ -14,6 +14,10 @@
         <testsuite name="functional">
             <directory>../Tests/Functional</directory>
         </testsuite>
+        <!-- Run by the fuzz job of checks.yml (typo3-ci-workflows fuzz.yml reads this file). -->
+        <testsuite name="Fuzz">
+            <directory suffix="FuzzTest.php">../Tests/Fuzz</directory>
+        </testsuite>
     </testsuites>
     <coverage>
         <report>

@@ -15,11 +15,11 @@
 declare(strict_types=1);
 
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
+use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException;
 
 require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 /** @var PhpFuzzer\Config $config */
-$evaluator = new LogicalExpressionEvaluator();
 
 // Create mock contexts for evaluation
 $mockContexts = [
@@ -30,15 +30,12 @@ $mockContexts = [
     'domain' => false,
 ];
 
-$config->setTarget(function (string $input) use ($evaluator, $mockContexts): void {
+$config->setTarget(function (string $input) use ($mockContexts): void {
     try {
-        // Test expression parsing
-        $evaluator->parse($input);
-
-        // Test evaluation with mock contexts
-        $evaluator->run($mockContexts, $input);
-    } catch (Throwable) {
-        // Ignore parsing/evaluation errors - we're looking for crashes
+        // Tokenize, parse and evaluate with mock contexts
+        LogicalExpressionEvaluator::run($input, $mockContexts);
+    } catch (LogicalExpressionEvaluatorException) {
+        // A rejected expression is a valid outcome - we're looking for crashes
     }
 });
 

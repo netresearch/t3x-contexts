@@ -39,7 +39,7 @@ composer ci:test:php:unit        # PHPUnit unit tests
 composer ci:test:php:functional  # PHPUnit functional tests (needs DB)
 composer test:coverage           # Coverage report (needs PCOV/Xdebug)
 composer test:mutation           # Infection mutation testing
-composer test:fuzz               # Fuzz-testing instructions
+composer test:fuzz               # PHPUnit fuzz suite
 
 # Fix commands
 composer ci:cgl               # Fix code style
