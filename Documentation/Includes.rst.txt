@@ -4,7 +4,7 @@
 .. This is included by all .rst files
 
 .. |extension_key| replace:: contexts
-.. |extension_name| replace:: Contexts
+.. |extension_name| replace:: Multi-channel Contexts
 .. |vendor_name| replace:: Netresearch
 
 .. role:: aspect(emphasis)

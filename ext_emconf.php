@@ -13,8 +13,8 @@
  */
 
 $EM_CONF['contexts'] = [
-    'title'          => 'Multi-channel contexts',
-    'description'    => 'Multi-channel content visibility for TYPO3 - by Netresearch',
+    'title'          => 'Multi-channel Contexts',
+    'description'    => 'Show, hide or change pages and content in the frontend depending on configurable conditions (contexts).',
     'category'       => 'misc',
     'author'         => 'Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag, Benni Mack',
     'author_email'   => '',
