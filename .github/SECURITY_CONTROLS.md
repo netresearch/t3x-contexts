@@ -21,6 +21,6 @@ This project uses automated quality gates as compensating controls for human cod
 
 ## Auto-Approval Workflow
 
-The `pr-quality.yml` workflow auto-approves PRs after all quality gates pass.
+The `pr-quality` job in `checks.yml` auto-approves PRs after all quality gates pass.
 This provides the GitHub Actions bot approval that satisfies Scorecard's review requirement
 while maintaining security through comprehensive automated checks.
