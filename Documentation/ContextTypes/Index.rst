@@ -124,7 +124,7 @@ Configuration
    :name: getparam-store-in-session
 
    :type: boolean
-   :default: false
+   :default: true
 
    When enabled, the context state is stored in the user session, persisting
    across page navigations even after the parameter is removed from the URL.
@@ -179,9 +179,11 @@ Configuration
    :name: httpheader-store-in-session
 
    :type: boolean
-   :default: false
+   :default: true
 
-   When enabled, the context state persists in the user session.
+   Has no effect for this context type. The header is evaluated on every
+   request, so the context is active only on requests that carry a matching
+   header.
 
 .. versionadded:: 4.0.0
    PSR-7 header support and case-insensitive substring matching.

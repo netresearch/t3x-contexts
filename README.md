@@ -140,7 +140,7 @@ FE80::/16             # IPv6 prefix
 
 Match HTTP request headers (User-Agent, Accept-Language, X-Forwarded-For, etc.)
 
-- Enable "Store result in user session" to persist across pages
+- The header is evaluated on every request; "Store result in user session" has no effect for this type
 - Leave value empty to match any non-empty header value
 
 ### Session Variable

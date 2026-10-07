@@ -38,68 +38,53 @@ GeneralUtility::setSingletonInstance(
 );
 
 /**
- * Testable context implementation for fuzzing.
+ * Testable context implementation for fuzzing. AbstractContext parses
+ * "type_conf" in its constructor, so every input gets a new instance.
  */
-$contextClass = new class ([
-    'uid' => 1,
-    'pid' => 0,
-    'type' => 'fuzz',
-    'title' => 'Fuzz Test',
-    'alias' => 'fuzz',
-    'type_conf' => '',
-    'invert' => 0,
-    'use_session' => 0,
-    'disabled' => 0,
-    'hide_in_backend' => 0,
-    'tstamp' => time(),
-]) extends AbstractContext {
+$contextClass = (new class extends AbstractContext {
     public function match(array $arDependencies = []): bool
     {
         return true;
-    }
-
-    public function setTypeConf(string $xml): void
-    {
-        // Use reflection to set the type_conf and trigger re-parsing
-        $reflection = new ReflectionClass(AbstractContext::class);
-        $arRowProp = $reflection->getProperty('arRow');
-
-        $arRow = $arRowProp->getValue($this);
-        $arRow['type_conf'] = $xml;
-        $arRowProp->setValue($this, $arRow);
-
-        // Reset the parsed config
-        $arFlexProp = $reflection->getProperty('arFlex');
-        $arFlexProp->setValue($this, null);
     }
 
     public function fuzzGetConfValue(string $field): string
     {
         return $this->getConfValue($field);
     }
-};
+})::class;
+
+$createContext = static fn(string $typeConf): object => new $contextClass([
+    'uid' => 1,
+    'pid' => 0,
+    'type' => 'fuzz',
+    'title' => 'Fuzz Test',
+    'alias' => 'fuzz',
+    'type_conf' => $typeConf,
+    'invert' => 0,
+    'use_session' => 0,
+    'disabled' => 0,
+    'hide_in_backend' => 0,
+    'tstamp' => time(),
+]);
 
 /** @var PhpFuzzer\Config $config */
-$config->setTarget(function (string $input) use ($contextClass): void {
+$config->setTarget(function (string $input) use ($createContext): void {
     // Wrap XML in FlexForm structure
     $xml = '<?xml version="1.0" encoding="utf-8"?>'
         . '<T3FlexForms><data><sheet index="sDEF"><language index="lDEF">'
         . '<field index="fuzzField"><value index="vDEF">' . $input . '</value></field>'
         . '</language></sheet></data></T3FlexForms>';
 
-    $contextClass->setTypeConf($xml);
-
     // Try to parse and retrieve the value
     try {
-        $contextClass->fuzzGetConfValue('fuzzField');
+        $createContext($xml)->fuzzGetConfValue('fuzzField');
     } catch (Throwable) {
         // Ignore parsing errors - we're looking for crashes
     }
 
     // Also test with raw malformed XML
-    $contextClass->setTypeConf($input);
     try {
-        $contextClass->fuzzGetConfValue('anyField');
+        $createContext($input)->fuzzGetConfValue('anyField');
     } catch (Throwable) {
         // Ignore parsing errors
     }

@@ -70,7 +70,7 @@ Checks that run on every pull request in this repository:
 - `.github/workflows/ci.yml`: PHP lint, code style (`Build/php-cs-fixer.php`), PHPStan (`Build/phpstan.neon`), Rector, unit tests and functional tests against MySQL for PHP 8.2 to 8.5 and TYPO3 13.4 and 14.3, and a documentation render.
 - `.github/workflows/harness-verify.yml` and `check-template-drift.yml`: consistency of the agent documentation and of the files managed by the organisation's TYPO3 extension template.
 
-The one recorded exception to the Composer Audit is `config.audit.ignore` in `composer.json`, with its reason next to the advisory ID. Fuzz targets in `Tests/Fuzz/` and mutation testing (`composer test:mutation`) are run locally, not in CI.
+The one recorded exception to the Composer Audit is `config.audit.ignore` in `composer.json`, with its reason next to the advisory ID. The PHPUnit fuzz suite (`Tests/Fuzz/*FuzzTest.php`, `composer test:fuzz`) runs in the `fuzz` job of `checks.yml` on every pull request; the php-fuzzer targets in `Tests/Fuzz/` and mutation testing (`composer test:mutation`) are run locally, not in CI.
 
 ## License
 

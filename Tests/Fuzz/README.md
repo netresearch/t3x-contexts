@@ -6,42 +6,37 @@ This directory contains fuzz testing targets for the contexts extension.
 
 ## Overview
 
-Fuzz testing automatically generates random/mutated inputs to find crashes, memory exhaustion, or unexpected exceptions in code that parses untrusted input.
+Fuzz testing generates random or mutated inputs to find crashes, memory exhaustion, or unexpected exceptions in code that parses configuration and request data.
 
-## Targets
+There are two kinds of fuzz tests here:
+
+- `ContextInputFuzzTest.php` is a PHPUnit test. It feeds the seed corpus and inputs generated from a fixed seed into the combination expression evaluator, the domain matching and the IP range comparison, and it fails on any exception, warning or notice that the code does not document. The `fuzz` job of `.github/workflows/checks.yml` runs it on every pull request (the shared `fuzz.yml` workflow runs the `Fuzz` testsuite of `Build/phpunit.xml`).
+- The `*Target.php` files are targets for [nikic/php-fuzzer](https://github.com/nikic/PHP-Fuzzer), a coverage-guided fuzzer for longer local runs. They are not run in CI.
+
+## PHPUnit fuzz suite
+
+```bash
+vendor/bin/phpunit -c Build/phpunit.xml --testsuite Fuzz --no-coverage
+```
+
+A failure message names the input that failed. Inputs come from a fixed seed, so the same input fails on every run.
+
+## php-fuzzer targets
 
 | Target | Description | Corpus |
 |--------|-------------|--------|
-| `FlexFormParserTarget.php` | Tests FlexForm XML parsing in AbstractContext | `corpus/flexform/` |
-| `CombinationExpressionTarget.php` | Tests logical expression parsing | `corpus/expression/` |
-| `IpMatchingTarget.php` | Tests IP address validation and matching | `corpus/ip/` |
+| `FlexFormParserTarget.php` | FlexForm XML parsing in AbstractContext | `corpus/flexform/` |
+| `CombinationExpressionTarget.php` | Logical expression parsing and evaluation | `corpus/expression/` |
+| `IpMatchingTarget.php` | IP address validation and matching | `corpus/ip/` |
 
-## Running Fuzz Tests
-
-### Via runTests.sh (Recommended)
+php-fuzzer adds the inputs it finds to the corpus directory it is given and removes inputs it has reduced, so pass a copy of the corpus:
 
 ```bash
-# Run all fuzz targets (10,000 iterations each)
-Build/Scripts/runTests.sh fuzz
-
-# Run specific target
-Build/Scripts/runTests.sh fuzz Tests/Fuzz/FlexFormParserTarget.php
-
-# Custom iteration count
-Build/Scripts/runTests.sh fuzz Tests/Fuzz/FlexFormParserTarget.php 50000
+cp -r Tests/Fuzz/corpus/flexform /tmp/flexform-corpus
+vendor/bin/php-fuzzer fuzz Tests/Fuzz/FlexFormParserTarget.php /tmp/flexform-corpus --max-runs 10000
 ```
 
-### Via DDEV
-
-```bash
-ddev exec Build/Scripts/runTests.sh fuzz
-```
-
-### Directly
-
-```bash
-vendor/bin/php-fuzzer fuzz Tests/Fuzz/FlexFormParserTarget.php Tests/Fuzz/corpus/flexform --max-runs 10000
-```
+php-fuzzer prints a line only when an input reaches new code, so the last line can show a lower run count than `--max-runs`.
 
 ## Interpreting Results
 
@@ -62,16 +57,10 @@ vendor/bin/php-fuzzer fuzz Tests/Fuzz/FlexFormParserTarget.php Tests/Fuzz/corpus
 
 ## Seed Corpus
 
-The `corpus/` directory contains seed inputs that the fuzzer uses as starting points. Include variety:
+The `corpus/` directory contains seed inputs that the fuzzers use as starting points. Include variety:
 
 - Valid minimal inputs
 - Valid complex inputs
 - Edge cases (empty, very long)
 - Malformed inputs
 - Special characters
-
-## CI Integration
-
-Fuzz testing is typically **not run in CI** due to time requirements. Run:
-- Locally before releases
-- Weekly on schedule for security-critical code

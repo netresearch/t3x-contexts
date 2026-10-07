@@ -23,6 +23,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 
 /**
  * Tests for HTTP Header context matching.
@@ -338,6 +339,33 @@ final class HttpHeaderContextTest extends TestBase
         $mock->setUseSession(false);
 
         self::assertFalse($mock->match());
+    }
+
+    #[Test]
+    public function matchDoesNotWriteTheResultToTheFrontendSession(): void
+    {
+        // The header is evaluated on every request; nothing reads a stored
+        // result back, so "Store in Session" must not create session data.
+        $_SERVER['HTTP_X_CUSTOM_HEADER'] = 'expected-value';
+
+        $frontendUser = $this->createMock(FrontendUserAuthentication::class);
+        $frontendUser->expects(self::never())->method('setKey');
+        $frontendUser->expects(self::never())->method('storeSessionData');
+
+        $mock = $this->getMockBuilder(HttpHeaderContext::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getConfValue', 'getFrontendUser'])
+            ->getMock();
+        $mock->method('getConfValue')
+            ->willReturnMap([
+                ['field_name', '', 'sDEF', 'lDEF', 'vDEF', 'HTTP_X_CUSTOM_HEADER'],
+                ['field_values', '', 'sDEF', 'lDEF', 'vDEF', 'expected-value'],
+            ]);
+        $mock->method('getFrontendUser')->willReturn($frontendUser);
+        $mock->setInvert(false);
+        $mock->setUseSession(true);
+
+        self::assertTrue($mock->match());
     }
 
     #[Test]

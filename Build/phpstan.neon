@@ -64,12 +64,6 @@ parameters:
             paths:
                 - ../Tests/*
 
-        # Fuzz tests may intentionally pass wrong types
-        -
-            message: '#Parameter .* expects .*, .* given#'
-            paths:
-                - ../Tests/Fuzz/*
-
         # Expressions in fuzz tests for analysis
         -
             message: '#on a separate line has no effect#'
@@ -79,18 +73,6 @@ parameters:
         # Parent constructor not called (intentional in test stubs)
         -
             message: '#does not call parent constructor#'
-            paths:
-                - ../Tests/*
-
-        # Dynamic call to static method (test patterns)
-        -
-            message: '#Dynamic call to static method#'
-            paths:
-                - ../Tests/*
-
-        # Invalid type for foreach (test edge cases with array|false)
-        -
-            message: '#Argument of an invalid type .* supplied for foreach#'
             paths:
                 - ../Tests/*
 
