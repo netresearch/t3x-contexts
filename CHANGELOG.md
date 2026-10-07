@@ -1,3 +1,14 @@
+# 4.0.1 (2026-10-07)
+
+## Bug Fixes
+
+- Context settings submitted with a page or content element are saved only when the backend user has the permission for the context settings field (an exclude field, like the core requires for every other exclude field), and only for the record they were submitted with. Admins are unaffected
+
+## Technical Changes
+
+- `IpContext` tests for an empty address list directly; PHPStan type fixes and a Rector cleanup from the 5.x line, so the current tool versions pass
+- The release workflow publishes through the shared `release-typo3-extension.yml`
+
 # 4.0.0 (2026-03-01)
 
 ## Breaking Changes

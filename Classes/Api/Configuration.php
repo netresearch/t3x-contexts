@@ -273,9 +273,12 @@ class Configuration
         } elseif (\array_key_exists($table, $extensionFlatSettings[$extKey] ?? [])) {
             $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'][$extKey][$table]
                 = array_unique(
-                    array_merge(
-                        $extensionFlatSettings[$extKey][$table],
-                        $settings,
+                    array_map(
+                        static fn(mixed $v): string => (string) $v,
+                        array_merge(
+                            $extensionFlatSettings[$extKey][$table],
+                            $settings,
+                        ),
                     ),
                 );
         } else {

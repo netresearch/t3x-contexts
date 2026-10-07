@@ -78,13 +78,13 @@ class CombinationFormElement extends AbstractFormElement
                 }
 
                 if (!$found) {
-                    $notFound[] = $token[1];
+                    $notFound[] = (string) $token[1];
                 }
             } elseif (
                 \is_array($token)
                 && ($token[0] === LogicalExpressionEvaluator::T_UNKNOWN)
             ) {
-                $unknownTokens[] = $token[1];
+                $unknownTokens[] = (string) $token[1];
             }
         }
 

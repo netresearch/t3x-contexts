@@ -23,6 +23,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
@@ -86,6 +87,17 @@ final class DataHandlerServiceTest extends TestCase
         return [
             'enabled setting (1) inserts record' => ['pages', '1', ['enabled' => 1]],
             'disabled setting (0) inserts record' => ['pages', '0', ['enabled' => 0]],
+        ];
+    }
+
+    /**
+     * @return array<string, array{0: bool, 1: bool}>
+     */
+    public static function permittedBackendUserProvider(): array
+    {
+        return [
+            'admin' => [true, false],
+            'editor with the field permission' => [false, true],
         ];
     }
 
@@ -249,6 +261,75 @@ final class DataHandlerServiceTest extends TestCase
         // Assert: early return means RECORD_SETTINGS_COLUMN is NOT processed
         self::assertArrayNotHasKey('default_settings', $incomingFieldArray);
         self::assertArrayHasKey(Configuration::RECORD_SETTINGS_COLUMN, $incomingFieldArray);
+    }
+
+    #[Test]
+    public function settingsOfARecordAreNotSavedForTheNextRecord(): void
+    {
+        // DataHandler skips the after-hook of a record it refuses, so the
+        // pre-process call of the next record is the first thing it sees.
+        $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings'] = [];
+        $refused = [Configuration::RECORD_SETTINGS_COLUMN => [1 => ['some_field' => '1']]];
+        $this->subject->processDatamap_preProcessFieldArray($refused, 'pages', '10', $this->dataHandler);
+
+        $next = ['title' => 'Next page'];
+        $this->subject->processDatamap_preProcessFieldArray($next, 'pages', '11', $this->dataHandler);
+
+        $this->connectionPool->expects(self::never())->method('getQueryBuilderForTable');
+        $this->connectionPool->expects(self::never())->method('getConnectionForTable');
+
+        $this->subject->processDatamap_afterDatabaseOperations('update', 'pages', '11', [], $this->dataHandler);
+    }
+
+    #[Test]
+    public function recordSettingsOfAnExcludeFieldNeedThePermissionForThatField(): void
+    {
+        $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings'] = [];
+        $GLOBALS['TCA']['pages']['columns'][Configuration::RECORD_SETTINGS_COLUMN]['exclude'] = true;
+
+        $backendUser = $this->createMock(BackendUserAuthentication::class);
+        $backendUser->method('isAdmin')->willReturn(false);
+        $backendUser->expects(self::once())
+            ->method('check')
+            ->with('non_exclude_fields', 'pages:' . Configuration::RECORD_SETTINGS_COLUMN)
+            ->willReturn(false);
+        $this->dataHandler->BE_USER = $backendUser;
+
+        $incomingFieldArray = [Configuration::RECORD_SETTINGS_COLUMN => [1 => ['some_field' => '1']]];
+        $this->subject->processDatamap_preProcessFieldArray($incomingFieldArray, 'pages', '10', $this->dataHandler);
+
+        // The field never reaches DataHandler, with or without permission.
+        self::assertArrayNotHasKey(Configuration::RECORD_SETTINGS_COLUMN, $incomingFieldArray);
+
+        $this->connectionPool->expects(self::never())->method('getQueryBuilderForTable');
+        $this->connectionPool->expects(self::never())->method('getConnectionForTable');
+
+        $this->subject->processDatamap_afterDatabaseOperations('update', 'pages', '10', [], $this->dataHandler);
+    }
+
+    #[Test]
+    #[DataProvider('permittedBackendUserProvider')]
+    public function recordSettingsOfAnExcludeFieldAreSavedForPermittedUsers(bool $isAdmin, bool $hasPermission): void
+    {
+        $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings'] = [];
+        $GLOBALS['TCA']['pages']['columns'][Configuration::RECORD_SETTINGS_COLUMN]['exclude'] = true;
+
+        $backendUser = $this->createMock(BackendUserAuthentication::class);
+        $backendUser->method('isAdmin')->willReturn($isAdmin);
+        $backendUser->method('check')->willReturn($hasPermission);
+        $this->dataHandler->BE_USER = $backendUser;
+
+        $incomingFieldArray = [Configuration::RECORD_SETTINGS_COLUMN => [1 => ['some_field' => '1']]];
+        $this->subject->processDatamap_preProcessFieldArray($incomingFieldArray, 'pages', '10', $this->dataHandler);
+
+        [$queryBuilder] = $this->createQueryBuilderMockWithResultFalse();
+        $connection = $this->createMock(Connection::class);
+        $this->connectionPool->method('getQueryBuilderForTable')->willReturn($queryBuilder);
+        $this->connectionPool->method('getConnectionForTable')->willReturn($connection);
+
+        $connection->expects(self::once())->method('insert')->with('tx_contexts_settings');
+
+        $this->subject->processDatamap_afterDatabaseOperations('update', 'pages', '10', [], $this->dataHandler);
     }
 
     // =========================================================================

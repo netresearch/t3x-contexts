@@ -48,7 +48,11 @@ class DataHandlerService
      * currentSettings. This function is called by TYPO each time a record
      * is saved in the backend.
      *
+     * The settings are reset for every record, so that they are only ever
+     * saved for the record they were submitted with.
      *
+     * The record settings column is an exclude field: this hook checks the
+     * editor's permission for it, as DataHandler does for every other field.
      */
     // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function processDatamap_preProcessFieldArray(
@@ -57,6 +61,8 @@ class DataHandlerService
         string $id,
         DataHandler $reference,
     ): void {
+        $this->currentSettings = [];
+
         if (
             $table === 'tx_contexts_contexts'
             && isset($incomingFieldArray['default_settings'])
@@ -68,7 +74,10 @@ class DataHandlerService
         }
 
         if (isset($incomingFieldArray[Configuration::RECORD_SETTINGS_COLUMN])) {
-            $this->currentSettings = (array) $incomingFieldArray[Configuration::RECORD_SETTINGS_COLUMN];
+            if ($this->mayEditField($reference, $table, Configuration::RECORD_SETTINGS_COLUMN)) {
+                $this->currentSettings = (array) $incomingFieldArray[Configuration::RECORD_SETTINGS_COLUMN];
+            }
+
             unset($incomingFieldArray[Configuration::RECORD_SETTINGS_COLUMN]);
         }
     }
@@ -89,10 +98,7 @@ class DataHandlerService
         array $fieldArray,
         DataHandler $reference,
     ): void {
-        if (
-            isset($this->currentSettings)
-            && (\count($this->currentSettings) > 0)
-        ) {
+        if (\count($this->currentSettings) > 0) {
             if (!is_numeric($id)) {
                 $id = $reference->substNEWwithIDs[$id];
             }
@@ -104,8 +110,25 @@ class DataHandlerService
                 $this->saveFlatSettings($table, (int) $id, $this->currentSettings);
             }
 
-            unset($this->currentSettings);
+            $this->currentSettings = [];
         }
+    }
+
+    /**
+     * Whether the backend user of the DataHandler may change the given field:
+     * a field the TCA declares as exclude field needs the matching
+     * "non_exclude_fields" permission, as DataHandler requires for every
+     * other field. Admins have every permission.
+     */
+    protected function mayEditField(DataHandler $reference, string $table, string $field): bool
+    {
+        if (!(bool) ($GLOBALS['TCA'][$table]['columns'][$field]['exclude'] ?? false)) {
+            return true;
+        }
+
+        $backendUser = $reference->BE_USER;
+
+        return $backendUser->isAdmin() || $backendUser->check('non_exclude_fields', $table . ':' . $field);
     }
 
     /**
