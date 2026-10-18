@@ -33,7 +33,7 @@
             "ergebnis/composer-normalize": true,
             "infection/extension-installer": true,
             "captainhook/hook-installer": true,
-            "phpstan/extension-installer": false
+            "phpstan/extension-installer": true
         },
         "audit": {
             "abandoned": "ignore",
@@ -52,7 +52,7 @@
         "typo3/cms-frontend": "^13.4 || ^14.3"
     },
     "require-dev": {
-        "netresearch/typo3-ci-workflows": "^1.8",
+        "netresearch/typo3-ci-workflows": "^2.0.1",
         "phpunit/phpunit": "^10.5 || ^11.0 || ^12.0 || ^13.0",
         "squizlabs/php_codesniffer": "^4.0"
     },
