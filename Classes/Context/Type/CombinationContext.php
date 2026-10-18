@@ -36,7 +36,17 @@ class CombinationContext extends AbstractContext
 
     /**
      */
-    protected array $tokens;
+    protected array $tokens = [];
+
+    /**
+     * @param array $arRow Database context row
+     */
+    public function __construct(array $arRow = [])
+    {
+        parent::__construct($arRow);
+
+        $this->evaluator = new LogicalExpressionEvaluator();
+    }
 
     /**
      * Initialize the evaluator, tokenize the expression and create

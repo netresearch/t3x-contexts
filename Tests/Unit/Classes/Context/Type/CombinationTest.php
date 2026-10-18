@@ -533,6 +533,21 @@ final class CombinationTest extends TestBase
         self::assertTrue($result);
     }
 
+    #[Test]
+    public function matchWithoutGetDependenciesEvaluatesAnEmptyExpression(): void
+    {
+        // The constructor initialises the evaluator, so match() before
+        // getDependencies() evaluates an empty expression (false) instead of
+        // accessing an uninitialised property.
+        $combinationContext = $this->createCombinationContext(
+            2,
+            'combi',
+            'ctx1',
+        );
+
+        self::assertFalse($combinationContext->match([]));
+    }
+
     /**
      * Create a test context with specified properties.
      */
