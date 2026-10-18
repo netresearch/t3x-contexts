@@ -19,14 +19,14 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Functional;
 
-use function dirname;
-
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Yaml\Yaml;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
+
+use function dirname;
 
 /**
  * Covers the TypoScript the site set contributes.

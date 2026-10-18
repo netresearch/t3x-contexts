@@ -17,15 +17,14 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Context;
 
 use ArrayObject;
-
-use function count;
-
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\ContextException;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use function count;
 
 /**
  * Loads contexts and provides access to them.

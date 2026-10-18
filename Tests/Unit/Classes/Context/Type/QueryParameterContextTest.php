@@ -16,14 +16,14 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
-use const E_NOTICE;
-
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Context\Type\QueryParameterContext;
 use Netresearch\Contexts\Tests\Unit\TestBase;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
+
+use const E_NOTICE;
 
 /**
  * Tests for QueryParameterContext.

@@ -16,14 +16,14 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Functional\Integration;
 
-use function count;
-
 use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\Context\AbstractContext;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionClass;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
+
+use function count;
 
 /**
  * Cross-extension integration tests.

@@ -16,12 +16,12 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Context\Type;
 
-use function count;
-
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use function count;
 
 /**
  * Matches on an HTTP header with a certain value.

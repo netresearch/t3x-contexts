@@ -16,14 +16,7 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Fuzz;
 
-use function array_slice;
-use function count;
-
 use ErrorException;
-
-use const FILTER_FLAG_IPV4;
-use const FILTER_VALIDATE_IP;
-
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException;
 use Netresearch\Contexts\Context\Type\DomainContext;
@@ -34,10 +27,14 @@ use PHPUnit\Framework\TestCase;
 use Random\Engine\Mt19937;
 use Random\Randomizer;
 use ReflectionMethod;
+use Throwable;
 
+use function array_slice;
+use function count;
 use function sprintf;
 
-use Throwable;
+use const FILTER_FLAG_IPV4;
+use const FILTER_VALIDATE_IP;
 
 /**
  * Randomised input for the parts of the extension that read configuration

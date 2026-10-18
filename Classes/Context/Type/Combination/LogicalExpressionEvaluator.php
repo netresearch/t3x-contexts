@@ -16,6 +16,8 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Context\Type\Combination;
 
+use stdClass;
+
 use function array_key_exists;
 use function count;
 use function in_array;
@@ -23,8 +25,6 @@ use function is_array;
 use function is_int;
 
 use const PREG_OFFSET_CAPTURE;
-
-use stdClass;
 
 /**
  * An evaluator that tokenizes, parses and evaluates logical expressions.

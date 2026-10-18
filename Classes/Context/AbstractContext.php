@@ -16,14 +16,8 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Context;
 
-use function array_key_exists;
-use function count;
-
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
-
-use function is_array;
-
 use Netresearch\Contexts\Api\Configuration;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\Connection;
@@ -31,6 +25,10 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
+
+use function array_key_exists;
+use function count;
+use function is_array;
 
 /**
  * Abstract context - must be extended by the context types.

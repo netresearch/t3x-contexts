@@ -20,13 +20,12 @@ use Netresearch\Contexts\EventListener\MenuItemFilterEventListener;
 use Netresearch\Contexts\Service\PageService;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionClass;
-
-use function sprintf;
-
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Frontend\Event\FilterMenuItemsEvent;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
+
+use function sprintf;
 
 /**
  * Unit tests for MenuItemFilterEventListener.

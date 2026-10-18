@@ -16,9 +16,6 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Form;
 
-use function count;
-use function is_array;
-
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
@@ -29,6 +26,9 @@ use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
+
+use function count;
+use function is_array;
 
 /**
  * Unit tests for CombinationFormElement.

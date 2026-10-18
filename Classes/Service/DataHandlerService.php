@@ -16,19 +16,17 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Service;
 
-use function array_key_exists;
-use function count;
-
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
-
-use function is_array;
-
 use Netresearch\Contexts\Api\Configuration;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
+
+use function array_key_exists;
+use function count;
+use function is_array;
 
 /**
  * Class for TCEmain-hooks: Capture incoming default and record settings

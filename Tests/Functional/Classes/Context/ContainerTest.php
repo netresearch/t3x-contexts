@@ -16,13 +16,13 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Functional\Classes\Context;
 
-use function count;
-
 use Netresearch\Contexts\Context\Container;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
+
+use function count;
 
 /**
  * Functional tests for Container class focusing on database-dependent methods.

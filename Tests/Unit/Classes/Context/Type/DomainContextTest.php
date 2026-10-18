@@ -16,8 +16,6 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
-use function is_string;
-
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Context\Type\DomainContext;
 use Netresearch\Contexts\Tests\Unit\TestBase;
@@ -26,6 +24,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
+
+use function is_string;
 
 /**
  * Tests for Domain context matching.

@@ -16,11 +16,11 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Service;
 
-use function array_slice;
-use function is_array;
-
 use Netresearch\Contexts\Context\Container;
 use TYPO3\CMS\Core\SingletonInterface;
+
+use function array_slice;
+use function is_array;
 
 /**
  * Class FrontendControllerService.

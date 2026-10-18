@@ -18,10 +18,9 @@ namespace Netresearch\Contexts\Service;
 
 use Netresearch\Contexts\Api\Record;
 use Netresearch\Contexts\Context\Container;
+use TYPO3\CMS\Core\SingletonInterface;
 
 use const SORT_NUMERIC;
-
-use TYPO3\CMS\Core\SingletonInterface;
 
 /**
  * Service for page-related context operations.

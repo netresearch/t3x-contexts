@@ -16,13 +16,13 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Api;
 
-use const E_ALL;
-use const E_WARNING;
-
 use Netresearch\Contexts\Api\Configuration;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\WithoutErrorHandler;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
+
+use const E_ALL;
+use const E_WARNING;
 
 /**
  * Tests for Configuration API class.

@@ -20,12 +20,11 @@ use Netresearch\Contexts\EventListener\IconOverlayEventListener;
 use Netresearch\Contexts\Service\IconService;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionClass;
-
-use function sprintf;
-
 use TYPO3\CMS\Core\Imaging\Event\ModifyRecordOverlayIconIdentifierEvent;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
+
+use function sprintf;
 
 /**
  * Unit tests for IconOverlayEventListener.

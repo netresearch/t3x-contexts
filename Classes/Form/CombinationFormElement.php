@@ -16,13 +16,8 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Form;
 
-use function count;
-
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
-
-use function is_array;
-
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
@@ -30,6 +25,9 @@ use Netresearch\Contexts\ContextException;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Form\Element\TextElement;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use function count;
+use function is_array;
 
 /**
  * Provides methods used in the backend by flexforms.

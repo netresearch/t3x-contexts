@@ -16,13 +16,13 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Service;
 
-use function array_key_exists;
-
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Context\Type\QueryParameterContext;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\SingletonInterface;
+
+use function array_key_exists;
 
 /**
  * Provides the GET parameters the configured "getparam" contexts depend on.

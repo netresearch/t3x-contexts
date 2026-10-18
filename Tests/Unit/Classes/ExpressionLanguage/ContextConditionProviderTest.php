@@ -19,11 +19,10 @@ namespace Netresearch\Contexts\Tests\Unit\ExpressionLanguage;
 use Netresearch\Contexts\ExpressionLanguage\ContextConditionProvider;
 use Netresearch\Contexts\ExpressionLanguage\FunctionsProvider\ContextFunctionsProvider;
 use PHPUnit\Framework\Attributes\Test;
-
-use function sprintf;
-
 use TYPO3\CMS\Core\ExpressionLanguage\AbstractProvider;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
+
+use function sprintf;
 
 /**
  * Tests for ContextConditionProvider.

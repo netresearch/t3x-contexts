@@ -16,8 +16,6 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\ExpressionLanguage\FunctionsProvider;
 
-use function count;
-
 use Netresearch\Contexts\Api\ContextMatcher;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
@@ -26,6 +24,8 @@ use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
+
+use function count;
 
 /**
  * Tests for ContextFunctionsProvider.

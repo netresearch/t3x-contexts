@@ -16,13 +16,13 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Api;
 
-use function array_key_exists;
-use function count;
-
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
+
+use function array_key_exists;
+use function count;
 
 /**
  * API with methods to retrieve context information for records.

@@ -16,12 +16,12 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\EventListener;
 
-use function array_key_exists;
-
 use Netresearch\Contexts\Api\Configuration;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Configuration\Event\BeforeFlexFormDataStructureIdentifierInitializedEvent;
 use TYPO3\CMS\Core\Configuration\Event\BeforeFlexFormDataStructureParsedEvent;
+
+use function array_key_exists;
 
 /**
  * Resolves the FlexForm data structure of "tx_contexts_contexts.type_conf"

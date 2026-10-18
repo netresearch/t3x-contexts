@@ -16,12 +16,12 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Context\Type;
 
-use function is_array;
-use function is_object;
-
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException;
+
+use function is_array;
+use function is_object;
 
 /**
  * Matches when a logical expression with other contexts evaluates to true.

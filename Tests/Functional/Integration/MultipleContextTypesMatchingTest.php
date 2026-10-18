@@ -16,14 +16,14 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Functional\Integration;
 
-use function count;
-
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
+
+use function count;
 
 /**
  * Tests for multiple context types matching simultaneously.

@@ -16,12 +16,12 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Context\Type;
 
+use Netresearch\Contexts\Context\AbstractContext;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 use const FILTER_FLAG_IPV4;
 use const FILTER_FLAG_IPV6;
 use const FILTER_VALIDATE_IP;
-
-use Netresearch\Contexts\Context\AbstractContext;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Matches on the current frontend user IP.

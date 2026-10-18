@@ -21,14 +21,13 @@ use Netresearch\Contexts\Service\FrontendControllerService;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
-
-use function sprintf;
-
 use Throwable;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Frontend\Event\AfterPageAndLanguageIsResolvedEvent;
 use TYPO3\CMS\Frontend\Page\PageInformation;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
+
+use function sprintf;
 
 /**
  * Unit tests for PageAccessEventListener.

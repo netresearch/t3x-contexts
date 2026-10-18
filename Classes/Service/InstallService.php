@@ -16,10 +16,10 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Service;
 
+use Netresearch\Contexts\Api\Configuration;
+
 use function array_key_exists;
 use function is_array;
-
-use Netresearch\Contexts\Api\Configuration;
 
 /**
  * Hooks for InstallUtility: Append the necessary field definitions for

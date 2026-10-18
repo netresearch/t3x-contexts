@@ -18,9 +18,6 @@ namespace Netresearch\Contexts\Form;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
-
-use function is_array;
-
 use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
@@ -30,6 +27,8 @@ use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconSize;
+
+use function is_array;
 
 /**
  * USER function to render the record settings fields.

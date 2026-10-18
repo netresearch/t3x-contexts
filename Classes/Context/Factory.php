@@ -16,9 +16,6 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Context;
 
-use function array_key_exists;
-use function is_string;
-
 use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\ContextException;
 use Psr\Log\LoggerAwareInterface;
@@ -26,6 +23,9 @@ use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use function array_key_exists;
+use function is_string;
 
 /**
  * Context factory.

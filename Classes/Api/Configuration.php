@@ -16,12 +16,12 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Api;
 
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 use function array_key_exists;
 use function in_array;
 use function is_array;
-
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
  * General configuration API.

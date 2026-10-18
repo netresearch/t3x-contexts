@@ -16,9 +16,6 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Query\Restriction;
 
-use function define;
-use function defined;
-
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Query\Restriction\ContextRestriction;
@@ -31,6 +28,9 @@ use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\EnforceableQueryRestrictionInterface;
 use TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionInterface;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
+
+use function define;
+use function defined;
 
 /**
  * Tests for ContextRestriction class.

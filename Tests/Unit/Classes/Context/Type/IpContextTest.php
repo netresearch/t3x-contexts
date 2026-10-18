@@ -16,16 +16,16 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
-use const FILTER_FLAG_IPV4;
-use const FILTER_VALIDATE_IP;
-
-use function is_string;
-
 use Netresearch\Contexts\Context\Type\IpContext;
 use Netresearch\Contexts\Tests\Unit\TestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+
+use function is_string;
+
+use const FILTER_FLAG_IPV4;
+use const FILTER_VALIDATE_IP;
 
 /**
  * Tests for IP context matching.

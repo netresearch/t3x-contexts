@@ -16,15 +16,15 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Context\Type;
 
-use function array_key_exists;
-use function count;
-use function in_array;
-
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use function array_key_exists;
+use function count;
+use function in_array;
 
 /**
  * Matches on a GET parameter with a certain value.
