@@ -1,16 +1,16 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Netresearch DTT GmbH
 
+# The shared config sets level 10, treatPhpDocTypesAsCertain,
+# reportUnmatchedIgnoredErrors and the other strictness flags, and excludes
+# .Build/ and ext_emconf.php; phpstan/extension-installer registers
+# phpstan-strict-rules, phpstan-deprecation-rules, phpstan-phpunit,
+# phpstan-typo3, phpat and ergebnis/phpstan-rules.
 includes:
-    - ../vendor/phpstan/phpstan-strict-rules/rules.neon
-    - ../vendor/phpstan/phpstan-deprecation-rules/rules.neon
-    - ../vendor/phpstan/phpstan-phpunit/extension.neon
+    - ../vendor/netresearch/typo3-ci-workflows/config/phpstan/phpstan.neon
     - phpat.neon
 
 parameters:
-    # Level 10: Strictest level — all issues resolved with inline @phpstan-ignore
-    level: 10
-
     paths:
         - ../Classes/
         - ../Configuration/
@@ -19,19 +19,14 @@ parameters:
 
     excludePaths:
         - ../vendor/*
-        - ../.Build/*
-        - ../ext_emconf.php
         # Exclude tests that need significant refactoring for PHPUnit 11
         - ../Tests/Unit/Classes/Context/AbstractTest.php
         - ../Tests/Unit/Classes/Context/Type/QueryParameterContextTest.php
         - ../Tests/Functional/PageTest.php
 
-    # TYPO3-specific configuration (PHPStan 2.x compatible)
-    treatPhpDocTypesAsCertain: false
-
-    # Every entry below has to earn its place: an ignore that stops matching is
+    # Every entry below has to earn its place: the shared config sets
+    # reportUnmatchedIgnoredErrors, so an ignore that stops matching is
     # reported as an error instead of silently rotting in the config.
-    reportUnmatchedIgnoredErrors: true
 
     # Temporary ignores for legacy code patterns
     # TODO: These should be addressed incrementally
