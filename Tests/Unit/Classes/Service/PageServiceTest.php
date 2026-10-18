@@ -42,12 +42,12 @@ final class PageServiceTest extends UnitTestCase
 
         // Initialize required TCA structure
         $GLOBALS['TCA']['tx_contexts_contexts'] = [
-            'contextTypes' => [],
+            'contextTypes'          => [],
             'extensionFlatSettings' => [],
-            'columns' => [],
+            'columns'               => [],
         ];
         $GLOBALS['TCA']['pages'] = [
-            'ctrl' => [],
+            'ctrl'    => [],
             'columns' => [],
         ];
     }
@@ -111,12 +111,12 @@ final class PageServiceTest extends UnitTestCase
     public function isPageVisibleInContextReturnsTrueForUnconfiguredPage(): void
     {
         $pageRecord = [
-            'uid' => 1,
+            'uid'   => 1,
             'title' => 'Test Page',
         ];
 
         $service = new PageService();
-        $result = $service->isPageVisibleInContext($pageRecord);
+        $result  = $service->isPageVisibleInContext($pageRecord);
 
         self::assertTrue($result);
     }
@@ -128,8 +128,8 @@ final class PageServiceTest extends UnitTestCase
             'ctrl' => [
                 'tx_contexts' => [
                     'enableSettings' => ['tx_contexts'],
-                    'flatSettings' => [
-                        'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
+                    'flatSettings'   => [
+                        'tx_contexts'     => ['tx_contexts_disable', 'tx_contexts_enable'],
                         'tx_contexts_nav' => ['tx_contexts_nav_disable', 'tx_contexts_nav_enable'],
                     ],
                 ],
@@ -138,16 +138,16 @@ final class PageServiceTest extends UnitTestCase
         ];
 
         $pageRecord = [
-            'uid' => 1,
-            'title' => 'Test Page',
-            'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '',
+            'uid'                     => 1,
+            'title'                   => 'Test Page',
+            'tx_contexts_disable'     => '',
+            'tx_contexts_enable'      => '',
             'tx_contexts_nav_disable' => '',
-            'tx_contexts_nav_enable' => '',
+            'tx_contexts_nav_enable'  => '',
         ];
 
         $service = new PageService();
-        $result = $service->isPageVisibleInContext($pageRecord);
+        $result  = $service->isPageVisibleInContext($pageRecord);
 
         self::assertTrue($result);
     }
@@ -156,7 +156,7 @@ final class PageServiceTest extends UnitTestCase
     public function filterMenuItemsReturnsEmptyArrayForEmptyInput(): void
     {
         $service = new PageService();
-        $result = $service->filterMenuItems([]);
+        $result  = $service->filterMenuItems([]);
 
         self::assertSame([], $result);
     }
@@ -170,7 +170,7 @@ final class PageServiceTest extends UnitTestCase
         ];
 
         $service = new PageService();
-        $result = $service->filterMenuItems($menuItems);
+        $result  = $service->filterMenuItems($menuItems);
 
         self::assertCount(2, $result);
     }
@@ -185,7 +185,7 @@ final class PageServiceTest extends UnitTestCase
         ];
 
         $service = new PageService();
-        $result = $service->filterMenuItems($menuItems);
+        $result  = $service->filterMenuItems($menuItems);
 
         // array_filter preserves keys
         self::assertArrayHasKey(0, $result);

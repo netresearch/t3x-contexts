@@ -59,11 +59,11 @@ final class DataHandlerServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->connectionPool = $this->createMock(ConnectionPool::class);
-        $this->cacheManager = $this->createMock(CacheManager::class);
+        $this->connectionPool        = $this->createMock(ConnectionPool::class);
+        $this->cacheManager          = $this->createMock(CacheManager::class);
         $this->queryParameterService = $this->createMock(QueryParameterService::class);
-        $this->dataHandler = $this->createMock(DataHandler::class);
-        $this->subject = new DataHandlerService(
+        $this->dataHandler           = $this->createMock(DataHandler::class);
+        $this->subject               = new DataHandlerService(
             $this->connectionPool,
             $this->cacheManager,
             $this->queryParameterService,
@@ -71,9 +71,9 @@ final class DataHandlerServiceTest extends TestCase
 
         // Initialize minimal TCA structure required by Configuration::getFlatColumns
         $GLOBALS['TCA']['tx_contexts_contexts'] = [
-            'contextTypes' => [],
+            'contextTypes'          => [],
             'extensionFlatSettings' => [],
-            'columns' => [],
+            'columns'               => [],
         ];
     }
 
@@ -98,7 +98,7 @@ final class DataHandlerServiceTest extends TestCase
     public static function settingValueProvider(): array
     {
         return [
-            'enabled setting (1) inserts record' => ['pages', '1', ['enabled' => 1]],
+            'enabled setting (1) inserts record'  => ['pages', '1', ['enabled' => 1]],
             'disabled setting (0) inserts record' => ['pages', '0', ['enabled' => 0]],
         ];
     }
@@ -111,10 +111,10 @@ final class DataHandlerServiceTest extends TestCase
     public static function cmdmapCommandDataProvider(): array
     {
         return [
-            'delete' => ['delete'],
+            'delete'   => ['delete'],
             'undelete' => ['undelete'],
-            'copy' => ['copy'],
-            'move' => ['move'],
+            'copy'     => ['copy'],
+            'move'     => ['move'],
             'localize' => ['localize'],
         ];
     }
@@ -125,7 +125,7 @@ final class DataHandlerServiceTest extends TestCase
     public static function permittedBackendUserProvider(): array
     {
         return [
-            'admin' => [true, false],
+            'admin'                            => [true, false],
             'editor with the field permission' => [false, true],
         ];
     }
@@ -138,9 +138,9 @@ final class DataHandlerServiceTest extends TestCase
     public function preProcessFieldArrayExtractsDefaultSettingsForContextsTable(): void
     {
         // Arrange
-        $defaultSettings = ['pages' => ['tx_contexts' => '1'], 'tt_content' => ['tx_contexts' => '0']];
+        $defaultSettings    = ['pages' => ['tx_contexts' => '1'], 'tt_content' => ['tx_contexts' => '0']];
         $incomingFieldArray = [
-            'title' => 'My Context',
+            'title'            => 'My Context',
             'default_settings' => $defaultSettings,
         ];
 
@@ -163,8 +163,8 @@ final class DataHandlerServiceTest extends TestCase
     {
         // Arrange
         $incomingFieldArray = [
-            'title' => 'Test Context',
-            'description' => 'A description',
+            'title'            => 'Test Context',
+            'description'      => 'A description',
             'default_settings' => ['pages' => ['tx_contexts' => '1']],
         ];
 
@@ -207,7 +207,7 @@ final class DataHandlerServiceTest extends TestCase
     {
         // Arrange: default_settings is a string, not an array
         $incomingFieldArray = [
-            'title' => 'My Context',
+            'title'            => 'My Context',
             'default_settings' => 'not-an-array',
         ];
         $originalArray = $incomingFieldArray;
@@ -228,9 +228,9 @@ final class DataHandlerServiceTest extends TestCase
     public function preProcessFieldArrayExtractsRecordSettingsColumnForNonContextsTable(): void
     {
         // Arrange
-        $recordSettings = [1 => ['tx_contexts' => '1'], 2 => ['tx_contexts' => '0']];
+        $recordSettings     = [1 => ['tx_contexts' => '1'], 2 => ['tx_contexts' => '0']];
         $incomingFieldArray = [
-            'title' => 'A Page',
+            'title'                               => 'A Page',
             Configuration::RECORD_SETTINGS_COLUMN => $recordSettings,
         ];
 
@@ -252,7 +252,7 @@ final class DataHandlerServiceTest extends TestCase
     {
         // Arrange: no RECORD_SETTINGS_COLUMN in field array
         $incomingFieldArray = [
-            'title' => 'A Page',
+            'title'  => 'A Page',
             'hidden' => 0,
         ];
         $originalArray = $incomingFieldArray;
@@ -275,7 +275,7 @@ final class DataHandlerServiceTest extends TestCase
         // Arrange: contexts table with both default_settings and record settings column
         // The contexts table branch should return early, leaving RECORD_SETTINGS_COLUMN intact
         $incomingFieldArray = [
-            'default_settings' => ['pages' => ['tx_contexts' => '1']],
+            'default_settings'                    => ['pages' => ['tx_contexts' => '1']],
             Configuration::RECORD_SETTINGS_COLUMN => [1 => ['tx_contexts' => '1']],
         ];
 
@@ -298,7 +298,7 @@ final class DataHandlerServiceTest extends TestCase
         // DataHandler skips the after-hook of a record it refuses, so the
         // pre-process call of the next record is the first thing it sees.
         $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings'] = [];
-        $refused = [Configuration::RECORD_SETTINGS_COLUMN => [1 => ['some_field' => '1']]];
+        $refused                                                        = [Configuration::RECORD_SETTINGS_COLUMN => [1 => ['some_field' => '1']]];
         $this->subject->processDatamap_preProcessFieldArray($refused, 'pages', '10', $this->dataHandler);
 
         $next = ['title' => 'Next page'];
@@ -313,7 +313,7 @@ final class DataHandlerServiceTest extends TestCase
     #[Test]
     public function recordSettingsOfAnExcludeFieldNeedThePermissionForThatField(): void
     {
-        $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings'] = [];
+        $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings']                       = [];
         $GLOBALS['TCA']['pages']['columns'][Configuration::RECORD_SETTINGS_COLUMN]['exclude'] = true;
 
         $backendUser = $this->createMock(BackendUserAuthentication::class);
@@ -340,7 +340,7 @@ final class DataHandlerServiceTest extends TestCase
     #[DataProvider('permittedBackendUserProvider')]
     public function recordSettingsOfAnExcludeFieldAreSavedForPermittedUsers(bool $isAdmin, bool $hasPermission): void
     {
-        $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings'] = [];
+        $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings']                       = [];
         $GLOBALS['TCA']['pages']['columns'][Configuration::RECORD_SETTINGS_COLUMN]['exclude'] = true;
 
         $backendUser = $this->createMock(BackendUserAuthentication::class);
@@ -352,7 +352,7 @@ final class DataHandlerServiceTest extends TestCase
         $this->subject->processDatamap_preProcessFieldArray($incomingFieldArray, 'pages', '10', $this->dataHandler);
 
         [$queryBuilder] = $this->createQueryBuilderMockWithResultFalse();
-        $connection = $this->createMock(Connection::class);
+        $connection     = $this->createMock(Connection::class);
         $this->connectionPool->method('getQueryBuilderForTable')->willReturn($queryBuilder);
         $this->connectionPool->method('getConnectionForTable')->willReturn($connection);
 
@@ -517,7 +517,7 @@ final class DataHandlerServiceTest extends TestCase
 
         // Set up mocks for saveDefaultSettings
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResult([]);
-        $connection = $this->createMock(Connection::class);
+        $connection              = $this->createMock(Connection::class);
 
         $this->connectionPool
             ->expects(self::once())
@@ -536,7 +536,7 @@ final class DataHandlerServiceTest extends TestCase
             ->method('insert')
             ->with(
                 'tx_contexts_settings',
-                self::callback(static fn(array $data): bool => $data['context_uid'] === 5
+                self::callback(static fn (array $data): bool => $data['context_uid'] === 5
                         && $data['foreign_table'] === 'pages'
                         && $data['name'] === 'tx_contexts'
                         && $data['foreign_uid'] === 0
@@ -559,7 +559,7 @@ final class DataHandlerServiceTest extends TestCase
     public function afterDatabaseOperationsUpdatesExistingDefaultSettings(): void
     {
         // Arrange: capture default settings
-        $defaultSettings = ['pages' => ['tx_contexts' => '0']];
+        $defaultSettings    = ['pages' => ['tx_contexts' => '0']];
         $incomingFieldArray = ['default_settings' => $defaultSettings];
         $this->subject->processDatamap_preProcessFieldArray(
             $incomingFieldArray,
@@ -573,7 +573,7 @@ final class DataHandlerServiceTest extends TestCase
             ['uid' => 77, 'foreign_table' => 'pages', 'name' => 'tx_contexts', 'enabled' => 1],
         ];
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResult($existingSettings);
-        $connection = $this->createMock(Connection::class);
+        $connection              = $this->createMock(Connection::class);
 
         $this->connectionPool
             ->expects(self::once())
@@ -610,7 +610,7 @@ final class DataHandlerServiceTest extends TestCase
     public function afterDatabaseOperationsResolvesNewIdForContextsTable(): void
     {
         // Arrange: capture default settings with a NEW-id
-        $defaultSettings = ['pages' => ['tx_contexts' => '1']];
+        $defaultSettings    = ['pages' => ['tx_contexts' => '1']];
         $incomingFieldArray = ['default_settings' => $defaultSettings];
         $this->subject->processDatamap_preProcessFieldArray(
             $incomingFieldArray,
@@ -623,7 +623,7 @@ final class DataHandlerServiceTest extends TestCase
         $this->dataHandler->substNEWwithIDs = ['NEW123' => 42];
 
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResult([]);
-        $connection = $this->createMock(Connection::class);
+        $connection              = $this->createMock(Connection::class);
 
         $this->connectionPool->method('getQueryBuilderForTable')->willReturn($queryBuilder);
         $this->connectionPool->method('getConnectionForTable')->willReturn($connection);
@@ -634,7 +634,7 @@ final class DataHandlerServiceTest extends TestCase
                 'tx_contexts_settings',
                 self::callback(
                     // Should use resolved id (42), not the string 'NEW123'
-                    static fn(array $data): bool => $data['context_uid'] === 42,
+                    static fn (array $data): bool => $data['context_uid'] === 42,
                 ),
             );
 
@@ -658,7 +658,7 @@ final class DataHandlerServiceTest extends TestCase
         // Arrange: table without flat columns configured
         $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings'] = [];
 
-        $recordSettings = [1 => ['some_field' => '1']];
+        $recordSettings     = [1 => ['some_field' => '1']];
         $incomingFieldArray = [Configuration::RECORD_SETTINGS_COLUMN => $recordSettings];
         $this->subject->processDatamap_preProcessFieldArray(
             $incomingFieldArray,
@@ -669,7 +669,7 @@ final class DataHandlerServiceTest extends TestCase
 
         // For saveRecordSettings: query for existing setting (returns false)
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResultFalse();
-        $connection = $this->createMock(Connection::class);
+        $connection              = $this->createMock(Connection::class);
 
         // The lookup queries tx_contexts_settings, so the QueryBuilder must be
         // created for that table (issue #168: was tx_contexts_contexts before).
@@ -704,7 +704,7 @@ final class DataHandlerServiceTest extends TestCase
         // Arrange: table without flat columns
         $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings'] = [];
 
-        $recordSettings = [1 => ['some_field' => '1']];
+        $recordSettings     = [1 => ['some_field' => '1']];
         $incomingFieldArray = [Configuration::RECORD_SETTINGS_COLUMN => $recordSettings];
         $this->subject->processDatamap_preProcessFieldArray(
             $incomingFieldArray,
@@ -716,7 +716,7 @@ final class DataHandlerServiceTest extends TestCase
         $this->dataHandler->substNEWwithIDs = ['NEWabc' => 77];
 
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResultFalse();
-        $connection = $this->createMock(Connection::class);
+        $connection              = $this->createMock(Connection::class);
 
         $this->connectionPool->method('getQueryBuilderForTable')->willReturn($queryBuilder);
         $this->connectionPool->method('getConnectionForTable')->willReturn($connection);
@@ -725,7 +725,7 @@ final class DataHandlerServiceTest extends TestCase
             ->method('insert')
             ->with(
                 'tx_contexts_settings',
-                self::callback(static fn(array $data): bool => $data['foreign_uid'] === 77),
+                self::callback(static fn (array $data): bool => $data['foreign_uid'] === 77),
             );
 
         // Act
@@ -742,7 +742,7 @@ final class DataHandlerServiceTest extends TestCase
     public function afterDatabaseOperationsClearsCurrentSettingsAfterSave(): void
     {
         // Arrange: capture settings once
-        $defaultSettings = ['pages' => ['tx_contexts' => '1']];
+        $defaultSettings    = ['pages' => ['tx_contexts' => '1']];
         $incomingFieldArray = ['default_settings' => $defaultSettings];
         $this->subject->processDatamap_preProcessFieldArray(
             $incomingFieldArray,
@@ -752,7 +752,7 @@ final class DataHandlerServiceTest extends TestCase
         );
 
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResult([]);
-        $connection = $this->createMock(Connection::class);
+        $connection              = $this->createMock(Connection::class);
 
         $this->connectionPool->method('getQueryBuilderForTable')->willReturn($queryBuilder);
         $this->connectionPool->method('getConnectionForTable')->willReturn($connection);
@@ -790,7 +790,7 @@ final class DataHandlerServiceTest extends TestCase
         // Arrange: existing record found (row exists)
         $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings'] = [];
 
-        $recordSettings = [5 => ['visible_field' => '0']]; // setting = 0 triggers update
+        $recordSettings     = [5 => ['visible_field' => '0']]; // setting = 0 triggers update
         $incomingFieldArray = [Configuration::RECORD_SETTINGS_COLUMN => $recordSettings];
         $this->subject->processDatamap_preProcessFieldArray(
             $incomingFieldArray,
@@ -800,7 +800,7 @@ final class DataHandlerServiceTest extends TestCase
         );
 
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResult([['uid' => 99]]);
-        $connection = $this->createMock(Connection::class);
+        $connection              = $this->createMock(Connection::class);
 
         $this->connectionPool->method('getQueryBuilderForTable')->willReturn($queryBuilder);
         $this->connectionPool->method('getConnectionForTable')->willReturn($connection);
@@ -834,7 +834,7 @@ final class DataHandlerServiceTest extends TestCase
         // row is found → the elseif branch executes and deletes the row.
         $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings'] = [];
 
-        $recordSettings = [3 => ['some_field' => '2']]; // (int)'2' = 2, triggers delete branch
+        $recordSettings     = [3 => ['some_field' => '2']]; // (int)'2' = 2, triggers delete branch
         $incomingFieldArray = [Configuration::RECORD_SETTINGS_COLUMN => $recordSettings];
         $this->subject->processDatamap_preProcessFieldArray(
             $incomingFieldArray,
@@ -844,7 +844,7 @@ final class DataHandlerServiceTest extends TestCase
         );
 
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResult([['uid' => 55]]);
-        $connection = $this->createMock(Connection::class);
+        $connection              = $this->createMock(Connection::class);
 
         $this->connectionPool->method('getQueryBuilderForTable')->willReturn($queryBuilder);
         $this->connectionPool->method('getConnectionForTable')->willReturn($connection);
@@ -876,7 +876,7 @@ final class DataHandlerServiceTest extends TestCase
         // Arrange: non-0/non-1 setting and no existing row → elseif branch is false, nothing happens
         $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings'] = [];
 
-        $recordSettings = [3 => ['some_field' => '2']]; // would delete, but no row found
+        $recordSettings     = [3 => ['some_field' => '2']]; // would delete, but no row found
         $incomingFieldArray = [Configuration::RECORD_SETTINGS_COLUMN => $recordSettings];
         $this->subject->processDatamap_preProcessFieldArray(
             $incomingFieldArray,
@@ -886,7 +886,7 @@ final class DataHandlerServiceTest extends TestCase
         );
 
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResultFalse();
-        $connection = $this->createMock(Connection::class);
+        $connection              = $this->createMock(Connection::class);
 
         $this->connectionPool->method('getQueryBuilderForTable')->willReturn($queryBuilder);
         $this->connectionPool->method('getConnectionForTable')->willReturn($connection);
@@ -915,7 +915,7 @@ final class DataHandlerServiceTest extends TestCase
         ];
 
         // 'tx_contexts' is a flat setting column – should be skipped in saveRecordSettings
-        $recordSettings = [1 => ['tx_contexts' => '1', 'other_field' => '0']];
+        $recordSettings     = [1 => ['tx_contexts' => '1', 'other_field' => '0']];
         $incomingFieldArray = [Configuration::RECORD_SETTINGS_COLUMN => $recordSettings];
         $this->subject->processDatamap_preProcessFieldArray(
             $incomingFieldArray,
@@ -925,8 +925,8 @@ final class DataHandlerServiceTest extends TestCase
         );
 
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResultFalse();
-        $connectionForSettings = $this->createMock(Connection::class);
-        $connectionForTable = $this->createMock(Connection::class);
+        $connectionForSettings   = $this->createMock(Connection::class);
+        $connectionForTable      = $this->createMock(Connection::class);
 
         $this->connectionPool
             ->method('getQueryBuilderForTable')
@@ -989,9 +989,9 @@ final class DataHandlerServiceTest extends TestCase
         );
 
         // saveRecordSettings makes no DB calls (only flat settings)
-        $queryBuilder = $this->createFullQueryBuilderMock();
+        $queryBuilder          = $this->createFullQueryBuilderMock();
         $connectionForSettings = $this->createMock(Connection::class);
-        $connectionForTable = $this->createMock(Connection::class);
+        $connectionForTable    = $this->createMock(Connection::class);
 
         $this->connectionPool
             ->method('getQueryBuilderForTable')
@@ -1015,7 +1015,7 @@ final class DataHandlerServiceTest extends TestCase
                 self::callback(
                     // tx_contexts_enable should contain context 1 (set to '1')
                     // tx_contexts_disable should contain context 2 (set to '0')
-                    static fn(array $values): bool => isset($values['tx_contexts_enable'])
+                    static fn (array $values): bool => isset($values['tx_contexts_enable'])
                     && isset($values['tx_contexts_disable'])
                     && str_contains((string) $values['tx_contexts_enable'], '1')
                     && str_contains((string) $values['tx_contexts_disable'], '2'),
@@ -1039,7 +1039,7 @@ final class DataHandlerServiceTest extends TestCase
         // Arrange: no flat columns → saveFlatSettings produces no values
         $GLOBALS['TCA']['pages']['ctrl']['tx_contexts']['flatSettings'] = [];
 
-        $recordSettings = [1 => ['some_field' => '1']];
+        $recordSettings     = [1 => ['some_field' => '1']];
         $incomingFieldArray = [Configuration::RECORD_SETTINGS_COLUMN => $recordSettings];
         $this->subject->processDatamap_preProcessFieldArray(
             $incomingFieldArray,
@@ -1049,7 +1049,7 @@ final class DataHandlerServiceTest extends TestCase
         );
 
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResultFalse();
-        $connectionForSettings = $this->createMock(Connection::class);
+        $connectionForSettings   = $this->createMock(Connection::class);
 
         // Only getConnectionForTable('tx_contexts_settings') is expected
         $this->connectionPool
@@ -1093,7 +1093,7 @@ final class DataHandlerServiceTest extends TestCase
             $this->dataHandler,
         );
 
-        $queryBuilder = $this->createFullQueryBuilderMock();
+        $queryBuilder       = $this->createFullQueryBuilderMock();
         $connectionForTable = $this->createMock(Connection::class);
 
         $this->connectionPool->method('getQueryBuilderForTable')->willReturn($queryBuilder);
@@ -1107,7 +1107,7 @@ final class DataHandlerServiceTest extends TestCase
                 'pages',
                 self::callback(
                     // Both flat columns should be empty strings
-                    static fn(array $values): bool => $values['tx_contexts_disable'] === ''
+                    static fn (array $values): bool => $values['tx_contexts_disable'] === ''
                     && $values['tx_contexts_enable'] === '',
                 ),
                 ['uid' => 70],
@@ -1132,7 +1132,7 @@ final class DataHandlerServiceTest extends TestCase
     {
         // Arrange: context with default settings for multiple tables
         $defaultSettings = [
-            'pages' => ['tx_contexts' => '1', 'menu_visibility' => '0'],
+            'pages'      => ['tx_contexts' => '1', 'menu_visibility' => '0'],
             'tt_content' => ['tx_contexts' => '1'],
         ];
         $incomingFieldArray = ['default_settings' => $defaultSettings];
@@ -1145,7 +1145,7 @@ final class DataHandlerServiceTest extends TestCase
 
         // No existing settings
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResult([]);
-        $connection = $this->createMock(Connection::class);
+        $connection              = $this->createMock(Connection::class);
 
         $this->connectionPool->method('getQueryBuilderForTable')->willReturn($queryBuilder);
         $this->connectionPool->method('getConnectionForTable')->willReturn($connection);
@@ -1170,7 +1170,7 @@ final class DataHandlerServiceTest extends TestCase
     {
         // Arrange: existing settings for pages.tx_contexts but not for tt_content.tx_contexts
         $defaultSettings = [
-            'pages' => ['tx_contexts' => '0'],
+            'pages'      => ['tx_contexts' => '0'],
             'tt_content' => ['tx_contexts' => '1'],
         ];
         $incomingFieldArray = ['default_settings' => $defaultSettings];
@@ -1186,7 +1186,7 @@ final class DataHandlerServiceTest extends TestCase
             ['uid' => 100, 'foreign_table' => 'pages', 'name' => 'tx_contexts', 'enabled' => 1],
         ];
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResult($existingSettings);
-        $connection = $this->createMock(Connection::class);
+        $connection              = $this->createMock(Connection::class);
 
         $this->connectionPool->method('getQueryBuilderForTable')->willReturn($queryBuilder);
         $this->connectionPool->method('getConnectionForTable')->willReturn($connection);
@@ -1205,7 +1205,7 @@ final class DataHandlerServiceTest extends TestCase
             ->method('insert')
             ->with(
                 'tx_contexts_settings',
-                self::callback(static fn(array $data): bool => $data['foreign_table'] === 'tt_content'
+                self::callback(static fn (array $data): bool => $data['foreign_table'] === 'tt_content'
                         && $data['name'] === 'tx_contexts'
                         && $data['enabled'] === 1),
             );
@@ -1230,7 +1230,7 @@ final class DataHandlerServiceTest extends TestCase
         // Arrange
         $GLOBALS['TCA'][$table]['ctrl']['tx_contexts']['flatSettings'] = [];
 
-        $recordSettings = [1 => ['some_field' => $settingValue]];
+        $recordSettings     = [1 => ['some_field' => $settingValue]];
         $incomingFieldArray = [Configuration::RECORD_SETTINGS_COLUMN => $recordSettings];
         $this->subject->processDatamap_preProcessFieldArray(
             $incomingFieldArray,
@@ -1240,7 +1240,7 @@ final class DataHandlerServiceTest extends TestCase
         );
 
         [$queryBuilder, $result] = $this->createQueryBuilderMockWithResultFalse();
-        $connection = $this->createMock(Connection::class);
+        $connection              = $this->createMock(Connection::class);
 
         $this->connectionPool->method('getQueryBuilderForTable')->willReturn($queryBuilder);
         $this->connectionPool->method('getConnectionForTable')->willReturn($connection);
@@ -1249,7 +1249,7 @@ final class DataHandlerServiceTest extends TestCase
             ->method('insert')
             ->with(
                 'tx_contexts_settings',
-                self::callback(static fn(array $data): bool => $data['enabled'] === $expectedData['enabled']),
+                self::callback(static fn (array $data): bool => $data['enabled'] === $expectedData['enabled']),
             );
 
         // Act
@@ -1270,6 +1270,7 @@ final class DataHandlerServiceTest extends TestCase
      * Creates a QueryBuilder mock that returns the given rows via fetchAllAssociative().
      *
      * @param array<int, array<string, mixed>> $rows
+     *
      * @return array{0: QueryBuilder&MockObject, 1: Result&MockObject}
      */
     private function createQueryBuilderMockWithResult(array $rows): array
@@ -1310,7 +1311,7 @@ final class DataHandlerServiceTest extends TestCase
         $queryBuilder->method('where')->willReturnSelf();
         $queryBuilder->method('expr')->willReturn($expressionBuilder);
         $queryBuilder->method('createNamedParameter')->willReturnCallback(
-            static fn(mixed $value): string => (string) $value,
+            static fn (mixed $value): string => (string) $value,
         );
         $queryBuilder->method('executeQuery')->willReturn($result);
 

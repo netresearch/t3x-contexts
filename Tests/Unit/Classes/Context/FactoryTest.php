@@ -42,13 +42,13 @@ final class FactoryTest extends UnitTestCase
         // Set up TCA for context types
         $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes'] = [
             'getparam' => [
-                'title' => 'GET Parameter',
-                'class' => QueryParameterContext::class,
+                'title'    => 'GET Parameter',
+                'class'    => QueryParameterContext::class,
                 'flexFile' => 'EXT:contexts/Configuration/FlexForms/GetParam.xml',
             ],
             'default' => [
-                'title' => 'Default',
-                'class' => null,
+                'title'    => 'Default',
+                'class'    => null,
                 'flexFile' => '',
             ],
         ];
@@ -66,17 +66,17 @@ final class FactoryTest extends UnitTestCase
         $factory = new Factory();
 
         $row = [
-            'uid' => 1,
-            'pid' => 0,
-            'type' => 'getparam',
-            'title' => 'Test Context',
-            'alias' => 'test',
-            'type_conf' => '',
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 1,
+            'pid'             => 0,
+            'type'            => 'getparam',
+            'title'           => 'Test Context',
+            'alias'           => 'test',
+            'type_conf'       => '',
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'tstamp' => time(),
+            'tstamp'          => time(),
         ];
 
         $context = $factory->createFromDb($row);
@@ -97,10 +97,10 @@ final class FactoryTest extends UnitTestCase
         $factory->setLogger($logger);
 
         $row = [
-            'uid' => 1,
-            'type' => 'unknown_type',
-            'title' => 'Test',
-            'alias' => 'test',
+            'uid'       => 1,
+            'type'      => 'unknown_type',
+            'title'     => 'Test',
+            'alias'     => 'test',
             'type_conf' => '',
         ];
 
@@ -120,10 +120,10 @@ final class FactoryTest extends UnitTestCase
         $factory->setLogger($logger);
 
         $row = [
-            'uid' => 1,
-            'type' => '',
-            'title' => 'Test',
-            'alias' => 'test',
+            'uid'       => 1,
+            'type'      => '',
+            'title'     => 'Test',
+            'alias'     => 'test',
             'type_conf' => '',
         ];
 
@@ -136,18 +136,18 @@ final class FactoryTest extends UnitTestCase
     public function createFromDbReturnsNullWhenClassNotSet(): void
     {
         $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']['noclasstype'] = [
-            'title' => 'No Class Type',
-            'class' => null,
+            'title'    => 'No Class Type',
+            'class'    => null,
             'flexFile' => '',
         ];
 
         $factory = new Factory();
 
         $row = [
-            'uid' => 1,
-            'type' => 'noclasstype',
-            'title' => 'Test',
-            'alias' => 'test',
+            'uid'       => 1,
+            'type'      => 'noclasstype',
+            'title'     => 'Test',
+            'alias'     => 'test',
             'type_conf' => '',
         ];
 
@@ -160,18 +160,18 @@ final class FactoryTest extends UnitTestCase
     public function createFromDbReturnsNullWhenClassIsEmptyString(): void
     {
         $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']['emptyclass'] = [
-            'title' => 'Empty Class Type',
-            'class' => '',
+            'title'    => 'Empty Class Type',
+            'class'    => '',
             'flexFile' => '',
         ];
 
         $factory = new Factory();
 
         $row = [
-            'uid' => 1,
-            'type' => 'emptyclass',
-            'title' => 'Test',
-            'alias' => 'test',
+            'uid'       => 1,
+            'type'      => 'emptyclass',
+            'title'     => 'Test',
+            'alias'     => 'test',
             'type_conf' => '',
         ];
 
@@ -184,18 +184,18 @@ final class FactoryTest extends UnitTestCase
     public function createFromDbReturnsNullWhenClassIsNotString(): void
     {
         $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']['nonstring'] = [
-            'title' => 'Non-String Class Type',
-            'class' => 12345,
+            'title'    => 'Non-String Class Type',
+            'class'    => 12345,
             'flexFile' => '',
         ];
 
         $factory = new Factory();
 
         $row = [
-            'uid' => 1,
-            'type' => 'nonstring',
-            'title' => 'Test',
-            'alias' => 'test',
+            'uid'       => 1,
+            'type'      => 'nonstring',
+            'title'     => 'Test',
+            'alias'     => 'test',
             'type_conf' => '',
         ];
 
@@ -209,24 +209,24 @@ final class FactoryTest extends UnitTestCase
     {
         // Register a singleton class as context type (which is not allowed)
         $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']['singleton'] = [
-            'title' => 'Singleton Test',
-            'class' => SingletonContextStub::class,
+            'title'    => 'Singleton Test',
+            'class'    => SingletonContextStub::class,
             'flexFile' => '',
         ];
 
         $factory = new Factory();
 
         $row = [
-            'uid' => 1,
-            'type' => 'singleton',
-            'title' => 'Test',
-            'alias' => 'test',
-            'type_conf' => '',
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 1,
+            'type'            => 'singleton',
+            'title'           => 'Test',
+            'alias'           => 'test',
+            'type_conf'       => '',
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'tstamp' => time(),
+            'tstamp'          => time(),
         ];
 
         $this->expectException(ContextException::class);
@@ -241,24 +241,24 @@ final class FactoryTest extends UnitTestCase
     {
         // Register a class that doesn't extend AbstractContext
         $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']['invalid'] = [
-            'title' => 'Invalid Class',
-            'class' => InvalidContextStub::class,
+            'title'    => 'Invalid Class',
+            'class'    => InvalidContextStub::class,
             'flexFile' => '',
         ];
 
         $factory = new Factory();
 
         $row = [
-            'uid' => 1,
-            'type' => 'invalid',
-            'title' => 'Test',
-            'alias' => 'test',
-            'type_conf' => '',
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 1,
+            'type'            => 'invalid',
+            'title'           => 'Test',
+            'alias'           => 'test',
+            'type_conf'       => '',
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'tstamp' => time(),
+            'tstamp'          => time(),
         ];
 
         $this->expectException(ContextException::class);
@@ -276,10 +276,10 @@ final class FactoryTest extends UnitTestCase
         $factory->setLogger($this->createMock(LoggerInterface::class));
 
         $row = [
-            'uid' => 1,
-            'type' => 'totally_unknown',
-            'title' => 'Test',
-            'alias' => 'test',
+            'uid'       => 1,
+            'type'      => 'totally_unknown',
+            'title'     => 'Test',
+            'alias'     => 'test',
             'type_conf' => '',
         ];
 
@@ -302,10 +302,10 @@ final class FactoryTest extends UnitTestCase
         $factory->setLogger($logger);
 
         $row = [
-            'uid' => 1,
-            'type' => 'special_context_type',
-            'title' => 'Test',
-            'alias' => 'test',
+            'uid'       => 1,
+            'type'      => 'special_context_type',
+            'title'     => 'Test',
+            'alias'     => 'test',
             'type_conf' => '',
         ];
 
@@ -318,24 +318,24 @@ final class FactoryTest extends UnitTestCase
         // Kills Concat and ConcatOperandRemoval mutants on Factory line 73
         // Verifies class name is at the START of the message (not reordered)
         $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']['singleton'] = [
-            'title' => 'Singleton Test',
-            'class' => SingletonContextStub::class,
+            'title'    => 'Singleton Test',
+            'class'    => SingletonContextStub::class,
             'flexFile' => '',
         ];
 
         $factory = new Factory();
 
         $row = [
-            'uid' => 1,
-            'type' => 'singleton',
-            'title' => 'Test',
-            'alias' => 'test',
-            'type_conf' => '',
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 1,
+            'type'            => 'singleton',
+            'title'           => 'Test',
+            'alias'           => 'test',
+            'type_conf'       => '',
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'tstamp' => time(),
+            'tstamp'          => time(),
         ];
 
         try {
@@ -356,24 +356,24 @@ final class FactoryTest extends UnitTestCase
         // Kills Concat and ConcatOperandRemoval mutants on Factory line 78
         // Verifies class name is at the START of the message (not reordered)
         $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']['invalid'] = [
-            'title' => 'Invalid Class',
-            'class' => InvalidContextStub::class,
+            'title'    => 'Invalid Class',
+            'class'    => InvalidContextStub::class,
             'flexFile' => '',
         ];
 
         $factory = new Factory();
 
         $row = [
-            'uid' => 1,
-            'type' => 'invalid',
-            'title' => 'Test',
-            'alias' => 'test',
-            'type_conf' => '',
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 1,
+            'type'            => 'invalid',
+            'title'           => 'Test',
+            'alias'           => 'test',
+            'type_conf'       => '',
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'tstamp' => time(),
+            'tstamp'          => time(),
         ];
 
         try {
@@ -407,10 +407,10 @@ final class FactoryTest extends UnitTestCase
         $factory->setLogger($logger);
 
         $row = [
-            'uid' => 1,
-            'type' => 'nonexistent_type',
-            'title' => 'Test',
-            'alias' => 'test',
+            'uid'       => 1,
+            'type'      => 'nonexistent_type',
+            'title'     => 'Test',
+            'alias'     => 'test',
             'type_conf' => '',
         ];
 
@@ -434,6 +434,4 @@ class SingletonContextStub extends AbstractContext implements SingletonInterface
 /**
  * Stub class that doesn't extend AbstractContext (not allowed).
  */
-class InvalidContextStub
-{
-}
+class InvalidContextStub {}

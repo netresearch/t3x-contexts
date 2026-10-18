@@ -16,6 +16,9 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Query\Restriction;
 
+use function count;
+use function defined;
+
 use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
@@ -27,24 +30,20 @@ use TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionInterface;
 use TYPO3\CMS\Core\Http\ApplicationType;
 
 /**
- * Class ContextRestriction
+ * Class ContextRestriction.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class ContextRestriction implements EnforceableQueryRestrictionInterface, QueryRestrictionInterface
 {
-    /**
-     */
     public function isEnforced(): bool
     {
         return true;
     }
 
-    /**
-     *
-     */
     public function buildExpression(array $queriedTables, ExpressionBuilder $expressionBuilder): CompositeExpression
     {
         $constraints = [];
@@ -53,15 +52,15 @@ class ContextRestriction implements EnforceableQueryRestrictionInterface, QueryR
             foreach ($queriedTables as $table) {
                 $table = (string) $table;
                 foreach (Configuration::getEnableSettings($table) as $setting) {
-                    $setting = (string) $setting;
+                    $setting     = (string) $setting;
                     $flatColumns = Configuration::getFlatColumns($table, $setting);
 
-                    if (\count($flatColumns) === 0) {
+                    if (count($flatColumns) === 0) {
                         continue;
                     }
 
                     $disableColumn = (string) $flatColumns[0];
-                    $enableColumn = (string) $flatColumns[1];
+                    $enableColumn  = (string) $flatColumns[1];
 
                     $enableConstraints = [
                         $expressionBuilder->isNull($enableColumn),
@@ -88,7 +87,7 @@ class ContextRestriction implements EnforceableQueryRestrictionInterface, QueryR
                         ...$enableConstraints,
                     );
 
-                    if (\count($disableConstraints) > 0) {
+                    if (count($disableConstraints) > 0) {
                         $constraints[] = $expressionBuilder->or(
                             $expressionBuilder->isNull($disableColumn),
                             $expressionBuilder->eq(
@@ -105,11 +104,9 @@ class ContextRestriction implements EnforceableQueryRestrictionInterface, QueryR
         return $expressionBuilder->and(...$constraints);
     }
 
-    /**
-     */
     protected function isEnvironmentInFrontendMode(): bool
     {
-        return \defined('TYPO3')
+        return defined('TYPO3')
             && (($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface)
             && ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend();
     }

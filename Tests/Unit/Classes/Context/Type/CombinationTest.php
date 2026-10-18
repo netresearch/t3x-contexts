@@ -92,7 +92,7 @@ final class CombinationTest extends TestBase
     #[Test]
     public function matchSuccess(): void
     {
-        $ipContext = $this->createTestContext(123, 'UNITTEST', false, true);
+        $ipContext  = $this->createTestContext(123, 'UNITTEST', false, true);
         $getContext = $this->createTestContext(124, 'getUNITTEST', false, true);
 
         $combinationContext = $this->createCombinationContext(
@@ -132,7 +132,7 @@ final class CombinationTest extends TestBase
     #[Test]
     public function matchSuccessWithDisabled(): void
     {
-        $ipContext = $this->createTestContext(123, 'UNITTEST', false, true);
+        $ipContext  = $this->createTestContext(123, 'UNITTEST', false, true);
         $getContext = $this->createTestContext(124, 'getUNITTEST', true, true);
 
         $combinationContext = $this->createCombinationContext(
@@ -173,7 +173,7 @@ final class CombinationTest extends TestBase
     #[Test]
     public function matchFailed(): void
     {
-        $ipContext = $this->createTestContext(123, 'UNITTEST', false, false);
+        $ipContext  = $this->createTestContext(123, 'UNITTEST', false, false);
         $getContext = $this->createTestContext(124, 'getUNITTEST', false, true);
 
         $combinationContext = $this->createCombinationContext(
@@ -212,7 +212,7 @@ final class CombinationTest extends TestBase
     #[Test]
     public function matchFailedWithDisabled(): void
     {
-        $ipContext = $this->createTestContext(123, 'UNITTEST', false, false);
+        $ipContext  = $this->createTestContext(123, 'UNITTEST', false, false);
         $getContext = $this->createTestContext(124, 'getUNITTEST', true, true);
 
         $combinationContext = $this->createCombinationContext(
@@ -250,7 +250,7 @@ final class CombinationTest extends TestBase
     #[Test]
     public function matchSuccessWithOrExpression(): void
     {
-        $ipContext = $this->createTestContext(123, 'UNITTEST', false, false);
+        $ipContext  = $this->createTestContext(123, 'UNITTEST', false, false);
         $getContext = $this->createTestContext(124, 'getUNITTEST', false, true);
 
         $combinationContext = $this->createCombinationContext(
@@ -292,7 +292,7 @@ final class CombinationTest extends TestBase
     #[Test]
     public function matchFailedWithOrExpressionBothFalse(): void
     {
-        $ipContext = $this->createTestContext(123, 'UNITTEST', false, false);
+        $ipContext  = $this->createTestContext(123, 'UNITTEST', false, false);
         $getContext = $this->createTestContext(124, 'getUNITTEST', false, false);
 
         $combinationContext = $this->createCombinationContext(
@@ -367,7 +367,7 @@ final class CombinationTest extends TestBase
     #[Test]
     public function matchSuccessWithXorExpression(): void
     {
-        $ipContext = $this->createTestContext(123, 'UNITTEST', false, true);
+        $ipContext  = $this->createTestContext(123, 'UNITTEST', false, true);
         $getContext = $this->createTestContext(124, 'getUNITTEST', false, false);
 
         $combinationContext = $this->createCombinationContext(
@@ -407,7 +407,7 @@ final class CombinationTest extends TestBase
     #[Test]
     public function matchFailedWithXorExpressionBothTrue(): void
     {
-        $ipContext = $this->createTestContext(123, 'UNITTEST', false, true);
+        $ipContext  = $this->createTestContext(123, 'UNITTEST', false, true);
         $getContext = $this->createTestContext(124, 'getUNITTEST', false, true);
 
         $combinationContext = $this->createCombinationContext(
@@ -563,9 +563,9 @@ final class CombinationTest extends TestBase
             public function __construct(int $uid, string $alias, bool $disabled, ?bool $matchResult)
             {
                 parent::__construct();
-                $this->uid = $uid;
-                $this->alias = $alias;
-                $this->disabled = $disabled;
+                $this->uid         = $uid;
+                $this->alias       = $alias;
+                $this->disabled    = $disabled;
                 $this->matchResult = $matchResult;
             }
 
@@ -587,10 +587,10 @@ final class CombinationTest extends TestBase
             public function __construct(int $uid, string $alias, string $expression)
             {
                 parent::__construct();
-                $this->uid = $uid;
-                $this->alias = $alias;
+                $this->uid        = $uid;
+                $this->alias      = $alias;
                 $this->expression = $expression;
-                $this->disabled = false;
+                $this->disabled   = false;
             }
 
             protected function getConfValue(

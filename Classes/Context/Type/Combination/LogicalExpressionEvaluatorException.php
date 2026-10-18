@@ -19,13 +19,12 @@ namespace Netresearch\Contexts\Context\Type\Combination;
 use Exception;
 
 /**
- * Exception for parsing and evaluation errors
+ * Exception for parsing and evaluation errors.
  *
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
-class LogicalExpressionEvaluatorException extends Exception
-{
-}
+class LogicalExpressionEvaluatorException extends Exception {}

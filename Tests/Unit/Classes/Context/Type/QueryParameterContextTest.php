@@ -16,6 +16,8 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
+use const E_NOTICE;
+
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Context\Type\QueryParameterContext;
 use Netresearch\Contexts\Tests\Unit\TestBase;
@@ -38,7 +40,7 @@ final class QueryParameterContextTest extends TestBase
     protected function setUp(): void
     {
         parent::setUp();
-        error_reporting(error_reporting() & ~\E_NOTICE);
+        error_reporting(error_reporting() & ~E_NOTICE);
         $this->mockGetParams = [];
     }
 
@@ -186,7 +188,7 @@ final class QueryParameterContextTest extends TestBase
 
         try {
             $instance = new QueryParameterContext();
-            $result = $this->callProtected($instance, 'getQueryParams');
+            $result   = $this->callProtected($instance, 'getQueryParams');
 
             self::assertArrayHasKey('test_param', $result);
             self::assertSame('global-value', $result['test_param']);
@@ -203,11 +205,11 @@ final class QueryParameterContextTest extends TestBase
         unset($GLOBALS['TYPO3_REQUEST']);
 
         $originalGet = $_GET;
-        $_GET = ['fallback_param' => 'fallback-value'];
+        $_GET        = ['fallback_param' => 'fallback-value'];
 
         try {
             $instance = new QueryParameterContext();
-            $result = $this->callProtected($instance, 'getQueryParams');
+            $result   = $this->callProtected($instance, 'getQueryParams');
 
             self::assertArrayHasKey('fallback_param', $result);
             self::assertSame('fallback-value', $result['fallback_param']);
@@ -230,7 +232,7 @@ final class QueryParameterContextTest extends TestBase
 
         try {
             $instance = new QueryParameterContext();
-            $result = $this->callProtected($instance, 'getQueryParams');
+            $result   = $this->callProtected($instance, 'getQueryParams');
 
             self::assertArrayHasKey('container_param', $result);
             self::assertSame('container-value', $result['container_param']);
@@ -292,9 +294,9 @@ final class QueryParameterContextTest extends TestBase
              */
             public function __construct(string $fieldName, string $fieldValues, array $getParams)
             {
-                $this->mockFieldName = $fieldName;
+                $this->mockFieldName   = $fieldName;
                 $this->mockFieldValues = $fieldValues;
-                $this->mockGetParams = $getParams;
+                $this->mockGetParams   = $getParams;
             }
 
             protected function getConfValue(
@@ -305,9 +307,9 @@ final class QueryParameterContextTest extends TestBase
                 string $value = 'vDEF',
             ): string {
                 return match ($fieldNameArg) {
-                    'field_name' => $this->mockFieldName,
+                    'field_name'   => $this->mockFieldName,
                     'field_values' => $this->mockFieldValues,
-                    default => $default,
+                    default        => $default,
                 };
             }
 

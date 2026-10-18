@@ -87,7 +87,7 @@ final class RecordSettingsFormElementTest extends UnitTestCase
     public function renderMethodIsPublic(): void
     {
         $reflection = new ReflectionClass(RecordSettingsFormElement::class);
-        $method = $reflection->getMethod('render');
+        $method     = $reflection->getMethod('render');
 
         self::assertTrue($method->isPublic(), 'render() must be public');
     }
@@ -96,7 +96,7 @@ final class RecordSettingsFormElementTest extends UnitTestCase
     public function renderMethodReturnsArray(): void
     {
         $reflection = new ReflectionClass(RecordSettingsFormElement::class);
-        $method = $reflection->getMethod('render');
+        $method     = $reflection->getMethod('render');
         $returnType = $method->getReturnType();
 
         self::assertNotNull($returnType);
@@ -125,12 +125,12 @@ final class RecordSettingsFormElementTest extends UnitTestCase
         }
 
         $mockIconFactory = $this->createMock(IconFactory::class);
-        $element = new RecordSettingsFormElement();
+        $element         = new RecordSettingsFormElement();
         $element->injectIconFactory($mockIconFactory);
 
         $reflection = new ReflectionClass($element);
-        $property = $reflection->getProperty('iconFactory');
-        $value = $property->getValue($element);
+        $property   = $reflection->getProperty('iconFactory');
+        $value      = $property->getValue($element);
 
         self::assertSame($mockIconFactory, $value);
     }
@@ -150,7 +150,7 @@ final class RecordSettingsFormElementTest extends UnitTestCase
     public function getClickMenuIsProtected(): void
     {
         $reflection = new ReflectionClass(RecordSettingsFormElement::class);
-        $method = $reflection->getMethod('getClickMenu');
+        $method     = $reflection->getMethod('getClickMenu');
 
         self::assertTrue($method->isProtected(), 'getClickMenu() must be protected');
     }
@@ -170,7 +170,7 @@ final class RecordSettingsFormElementTest extends UnitTestCase
     public function getIconIsProtected(): void
     {
         $reflection = new ReflectionClass(RecordSettingsFormElement::class);
-        $method = $reflection->getMethod('getIcon');
+        $method     = $reflection->getMethod('getIcon');
 
         self::assertTrue($method->isProtected(), 'getIcon() must be protected');
     }
@@ -190,7 +190,7 @@ final class RecordSettingsFormElementTest extends UnitTestCase
     public function getRecordPreviewIsProtected(): void
     {
         $reflection = new ReflectionClass(RecordSettingsFormElement::class);
-        $method = $reflection->getMethod('getRecordPreview');
+        $method     = $reflection->getMethod('getRecordPreview');
 
         self::assertTrue($method->isProtected(), 'getRecordPreview() must be protected');
     }
@@ -569,7 +569,7 @@ final class RecordSettingsFormElementTest extends UnitTestCase
             uid: 0,
             tableName: 'tt_content',
             settings: [
-                'tx_contexts' => ['label' => 'LLL:visibility'],
+                'tx_contexts'     => ['label' => 'LLL:visibility'],
                 'tx_contexts_nav' => ['label' => 'LLL:navigation'],
             ],
             contexts: [],
@@ -770,28 +770,28 @@ final class RecordSettingsFormElementTest extends UnitTestCase
         };
 
         $reflection = new ReflectionClass(AbstractContext::class);
-        $uidProp = $reflection->getProperty('uid');
+        $uidProp    = $reflection->getProperty('uid');
         $uidProp->setValue($context, $contextUid);
 
         return new Setting($context, [
-            'uid' => 1,
+            'uid'           => 1,
             'foreign_table' => 'tt_content',
-            'name' => 'tx_contexts',
-            'foreign_uid' => 0,
-            'enabled' => $enabled,
+            'name'          => 'tx_contexts',
+            'foreign_uid'   => 0,
+            'enabled'       => $enabled,
         ]);
     }
 
     /**
      * Build a TestableRecordSettingsFormElement with injected test doubles.
      *
-     * @param int $uid The uid of the record being edited (0 for new records)
-     * @param string $tableName The table name
-     * @param array $settings The settings config
-     * @param AbstractContext[] $contexts Contexts to populate the container with
-     * @param Setting|null $resolvedSetting Setting to return for context->getSetting()
-     * @param string $noContextsLabel Translation for "no contexts"
-     * @param string $settingLabel Translation for setting column labels
+     * @param int               $uid             The uid of the record being edited (0 for new records)
+     * @param string            $tableName       The table name
+     * @param array             $settings        The settings config
+     * @param AbstractContext[] $contexts        Contexts to populate the container with
+     * @param Setting|null      $resolvedSetting Setting to return for context->getSetting()
+     * @param string            $noContextsLabel Translation for "no contexts"
+     * @param string            $settingLabel    Translation for setting column labels
      */
     private function buildTestableElement(
         int $uid,
@@ -804,20 +804,20 @@ final class RecordSettingsFormElementTest extends UnitTestCase
     ): TestableRecordSettingsFormElement {
         $languageService = $this->createMock(LanguageService::class);
         $languageService->method('sL')->willReturnCallback(
-            static fn(string $key): string => match (true) {
-                str_contains($key, 'no_contexts') => $noContextsLabel,
+            static fn (string $key): string => match (true) {
+                str_contains($key, 'no_contexts')          => $noContextsLabel,
                 str_contains($key, 'tx_contexts_contexts') => 'Contexts',
-                default => $settingLabel,
+                default                                    => $settingLabel,
             },
         );
 
         $nodeFactory = $this->createMock(NodeFactory::class);
 
         $data = [
-            'databaseRow' => ['uid' => $uid],
-            'tableName' => $tableName,
+            'databaseRow'     => ['uid' => $uid],
+            'tableName'       => $tableName,
             'elementBaseName' => '[' . $tableName . '][' . $uid . '][tx_contexts_settings]',
-            'parameterArray' => [
+            'parameterArray'  => [
                 'fieldConf' => [
                     'config' => [
                         'settings' => $settings,
@@ -863,9 +863,9 @@ class TestableRecordSettingsFormElement extends RecordSettingsFormElement
         array $data,
     ) {
         // Set parent properties directly — works for both v12 (constructor) and v13 (setter)
-        $this->nodeFactory = $nodeFactory;
-        $this->data = $data;
-        $this->testContexts = $testContexts;
+        $this->nodeFactory         = $nodeFactory;
+        $this->data                = $data;
+        $this->testContexts        = $testContexts;
         $this->testResolvedSetting = $testResolvedSetting;
         $this->mockLanguageService = $mockLanguageService;
         // iconFactory is null by default (not injected in tests unless needed)
@@ -892,11 +892,11 @@ class TestableRecordSettingsFormElement extends RecordSettingsFormElement
         // Use injected contexts instead of Container::initAll()
         $contexts = $this->testContexts;
 
-        $namePre = 'data' . $this->data['elementBaseName'];
+        $namePre  = 'data' . $this->data['elementBaseName'];
         $settings = $this->data['parameterArray']['fieldConf']['config']['settings'];
 
         $contextsLabel = $this->getLanguageService()->sL('LLL:' . Configuration::LANG_FILE . ':tx_contexts_contexts');
-        $content = <<<HTML
+        $content       = <<<HTML
             <table class="tx_contexts_table_settings typo3-dblist" style="width: auto; min-width: 50%;">
                 <tbody>
                     <tr class="t3-row-header">
@@ -932,7 +932,7 @@ class TestableRecordSettingsFormElement extends RecordSettingsFormElement
 
             ++$visibleContexts;
             $contSettings = '';
-            $bHasSetting = false;
+            $bHasSetting  = false;
 
             foreach ($settings as $settingName => $config) {
                 // Use the injected pre-resolved setting instead of DB lookup
@@ -979,7 +979,7 @@ class TestableRecordSettingsFormElement extends RecordSettingsFormElement
             </table>
             HTML;
 
-        $result = $this->initializeResultArray();
+        $result         = $this->initializeResultArray();
         $result['html'] = $content;
 
         return $result;

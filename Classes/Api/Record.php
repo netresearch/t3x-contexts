@@ -16,29 +16,32 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Api;
 
+use function array_key_exists;
+use function count;
+
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 
 /**
- * API with methods to retrieve context information for records
+ * API with methods to retrieve context information for records.
  *
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class Record
 {
     /**
      * Determines if the specified record is enabled or disabled by the current
      * contexts (means that the records is disabled if one of the enableSettings
-     * are disabled for one of the current contexts)
+     * are disabled for one of the current contexts).
      *
      * @param string $table Table name
      * @param array  $row   Record array or an uid
-     *
      *
      * @throws DBALException
      * @throws Exception
@@ -47,7 +50,7 @@ class Record
     {
         $enableSettings = Configuration::getEnableSettings($table);
 
-        if (\count($enableSettings) === 0) {
+        if (count($enableSettings) === 0) {
             return true;
         }
 
@@ -62,12 +65,11 @@ class Record
 
     /**
      * Determines if a setting is enabled or disabled by the current contexts
-     * (returns false if the setting is disabled for one of the contexts)
+     * (returns false if the setting is disabled for one of the contexts).
      *
      * @param string $table   Table name
      * @param string $setting Setting name
      * @param array  $row     Record array
-     *
      *
      * @throws DBALException
      * @throws Exception
@@ -89,7 +91,7 @@ class Record
         // @codeCoverageIgnoreStart
         /** @var AbstractContext $context */
         foreach (Container::get() as $context) {
-            $rowSetting = $context->getSetting($table, $setting, $uid);
+            $rowSetting     = $context->getSetting($table, $setting, $uid);
             $defaultSetting = $context->getSetting($table, $setting, 0);
 
             if (
@@ -106,7 +108,7 @@ class Record
 
     /**
      * Tries to get if the setting is enabled by evaluating the flat columns
-     * within the record
+     * within the record.
      *
      * @param string $table   Table name
      * @param string $setting Setting name
@@ -120,16 +122,16 @@ class Record
     {
         $flatColumns = Configuration::getFlatColumns($table, $setting);
 
-        if (\count($flatColumns) === 0) {
+        if (count($flatColumns) === 0) {
             return null;
         }
 
-        $rowValid = true;
+        $rowValid           = true;
         $flatColumnContents = [];
 
         foreach ($flatColumns as $i => $flatColumn) {
             $flatColumn = (string) $flatColumn;
-            if (!\array_key_exists($flatColumn, $row) || ($row[$flatColumn] === null)) {
+            if (!array_key_exists($flatColumn, $row) || ($row[$flatColumn] === null)) {
                 $rowValid = false;
             } elseif ($row[$flatColumn] !== '') {
                 $flatColumnContents[$i] = array_flip(explode(',', (string) $row[$flatColumn]));
@@ -143,7 +145,7 @@ class Record
         }
 
         foreach (Container::get() as $context) {
-            if (\array_key_exists($context->getUid(), $flatColumnContents[0])) {
+            if (array_key_exists($context->getUid(), $flatColumnContents[0])) {
                 return false;
             }
         }

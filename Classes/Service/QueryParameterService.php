@@ -16,6 +16,8 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Service;
 
+use function array_key_exists;
+
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Context\Type\QueryParameterContext;
@@ -45,7 +47,8 @@ use TYPO3\CMS\Core\SingletonInterface;
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class QueryParameterService implements SingletonInterface
 {
@@ -98,10 +101,10 @@ class QueryParameterService implements SingletonInterface
     public function getParameterValues(ServerRequestInterface $request): array
     {
         $queryParams = $request->getQueryParams();
-        $values = [];
+        $values      = [];
 
         foreach ($this->getParameterNames() as $name) {
-            if (\array_key_exists($name, $queryParams)) {
+            if (array_key_exists($name, $queryParams)) {
                 $values[$name] = $queryParams[$name];
             }
         }
@@ -120,7 +123,7 @@ class QueryParameterService implements SingletonInterface
     public function reset(): void
     {
         $this->parameterNames = null;
-        $this->linkVarNames = null;
+        $this->linkVarNames   = null;
     }
 
     /**
@@ -145,7 +148,7 @@ class QueryParameterService implements SingletonInterface
         }
 
         $parameterNames = [];
-        $linkVarNames = [];
+        $linkVarNames   = [];
 
         foreach ($this->getAvailableContexts() as $context) {
             if (!$context instanceof QueryParameterContext) {
@@ -170,7 +173,7 @@ class QueryParameterService implements SingletonInterface
         }
 
         $this->parameterNames = array_keys($parameterNames);
-        $this->linkVarNames = array_keys($linkVarNames);
+        $this->linkVarNames   = array_keys($linkVarNames);
 
         sort($this->parameterNames);
         sort($this->linkVarNames);

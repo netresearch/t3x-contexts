@@ -16,6 +16,11 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Context\Type;
 
+use const FILTER_FLAG_IPV4;
+use const FILTER_VALIDATE_IP;
+
+use function is_string;
+
 use Netresearch\Contexts\Context\Type\IpContext;
 use Netresearch\Contexts\Tests\Unit\TestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -32,8 +37,8 @@ final class IpContextTest extends TestBase
     protected function setUp(): void
     {
         parent::setUp();
-        $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? null;
-        $this->originalRemoteAddr = \is_string($remoteAddr) ? $remoteAddr : null;
+        $remoteAddr               = $_SERVER['REMOTE_ADDR'] ?? null;
+        $this->originalRemoteAddr = is_string($remoteAddr) ? $remoteAddr : null;
     }
 
     protected function tearDown(): void
@@ -155,7 +160,7 @@ final class IpContextTest extends TestBase
             $instance,
             'isIpInRange',
             $ip,
-            filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4) !== false,
+            filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false,
             $range,
         );
 

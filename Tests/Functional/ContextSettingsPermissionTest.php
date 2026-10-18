@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2026 Netresearch DTT GmbH
+ * Copyright (c) 2025-2026 Netresearch DTT GmbH
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
@@ -64,7 +64,7 @@ final class ContextSettingsPermissionTest extends FunctionalTestCase
         $dataHandler = $this->runDataMap(self::EDITOR_WITHOUT_CONTEXT_FIELDS, [
             'pages' => [
                 1 => [
-                    'title' => 'Edited page',
+                    'title'                => 'Edited page',
                     'tx_contexts_settings' => [11 => ['tx_contexts' => '0', 'tx_contexts_nav' => '']],
                 ],
             ],

@@ -20,11 +20,12 @@ use Netresearch\Contexts\ExpressionLanguage\FunctionsProvider\ContextFunctionsPr
 use TYPO3\CMS\Core\ExpressionLanguage\AbstractProvider;
 
 /**
- * Class ContextConditionProvider
+ * Class ContextConditionProvider.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class ContextConditionProvider extends AbstractProvider
 {

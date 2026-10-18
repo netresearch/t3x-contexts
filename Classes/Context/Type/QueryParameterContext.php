@@ -16,6 +16,10 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Context\Type;
 
+use function array_key_exists;
+use function count;
+use function in_array;
+
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Psr\Http\Message\ServerRequestInterface;
@@ -23,13 +27,14 @@ use RuntimeException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Matches on a GET parameter with a certain value
+ * Matches on a GET parameter with a certain value.
  *
  * @author  Christian Weiske <christian.weiske@netresearch.de>
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class QueryParameterContext extends AbstractContext
 {
@@ -55,9 +60,10 @@ class QueryParameterContext extends AbstractContext
 
         $queryParams = $this->getQueryParams();
 
-        if (!\array_key_exists($param, $queryParams)) {
+        if (!array_key_exists($param, $queryParams)) {
             // load from session if no param given
             [$bUseMatch, $bMatch] = $this->getMatchFromSession();
+
             return $this->invert($bUseMatch && ($bMatch ?? false));
         }
 
@@ -70,7 +76,7 @@ class QueryParameterContext extends AbstractContext
         );
 
         return $this->invert($this->storeInSession(
-            (\count($values) === 0) || \in_array($value, $values, true),
+            (count($values) === 0) || in_array($value, $values, true),
         ));
     }
 
@@ -131,6 +137,7 @@ class QueryParameterContext extends AbstractContext
     protected function getQueryParameter(string $param): mixed
     {
         $queryParams = $this->getQueryParams();
+
         return $queryParams[$param] ?? null;
     }
 }

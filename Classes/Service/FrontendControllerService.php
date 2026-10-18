@@ -16,15 +16,19 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Service;
 
+use function array_slice;
+use function is_array;
+
 use Netresearch\Contexts\Context\Container;
 use TYPO3\CMS\Core\SingletonInterface;
 
 /**
- * Class FrontendControllerService
+ * Class FrontendControllerService.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class FrontendControllerService implements SingletonInterface
 {
@@ -36,7 +40,7 @@ class FrontendControllerService implements SingletonInterface
      * enabled, which propagates their restrictions down the page tree.
      *
      * @param array<int, array<string, mixed>> $rootLine The page rootline
-     *                                                    (current page first, root page last)
+     *                                                   (current page first, root page last)
      *
      * @return bool FALSE if context restrictions deny access
      */
@@ -53,13 +57,13 @@ class FrontendControllerService implements SingletonInterface
         // even when the required context is not active.
         $currentPage = reset($rootLine);
 
-        if (\is_array($currentPage) && !$this->isPageAccessible($currentPage, $contexts)) {
+        if (is_array($currentPage) && !$this->isPageAccessible($currentPage, $contexts)) {
             return false;
         }
 
         // Check parent pages (skip index 0 = current page).
         // Parent pages only apply restrictions if extendToSubpages is enabled.
-        $parentPages = \array_slice($rootLine, 1);
+        $parentPages       = array_slice($rootLine, 1);
         $findExtendSubPage = false;
 
         foreach (array_reverse($parentPages) as $page) {

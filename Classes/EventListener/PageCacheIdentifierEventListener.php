@@ -41,8 +41,7 @@ final readonly class PageCacheIdentifierEventListener
     public function __construct(
         private PageService $pageService,
         private QueryParameterService $queryParameterService,
-    ) {
-    }
+    ) {}
 
     public function __invoke(BeforePageCacheIdentifierIsHashedEvent $event): void
     {

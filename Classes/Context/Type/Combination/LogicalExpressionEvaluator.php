@@ -16,90 +16,107 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Context\Type\Combination;
 
+use function array_key_exists;
+use function count;
+use function in_array;
+use function is_array;
+use function is_int;
+
+use const PREG_OFFSET_CAPTURE;
+
 use stdClass;
 
 /**
- * An evaluator that tokenizes, parses and evaluates logical expressions
+ * An evaluator that tokenizes, parses and evaluates logical expressions.
  *
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class LogicalExpressionEvaluator
 {
     /**
-     * Identifier for any unknown token
+     * Identifier for any unknown token.
+     *
      * @var int
      */
     public const T_UNKNOWN = 0;
 
     /**
-     * Identifier for && token
+     * Identifier for && token.
+     *
      * @var int
      */
     public const T_AND = 1;
 
     /**
-     * Identifier for || token
+     * Identifier for || token.
+     *
      * @var int
      */
     public const T_OR = 2;
 
     /**
-     * Identifier for >< token
+     * Identifier for >< token.
+     *
      * @var int
      */
     public const T_XOR = 3;
 
     /**
-     * Identifier for ! token
+     * Identifier for ! token.
+     *
      * @var int
      */
     public const T_NEGATE = 4;
 
     /**
-     * Identifier for ( token
+     * Identifier for ( token.
+     *
      * @var int
      */
     public const T_PL = 5;
 
     /**
-     * Identifier for ) token
+     * Identifier for ) token.
+     *
      * @var int
      */
     public const T_PR = 6;
 
     /**
-     * Identifier for variable tokens
+     * Identifier for variable tokens.
+     *
      * @var int
      */
     public const T_VAR = 7;
 
     /**
-     * Identifier for end token
+     * Identifier for end token.
+     *
      * @var int
      */
     public const T_END = 8;
 
     /**
-     * Token identifier to token map
+     * Token identifier to token map.
      *
      * @var array<int, string>
      */
     protected static array $operatorMap = [
-        self::T_AND => '&&',
-        self::T_OR => '||',
-        self::T_XOR => '><',
+        self::T_AND    => '&&',
+        self::T_OR     => '||',
+        self::T_XOR    => '><',
         self::T_NEGATE => '!',
-        self::T_PL => '(',
-        self::T_PR => ')',
+        self::T_PL     => '(',
+        self::T_PR     => ')',
     ];
 
     /**
      * Scope container - required to share the scope array
-     * between all current scope instances
-     *
+     * between all current scope instances.
      */
     protected ?stdClass $scopeContainer = null;
 
@@ -107,40 +124,36 @@ class LogicalExpressionEvaluator
      * Token array: Can contain
      * * integers (operators)
      * * arrays (variables)
-     * * self (scopes)
+     * * self (scopes).
      *
      * @var array<int, int|array<int, mixed>|self>
      */
     protected array $tokens = [];
 
     /**
-     * Parent scope - set by @see pushScope() (that's NOT the same as getScope())
-     *
+     * Parent scope - set by @see pushScope() (that's NOT the same as getScope()).
      */
     protected ?LogicalExpressionEvaluator $parentScope = null;
 
     /**
      * Set when a negation token was handled and
-     * factored in when the next token gets pushed
-     *
+     * factored in when the next token gets pushed.
      */
     protected bool $nextTokenNegated = false;
 
     /**
-     * Set on scopes by pushToken() when they are negated
+     * Set on scopes by pushToken() when they are negated.
      */
     protected bool $negated = false;
 
     /**
      * After precedence shifting the operator tokens
-     * are extracted and set to this variable
-     *
+     * are extracted and set to this variable.
      */
     protected int $operator = self::T_UNKNOWN;
 
     /**
-     * Shortcut to instantiate, tokenize, parse and evaluate
-     *
+     * Shortcut to instantiate, tokenize, parse and evaluate.
      *
      * @throws LogicalExpressionEvaluatorException
      */
@@ -148,6 +161,7 @@ class LogicalExpressionEvaluator
     {
         $evaluator = new self();
         $evaluator->parse($evaluator->tokenize($expression));
+
         return $evaluator->evaluate($values);
     }
 
@@ -155,9 +169,7 @@ class LogicalExpressionEvaluator
      * Tokenize an expression. Returns an array of tokens which
      * can be either integer when they are operators or array
      * when they are variable or unknown tokens (the identifier
-     * is then in key 0 and the token in key 1)
-     *
-     *
+     * is then in key 0 and the token in key 1).
      */
     public function tokenize(string $expression): array
     {
@@ -186,15 +198,15 @@ class LogicalExpressionEvaluator
         /** @var string[][] $operators */
         $operators = [];
 
-        preg_match_all($pattern, $expression . ' ', $operators, \PREG_OFFSET_CAPTURE);
+        preg_match_all($pattern, $expression . ' ', $operators, PREG_OFFSET_CAPTURE);
 
         $nextPosition = 0;
-        $tokens = [];
+        $tokens       = [];
         $lastOperator = '';
-        $operatorMap = array_flip(self::$operatorMap);
+        $operatorMap  = array_flip(self::$operatorMap);
         foreach ($operators[0] as $operator) {
             if ($lastOperator !== '') {
-                if (\array_key_exists($lastOperator . $operator[0], $operatorMap)) {
+                if (array_key_exists($lastOperator . $operator[0], $operatorMap)) {
                     $tokens[] = $operatorMap[$lastOperator . $operator[0]];
                 } else {
                     $tokens[] = [
@@ -215,8 +227,8 @@ class LogicalExpressionEvaluator
 
             $nextPosition = $operator[1] + 1;
 
-            if (\array_key_exists($operator[0], $operatorMap)) {
-                $tokens[] = $operatorMap[$operator[0]];
+            if (array_key_exists($operator[0], $operatorMap)) {
+                $tokens[]     = $operatorMap[$operator[0]];
                 $lastOperator = '';
             } elseif (trim($operator[0]) !== '') {
                 $lastOperator = $operator[0];
@@ -231,16 +243,15 @@ class LogicalExpressionEvaluator
     }
 
     /**
-     * Parse the tokens
-     *
+     * Parse the tokens.
      *
      * @throws LogicalExpressionEvaluatorException
      */
     public function parse(array $tokens): void
     {
-        $this->scopeContainer = new stdClass();
+        $this->scopeContainer         = new stdClass();
         $this->scopeContainer->scopes = [];
-        $this->scopeContainer->keys = [];
+        $this->scopeContainer->keys   = [];
         $this->pushScope();
 
         $this->tokens = [
@@ -266,23 +277,23 @@ class LogicalExpressionEvaluator
 
     /**
      * Evalute the tokenized and parsed expression with the
-     * provided values
+     * provided values.
      *
      * @throws LogicalExpressionEvaluatorException
      */
     public function evaluate(array $values): bool
     {
         // default if no operator isset
-        $value = false;
+        $value     = false;
         $lastValue = null;
 
         foreach ($this->tokens as $i => $token) {
             if ($token instanceof self) {
                 $value = $token->evaluate($values);
-            } elseif (\is_array($token)) {
+            } elseif (is_array($token)) {
                 /** @var string $tokenKey */
                 $tokenKey = $token[1];
-                if (!\array_key_exists($tokenKey, $values)) {
+                if (!array_key_exists($tokenKey, $values)) {
                     $values[$tokenKey] = true;
                 }
 
@@ -290,7 +301,7 @@ class LogicalExpressionEvaluator
                 if ($value === 'disabled') {
                     // context is disabled, so treat it as matching
                     $value = true;
-                } elseif (\array_key_exists(2, $token)) {
+                } elseif (array_key_exists(2, $token)) {
                     $value = !$value;
                 }
             }
@@ -335,9 +346,7 @@ class LogicalExpressionEvaluator
      * Recreate the expression from the parsed tokens mainly for
      * debugging purpose
      * (set $unshifted to true when the tokens were not yet
-     * precedence shifted)
-     *
-     *
+     * precedence shifted).
      */
     public function rebuild(bool $unshifted = false): string
     {
@@ -352,14 +361,14 @@ class LogicalExpressionEvaluator
                 if ($token->negated) {
                     $str = '!' . $str;
                 }
-            } elseif ($unshifted && \is_int($token)) {
+            } elseif ($unshifted && is_int($token)) {
                 // @codeCoverageIgnoreStart
-                $str = \array_key_exists($token, self::$operatorMap) ? self::$operatorMap[$token] : '?';
+                $str = array_key_exists($token, self::$operatorMap) ? self::$operatorMap[$token] : '?';
                 $str = ' ' . $str . ' ';
                 // @codeCoverageIgnoreEnd
-            } elseif (\is_array($token)) {
+            } elseif (is_array($token)) {
                 $str = (string) $token[1];
-                if (\array_key_exists(2, $token)) {
+                if (array_key_exists(2, $token)) {
                     $str = '!' . $str;
                 }
             } else {
@@ -371,7 +380,7 @@ class LogicalExpressionEvaluator
             $parts[] = $str;
         }
 
-        $operator = \array_key_exists($this->operator, self::$operatorMap) ? self::$operatorMap[$this->operator] : '?';
+        $operator = array_key_exists($this->operator, self::$operatorMap) ? self::$operatorMap[$this->operator] : '?';
         $operator = ' ' . $operator . ' ';
 
         return implode($operator, $parts);
@@ -379,8 +388,7 @@ class LogicalExpressionEvaluator
 
     /**
      * Instantiate and push a scope to the scope stack
-     * and increase the pointer stack
-     *
+     * and increase the pointer stack.
      */
     protected function pushScope(): void
     {
@@ -390,20 +398,19 @@ class LogicalExpressionEvaluator
             // @codeCoverageIgnoreEnd
         }
 
-        $scope = new self();
-        $scope->parentScope = $this;
+        $scope                 = new self();
+        $scope->parentScope    = $this;
         $scope->scopeContainer = $this->scopeContainer;
 
         $this->scopeContainer->scopes[] = $scope;
 
         /** @var array<int, self> $scopes */
-        $scopes = $this->scopeContainer->scopes;
+        $scopes                       = $this->scopeContainer->scopes;
         $this->scopeContainer->keys[] = array_key_last($scopes);
     }
 
     /**
-     * Pop the current scope (key)
-     *
+     * Pop the current scope (key).
      */
     protected function popScope(): void
     {
@@ -416,8 +423,7 @@ class LogicalExpressionEvaluator
     }
 
     /**
-     * Get the current scope (not to confuse with parent scope)
-     *
+     * Get the current scope (not to confuse with parent scope).
      */
     protected function getScope(): LogicalExpressionEvaluator
     {
@@ -435,9 +441,10 @@ class LogicalExpressionEvaluator
 
     /**
      * Handle a token: Creates scopes for each expression in parentheses and
-     * does some syntax checks
+     * does some syntax checks.
      *
      * @param int|array<int, mixed> $token
+     *
      * @throws LogicalExpressionEvaluatorException
      */
     protected function handleToken($token): void
@@ -462,7 +469,7 @@ class LogicalExpressionEvaluator
                     );
                 }
 
-                if (\is_int(end($this->tokens))) {
+                if (is_int(end($this->tokens))) {
                     throw new LogicalExpressionEvaluatorException(
                         'Unexpected )',
                         9855977305,
@@ -478,7 +485,7 @@ class LogicalExpressionEvaluator
             case self::T_AND:
             case self::T_OR:
             case self::T_XOR:
-                if ((\count($this->tokens) === 0) || \is_int(end($this->tokens))) {
+                if ((count($this->tokens) === 0) || is_int(end($this->tokens))) {
                     throw new LogicalExpressionEvaluatorException(
                         'Unexpected Operator',
                         1651471071,
@@ -489,7 +496,7 @@ class LogicalExpressionEvaluator
                 break;
 
             case self::T_END:
-                if (\is_int(end($this->tokens))) {
+                if (is_int(end($this->tokens))) {
                     throw new LogicalExpressionEvaluatorException(
                         'Unexpected end',
                         8606073221,
@@ -509,9 +516,9 @@ class LogicalExpressionEvaluator
                 break;
 
             default:
-                if (\is_array($token)) {
+                if (is_array($token)) {
                     if ($token[0] === self::T_VAR) {
-                        if ((\count($this->tokens) > 0) && !\is_int(end($this->tokens))) {
+                        if ((count($this->tokens) > 0) && !is_int(end($this->tokens))) {
                             throw new LogicalExpressionEvaluatorException(
                                 'Unexpected variable',
                                 7706253055,
@@ -530,15 +537,16 @@ class LogicalExpressionEvaluator
     }
 
     /**
-     * Add a token to the current scope tokens
+     * Add a token to the current scope tokens.
      *
      * @param int|array<int, mixed>|self $token
+     *
      * @throws LogicalExpressionEvaluatorException
      */
     protected function pushToken($token): void
     {
         if ($this->nextTokenNegated) {
-            if (\is_array($token)) {
+            if (is_array($token)) {
                 $token[2] = true;
             } elseif ($token instanceof self) {
                 $token->negated = true;
@@ -558,8 +566,7 @@ class LogicalExpressionEvaluator
     /**
      * Scans the current tokens for operators by the order they are
      * in $precedences and creates scopes for each expression next to
-     * those operators
-     *
+     * those operators.
      *
      * @throws LogicalExpressionEvaluatorException
      */
@@ -571,16 +578,16 @@ class LogicalExpressionEvaluator
             return;
         }
 
-        if (\in_array($operator, $this->tokens, true)) {
+        if (in_array($operator, $this->tokens, true)) {
             $this->operator = $operator;
-            $tokens = $this->tokens;
-            $this->tokens = [
+            $tokens         = $this->tokens;
+            $this->tokens   = [
                 $scope = new self(),
             ];
 
             foreach ($tokens as $token) {
                 if ($token === $this->operator) {
-                    $scope = new self();
+                    $scope          = new self();
                     $this->tokens[] = $scope;
                 } else {
                     $scope->pushToken($token);

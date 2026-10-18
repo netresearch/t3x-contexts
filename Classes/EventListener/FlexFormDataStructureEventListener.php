@@ -16,6 +16,8 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\EventListener;
 
+use function array_key_exists;
+
 use Netresearch\Contexts\Api\Configuration;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Configuration\Event\BeforeFlexFormDataStructureIdentifierInitializedEvent;
@@ -79,15 +81,15 @@ final readonly class FlexFormDataStructureEventListener
             return;
         }
 
-        $row = $event->getRow();
+        $row         = $event->getRow();
         $contextType = isset($row['type']) ? (string) $row['type'] : '';
 
-        if (!\array_key_exists($contextType, Configuration::getContextTypes())) {
+        if (!array_key_exists($contextType, Configuration::getContextTypes())) {
             $contextType = self::FALLBACK_TYPE;
         }
 
         $event->setIdentifier([
-            'type' => self::IDENTIFIER_TYPE,
+            'type'        => self::IDENTIFIER_TYPE,
             'contextType' => $contextType,
         ]);
     }
@@ -107,9 +109,9 @@ final readonly class FlexFormDataStructureEventListener
             return;
         }
 
-        $contextType = isset($identifier['contextType']) ? (string) $identifier['contextType'] : '';
+        $contextType  = isset($identifier['contextType']) ? (string) $identifier['contextType'] : '';
         $contextTypes = Configuration::getContextTypes();
-        $flexFile = $contextTypes[$contextType]['flexFile']
+        $flexFile     = $contextTypes[$contextType]['flexFile']
             ?? $contextTypes[self::FALLBACK_TYPE]['flexFile']
             ?? self::FALLBACK_DATA_STRUCTURE;
 

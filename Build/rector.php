@@ -31,7 +31,7 @@ return static function (RectorConfig $rectorConfig) use ($configure): void {
     // typo3/cms-core ^13.4 || ^14.3).
     $configure($rectorConfig, __DIR__ . '/..', [
         'tests' => true,
-        'php' => '8.2',
+        'php'   => '8.2',
         'typo3' => 13,
     ]);
 

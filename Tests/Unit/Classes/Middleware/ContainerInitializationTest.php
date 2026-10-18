@@ -83,7 +83,7 @@ final class ContainerInitializationTest extends UnitTestCase
     public function processMethodHasCorrectSignature(): void
     {
         $reflection = new ReflectionClass(ContainerInitialization::class);
-        $method = $reflection->getMethod('process');
+        $method     = $reflection->getMethod('process');
         $parameters = $method->getParameters();
 
         self::assertCount(2, $parameters, 'process() should accept exactly two parameters');
@@ -103,7 +103,7 @@ final class ContainerInitializationTest extends UnitTestCase
     public function processMethodReturnsResponseInterface(): void
     {
         $reflection = new ReflectionClass(ContainerInitialization::class);
-        $method = $reflection->getMethod('process');
+        $method     = $reflection->getMethod('process');
         $returnType = $method->getReturnType();
 
         self::assertNotNull($returnType);
@@ -114,7 +114,7 @@ final class ContainerInitializationTest extends UnitTestCase
     public function processDelegatesToHandler(): void
     {
         $expectedResponse = $this->createMock(ResponseInterface::class);
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request          = $this->createMock(ServerRequestInterface::class);
 
         $handler = $this->createMock(RequestHandlerInterface::class);
         $handler->expects(self::once())
@@ -144,7 +144,7 @@ final class ContainerInitializationTest extends UnitTestCase
             ->willReturn($container);
 
         // Inject the mock container as the singleton
-        $reflection = new ReflectionClass(Container::class);
+        $reflection       = new ReflectionClass(Container::class);
         $instanceProperty = $reflection->getProperty('instance');
         $instanceProperty->setValue(null, $container);
 
@@ -157,7 +157,7 @@ final class ContainerInitializationTest extends UnitTestCase
     public function processPassesRequestToContainer(): void
     {
         $response = $this->createMock(ResponseInterface::class);
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request  = $this->createMock(ServerRequestInterface::class);
 
         $handler = $this->createMock(RequestHandlerInterface::class);
         $handler->method('handle')->willReturn($response);
@@ -173,7 +173,7 @@ final class ContainerInitializationTest extends UnitTestCase
 
         $container->method('initMatching')->willReturn($container);
 
-        $reflection = new ReflectionClass(Container::class);
+        $reflection       = new ReflectionClass(Container::class);
         $instanceProperty = $reflection->getProperty('instance');
         $instanceProperty->setValue(null, $container);
 
@@ -185,7 +185,7 @@ final class ContainerInitializationTest extends UnitTestCase
     public function processCallsHandlerWithOriginalRequest(): void
     {
         $response = $this->createMock(ResponseInterface::class);
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request  = $this->createMock(ServerRequestInterface::class);
 
         $handler = $this->createMock(RequestHandlerInterface::class);
         $handler->expects(self::once())
@@ -200,7 +200,7 @@ final class ContainerInitializationTest extends UnitTestCase
         $container->method('setRequest')->willReturn($container);
         $container->method('initMatching')->willReturn($container);
 
-        $reflection = new ReflectionClass(Container::class);
+        $reflection       = new ReflectionClass(Container::class);
         $instanceProperty = $reflection->getProperty('instance');
         $instanceProperty->setValue(null, $container);
 
@@ -212,7 +212,7 @@ final class ContainerInitializationTest extends UnitTestCase
     public function processReturnsHandlerResponse(): void
     {
         $expectedResponse = $this->createMock(ResponseInterface::class);
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request          = $this->createMock(ServerRequestInterface::class);
 
         $handler = $this->createMock(RequestHandlerInterface::class);
         $handler->method('handle')->willReturn($expectedResponse);
@@ -224,12 +224,12 @@ final class ContainerInitializationTest extends UnitTestCase
         $container->method('setRequest')->willReturn($container);
         $container->method('initMatching')->willReturn($container);
 
-        $reflection = new ReflectionClass(Container::class);
+        $reflection       = new ReflectionClass(Container::class);
         $instanceProperty = $reflection->getProperty('instance');
         $instanceProperty->setValue(null, $container);
 
         $middleware = new ContainerInitialization();
-        $result = $middleware->process($request, $handler);
+        $result     = $middleware->process($request, $handler);
 
         self::assertSame($expectedResponse, $result);
     }
@@ -248,7 +248,7 @@ final class ContainerInitializationTest extends UnitTestCase
     #[Test]
     public function middlewareHasNoConstructorParameters(): void
     {
-        $reflection = new ReflectionClass(ContainerInitialization::class);
+        $reflection  = new ReflectionClass(ContainerInitialization::class);
         $constructor = $reflection->getConstructor();
 
         if ($constructor !== null) {
@@ -267,7 +267,7 @@ final class ContainerInitializationTest extends UnitTestCase
     public function processCallsInitMatchingOnContainer(): void
     {
         $response = $this->createMock(ResponseInterface::class);
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request  = $this->createMock(ServerRequestInterface::class);
 
         $handler = $this->createMock(RequestHandlerInterface::class);
         $handler->method('handle')->willReturn($response);
@@ -283,7 +283,7 @@ final class ContainerInitializationTest extends UnitTestCase
             ->method('initMatching')
             ->willReturn($container);
 
-        $reflection = new ReflectionClass(Container::class);
+        $reflection       = new ReflectionClass(Container::class);
         $instanceProperty = $reflection->getProperty('instance');
         $instanceProperty->setValue(null, $container);
 

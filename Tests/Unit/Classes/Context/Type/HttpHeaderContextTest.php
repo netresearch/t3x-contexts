@@ -39,7 +39,7 @@ final class HttpHeaderContextTest extends TestBase
     {
         parent::setUp();
         /** @var array<string, mixed> $serverVars */
-        $serverVars = $_SERVER;
+        $serverVars               = $_SERVER;
         $this->originalServerVars = $serverVars;
     }
 
@@ -55,14 +55,14 @@ final class HttpHeaderContextTest extends TestBase
     public static function valueMatchProvider(): array
     {
         return [
-            'exact match' => ['mobile', "mobile\ndesktop", true],
-            'no match' => ['tablet', "mobile\ndesktop", false],
+            'exact match'                          => ['mobile', "mobile\ndesktop", true],
+            'no match'                             => ['tablet', "mobile\ndesktop", false],
             'empty config matches non-empty value' => ['something', '', true],
-            'empty value with empty config' => ['', '', false],
-            'whitespace trimmed' => ['mobile', " mobile \n desktop ", true],
-            'substring match' => ['Mozilla/5.0 (iPhone; CPU)', "iPhone\nAndroid", true],
-            'case-insensitive match' => ['MOBILE-DEVICE', "mobile\ndesktop", true],
-            'no substring match' => ['Windows NT 10.0', "iPhone\nAndroid", false],
+            'empty value with empty config'        => ['', '', false],
+            'whitespace trimmed'                   => ['mobile', " mobile \n desktop ", true],
+            'substring match'                      => ['Mozilla/5.0 (iPhone; CPU)', "iPhone\nAndroid", true],
+            'case-insensitive match'               => ['MOBILE-DEVICE', "mobile\ndesktop", true],
+            'no substring match'                   => ['Windows NT 10.0', "iPhone\nAndroid", false],
         ];
     }
 
@@ -373,12 +373,12 @@ final class HttpHeaderContextTest extends TestBase
     {
         Container::reset();
 
-        $mockRequest = $this->createMock(ServerRequestInterface::class);
+        $mockRequest              = $this->createMock(ServerRequestInterface::class);
         $GLOBALS['TYPO3_REQUEST'] = $mockRequest;
 
         try {
             $instance = new HttpHeaderContext();
-            $result = $this->callProtected($instance, 'getRequest');
+            $result   = $this->callProtected($instance, 'getRequest');
 
             self::assertSame($mockRequest, $result);
         } finally {
@@ -395,7 +395,7 @@ final class HttpHeaderContextTest extends TestBase
 
         try {
             $instance = new HttpHeaderContext();
-            $result = $this->callProtected($instance, 'getRequest');
+            $result   = $this->callProtected($instance, 'getRequest');
 
             self::assertNull($result);
         } finally {
@@ -413,7 +413,7 @@ final class HttpHeaderContextTest extends TestBase
 
         try {
             $instance = new HttpHeaderContext();
-            $result = $this->callProtected($instance, 'getRequest');
+            $result   = $this->callProtected($instance, 'getRequest');
 
             self::assertSame($mockRequest, $result);
         } finally {
@@ -426,11 +426,11 @@ final class HttpHeaderContextTest extends TestBase
     {
         $serverParams = [
             'HTTP_X_CUSTOM' => 'value123',
-            'OTHER_KEY' => 'other',
+            'OTHER_KEY'     => 'other',
         ];
 
         $instance = new HttpHeaderContext();
-        $result = $this->callProtected($instance, 'findInServerParams', $serverParams, 'http_x_custom');
+        $result   = $this->callProtected($instance, 'findInServerParams', $serverParams, 'http_x_custom');
 
         self::assertSame('value123', $result);
     }
@@ -443,7 +443,7 @@ final class HttpHeaderContextTest extends TestBase
         ];
 
         $instance = new HttpHeaderContext();
-        $result = $this->callProtected($instance, 'findInServerParams', $serverParams, 'HTTP_X_MISSING');
+        $result   = $this->callProtected($instance, 'findInServerParams', $serverParams, 'HTTP_X_MISSING');
 
         self::assertNull($result);
     }

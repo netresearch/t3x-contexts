@@ -76,7 +76,7 @@ final class IconServiceTest extends TestCase
         string $expectedIcon,
     ): void {
         $service = new IconService();
-        $status = [];
+        $status  = [];
 
         $result = $service->postOverlayPriorityLookup('tt_content', $row, $status, $currentIcon);
 
@@ -87,8 +87,8 @@ final class IconServiceTest extends TestCase
     public function postOverlayPriorityLookupWorksWithDifferentTables(): void
     {
         $service = new IconService();
-        $status = [];
-        $row = ['tx_contexts_enable' => '5'];
+        $status  = [];
+        $row     = ['tx_contexts_enable' => '5'];
 
         $result = $service->postOverlayPriorityLookup('pages', $row, $status, 'page-default');
 

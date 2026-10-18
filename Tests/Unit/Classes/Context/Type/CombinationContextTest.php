@@ -35,23 +35,23 @@ final class CombinationContextTest extends TestBase
      * Provides logical expression scenarios for direct match() testing.
      *
      * @return array<string, array{0: string, 1: bool, 2: bool, 3: bool}>
-     *               [label => [expression, ctx1Matched, ctx2Matched, expectedResult]]
+     *                                                                    [label => [expression, ctx1Matched, ctx2Matched, expectedResult]]
      */
     public static function logicalExpressionProvider(): array
     {
         return [
-            'AND both true' => ['ctx1 && ctx2', true,  true,  true],
-            'AND first false' => ['ctx1 && ctx2', false, true,  false],
-            'AND second false' => ['ctx1 && ctx2', true,  false, false],
-            'AND both false' => ['ctx1 && ctx2', false, false, false],
-            'OR both true' => ['ctx1 || ctx2', true,  true,  true],
-            'OR first true' => ['ctx1 || ctx2', true,  false, true],
-            'OR second true' => ['ctx1 || ctx2', false, true,  true],
-            'OR both false' => ['ctx1 || ctx2', false, false, false],
-            'XOR only first true' => ['ctx1 >< ctx2', true,  false, true],
-            'XOR only second true' => ['ctx1 >< ctx2', false, true,  true],
-            'XOR both true' => ['ctx1 >< ctx2', true,  true,  false],
-            'XOR both false' => ['ctx1 >< ctx2', false, false, false],
+            'AND both true'        => ['ctx1 && ctx2', true, true, true],
+            'AND first false'      => ['ctx1 && ctx2', false, true, false],
+            'AND second false'     => ['ctx1 && ctx2', true, false, false],
+            'AND both false'       => ['ctx1 && ctx2', false, false, false],
+            'OR both true'         => ['ctx1 || ctx2', true, true, true],
+            'OR first true'        => ['ctx1 || ctx2', true, false, true],
+            'OR second true'       => ['ctx1 || ctx2', false, true, true],
+            'OR both false'        => ['ctx1 || ctx2', false, false, false],
+            'XOR only first true'  => ['ctx1 >< ctx2', true, false, true],
+            'XOR only second true' => ['ctx1 >< ctx2', false, true, true],
+            'XOR both true'        => ['ctx1 >< ctx2', true, true, false],
+            'XOR both false'       => ['ctx1 >< ctx2', false, false, false],
         ];
     }
 
@@ -83,7 +83,7 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function getDependenciesReturnsTrueForEnabledMatchingContext(): void
     {
-        $ctx = $this->createTestContext(1, 'ctx1', false);
+        $ctx                = $this->createTestContext(1, 'ctx1', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1');
 
         $dependencies = $combinationContext->getDependencies([1 => $ctx, 10 => $combinationContext]);
@@ -94,7 +94,7 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function getDependenciesReturnsFalseForDisabledMatchingContext(): void
     {
-        $ctx = $this->createTestContext(1, 'ctx1', true);
+        $ctx                = $this->createTestContext(1, 'ctx1', true);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1');
 
         $dependencies = $combinationContext->getDependencies([1 => $ctx, 10 => $combinationContext]);
@@ -105,13 +105,13 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function getDependenciesCollectsMultipleDistinctContexts(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1 && ctx2');
 
         $dependencies = $combinationContext->getDependencies([
-            1 => $ctx1,
-            2 => $ctx2,
+            1  => $ctx1,
+            2  => $ctx2,
             10 => $combinationContext,
         ]);
 
@@ -122,7 +122,7 @@ final class CombinationContextTest extends TestBase
     public function getDependenciesDeduplicatesRepeatedAliasInExpression(): void
     {
         // "ctx1 && ctx1 || ctx1" references the same alias three times; uid 1 should appear once.
-        $ctx = $this->createTestContext(1, 'ctx1', false);
+        $ctx                = $this->createTestContext(1, 'ctx1', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1 && ctx1 || ctx1');
 
         $dependencies = $combinationContext->getDependencies([1 => $ctx, 10 => $combinationContext]);
@@ -147,13 +147,13 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function getDependenciesHandlesMixedEnabledAndDisabledContexts(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false); // enabled
-        $ctx2 = $this->createTestContext(2, 'ctx2', true);  // disabled
+        $ctx1               = $this->createTestContext(1, 'ctx1', false); // enabled
+        $ctx2               = $this->createTestContext(2, 'ctx2', true);  // disabled
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1 && ctx2');
 
         $dependencies = $combinationContext->getDependencies([
-            1 => $ctx1,
-            2 => $ctx2,
+            1  => $ctx1,
+            2  => $ctx2,
             10 => $combinationContext,
         ]);
 
@@ -165,7 +165,7 @@ final class CombinationContextTest extends TestBase
     {
         // AbstractContext::getAlias() calls strtolower(), so "CTX1" in the
         // context row resolves to "ctx1". The expression uses "CTX1".
-        $ctx = $this->createTestContext(1, 'CTX1', false);
+        $ctx                = $this->createTestContext(1, 'CTX1', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'CTX1');
 
         $dependencies = $combinationContext->getDependencies([1 => $ctx, 10 => $combinationContext]);
@@ -176,15 +176,15 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function getDependenciesHandlesComplexExpressionWithParentheses(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
-        $ctx3 = $this->createTestContext(3, 'ctx3', true);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
+        $ctx3               = $this->createTestContext(3, 'ctx3', true);
         $combinationContext = $this->createCombinationContext(10, 'combi', '(ctx1 && ctx2) || !ctx3');
 
         $dependencies = $combinationContext->getDependencies([
-            1 => $ctx1,
-            2 => $ctx2,
-            3 => $ctx3,
+            1  => $ctx1,
+            2  => $ctx2,
+            3  => $ctx3,
             10 => $combinationContext,
         ]);
 
@@ -199,13 +199,13 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchReturnsTrueForSingleMatchedDependency(): void
     {
-        $ctx = $this->createTestContext(1, 'ctx1', false);
+        $ctx                = $this->createTestContext(1, 'ctx1', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1');
 
         // First call getDependencies so the evaluator and tokens are initialised
         $combinationContext->getDependencies([1 => $ctx, 10 => $combinationContext]);
 
-        $dep = new stdClass();
+        $dep          = new stdClass();
         $dep->context = $ctx;
         $dep->matched = true;
 
@@ -215,12 +215,12 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchReturnsFalseForSingleUnmatchedDependency(): void
     {
-        $ctx = $this->createTestContext(1, 'ctx1', false);
+        $ctx                = $this->createTestContext(1, 'ctx1', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1');
 
         $combinationContext->getDependencies([1 => $ctx, 10 => $combinationContext]);
 
-        $dep = new stdClass();
+        $dep          = new stdClass();
         $dep->context = $ctx;
         $dep->matched = false;
 
@@ -230,17 +230,17 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchReturnsTrueForAndExpressionWhenBothMatch(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1 && ctx2');
 
         $combinationContext->getDependencies([1 => $ctx1, 2 => $ctx2, 10 => $combinationContext]);
 
-        $dep1 = new stdClass();
+        $dep1          = new stdClass();
         $dep1->context = $ctx1;
         $dep1->matched = true;
 
-        $dep2 = new stdClass();
+        $dep2          = new stdClass();
         $dep2->context = $ctx2;
         $dep2->matched = true;
 
@@ -250,17 +250,17 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchReturnsFalseForAndExpressionWhenOneDoesNotMatch(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1 && ctx2');
 
         $combinationContext->getDependencies([1 => $ctx1, 2 => $ctx2, 10 => $combinationContext]);
 
-        $dep1 = new stdClass();
+        $dep1          = new stdClass();
         $dep1->context = $ctx1;
         $dep1->matched = true;
 
-        $dep2 = new stdClass();
+        $dep2          = new stdClass();
         $dep2->context = $ctx2;
         $dep2->matched = false;
 
@@ -270,17 +270,17 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchReturnsTrueForOrExpressionWhenOnlyOneMatches(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1 || ctx2');
 
         $combinationContext->getDependencies([1 => $ctx1, 2 => $ctx2, 10 => $combinationContext]);
 
-        $dep1 = new stdClass();
+        $dep1          = new stdClass();
         $dep1->context = $ctx1;
         $dep1->matched = false;
 
-        $dep2 = new stdClass();
+        $dep2          = new stdClass();
         $dep2->context = $ctx2;
         $dep2->matched = true;
 
@@ -290,17 +290,17 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchReturnsFalseForOrExpressionWhenBothFail(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1 || ctx2');
 
         $combinationContext->getDependencies([1 => $ctx1, 2 => $ctx2, 10 => $combinationContext]);
 
-        $dep1 = new stdClass();
+        $dep1          = new stdClass();
         $dep1->context = $ctx1;
         $dep1->matched = false;
 
-        $dep2 = new stdClass();
+        $dep2          = new stdClass();
         $dep2->context = $ctx2;
         $dep2->matched = false;
 
@@ -310,17 +310,17 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchReturnsTrueForXorExpressionWhenExactlyOneMatches(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1 >< ctx2');
 
         $combinationContext->getDependencies([1 => $ctx1, 2 => $ctx2, 10 => $combinationContext]);
 
-        $dep1 = new stdClass();
+        $dep1          = new stdClass();
         $dep1->context = $ctx1;
         $dep1->matched = true;
 
-        $dep2 = new stdClass();
+        $dep2          = new stdClass();
         $dep2->context = $ctx2;
         $dep2->matched = false;
 
@@ -330,17 +330,17 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchReturnsFalseForXorExpressionWhenBothMatch(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1 >< ctx2');
 
         $combinationContext->getDependencies([1 => $ctx1, 2 => $ctx2, 10 => $combinationContext]);
 
-        $dep1 = new stdClass();
+        $dep1          = new stdClass();
         $dep1->context = $ctx1;
         $dep1->matched = true;
 
-        $dep2 = new stdClass();
+        $dep2          = new stdClass();
         $dep2->context = $ctx2;
         $dep2->matched = true;
 
@@ -350,17 +350,17 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchReturnsFalseForXorExpressionWhenBothFail(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1 >< ctx2');
 
         $combinationContext->getDependencies([1 => $ctx1, 2 => $ctx2, 10 => $combinationContext]);
 
-        $dep1 = new stdClass();
+        $dep1          = new stdClass();
         $dep1->context = $ctx1;
         $dep1->matched = false;
 
-        $dep2 = new stdClass();
+        $dep2          = new stdClass();
         $dep2->context = $ctx2;
         $dep2->matched = false;
 
@@ -370,12 +370,12 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchReturnsTrueForNegatedUnmatchedDependency(): void
     {
-        $ctx = $this->createTestContext(1, 'ctx1', false);
+        $ctx                = $this->createTestContext(1, 'ctx1', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', '!ctx1');
 
         $combinationContext->getDependencies([1 => $ctx, 10 => $combinationContext]);
 
-        $dep = new stdClass();
+        $dep          = new stdClass();
         $dep->context = $ctx;
         $dep->matched = false;
 
@@ -386,12 +386,12 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchReturnsFalseForNegatedMatchedDependency(): void
     {
-        $ctx = $this->createTestContext(1, 'ctx1', false);
+        $ctx                = $this->createTestContext(1, 'ctx1', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', '!ctx1');
 
         $combinationContext->getDependencies([1 => $ctx, 10 => $combinationContext]);
 
-        $dep = new stdClass();
+        $dep          = new stdClass();
         $dep->context = $ctx;
         $dep->matched = true;
 
@@ -408,7 +408,7 @@ final class CombinationContextTest extends TestBase
 
         $combinationContext->getDependencies([1 => $ctx, 10 => $combinationContext]);
 
-        $dep = new stdClass();
+        $dep          = new stdClass();
         $dep->context = $ctx;
         $dep->matched = true;
 
@@ -418,12 +418,12 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchInvertedReturnsTrueWhenExpressionIsFalseAndInvertIsSet(): void
     {
-        $ctx = $this->createTestContext(1, 'ctx1', false);
+        $ctx                = $this->createTestContext(1, 'ctx1', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1', true);
 
         $combinationContext->getDependencies([1 => $ctx, 10 => $combinationContext]);
 
-        $dep = new stdClass();
+        $dep          = new stdClass();
         $dep->context = $ctx;
         $dep->matched = false;
 
@@ -437,13 +437,13 @@ final class CombinationContextTest extends TestBase
         // The evaluator then looks up the variable by its name in the expression.
         // Because the expression uses the alias name, the result will default to
         // true (unknown variable), so the match should return true.
-        $ctx = $this->createTestContext(1, '', false);
+        $ctx                = $this->createTestContext(1, '', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1');
 
         // ctx1 alias does not exist, so getDependencies returns nothing
         $combinationContext->getDependencies([1 => $ctx, 10 => $combinationContext]);
 
-        $dep = new stdClass();
+        $dep          = new stdClass();
         $dep->context = $ctx;
         $dep->matched = false;
 
@@ -454,27 +454,27 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchHandlesNestedParenthesesExpression(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
-        $ctx3 = $this->createTestContext(3, 'ctx3', false);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
+        $ctx3               = $this->createTestContext(3, 'ctx3', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', '(ctx1 && ctx2) || ctx3');
 
         $combinationContext->getDependencies([
-            1 => $ctx1,
-            2 => $ctx2,
-            3 => $ctx3,
+            1  => $ctx1,
+            2  => $ctx2,
+            3  => $ctx3,
             10 => $combinationContext,
         ]);
 
-        $dep1 = new stdClass();
+        $dep1          = new stdClass();
         $dep1->context = $ctx1;
         $dep1->matched = true;
 
-        $dep2 = new stdClass();
+        $dep2          = new stdClass();
         $dep2->context = $ctx2;
         $dep2->matched = false;
 
-        $dep3 = new stdClass();
+        $dep3          = new stdClass();
         $dep3->context = $ctx3;
         $dep3->matched = true;
 
@@ -485,27 +485,27 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchHandlesNestedParenthesesExpressionFalse(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
-        $ctx3 = $this->createTestContext(3, 'ctx3', false);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
+        $ctx3               = $this->createTestContext(3, 'ctx3', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', '(ctx1 && ctx2) || ctx3');
 
         $combinationContext->getDependencies([
-            1 => $ctx1,
-            2 => $ctx2,
-            3 => $ctx3,
+            1  => $ctx1,
+            2  => $ctx2,
+            3  => $ctx3,
             10 => $combinationContext,
         ]);
 
-        $dep1 = new stdClass();
+        $dep1          = new stdClass();
         $dep1->context = $ctx1;
         $dep1->matched = true;
 
-        $dep2 = new stdClass();
+        $dep2          = new stdClass();
         $dep2->context = $ctx2;
         $dep2->matched = false;
 
-        $dep3 = new stdClass();
+        $dep3          = new stdClass();
         $dep3->context = $ctx3;
         $dep3->matched = false;
 
@@ -518,12 +518,12 @@ final class CombinationContextTest extends TestBase
     {
         // When a dependency is disabled, Container passes matched='disabled'.
         // The evaluator treats 'disabled' as true.
-        $ctx = $this->createTestContext(1, 'ctx1', true);
+        $ctx                = $this->createTestContext(1, 'ctx1', true);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1');
 
         $combinationContext->getDependencies([1 => $ctx, 10 => $combinationContext]);
 
-        $dep = new stdClass();
+        $dep          = new stdClass();
         $dep->context = $ctx;
         $dep->matched = 'disabled';
 
@@ -541,11 +541,11 @@ final class CombinationContextTest extends TestBase
 
         $combinationContext->getDependencies([1 => $ctx1, 2 => $ctx2, 10 => $combinationContext]);
 
-        $dep1 = new stdClass();
+        $dep1          = new stdClass();
         $dep1->context = $ctx1;
         $dep1->matched = true;
 
-        $dep2 = new stdClass();
+        $dep2          = new stdClass();
         $dep2->context = $ctx2;
         $dep2->matched = true;
 
@@ -555,17 +555,17 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchHandlesWordOrOperator(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1 or ctx2');
 
         $combinationContext->getDependencies([1 => $ctx1, 2 => $ctx2, 10 => $combinationContext]);
 
-        $dep1 = new stdClass();
+        $dep1          = new stdClass();
         $dep1->context = $ctx1;
         $dep1->matched = false;
 
-        $dep2 = new stdClass();
+        $dep2          = new stdClass();
         $dep2->context = $ctx2;
         $dep2->matched = true;
 
@@ -575,17 +575,17 @@ final class CombinationContextTest extends TestBase
     #[Test]
     public function matchHandlesWordXorOperator(): void
     {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1 xor ctx2');
 
         $combinationContext->getDependencies([1 => $ctx1, 2 => $ctx2, 10 => $combinationContext]);
 
-        $dep1 = new stdClass();
+        $dep1          = new stdClass();
         $dep1->context = $ctx1;
         $dep1->matched = true;
 
-        $dep2 = new stdClass();
+        $dep2          = new stdClass();
         $dep2->context = $ctx2;
         $dep2->matched = false;
 
@@ -597,12 +597,12 @@ final class CombinationContextTest extends TestBase
     {
         // Context with alias 'ctx1': match() stores both alias and uid
         // in the values array. The evaluator finds the alias key.
-        $ctx = $this->createTestContext(1, 'ctx1', false);
+        $ctx                = $this->createTestContext(1, 'ctx1', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', 'ctx1');
 
         $combinationContext->getDependencies([1 => $ctx, 10 => $combinationContext]);
 
-        $dep = new stdClass();
+        $dep          = new stdClass();
         $dep->context = $ctx;
         $dep->matched = true;
 
@@ -617,17 +617,17 @@ final class CombinationContextTest extends TestBase
         bool $ctx2Matched,
         bool $expectedResult,
     ): void {
-        $ctx1 = $this->createTestContext(1, 'ctx1', false);
-        $ctx2 = $this->createTestContext(2, 'ctx2', false);
+        $ctx1               = $this->createTestContext(1, 'ctx1', false);
+        $ctx2               = $this->createTestContext(2, 'ctx2', false);
         $combinationContext = $this->createCombinationContext(10, 'combi', $expression);
 
         $combinationContext->getDependencies([1 => $ctx1, 2 => $ctx2, 10 => $combinationContext]);
 
-        $dep1 = new stdClass();
+        $dep1          = new stdClass();
         $dep1->context = $ctx1;
         $dep1->matched = $ctx1Matched;
 
-        $dep2 = new stdClass();
+        $dep2          = new stdClass();
         $dep2->context = $ctx2;
         $dep2->matched = $ctx2Matched;
 
@@ -650,8 +650,8 @@ final class CombinationContextTest extends TestBase
             public function __construct(int $uid, string $alias, bool $disabled)
             {
                 parent::__construct();
-                $this->uid = $uid;
-                $this->alias = $alias;
+                $this->uid      = $uid;
+                $this->alias    = $alias;
                 $this->disabled = $disabled;
             }
 
@@ -678,11 +678,11 @@ final class CombinationContextTest extends TestBase
             public function __construct(int $uid, string $alias, string $expression, bool $invert)
             {
                 parent::__construct();
-                $this->uid = $uid;
-                $this->alias = $alias;
-                $this->disabled = false;
+                $this->uid        = $uid;
+                $this->alias      = $alias;
+                $this->disabled   = false;
                 $this->expression = $expression;
-                $this->invert = $invert;
+                $this->invert     = $invert;
             }
 
             protected function getConfValue(

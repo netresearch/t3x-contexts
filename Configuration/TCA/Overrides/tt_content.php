@@ -16,10 +16,10 @@ declare(strict_types=1);
 
 use Netresearch\Contexts\Api\Configuration;
 
-defined('TYPO3') || die('Access denied.');
+defined('TYPO3') || exit('Access denied.');
 
 /**
- * TCA override for tt_content table
+ * TCA override for tt_content table.
  */
 call_user_func(static function (): void {
     Configuration::enableContextsForTable(

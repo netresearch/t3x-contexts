@@ -23,10 +23,10 @@ require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 // Create mock contexts for evaluation
 $mockContexts = [
-    'ctx1' => true,
-    'ctx2' => false,
-    'ctx3' => true,
-    'test' => true,
+    'ctx1'   => true,
+    'ctx2'   => false,
+    'ctx3'   => true,
+    'test'   => true,
     'domain' => false,
 ];
 

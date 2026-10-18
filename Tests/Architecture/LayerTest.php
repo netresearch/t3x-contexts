@@ -32,7 +32,7 @@ final class LayerTest
 {
     /**
      * Context type classes should only depend on AbstractContext
-     * (excludes helper classes like evaluators and exceptions)
+     * (excludes helper classes like evaluators and exceptions).
      */
     public function testContextTypesExtendAbstract(): Rule
     {
@@ -50,7 +50,7 @@ final class LayerTest
     }
 
     /**
-     * Event classes should be final
+     * Event classes should be final.
      */
     public function testEventsAreFinal(): Rule
     {
@@ -61,7 +61,7 @@ final class LayerTest
     }
 
     /**
-     * DTO classes should be readonly
+     * DTO classes should be readonly.
      */
     public function testDtosAreReadonly(): Rule
     {

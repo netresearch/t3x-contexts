@@ -32,13 +32,12 @@ final readonly class MenuItemFilterEventListener
 {
     public function __construct(
         private PageService $pageService,
-    ) {
-    }
+    ) {}
 
     public function __invoke(FilterMenuItemsEvent $event): void
     {
         /** @var array<int, array<string, mixed>> $menuItems */
-        $menuItems = $event->getFilteredMenuItems();
+        $menuItems     = $event->getFilteredMenuItems();
         $filteredItems = $this->pageService->filterMenuItems($menuItems);
         $event->setFilteredMenuItems($filteredItems);
     }

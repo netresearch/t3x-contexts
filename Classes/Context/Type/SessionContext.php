@@ -20,12 +20,13 @@ use Netresearch\Contexts\Context\AbstractContext;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 
 /**
- * Check if a session variable is set or not
+ * Check if a session variable is set or not.
  *
  * @author  Andre Hähnel <andre.haehnel@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class SessionContext extends AbstractContext
 {

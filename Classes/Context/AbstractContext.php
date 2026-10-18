@@ -16,8 +16,14 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Context;
 
+use function array_key_exists;
+use function count;
+
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
+
+use function is_array;
+
 use Netresearch\Contexts\Api\Configuration;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\Connection;
@@ -27,24 +33,25 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 
 /**
- * Abstract context - must be extended by the context types
+ * Abstract context - must be extended by the context types.
  *
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 abstract class AbstractContext
 {
     /**
-     * Key for the ip forward header
+     * Key for the ip forward header.
      *
      * @var string
      */
     public const HTTP_X_FORWARDED_FOR = 'HTTP_X_FORWARDED_FOR';
 
     /**
-     * Key for the ip remote address
+     * Key for the ip remote address.
      *
      * @var string
      */
@@ -52,67 +59,56 @@ abstract class AbstractContext
 
     /**
      * Uid of context.
-     *
      */
     protected int $uid = 0;
 
     /**
      * Type of context.
-     *
      */
     protected string $type = '';
 
     /**
      * Title of context.
-     *
      */
     protected string $title = '';
 
     /**
      * Alias of context.
-     *
      */
     protected string $alias = '';
 
     /**
      * Unix timestamp of last record modification.
-     *
      */
     protected int $tstamp = 0;
 
     /**
      * Invert the match result.
-     *
      */
     protected bool $invert = false;
 
     /**
      * Store match result in user session.
-     *
      */
     protected bool $use_session = true;
 
     /**
      * Context configuration.
-     *
      */
     protected array $conf = [];
 
     /**
      * Constructor - set the values from database row.
-     *
      */
     protected bool $disabled = false;
 
     /**
-     * Hide Context in backend
-     *
+     * Hide Context in backend.
      */
     protected bool $bHideInBackend = false;
 
     /**
      * List of all context settings.
-     *
      */
     private array $settings = [];
 
@@ -123,15 +119,15 @@ abstract class AbstractContext
      */
     public function __construct(array $arRow = [])
     {
-        if (\count($arRow) > 0) {
-            $this->uid = (int) $arRow['uid'];
-            $this->type = (string) $arRow['type'];
-            $this->title = (string) $arRow['title'];
-            $this->alias = (string) $arRow['alias'];
-            $this->tstamp = (int) $arRow['tstamp'];
-            $this->invert = (bool) $arRow['invert'];
-            $this->use_session = (bool) $arRow['use_session'];
-            $this->disabled = (bool) $arRow['disabled'];
+        if (count($arRow) > 0) {
+            $this->uid            = (int) $arRow['uid'];
+            $this->type           = (string) $arRow['type'];
+            $this->title          = (string) $arRow['title'];
+            $this->alias          = (string) $arRow['alias'];
+            $this->tstamp         = (int) $arRow['tstamp'];
+            $this->invert         = (bool) $arRow['invert'];
+            $this->use_session    = (bool) $arRow['use_session'];
+            $this->disabled       = (bool) $arRow['disabled'];
             $this->bHideInBackend = (bool) $arRow['hide_in_backend'];
 
             if (!empty($arRow['type_conf'])) {
@@ -202,13 +198,13 @@ abstract class AbstractContext
     {
         $settingsKey = $table . '.' . $uid;
 
-        if (\array_key_exists($settingsKey, $this->settings)) {
+        if (array_key_exists($settingsKey, $this->settings)) {
             return $this->settings[$settingsKey];
         }
 
         $uids = [$uid];
 
-        if (($uid > 0) && !\array_key_exists($table . '.0', $this->settings)) {
+        if (($uid > 0) && !array_key_exists($table . '.0', $this->settings)) {
             $uids[] = 0;
         }
 
@@ -238,7 +234,7 @@ abstract class AbstractContext
             $this->settings[$table . '.' . $uidValue] = [];
         }
 
-        if (\is_array($rows)) {
+        if (is_array($rows)) {
             foreach ($rows as $row) {
                 /** @var int|string $foreignUid */
                 $foreignUid = $row['foreign_uid'];
@@ -258,7 +254,6 @@ abstract class AbstractContext
      * @param string $table   Database table
      * @param string $setting Setting name
      * @param int    $uid     Record UID
-     *
      *
      * @throws DBALException
      * @throws Exception
@@ -282,7 +277,6 @@ abstract class AbstractContext
 
     /**
      * Get the uid of this context.
-     *
      */
     public function getUid(): int
     {
@@ -291,7 +285,6 @@ abstract class AbstractContext
 
     /**
      * Get the type of this context.
-     *
      */
     public function getType(): string
     {
@@ -300,7 +293,6 @@ abstract class AbstractContext
 
     /**
      * Get the title of this context.
-     *
      */
     public function getTitle(): string
     {
@@ -309,7 +301,6 @@ abstract class AbstractContext
 
     /**
      * Get the alias of this context.
-     *
      */
     public function getAlias(): string
     {
@@ -329,8 +320,7 @@ abstract class AbstractContext
     }
 
     /**
-     * Get the disabled status of this context
-     *
+     * Get the disabled status of this context.
      */
     public function getDisabled(): bool
     {
@@ -338,7 +328,7 @@ abstract class AbstractContext
     }
 
     /**
-     * Get hide in backend
+     * Get hide in backend.
      *
      * @return bool true if the context not shown in backend
      */
@@ -351,7 +341,6 @@ abstract class AbstractContext
      * Set invert flag.
      *
      * @param bool $bInvert True or false
-     *
      */
     public function setInvert(bool $bInvert): void
     {
@@ -362,7 +351,6 @@ abstract class AbstractContext
      * Set use session flag.
      *
      * @param bool $bUseSession True or false
-     *
      */
     public function setUseSession(bool $bUseSession): void
     {
@@ -398,9 +386,9 @@ abstract class AbstractContext
      * Loads match() result from session if the context is configured so.
      *
      * @return array{0: bool, 1: bool|null} Array with two values:
-     *               0: true: Use the second value as return,
-     *                  false: calculate it
-     *               1: Return value when 0 is true
+     *                                      0: true: Use the second value as return,
+     *                                      false: calculate it
+     *                                      1: Return value when 0 is true
      */
     protected function getMatchFromSession(): array
     {
@@ -489,7 +477,7 @@ abstract class AbstractContext
      */
     protected function storeInSession(bool $bMatch): bool
     {
-        if (!($this->use_session)) {
+        if (!$this->use_session) {
             return $bMatch;
         }
 
@@ -514,7 +502,6 @@ abstract class AbstractContext
      * Inverts the current match setting if inverting is activated.
      *
      * @param bool $bMatch If the context matches
-     *
      */
     protected function invert(bool $bMatch): bool
     {
@@ -536,7 +523,7 @@ abstract class AbstractContext
      */
     protected function getNormalizedParams(): NormalizedParams
     {
-        $request = $this->getRequest();
+        $request          = $this->getRequest();
         $normalizedParams = $request?->getAttribute('normalizedParams');
 
         if ($normalizedParams instanceof NormalizedParams) {
@@ -548,7 +535,6 @@ abstract class AbstractContext
 
     /**
      * Returns the clients remote address.
-     *
      */
     protected function getRemoteAddress(): string
     {

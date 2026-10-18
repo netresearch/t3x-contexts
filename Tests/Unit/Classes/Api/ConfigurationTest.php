@@ -16,6 +16,9 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Api;
 
+use const E_ALL;
+use const E_WARNING;
+
 use Netresearch\Contexts\Api\Configuration;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\WithoutErrorHandler;
@@ -35,9 +38,9 @@ final class ConfigurationTest extends UnitTestCase
 
         // Initialize required TCA structure
         $GLOBALS['TCA']['tx_contexts_contexts'] = [
-            'contextTypes' => [],
+            'contextTypes'          => [],
             'extensionFlatSettings' => [],
-            'columns' => [],
+            'columns'               => [],
         ];
     }
 
@@ -65,8 +68,8 @@ final class ConfigurationTest extends UnitTestCase
     {
         $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes'] = [
             'domain' => [
-                'title' => 'Domain',
-                'class' => 'SomeClass',
+                'title'    => 'Domain',
+                'class'    => 'SomeClass',
                 'flexFile' => 'EXT:contexts/some.xml',
             ],
         ];
@@ -168,7 +171,7 @@ final class ConfigurationTest extends UnitTestCase
                 'tx_contexts' => [
                     'flatSettings' => [
                         'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
-                        'tx_custom' => ['tx_custom_disable', 'tx_custom_enable'],
+                        'tx_custom'   => ['tx_custom_disable', 'tx_custom_enable'],
                     ],
                 ],
             ],
@@ -266,7 +269,7 @@ final class ConfigurationTest extends UnitTestCase
     {
         // Set up minimal TCA structure for test_table
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
@@ -285,13 +288,13 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableWithCustomSettings(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
         Configuration::enableContextsForTable('test_ext', 'test_table', [
             'custom_setting' => [
-                'label' => 'Custom Setting',
+                'label'   => 'Custom Setting',
                 'flatten' => true,
                 'enables' => true,
             ],
@@ -312,13 +315,13 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableWithoutDefaults(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
         Configuration::enableContextsForTable('test_ext', 'test_table', [
             'only_custom' => [
-                'label' => 'Only Custom',
+                'label'   => 'Only Custom',
                 'flatten' => true,
             ],
         ], false); // addDefaults = false
@@ -337,7 +340,7 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableWithNullSettingsAndAddDefaultsFalse(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
@@ -356,7 +359,7 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableRegistersExtensionFlatSettings(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
@@ -370,7 +373,7 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableMergesWithExistingExtensionSettings(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
@@ -379,7 +382,7 @@ final class ConfigurationTest extends UnitTestCase
 
         // Second call with different table
         $GLOBALS['TCA']['another_table'] = [
-            'ctrl' => ['title' => 'Another Table'],
+            'ctrl'    => ['title' => 'Another Table'],
             'columns' => [],
         ];
         Configuration::enableContextsForTable('merge_ext', 'another_table');
@@ -392,7 +395,7 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableSettingWithoutFlattenIsNotFlattened(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
@@ -412,13 +415,13 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableSettingWithEnablesIsFlattened(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
         Configuration::enableContextsForTable('test_ext', 'test_table', [
             'access_control' => [
-                'label' => 'Access Control',
+                'label'   => 'Access Control',
                 'enables' => true, // This makes it a flat setting
             ],
         ], false);
@@ -437,7 +440,7 @@ final class ConfigurationTest extends UnitTestCase
     {
         $GLOBALS['TCA']['test_table'] = [
             'ctrl' => [
-                'title' => 'Test Table',
+                'title'       => 'Test Table',
                 'tx_contexts' => [
                     'enableSettings' => ['tx_contexts'], // Already exists
                 ],
@@ -449,7 +452,7 @@ final class ConfigurationTest extends UnitTestCase
 
         $enableSettings = Configuration::getEnableSettings('test_table');
         // Count occurrences of tx_contexts
-        $count = array_count_values(array_map(static fn(mixed $v): string => (string) $v, $enableSettings))['tx_contexts'] ?? 0;
+        $count = array_count_values(array_map(static fn (mixed $v): string => (string) $v, $enableSettings))['tx_contexts'] ?? 0;
         self::assertSame(1, $count, 'tx_contexts should not be duplicated');
     }
 
@@ -495,13 +498,13 @@ final class ConfigurationTest extends UnitTestCase
     public function flatColumnNamingFollowsConvention(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
         Configuration::enableContextsForTable('test_ext', 'test_table', [
             'my_visibility' => [
-                'label' => 'My Visibility',
+                'label'   => 'My Visibility',
                 'flatten' => true,
             ],
         ], false);
@@ -518,7 +521,7 @@ final class ConfigurationTest extends UnitTestCase
     {
         // Set up table with existing tx_contexts_settings column
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [
                 Configuration::RECORD_SETTINGS_COLUMN => [
                     'config' => [
@@ -532,7 +535,7 @@ final class ConfigurationTest extends UnitTestCase
 
         Configuration::enableContextsForTable('test_ext', 'test_table', [
             'new_setting' => [
-                'label' => 'New Setting',
+                'label'   => 'New Setting',
                 'enables' => true,
             ],
         ], false);
@@ -628,7 +631,7 @@ final class ConfigurationTest extends UnitTestCase
             'ctrl' => [
                 'tx_contexts' => [
                     'flatSettings' => [
-                        '' => ['empty_disable', 'empty_enable'],
+                        ''       => ['empty_disable', 'empty_enable'],
                         'normal' => ['normal_disable', 'normal_enable'],
                     ],
                 ],
@@ -696,7 +699,7 @@ final class ConfigurationTest extends UnitTestCase
         unset($GLOBALS['TCA']);
 
         // Suppress warnings - we're testing undefined TCA behavior
-        $originalLevel = error_reporting(\E_ALL & ~\E_WARNING);
+        $originalLevel = error_reporting(E_ALL & ~E_WARNING);
         try {
             $types = Configuration::getContextTypes();
             self::assertSame([], $types);
@@ -714,7 +717,7 @@ final class ConfigurationTest extends UnitTestCase
         ];
 
         // Suppress warnings - we're testing missing key behavior
-        $originalLevel = error_reporting(\E_ALL & ~\E_WARNING);
+        $originalLevel = error_reporting(E_ALL & ~E_WARNING);
         try {
             $types = Configuration::getContextTypes();
             self::assertSame([], $types);
@@ -732,7 +735,7 @@ final class ConfigurationTest extends UnitTestCase
     {
         // Table with minimal TCA structure (title is required for default settings column)
         $GLOBALS['TCA']['minimal_table'] = [
-            'ctrl' => ['title' => 'Minimal Table'],
+            'ctrl'    => ['title' => 'Minimal Table'],
             'columns' => [],
         ];
 
@@ -748,7 +751,7 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableHandlesPagesTable(): void
     {
         $GLOBALS['TCA']['pages'] = [
-            'ctrl' => ['title' => 'Pages'],
+            'ctrl'    => ['title' => 'Pages'],
             'columns' => [],
         ];
 
@@ -765,7 +768,7 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableHandlesTtContentTable(): void
     {
         $GLOBALS['TCA']['tt_content'] = [
-            'ctrl' => ['title' => 'Content'],
+            'ctrl'    => ['title' => 'Content'],
             'columns' => [],
         ];
 
@@ -783,12 +786,12 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableMergesDefaultSettingsColumn(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
         // Suppress warnings - we're testing array merge with sub-arrays (known issue)
-        $originalLevel = error_reporting(\E_ALL & ~\E_WARNING);
+        $originalLevel = error_reporting(E_ALL & ~E_WARNING);
         try {
             // First call creates the default settings column
             Configuration::enableContextsForTable('test_ext', 'test_table');
@@ -803,7 +806,7 @@ final class ConfigurationTest extends UnitTestCase
             $GLOBALS['TCA']['test_table']['columns'] = [];
             Configuration::enableContextsForTable('test_ext', 'test_table', [
                 'additional_setting' => [
-                    'label' => 'Additional',
+                    'label'   => 'Additional',
                     'enables' => true,
                 ],
             ]);
@@ -820,7 +823,7 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableCreatesPassthroughFieldsForFlatColumns(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
@@ -849,7 +852,7 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableCreatesNewExtensionEntry(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
@@ -869,7 +872,7 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableMergesExistingExtensionTableSettings(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
@@ -881,11 +884,11 @@ final class ConfigurationTest extends UnitTestCase
         ];
 
         // Suppress warnings - we're testing array merge with sub-arrays (known issue)
-        $originalLevel = error_reporting(\E_ALL & ~\E_WARNING);
+        $originalLevel = error_reporting(E_ALL & ~E_WARNING);
         try {
             Configuration::enableContextsForTable('existing_ext', 'test_table', [
                 'new_flat_setting' => [
-                    'label' => 'New',
+                    'label'   => 'New',
                     'flatten' => true,
                 ],
             ], false);
@@ -904,11 +907,11 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableAddsNewTableToExistingExtension(): void
     {
         $GLOBALS['TCA']['table1'] = [
-            'ctrl' => ['title' => 'Table 1'],
+            'ctrl'    => ['title' => 'Table 1'],
             'columns' => [],
         ];
         $GLOBALS['TCA']['table2'] = [
-            'ctrl' => ['title' => 'Table 2'],
+            'ctrl'    => ['title' => 'Table 2'],
             'columns' => [],
         ];
 
@@ -931,13 +934,13 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableHandlesSettingWithOnlyFlattenFlag(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
         Configuration::enableContextsForTable('test_ext', 'test_table', [
             'flatten_only' => [
-                'label' => 'Flatten Only',
+                'label'   => 'Flatten Only',
                 'flatten' => true,
                 // No 'enables' flag
             ],
@@ -956,13 +959,13 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableHandlesSettingWithBothFlags(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
         Configuration::enableContextsForTable('test_ext', 'test_table', [
             'both_flags' => [
-                'label' => 'Both Flags',
+                'label'   => 'Both Flags',
                 'flatten' => true,
                 'enables' => true,
             ],
@@ -981,13 +984,13 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableHandlesSettingWithFalseFlattenFlag(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
         Configuration::enableContextsForTable('test_ext', 'test_table', [
             'false_flatten' => [
-                'label' => 'False Flatten',
+                'label'   => 'False Flatten',
                 'flatten' => false, // Explicitly false
             ],
         ], false);
@@ -1002,13 +1005,13 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableHandlesSettingWithFalseEnablesFlag(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
         Configuration::enableContextsForTable('test_ext', 'test_table', [
             'false_enables' => [
-                'label' => 'False Enables',
+                'label'   => 'False Enables',
                 'enables' => false, // Explicitly false
             ],
         ], false);
@@ -1027,22 +1030,22 @@ final class ConfigurationTest extends UnitTestCase
     public function enableContextsForTableHandlesMultipleSettingsWithMixedFlags(): void
     {
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => ['title' => 'Test Table'],
+            'ctrl'    => ['title' => 'Test Table'],
             'columns' => [],
         ];
 
         Configuration::enableContextsForTable('test_ext', 'test_table', [
             'setting1' => [
-                'label' => 'Setting 1',
+                'label'   => 'Setting 1',
                 'flatten' => true,
                 'enables' => true,
             ],
             'setting2' => [
-                'label' => 'Setting 2',
+                'label'   => 'Setting 2',
                 'flatten' => true,
             ],
             'setting3' => [
-                'label' => 'Setting 3',
+                'label'   => 'Setting 3',
                 'enables' => true,
             ],
             'setting4' => [

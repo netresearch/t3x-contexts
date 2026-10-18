@@ -19,12 +19,13 @@ namespace Netresearch\Contexts\Service;
 use TYPO3\CMS\Core\SingletonInterface;
 
 /**
- * Hook methods used in TYPO3 for Icons
+ * Hook methods used in TYPO3 for Icons.
  *
  * @author  André Hähnel <andre.haehnel@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class IconService implements SingletonInterface
 {

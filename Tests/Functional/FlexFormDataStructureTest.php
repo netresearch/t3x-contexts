@@ -49,9 +49,9 @@ final class FlexFormDataStructureTest extends FunctionalTestCase
     {
         return [
             'GET parameter context' => ['getparam', 'field_name'],
-            'session context' => ['session', 'field_variable'],
-            'domain context' => ['domain', 'field_domains'],
-            'IP context' => ['ip', 'field_ip'],
+            'session context'       => ['session', 'field_variable'],
+            'domain context'        => ['domain', 'field_domains'],
+            'IP context'            => ['ip', 'field_ip'],
         ];
     }
 
@@ -106,10 +106,10 @@ final class FlexFormDataStructureTest extends FunctionalTestCase
         );
 
         $dataStructure = $flexFormTools->parseDataStructureByIdentifier($identifier);
-        $elements = $dataStructure['sheets']['sDEF']['ROOT']['el'] ?? null;
+        $elements      = $dataStructure['sheets']['sDEF']['ROOT']['el'] ?? null;
 
         self::assertIsArray($elements, 'The data structure must have a default sheet');
 
-        return array_map(static fn(int|string $name): string => (string) $name, array_keys($elements));
+        return array_map(static fn (int|string $name): string => (string) $name, array_keys($elements));
     }
 }

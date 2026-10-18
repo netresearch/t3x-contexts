@@ -32,12 +32,12 @@ final class SettingTest extends UnitTestCase
     public function constructorSetsAllPropertiesFromRow(): void
     {
         $mockContext = $this->createMock(AbstractContext::class);
-        $row = [
-            'uid' => 42,
+        $row         = [
+            'uid'           => 42,
             'foreign_table' => 'pages',
-            'foreign_uid' => 123,
-            'name' => 'tx_contexts',
-            'enabled' => 1,
+            'foreign_uid'   => 123,
+            'name'          => 'tx_contexts',
+            'enabled'       => 1,
         ];
 
         $setting = new Setting($mockContext, $row);
@@ -54,12 +54,12 @@ final class SettingTest extends UnitTestCase
     public function constructorCastsTypesCorrectly(): void
     {
         $mockContext = $this->createMock(AbstractContext::class);
-        $row = [
-            'uid' => '99',
+        $row         = [
+            'uid'           => '99',
             'foreign_table' => 'tt_content',
-            'foreign_uid' => '456',
-            'name' => 'visibility',
-            'enabled' => '0',
+            'foreign_uid'   => '456',
+            'name'          => 'visibility',
+            'enabled'       => '0',
         ];
 
         $setting = new Setting($mockContext, $row);
@@ -73,12 +73,12 @@ final class SettingTest extends UnitTestCase
     public function isDefaultSettingReturnsTrueForUidZero(): void
     {
         $mockContext = $this->createMock(AbstractContext::class);
-        $row = [
-            'uid' => 0,
+        $row         = [
+            'uid'           => 0,
             'foreign_table' => 'pages',
-            'foreign_uid' => 0,
-            'name' => 'tx_contexts',
-            'enabled' => 1,
+            'foreign_uid'   => 0,
+            'name'          => 'tx_contexts',
+            'enabled'       => 1,
         ];
 
         $setting = new Setting($mockContext, $row);
@@ -90,12 +90,12 @@ final class SettingTest extends UnitTestCase
     public function isDefaultSettingReturnsFalseForNonZeroUid(): void
     {
         $mockContext = $this->createMock(AbstractContext::class);
-        $row = [
-            'uid' => 1,
+        $row         = [
+            'uid'           => 1,
             'foreign_table' => 'pages',
-            'foreign_uid' => 0,
-            'name' => 'tx_contexts',
-            'enabled' => 1,
+            'foreign_uid'   => 0,
+            'name'          => 'tx_contexts',
+            'enabled'       => 1,
         ];
 
         $setting = new Setting($mockContext, $row);
@@ -110,9 +110,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(5);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '1,2,3',
-            'tx_contexts_enable' => '4,6,7',
+            'tx_contexts_enable'  => '4,6,7',
         ];
 
         $setting = Setting::fromFlatData(
@@ -133,9 +133,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(5);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '1,2,3',
-            'tx_contexts_enable' => '4,5,6',
+            'tx_contexts_enable'  => '4,5,6',
         ];
 
         $setting = Setting::fromFlatData(
@@ -159,9 +159,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(2);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '1,2,3',
-            'tx_contexts_enable' => '4,5,6',
+            'tx_contexts_enable'  => '4,5,6',
         ];
 
         $setting = Setting::fromFlatData(
@@ -184,9 +184,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(1);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         $setting = Setting::fromFlatData(
@@ -207,9 +207,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(1);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '1',
+            'tx_contexts_enable'  => '1',
         ];
 
         $setting = Setting::fromFlatData(
@@ -232,9 +232,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(1);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '10,11,12', // Contains "1" as prefix but not as ID
-            'tx_contexts_enable' => '20,21,22',
+            'tx_contexts_enable'  => '20,21,22',
         ];
 
         $setting = Setting::fromFlatData(
@@ -257,9 +257,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(1);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '21,31,41', // Contains "1" as suffix but not as ID
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         $setting = Setting::fromFlatData(
@@ -281,9 +281,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(1);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '210,310', // Contains "1" in middle but not as ID
+            'tx_contexts_enable'  => '210,310', // Contains "1" in middle but not as ID
         ];
 
         $setting = Setting::fromFlatData(
@@ -305,9 +305,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(5);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '3,5,7',
+            'tx_contexts_enable'  => '3,5,7',
         ];
 
         $setting = Setting::fromFlatData(
@@ -330,9 +330,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(5);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '5,10,15',
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         $setting = Setting::fromFlatData(
@@ -355,9 +355,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(15);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '5,10,15',
+            'tx_contexts_enable'  => '5,10,15',
         ];
 
         $setting = Setting::fromFlatData(
@@ -383,9 +383,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(15);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '5,10,15', // uid 15 at end
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         $setting = Setting::fromFlatData(
@@ -410,9 +410,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(2);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '20,21', // 2 is a prefix of 20
+            'tx_contexts_enable'  => '20,21', // 2 is a prefix of 20
         ];
 
         $setting = Setting::fromFlatData(
@@ -437,9 +437,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(5);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '5', // Also in disable
-            'tx_contexts_enable' => '5',  // In enable
+            'tx_contexts_enable'  => '5',  // In enable
         ];
 
         $setting = Setting::fromFlatData(
@@ -463,9 +463,9 @@ final class SettingTest extends UnitTestCase
         $mockContext->method('getUid')->willReturn(5);
 
         $flatColumns = ['tx_contexts_disable', 'tx_contexts_enable'];
-        $row = [
+        $row         = [
             'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '5',
+            'tx_contexts_enable'  => '5',
         ];
 
         $setting = Setting::fromFlatData(

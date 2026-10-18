@@ -16,10 +16,10 @@ declare(strict_types=1);
 
 use Netresearch\Contexts\Api\Configuration;
 
-defined('TYPO3') || die('Access denied.');
+defined('TYPO3') || exit('Access denied.');
 
 /**
- * TCA override for pages table
+ * TCA override for pages table.
  */
 call_user_func(static function (): void {
     Configuration::enableContextsForTable(
@@ -27,7 +27,7 @@ call_user_func(static function (): void {
         'pages',
         [
             'tx_contexts_nav' => [
-                'label' => 'LLL:' . Configuration::LANG_FILE . ':tx_contexts_menu_visibility',
+                'label'   => 'LLL:' . Configuration::LANG_FILE . ':tx_contexts_menu_visibility',
                 'flatten' => true,
             ],
         ],

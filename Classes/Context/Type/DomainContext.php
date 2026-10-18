@@ -22,20 +22,18 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Matches on the current domain name
+ * Matches on the current domain name.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class DomainContext extends AbstractContext
 {
-    /**
-     *
-     */
     public function match(array $arDependencies = []): bool
     {
-        $curHost = $this->getCurrentHost();
+        $curHost   = $this->getCurrentHost();
         $arDomains = GeneralUtility::trimExplode(
             "\n",
             $this->getConfValue('field_domains'),
@@ -51,9 +49,6 @@ class DomainContext extends AbstractContext
         return $this->invert(false);
     }
 
-    /**
-     *
-     */
     /**
      * Get the current host from the request.
      *

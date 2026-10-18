@@ -20,7 +20,7 @@ return [
     'frontend' => [
         'netresearch/context/container-initialization' => [
             'target' => ContainerInitialization::class,
-            'after' => [
+            'after'  => [
                 // The frontend user has to be authenticated before contexts are
                 // matched: SessionContext and "use_session" persistence read the
                 // "frontend.user" request attribute this middleware sets.

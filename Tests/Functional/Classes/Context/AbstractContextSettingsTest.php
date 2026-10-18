@@ -55,7 +55,7 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initAll();
 
@@ -79,7 +79,7 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initAll();
 
@@ -101,7 +101,7 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initAll();
 
@@ -122,7 +122,7 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initAll();
 
@@ -145,7 +145,7 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initAll();
 
@@ -170,14 +170,14 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initAll();
 
         $context = $container->find(10);
         self::assertNotNull($context);
 
-        $pagesSettings = $context->getSettings('pages', 100);
+        $pagesSettings   = $context->getSettings('pages', 100);
         $contentSettings = $context->getSettings('tt_content', 200);
 
         self::assertCount(2, $pagesSettings, 'Should have 2 settings for pages');
@@ -191,7 +191,7 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initAll();
 
@@ -211,7 +211,7 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initAll();
 
@@ -230,7 +230,7 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initAll();
 
@@ -249,7 +249,7 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initAll();
 
@@ -268,7 +268,7 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initAll();
 
@@ -287,14 +287,14 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initAll();
 
         $context = $container->find(10);
         self::assertNotNull($context);
 
-        $enabledSetting = $context->getSetting('pages', 'tx_contexts_visibility', 100);
+        $enabledSetting  = $context->getSetting('pages', 'tx_contexts_visibility', 100);
         $disabledSetting = $context->getSetting('pages', 'tx_contexts_nav', 100);
 
         self::assertNotNull($enabledSetting);
@@ -310,13 +310,13 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/AbstractContextSettingsTest.csv');
 
         // Set up TCA with flat columns
-        $GLOBALS['TCA']['pages']['ctrl']['enablecolumns'] = [];
+        $GLOBALS['TCA']['pages']['ctrl']['enablecolumns']                = [];
         $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'] = [
             'pages' => [
                 'tx_contexts' => [
-                    'flatten' => true,
+                    'flatten'     => true,
                     'flatColumns' => [
-                        'tx_contexts_enable' => ['context_enable', 'enableField'],
+                        'tx_contexts_enable'  => ['context_enable', 'enableField'],
                         'tx_contexts_disable' => ['context_disable', 'disableField'],
                     ],
                 ],
@@ -325,7 +325,7 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initAll();
 
@@ -334,8 +334,8 @@ final class AbstractContextSettingsTest extends FunctionalTestCase
 
         // Test flat data - when row contains the flat columns
         $row = [
-            'uid' => 100,
-            'tx_contexts_enable' => '10', // Context UID 10 is enabled
+            'uid'                 => 100,
+            'tx_contexts_enable'  => '10', // Context UID 10 is enabled
             'tx_contexts_disable' => '',
         ];
 

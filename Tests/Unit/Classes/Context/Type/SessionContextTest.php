@@ -120,7 +120,7 @@ final class SessionContextTest extends UnitTestCase
     #[Test]
     public function matchReturnsTrueWhenSessionVariableIsObject(): void
     {
-        $obj = new stdClass();
+        $obj           = new stdClass();
         $obj->property = 'value';
 
         $context = $this->createSessionContext('my_session_var', $obj, true);
@@ -181,10 +181,10 @@ final class SessionContextTest extends UnitTestCase
      * Create a SessionContext driven by a request carrying a frontend user with
      * the given session value.
      *
-     * @param string $variableName  The session variable name to check
-     * @param mixed  $sessionValue  The value to return from session (null = not set)
-     * @param bool   $hasFeUser     Whether the request carries a frontend user
-     * @param bool   $invert        Whether to invert the match result
+     * @param string $variableName The session variable name to check
+     * @param mixed  $sessionValue The value to return from session (null = not set)
+     * @param bool   $hasFeUser    Whether the request carries a frontend user
+     * @param bool   $invert       Whether to invert the match result
      */
     private function createSessionContext(
         string $variableName,
@@ -227,8 +227,8 @@ final class SessionContextTest extends UnitTestCase
                 bool $invert,
             ) {
                 $this->mockVariableName = $variableName;
-                $this->mockRequest = $request;
-                $this->mockInvert = $invert;
+                $this->mockRequest      = $request;
+                $this->mockInvert       = $invert;
             }
 
             protected function getConfValue(

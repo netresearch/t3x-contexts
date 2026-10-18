@@ -16,8 +16,13 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Form;
 
+use function count;
+
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
+
+use function is_array;
+
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
@@ -32,13 +37,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @author  Marian Pollzien <marian.pollzien@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class CombinationFormElement extends AbstractFormElement
 {
     /**
-     * Display a textarea with validation for the entered aliases and expressions
-     *
+     * Display a textarea with validation for the entered aliases and expressions.
      *
      * @throws ContextException
      * @throws DBALException
@@ -57,18 +62,18 @@ class CombinationFormElement extends AbstractFormElement
         $text = $textElement->render();
 
         $evaluator = new LogicalExpressionEvaluator();
-        $tokens = $evaluator->tokenize((string) $this->data['parameterArray']['itemFormElValue']);
+        $tokens    = $evaluator->tokenize((string) $this->data['parameterArray']['itemFormElValue']);
 
-        $notFound = [];
+        $notFound      = [];
         $unknownTokens = [];
 
         foreach ($tokens as $token) {
             if (
-                \is_array($token)
+                is_array($token)
                 && $token[0] === LogicalExpressionEvaluator::T_VAR
             ) {
                 $contexts = Container::get()->initAll();
-                $found = false;
+                $found    = false;
 
                 /** @var AbstractContext $context */
                 foreach ($contexts as $context) {
@@ -81,24 +86,24 @@ class CombinationFormElement extends AbstractFormElement
                     $notFound[] = (string) $token[1];
                 }
             } elseif (
-                \is_array($token)
+                is_array($token)
                 && ($token[0] === LogicalExpressionEvaluator::T_UNKNOWN)
             ) {
                 $unknownTokens[] = (string) $token[1];
             }
         }
 
-        if ((\count($notFound) === 0) && (\count($unknownTokens) === 0)) {
+        if ((count($notFound) === 0) && (count($unknownTokens) === 0)) {
             return $text;
         }
 
         $textHtml = (string) $text['html'];
-        $html = <<<HTML
+        $html     = <<<HTML
             {$textHtml}
             <div class="text-danger">
             HTML;
-        if (\count($notFound) > 0) {
-            $notFoundText = htmlspecialchars(implode(', ', $notFound));
+        if (count($notFound) > 0) {
+            $notFoundText         = htmlspecialchars(implode(', ', $notFound));
             $aliasesNotFoundLabel = $this->getLanguageService()->sL(
                 'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:aliasesNotFound',
             );
@@ -109,8 +114,8 @@ class CombinationFormElement extends AbstractFormElement
                 HTML;
         }
 
-        if (\count($unknownTokens) > 0) {
-            $unknownTokensText = htmlspecialchars(implode(', ', $unknownTokens));
+        if (count($unknownTokens) > 0) {
+            $unknownTokensText  = htmlspecialchars(implode(', ', $unknownTokens));
             $unknownTokensLabel = $this->getLanguageService()->sL(
                 'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:unknownTokensFound',
             );
@@ -125,7 +130,7 @@ class CombinationFormElement extends AbstractFormElement
             </div>
             HTML;
 
-        $result = $this->initializeResultArray();
+        $result         = $this->initializeResultArray();
         $result['html'] = $html;
 
         return $result;

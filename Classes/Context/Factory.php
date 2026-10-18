@@ -16,6 +16,9 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Context;
 
+use function array_key_exists;
+use function is_string;
+
 use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\ContextException;
 use Psr\Log\LoggerAwareInterface;
@@ -25,19 +28,20 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Context factory
+ * Context factory.
  *
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class Factory implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
     /**
-     * Find the right class for the context type and instantiate it
+     * Find the right class for the context type and instantiate it.
      *
      * @param array $arRow Database context row
      *
@@ -46,9 +50,9 @@ class Factory implements LoggerAwareInterface
     public function createFromDb(array $arRow): ?AbstractContext
     {
         $classMap = Configuration::getContextTypes();
-        $type = (string) $arRow['type'];
+        $type     = (string) $arRow['type'];
 
-        if ($type === '' || !\array_key_exists($type, $classMap)) {
+        if ($type === '' || !array_key_exists($type, $classMap)) {
             if ($this->logger instanceof LoggerInterface) {
                 $this->logger->warning('tx_contexts: No class found for context type "' . $type . '"');
             }
@@ -62,7 +66,7 @@ class Factory implements LoggerAwareInterface
 
         $class = $classMap[$type]['class'];
 
-        if (!\is_string($class) || $class === '') {
+        if (!is_string($class) || $class === '') {
             return null;
         }
 

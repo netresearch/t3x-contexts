@@ -16,6 +16,9 @@ declare(strict_types=1);
 
 namespace Netresearch\Contexts\Tests\Unit\Query\Restriction;
 
+use function define;
+use function defined;
+
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
 use Netresearch\Contexts\Query\Restriction\ContextRestriction;
@@ -52,9 +55,9 @@ final class ContextRestrictionTest extends UnitTestCase
 
         // Initialize required TCA structure
         $GLOBALS['TCA']['tx_contexts_contexts'] = [
-            'contextTypes' => [],
+            'contextTypes'          => [],
             'extensionFlatSettings' => [],
-            'columns' => [],
+            'columns'               => [],
         ];
     }
 
@@ -102,7 +105,7 @@ final class ContextRestrictionTest extends UnitTestCase
 
         $restriction = new ContextRestriction();
 
-        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder   = $this->createMock(ExpressionBuilder::class);
         $compositeExpression = $this->createMock(CompositeExpression::class);
 
         $expressionBuilder->expects(self::once())
@@ -119,13 +122,13 @@ final class ContextRestrictionTest extends UnitTestCase
     {
         // Table without enable settings
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => [],
+            'ctrl'    => [],
             'columns' => [],
         ];
 
         $restriction = new ContextRestriction();
 
-        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder   = $this->createMock(ExpressionBuilder::class);
         $compositeExpression = $this->createMock(CompositeExpression::class);
 
         $expressionBuilder->expects(self::once())
@@ -142,7 +145,7 @@ final class ContextRestrictionTest extends UnitTestCase
     {
         $restriction = new ContextRestriction();
 
-        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder   = $this->createMock(ExpressionBuilder::class);
         $compositeExpression = $this->createMock(CompositeExpression::class);
 
         $expressionBuilder->expects(self::once())
@@ -163,7 +166,7 @@ final class ContextRestrictionTest extends UnitTestCase
 
         $restriction = new ContextRestriction();
 
-        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder   = $this->createMock(ExpressionBuilder::class);
         $compositeExpression = $this->createMock(CompositeExpression::class);
 
         $expressionBuilder->expects(self::once())
@@ -180,7 +183,7 @@ final class ContextRestrictionTest extends UnitTestCase
     {
         $restriction = new ContextRestriction();
 
-        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder   = $this->createMock(ExpressionBuilder::class);
         $compositeExpression = $this->createMock(CompositeExpression::class);
 
         $expressionBuilder->method('and')
@@ -207,7 +210,7 @@ final class ContextRestrictionTest extends UnitTestCase
 
         $restriction = new ContextRestriction();
 
-        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder   = $this->createMock(ExpressionBuilder::class);
         $compositeExpression = $this->createMock(CompositeExpression::class);
 
         // Only final and() call should happen, no intermediate calls
@@ -231,7 +234,7 @@ final class ContextRestrictionTest extends UnitTestCase
             'ctrl' => [
                 'tx_contexts' => [
                     'enableSettings' => ['tx_contexts'],
-                    'flatSettings' => [
+                    'flatSettings'   => [
                         'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
                     ],
                 ],
@@ -241,9 +244,9 @@ final class ContextRestrictionTest extends UnitTestCase
 
         $restriction = new ContextRestriction();
 
-        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder   = $this->createMock(ExpressionBuilder::class);
         $compositeExpression = $this->createMock(CompositeExpression::class);
-        $orExpression = $this->createMock(CompositeExpression::class);
+        $orExpression        = $this->createMock(CompositeExpression::class);
 
         // With no contexts, only enable column constraints are built (isNull, eq on enable column)
         // No disable constraints are added because disableConstraints array is empty
@@ -293,7 +296,7 @@ final class ContextRestrictionTest extends UnitTestCase
             'ctrl' => [
                 'tx_contexts' => [
                     'enableSettings' => ['tx_contexts'],
-                    'flatSettings' => [
+                    'flatSettings'   => [
                         'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
                     ],
                 ],
@@ -303,9 +306,9 @@ final class ContextRestrictionTest extends UnitTestCase
 
         $restriction = new ContextRestriction();
 
-        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder   = $this->createMock(ExpressionBuilder::class);
         $compositeExpression = $this->createMock(CompositeExpression::class);
-        $orExpression = $this->createMock(CompositeExpression::class);
+        $orExpression        = $this->createMock(CompositeExpression::class);
 
         // Should build enable constraints (isNull, eq on enable column)
         // AND disable constraints (isNull, eq on disable column)
@@ -325,7 +328,7 @@ final class ContextRestrictionTest extends UnitTestCase
         // Should build inSet for both enable and disable columns
         $expressionBuilder->expects(self::exactly(2))
             ->method('inSet')
-            ->willReturnCallback(fn($column, $value): string => 'FIND_IN_SET(' . (string) $value . ', ' . (string) $column . ')');
+            ->willReturnCallback(fn ($column, $value): string => 'FIND_IN_SET(' . (string) $value . ', ' . (string) $column . ')');
 
         // Should create OR expressions: one for enable, one for disable
         $expressionBuilder->expects(self::exactly(2))
@@ -359,7 +362,7 @@ final class ContextRestrictionTest extends UnitTestCase
             'ctrl' => [
                 'tx_contexts' => [
                     'enableSettings' => ['tx_contexts'],
-                    'flatSettings' => [
+                    'flatSettings'   => [
                         'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
                     ],
                 ],
@@ -369,7 +372,7 @@ final class ContextRestrictionTest extends UnitTestCase
 
         $restriction = new ContextRestriction();
 
-        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder   = $this->createMock(ExpressionBuilder::class);
         $compositeExpression = $this->createMock(CompositeExpression::class);
 
         // Should build inSet for both contexts (enable and disable)
@@ -402,8 +405,8 @@ final class ContextRestrictionTest extends UnitTestCase
             'ctrl' => [
                 'tx_contexts' => [
                     'enableSettings' => ['tx_contexts', 'tx_visibility'],
-                    'flatSettings' => [
-                        'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
+                    'flatSettings'   => [
+                        'tx_contexts'   => ['tx_contexts_disable', 'tx_contexts_enable'],
                         'tx_visibility' => ['tx_visibility_disable', 'tx_visibility_enable'],
                     ],
                 ],
@@ -413,7 +416,7 @@ final class ContextRestrictionTest extends UnitTestCase
 
         $restriction = new ContextRestriction();
 
-        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder   = $this->createMock(ExpressionBuilder::class);
         $compositeExpression = $this->createMock(CompositeExpression::class);
 
         // Should process both settings
@@ -449,7 +452,7 @@ final class ContextRestrictionTest extends UnitTestCase
 
         $restriction = new ContextRestriction();
 
-        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder   = $this->createMock(ExpressionBuilder::class);
         $compositeExpression = $this->createMock(CompositeExpression::class);
 
         // Only final and() call should happen, no constraint building
@@ -481,7 +484,7 @@ final class ContextRestrictionTest extends UnitTestCase
             'ctrl' => [
                 'tx_contexts' => [
                     'enableSettings' => ['tx_contexts'],
-                    'flatSettings' => [
+                    'flatSettings'   => [
                         'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
                     ],
                 ],
@@ -491,9 +494,9 @@ final class ContextRestrictionTest extends UnitTestCase
 
         $restriction = new ContextRestriction();
 
-        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder   = $this->createMock(ExpressionBuilder::class);
         $compositeExpression = $this->createMock(CompositeExpression::class);
-        $orExpression = $this->createMock(CompositeExpression::class);
+        $orExpression        = $this->createMock(CompositeExpression::class);
 
         // Track calls to inSet to verify disable column is used
         $inSetCalls = [];
@@ -501,6 +504,7 @@ final class ContextRestrictionTest extends UnitTestCase
             ->method('inSet')
             ->willReturnCallback(function ($column, $value) use (&$inSetCalls): string {
                 $inSetCalls[] = ['column' => $column, 'value' => $value];
+
                 return 'FIND_IN_SET(' . (string) $value . ', ' . (string) $column . ')';
             });
 
@@ -519,12 +523,12 @@ final class ContextRestrictionTest extends UnitTestCase
     }
 
     /**
-     * Set up frontend mode simulation
+     * Set up frontend mode simulation.
      */
     private function setupFrontendMode(): void
     {
-        if (!\defined('TYPO3')) {
-            \define('TYPO3', true);
+        if (!defined('TYPO3')) {
+            define('TYPO3', true);
         }
 
         // Create mock request with proper frontend type
@@ -537,7 +541,7 @@ final class ContextRestrictionTest extends UnitTestCase
     }
 
     /**
-     * Create a mock context with specified UID
+     * Create a mock context with specified UID.
      */
     private function createMockContext(int $uid): MockObject
     {

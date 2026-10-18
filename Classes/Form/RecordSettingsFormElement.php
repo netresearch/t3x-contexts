@@ -18,6 +18,9 @@ namespace Netresearch\Contexts\Form;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
+
+use function is_array;
+
 use Netresearch\Contexts\Api\Configuration;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\Contexts\Context\Container;
@@ -29,12 +32,13 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconSize;
 
 /**
- * USER function to render the record settings fields
+ * USER function to render the record settings fields.
  *
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class RecordSettingsFormElement extends AbstractFormElement
 {
@@ -52,8 +56,7 @@ class RecordSettingsFormElement extends AbstractFormElement
     }
 
     /**
-     * Render the context settings field for a certain table
-     *
+     * Render the context settings field for a certain table.
      *
      * @throws ContextException
      * @throws DBALException
@@ -66,11 +69,11 @@ class RecordSettingsFormElement extends AbstractFormElement
         $contexts = new Container();
         $contexts->initAll();
 
-        $namePre = 'data' . (string) $this->data['elementBaseName'];
+        $namePre  = 'data' . (string) $this->data['elementBaseName'];
         $settings = $this->data['parameterArray']['fieldConf']['config']['settings'];
 
         $contextsLabel = $this->getLanguageService()->sL('LLL:' . Configuration::LANG_FILE . ':tx_contexts_contexts');
-        $content = <<<HTML
+        $content       = <<<HTML
             <table class="tx_contexts_table_settings typo3-dblist" style="width: auto; min-width: 50%;">
                 <tbody>
                     <tr class="t3-row-header">
@@ -107,16 +110,16 @@ class RecordSettingsFormElement extends AbstractFormElement
 
             ++$visibleContexts;
             $contSettings = '';
-            $bHasSetting = false;
+            $bHasSetting  = false;
 
             foreach ($settings as $settingName => $config) {
                 $settingName = (string) $settingName;
-                $setting = $uid > 0
+                $setting     = $uid > 0
                     ? $context->getSetting(
                         (string) $this->data['tableName'],
                         $settingName,
                         $uid,
-                        \is_array($this->data['databaseRow']) ? $this->data['databaseRow'] : null,
+                        is_array($this->data['databaseRow']) ? $this->data['databaseRow'] : null,
                     )
                     : null;
 
@@ -161,15 +164,14 @@ class RecordSettingsFormElement extends AbstractFormElement
             </table>
             HTML;
 
-        $result = $this->initializeResultArray();
+        $result         = $this->initializeResultArray();
         $result['html'] = $content;
 
         return $result;
     }
 
     /**
-     * Get the standard record view for context records
-     *
+     * Get the standard record view for context records.
      *
      * @return array First value is click icon, second is title
      *
@@ -178,9 +180,9 @@ class RecordSettingsFormElement extends AbstractFormElement
     protected function getRecordPreview(AbstractContext $context): array
     {
         $row = [
-            'uid' => $context->getUid(),
-            'pid' => 0,
-            'type' => $context->getType(),
+            'uid'   => $context->getUid(),
+            'pid'   => 0,
+            'type'  => $context->getType(),
             'alias' => $context->getAlias(),
         ];
 
@@ -204,7 +206,7 @@ class RecordSettingsFormElement extends AbstractFormElement
      * @param string     $str   The icon HTML to wrap
      * @param string     $table Table name (e.g. "pages" or "tt_content") OR the
      *                          absolute path to the file
-     * @param int|string $uid   The uid of the record OR if a file, just blank value.
+     * @param int|string $uid   the uid of the record OR if a file, just blank value
      *
      * @codeCoverageIgnore Wraps BackendUtility::wrapClickMenuOnIcon
      */

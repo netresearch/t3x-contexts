@@ -19,6 +19,9 @@ namespace Netresearch\Contexts\Tests\Unit\ExpressionLanguage;
 use Netresearch\Contexts\ExpressionLanguage\ContextConditionProvider;
 use Netresearch\Contexts\ExpressionLanguage\FunctionsProvider\ContextFunctionsProvider;
 use PHPUnit\Framework\Attributes\Test;
+
+use function sprintf;
+
 use TYPO3\CMS\Core\ExpressionLanguage\AbstractProvider;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -123,13 +126,13 @@ final class ContextConditionProviderTest extends UnitTestCase
     #[Test]
     public function registeredProviderClassIsInstantiable(): void
     {
-        $provider = new ContextConditionProvider();
+        $provider  = new ContextConditionProvider();
         $providers = $provider->getExpressionLanguageProviders();
 
         foreach ($providers as $providerClass) {
             self::assertTrue(
                 class_exists($providerClass),
-                \sprintf('Provider class "%s" must exist and be autoloadable.', $providerClass),
+                sprintf('Provider class "%s" must exist and be autoloadable.', $providerClass),
             );
         }
     }

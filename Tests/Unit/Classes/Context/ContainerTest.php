@@ -82,7 +82,7 @@ final class ContainerTest extends UnitTestCase
     public function setRequestStoresRequest(): void
     {
         $mockRequest = $this->createMock(ServerRequestInterface::class);
-        $container = Container::get();
+        $container   = Container::get();
 
         $result = $container->setRequest($mockRequest);
 
@@ -214,7 +214,7 @@ final class ContainerTest extends UnitTestCase
     {
         $mockContext = $this->createMock(AbstractContext::class);
 
-        $container = Container::get();
+        $container    = Container::get();
         $container[1] = $mockContext;
 
         self::assertTrue(isset($container[1]));
@@ -260,7 +260,7 @@ final class ContainerTest extends UnitTestCase
         $nonMatchingContext->method('match')->willReturn(false);
 
         $container = new TestableContainer();
-        $result = $container->exposeMatch([1 => $matchingContext, 2 => $nonMatchingContext]);
+        $result    = $container->exposeMatch([1 => $matchingContext, 2 => $nonMatchingContext]);
 
         self::assertCount(1, $result);
         self::assertArrayHasKey(1, $result);
@@ -282,7 +282,7 @@ final class ContainerTest extends UnitTestCase
         // match() should never be called for disabled contexts
 
         $container = new TestableContainer();
-        $result = $container->exposeMatch([1 => $enabledContext, 2 => $disabledContext]);
+        $result    = $container->exposeMatch([1 => $enabledContext, 2 => $disabledContext]);
 
         self::assertCount(1, $result);
         self::assertArrayHasKey(1, $result);
@@ -333,7 +333,7 @@ final class ContainerTest extends UnitTestCase
         $context2->method('match')->willReturn(true);
 
         $container = new TestableContainer();
-        $result = $container->exposeMatch([1 => $context1, 2 => $context2]);
+        $result    = $container->exposeMatch([1 => $context1, 2 => $context2]);
 
         // Context 1 not matched, but context 2 can still match
         self::assertCount(1, $result);
@@ -360,7 +360,7 @@ final class ContainerTest extends UnitTestCase
         $context2->method('match')->willReturn(true);
 
         $container = new TestableContainer();
-        $result = $container->exposeMatch([1 => $context1, 2 => $context2]);
+        $result    = $container->exposeMatch([1 => $context1, 2 => $context2]);
 
         self::assertCount(2, $result);
     }
@@ -404,7 +404,7 @@ final class ContainerTest extends UnitTestCase
         $context->expects(self::never())->method('match');
 
         $container = new TestableContainer();
-        $result = $container->exposeMatch([1 => $context]);
+        $result    = $container->exposeMatch([1 => $context]);
 
         // Context never matched due to unresolvable dependency
         self::assertCount(0, $result);
@@ -420,7 +420,7 @@ final class ContainerTest extends UnitTestCase
         $context->method('match')->willReturn(false);
 
         $container = new TestableContainer();
-        $result = $container->exposeMatch([1 => $context]);
+        $result    = $container->exposeMatch([1 => $context]);
 
         self::assertCount(0, $result);
     }
@@ -429,7 +429,7 @@ final class ContainerTest extends UnitTestCase
     public function matchReturnsEmptyArrayForEmptyInput(): void
     {
         $container = new TestableContainer();
-        $result = $container->exposeMatch([]);
+        $result    = $container->exposeMatch([]);
 
         self::assertCount(0, $result);
     }
@@ -486,7 +486,7 @@ final class ContainerTest extends UnitTestCase
         $context3->method('match')->willReturn(true);
 
         $container = new TestableContainer();
-        $result = $container->exposeMatch([
+        $result    = $container->exposeMatch([
             2 => $context2,
             3 => $context3,
             1 => $context1,
@@ -507,7 +507,7 @@ final class ContainerTest extends UnitTestCase
         $disabled2->method('getDisabled')->willReturn(true);
 
         $container = new TestableContainer();
-        $result = $container->exposeMatch([1 => $disabled1, 2 => $disabled2]);
+        $result    = $container->exposeMatch([1 => $disabled1, 2 => $disabled2]);
 
         // All disabled, none matched
         self::assertCount(0, $result);
@@ -544,12 +544,13 @@ final class ContainerTest extends UnitTestCase
                     property_exists($arDeps[1], 'matched'),
                     'Dependency object must have "matched" property',
                 );
+
                 return true;
             },
         );
 
         $container = new TestableContainer();
-        $result = $container->exposeMatch([1 => $context1, 2 => $context2]);
+        $result    = $container->exposeMatch([1 => $context1, 2 => $context2]);
 
         self::assertCount(2, $result);
     }
@@ -575,6 +576,7 @@ final class ContainerTest extends UnitTestCase
                     'Dependency for not-matched context must be an object',
                 );
                 self::assertFalse($arDeps[1]->matched); // @phpstan-ignore property.notFound
+
                 return true;
             },
         );
@@ -605,6 +607,7 @@ final class ContainerTest extends UnitTestCase
                     'Disabled dependency must be an object',
                 );
                 self::assertSame('disabled', $arDeps[1]->matched); // @phpstan-ignore property.notFound
+
                 return true;
             },
         );
@@ -621,7 +624,7 @@ final class ContainerTest extends UnitTestCase
         // Create a chain of 11 contexts each depending on the previous one
         // but ordered so they need multiple loop iterations
         $contexts = [];
-        for ($i = 1; $i <= 11; $i++) {
+        for ($i = 1; $i <= 11; ++$i) {
             $context = $this->createMock(AbstractContext::class);
             $context->method('getUid')->willReturn($i);
             $context->method('getDisabled')->willReturn(false);
@@ -637,7 +640,7 @@ final class ContainerTest extends UnitTestCase
         $reversed = array_reverse($contexts, true);
 
         $container = new TestableContainer();
-        $result = $container->exposeMatch($reversed);
+        $result    = $container->exposeMatch($reversed);
 
         // With loop limit of 10 and $loops starting at 0, exactly 10 iterations.
         // In reverse order (11,10,...,1), context 1 resolves in first iteration,
@@ -651,7 +654,7 @@ final class ContainerTest extends UnitTestCase
 }
 
 /**
- * Testable Container that exposes protected match() method
+ * Testable Container that exposes protected match() method.
  */
 class TestableContainer extends Container
 {
