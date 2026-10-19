@@ -25,6 +25,8 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
+use function count;
+
 /**
  * Tests for ContextFunctionsProvider.
  *
@@ -97,10 +99,10 @@ final class ContextFunctionsProviderTest extends UnitTestCase
     #[Test]
     public function getFunctionsProvidesContextMatchFunction(): void
     {
-        $provider = new ContextFunctionsProvider();
+        $provider  = new ContextFunctionsProvider();
         $functions = $provider->getFunctions();
 
-        $names = array_map(static fn(ExpressionFunction $f): string => $f->getName(), $functions);
+        $names = array_map(static fn (ExpressionFunction $f): string => $f->getName(), $functions);
 
         self::assertContains('contextMatch', $names);
     }
@@ -112,7 +114,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
     #[Test]
     public function contextMatchCompilerCallableIsCallable(): void
     {
-        $provider = new ContextFunctionsProvider();
+        $provider  = new ContextFunctionsProvider();
         $functions = $provider->getFunctions();
 
         $contextMatch = $this->findContextMatchFunction($functions);
@@ -125,7 +127,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
     #[Test]
     public function contextMatchCompilerCallableReturnsNull(): void
     {
-        $provider = new ContextFunctionsProvider();
+        $provider     = new ContextFunctionsProvider();
         $contextMatch = $this->findContextMatchFunction($provider->getFunctions());
 
         self::assertNotNull($contextMatch);
@@ -143,7 +145,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
     #[Test]
     public function contextMatchEvaluatorIsCallable(): void
     {
-        $provider = new ContextFunctionsProvider();
+        $provider     = new ContextFunctionsProvider();
         $contextMatch = $this->findContextMatchFunction($provider->getFunctions());
 
         self::assertNotNull($contextMatch);
@@ -159,7 +161,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
 
         Container::get()->exchangeArray([1 => $mockContext]);
 
-        $provider = new ContextFunctionsProvider();
+        $provider  = new ContextFunctionsProvider();
         $evaluator = $this->findContextMatchFunction($provider->getFunctions())->getEvaluator();
 
         self::assertTrue($evaluator([], 'mobile'));
@@ -170,7 +172,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
     {
         Container::get()->exchangeArray([]);
 
-        $provider = new ContextFunctionsProvider();
+        $provider  = new ContextFunctionsProvider();
         $evaluator = $this->findContextMatchFunction($provider->getFunctions())->getEvaluator();
 
         self::assertFalse($evaluator([], 'nonexistent'));
@@ -185,7 +187,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
 
         Container::get()->exchangeArray([2 => $mockContext]);
 
-        $provider = new ContextFunctionsProvider();
+        $provider  = new ContextFunctionsProvider();
         $evaluator = $this->findContextMatchFunction($provider->getFunctions())->getEvaluator();
 
         self::assertTrue($evaluator([], 'desktop'));
@@ -196,7 +198,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
     #[Test]
     public function contextMatchEvaluatorReturnsFalseForEmptyContextString(): void
     {
-        $provider = new ContextFunctionsProvider();
+        $provider  = new ContextFunctionsProvider();
         $evaluator = $this->findContextMatchFunction($provider->getFunctions())->getEvaluator();
 
         self::assertFalse($evaluator([], ''));
@@ -211,7 +213,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
 
         Container::get()->exchangeArray([99 => $mockContext]);
 
-        $provider = new ContextFunctionsProvider();
+        $provider  = new ContextFunctionsProvider();
         $evaluator = $this->findContextMatchFunction($provider->getFunctions())->getEvaluator();
 
         // Alias matches
@@ -228,7 +230,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
         // Container stores context at numeric key 99 — find() uses is_numeric check
         Container::get()->exchangeArray([99 => $mockContext]);
 
-        $provider = new ContextFunctionsProvider();
+        $provider  = new ContextFunctionsProvider();
         $evaluator = $this->findContextMatchFunction($provider->getFunctions())->getEvaluator();
 
         // Container::find() also matches by numeric UID when context is at that key
@@ -240,10 +242,10 @@ final class ContextFunctionsProviderTest extends UnitTestCase
     {
         $provider = new ContextFunctionsProvider();
 
-        $firstCall = $provider->getFunctions();
+        $firstCall  = $provider->getFunctions();
         $secondCall = $provider->getFunctions();
 
-        self::assertCount(\count($firstCall), $secondCall);
+        self::assertCount(count($firstCall), $secondCall);
         self::assertSame($firstCall[0]->getName(), $secondCall[0]->getName());
     }
 

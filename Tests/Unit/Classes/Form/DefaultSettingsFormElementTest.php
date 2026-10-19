@@ -83,7 +83,7 @@ final class DefaultSettingsFormElementTest extends UnitTestCase
     public function renderMethodIsPublic(): void
     {
         $reflection = new ReflectionClass(DefaultSettingsFormElement::class);
-        $method = $reflection->getMethod('render');
+        $method     = $reflection->getMethod('render');
 
         self::assertTrue($method->isPublic(), 'render() must be public');
     }
@@ -92,7 +92,7 @@ final class DefaultSettingsFormElementTest extends UnitTestCase
     public function renderMethodReturnsArray(): void
     {
         $reflection = new ReflectionClass(DefaultSettingsFormElement::class);
-        $method = $reflection->getMethod('render');
+        $method     = $reflection->getMethod('render');
         $returnType = $method->getReturnType();
 
         self::assertNotNull($returnType);
@@ -263,7 +263,7 @@ final class DefaultSettingsFormElementTest extends UnitTestCase
             uid: 0,
             table: 'tt_content',
             settings: [
-                'tx_contexts' => ['label' => 'LLL:visibility'],
+                'tx_contexts'     => ['label' => 'LLL:visibility'],
                 'tx_contexts_nav' => ['label' => 'LLL:navigation'],
             ],
             resolvedSetting: null,
@@ -387,24 +387,24 @@ final class DefaultSettingsFormElementTest extends UnitTestCase
         };
 
         return new Setting($context, [
-            'uid' => 1,
+            'uid'           => 1,
             'foreign_table' => 'tt_content',
-            'name' => 'tx_contexts',
-            'foreign_uid' => 0,
-            'enabled' => $enabled,
+            'name'          => 'tx_contexts',
+            'foreign_uid'   => 0,
+            'enabled'       => $enabled,
         ]);
     }
 
     /**
      * Build a TestableDefaultSettingsFormElement.
      *
-     * @param int $uid Database uid of the record being edited
-     * @param string $table The table name for the settings
-     * @param array $settings The settings config to render
-     * @param Setting|null $resolvedSetting The Setting instance to return (null = no setting)
-     * @param bool $contextFound Whether a context is found for the given uid
-     * @param string $itemFormElName The form element name
-     * @param string $labelTranslation What sL() should return for labels
+     * @param int          $uid              Database uid of the record being edited
+     * @param string       $table            The table name for the settings
+     * @param array        $settings         The settings config to render
+     * @param Setting|null $resolvedSetting  The Setting instance to return (null = no setting)
+     * @param bool         $contextFound     Whether a context is found for the given uid
+     * @param string       $itemFormElName   The form element name
+     * @param string       $labelTranslation What sL() should return for labels
      */
     private function buildTestableElement(
         int $uid,
@@ -421,12 +421,12 @@ final class DefaultSettingsFormElementTest extends UnitTestCase
         $nodeFactory = $this->createMock(NodeFactory::class);
 
         $data = [
-            'databaseRow' => ['uid' => $uid],
+            'databaseRow'    => ['uid' => $uid],
             'parameterArray' => [
                 'itemFormElName' => $itemFormElName,
-                'fieldConf' => [
+                'fieldConf'      => [
                     'config' => [
-                        'table' => $table,
+                        'table'    => $table,
                         'settings' => $settings,
                     ],
                 ],
@@ -466,10 +466,10 @@ class TestableDefaultSettingsFormElement extends DefaultSettingsFormElement
         array $data,
     ) {
         // Set parent properties directly — works for both v12 (constructor) and v13 (setter)
-        $this->nodeFactory = $nodeFactory;
-        $this->data = $data;
-        $this->resolvedSetting = $resolvedSetting;
-        $this->contextFound = $contextFound;
+        $this->nodeFactory         = $nodeFactory;
+        $this->data                = $data;
+        $this->resolvedSetting     = $resolvedSetting;
+        $this->contextFound        = $contextFound;
         $this->mockLanguageService = $mockLanguageService;
     }
 
@@ -492,11 +492,11 @@ class TestableDefaultSettingsFormElement extends DefaultSettingsFormElement
         $baseId = trim($baseId, '_');
 
         foreach ($this->data['parameterArray']['fieldConf']['config']['settings'] as $configKey => $config) {
-            $id = $baseId . '-' . $configKey;
-            $name = $namePre . '[' . $configKey . ']';
+            $id      = $baseId . '-' . $configKey;
+            $name    = $namePre . '[' . $configKey . ']';
             $checked = '';
 
-            $setting = $hasContext ? $this->resolvedSetting : null;
+            $setting    = $hasContext ? $this->resolvedSetting : null;
             $hasSetting = (bool) $setting;
 
             // Replicate the original render logic:
@@ -518,7 +518,7 @@ class TestableDefaultSettingsFormElement extends DefaultSettingsFormElement
                 HTML;
         }
 
-        $result = $this->initializeResultArray();
+        $result         = $this->initializeResultArray();
         $result['html'] = $content;
 
         return $result;

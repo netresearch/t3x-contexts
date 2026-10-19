@@ -48,7 +48,7 @@ final class ContextTypesTest extends FunctionalTestCase
 
         // Backup original $_SERVER values we'll modify
         $this->originalServer = [
-            'HTTP_HOST' => $_SERVER['HTTP_HOST'] ?? null,
+            'HTTP_HOST'   => $_SERVER['HTTP_HOST'] ?? null,
             'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'] ?? null,
         ];
 
@@ -81,7 +81,7 @@ final class ContextTypesTest extends FunctionalTestCase
     #[Test]
     public function domainContextMatchesLocalhost(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1'; // non-matching IP
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -102,7 +102,7 @@ final class ContextTypesTest extends FunctionalTestCase
     #[Test]
     public function domainContextDoesNotMatchUnknownDomain(): void
     {
-        $_SERVER['HTTP_HOST'] = 'unknown-domain.test';
+        $_SERVER['HTTP_HOST']   = 'unknown-domain.test';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         $request = new ServerRequest('http://unknown-domain.test/', 'GET');
@@ -120,7 +120,7 @@ final class ContextTypesTest extends FunctionalTestCase
     #[Test]
     public function ipContextMatchesLocalhost(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -141,7 +141,7 @@ final class ContextTypesTest extends FunctionalTestCase
     #[Test]
     public function ipContextDoesNotMatchUnknownIp(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '192.168.1.100';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -159,7 +159,7 @@ final class ContextTypesTest extends FunctionalTestCase
     #[Test]
     public function queryParameterContextMatchesWithParameter(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -181,7 +181,7 @@ final class ContextTypesTest extends FunctionalTestCase
     #[Test]
     public function queryParameterContextDoesNotMatchWithWrongValue(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -200,7 +200,7 @@ final class ContextTypesTest extends FunctionalTestCase
     #[Test]
     public function disabledContextIsNotMatched(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -219,7 +219,7 @@ final class ContextTypesTest extends FunctionalTestCase
     #[Test]
     public function invertedContextMatchesWhenConditionFails(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -240,7 +240,7 @@ final class ContextTypesTest extends FunctionalTestCase
     #[Test]
     public function invertedContextDoesNotMatchWhenConditionSucceeds(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -259,7 +259,7 @@ final class ContextTypesTest extends FunctionalTestCase
     #[Test]
     public function multipleContextsCanMatchSimultaneously(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -277,7 +277,7 @@ final class ContextTypesTest extends FunctionalTestCase
     #[Test]
     public function containerFindByAliasWorks(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -299,7 +299,7 @@ final class ContextTypesTest extends FunctionalTestCase
     #[Test]
     public function containerResetClearsAllContexts(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))

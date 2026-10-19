@@ -71,7 +71,7 @@ final class ContentTest extends FunctionalTestCase
             ->getConnectionForTable('tt_content');
 
         $result = $connection->select(['uid', 'header'], 'tt_content', ['pid' => 1]);
-        $rows = $result->fetchAllAssociative();
+        $rows   = $result->fetchAllAssociative();
 
         self::assertCount(3, $rows);
     }

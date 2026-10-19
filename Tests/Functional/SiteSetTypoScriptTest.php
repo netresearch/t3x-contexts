@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * Copyright (c) 2025-2026 Netresearch DTT GmbH
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
 declare(strict_types=1);
 
 /*
@@ -20,6 +25,8 @@ use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
+
+use function dirname;
 
 /**
  * Covers the TypoScript the site set contributes.
@@ -57,7 +64,7 @@ final class SiteSetTypoScriptTest extends FunctionalTestCase
     public function theSetCarriesNoLegacyConstantCondition(): void
     {
         $setup = (string) file_get_contents(
-            \dirname(__DIR__, 2) . '/Configuration/Sets/Contexts/setup.typoscript',
+            dirname(__DIR__, 2) . '/Configuration/Sets/Contexts/setup.typoscript',
         );
 
         // A condition line is `[...]` at the start of a line. The parser accepts
@@ -111,14 +118,14 @@ final class SiteSetTypoScriptTest extends FunctionalTestCase
             $siteConfigPath . '/config.yaml',
             Yaml::dump([
                 'rootPageId' => 1,
-                'base' => self::BASE_URL,
+                'base'       => self::BASE_URL,
                 // The set is what contributes the TypoScript under test.
                 'dependencies' => ['netresearch/contexts'],
-                'languages' => [[
+                'languages'    => [[
                     'languageId' => 0,
-                    'title' => 'English',
-                    'locale' => 'en_US.UTF-8',
-                    'base' => '/',
+                    'title'      => 'English',
+                    'locale'     => 'en_US.UTF-8',
+                    'base'       => '/',
                 ]],
             ], 99, 2),
         );
@@ -147,12 +154,12 @@ final class SiteSetTypoScriptTest extends FunctionalTestCase
         $this->getConnectionPool()
             ->getConnectionForTable('sys_template')
             ->insert('sys_template', [
-                'pid' => 1,
-                'root' => 1,
-                'clear' => 0,
-                'title' => 'Page object only',
+                'pid'       => 1,
+                'root'      => 1,
+                'clear'     => 0,
+                'title'     => 'Page object only',
                 'constants' => '',
-                'config' => "page = PAGE\npage.typeNum = 0\n",
+                'config'    => "page = PAGE\npage.typeNum = 0\n",
             ]);
 
         return (string) $this->executeFrontendSubRequest(

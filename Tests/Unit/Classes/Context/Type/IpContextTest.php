@@ -22,6 +22,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 
+use function is_string;
+
+use const FILTER_FLAG_IPV4;
+use const FILTER_VALIDATE_IP;
+
 /**
  * Tests for IP context matching.
  */
@@ -32,8 +37,8 @@ final class IpContextTest extends TestBase
     protected function setUp(): void
     {
         parent::setUp();
-        $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? null;
-        $this->originalRemoteAddr = \is_string($remoteAddr) ? $remoteAddr : null;
+        $remoteAddr               = $_SERVER['REMOTE_ADDR'] ?? null;
+        $this->originalRemoteAddr = is_string($remoteAddr) ? $remoteAddr : null;
     }
 
     protected function tearDown(): void
@@ -155,7 +160,7 @@ final class IpContextTest extends TestBase
             $instance,
             'isIpInRange',
             $ip,
-            filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4) !== false,
+            filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false,
             $range,
         );
 

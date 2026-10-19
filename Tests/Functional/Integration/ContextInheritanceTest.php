@@ -60,7 +60,7 @@ final class ContextInheritanceTest extends FunctionalTestCase
 
         // Backup original $_SERVER values we'll modify
         $this->originalServer = [
-            'HTTP_HOST' => $_SERVER['HTTP_HOST'] ?? null,
+            'HTTP_HOST'   => $_SERVER['HTTP_HOST'] ?? null,
             'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'] ?? null,
         ];
 
@@ -124,8 +124,8 @@ final class ContextInheritanceTest extends FunctionalTestCase
     public function contextClassesImplementMatchMethod(): void
     {
         $reflectionDomain = new ReflectionClass(DomainContext::class);
-        $reflectionIp = new ReflectionClass(IpContext::class);
-        $reflectionQuery = new ReflectionClass(QueryParameterContext::class);
+        $reflectionIp     = new ReflectionClass(IpContext::class);
+        $reflectionQuery  = new ReflectionClass(QueryParameterContext::class);
 
         self::assertTrue(
             $reflectionDomain->hasMethod('match'),
@@ -148,7 +148,7 @@ final class ContextInheritanceTest extends FunctionalTestCase
     #[Test]
     public function contextHasCorrectPropertiesFromDatabase(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -169,7 +169,7 @@ final class ContextInheritanceTest extends FunctionalTestCase
     #[Test]
     public function disabledPropertyIsCorrectlySet(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -188,7 +188,7 @@ final class ContextInheritanceTest extends FunctionalTestCase
     #[Test]
     public function hideInBackendPropertyIsCorrectlySet(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -213,7 +213,7 @@ final class ContextInheritanceTest extends FunctionalTestCase
     #[Test]
     public function invertedContextInvertsMatchResult(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -245,7 +245,7 @@ final class ContextInheritanceTest extends FunctionalTestCase
     #[Test]
     public function factoryCreatesCorrectContextType(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -255,8 +255,8 @@ final class ContextInheritanceTest extends FunctionalTestCase
             ->initMatching();
 
         $domainContext = Container::get()->find(1);
-        $ipContext = Container::get()->find(2);
-        $queryContext = Container::get()->find(3);
+        $ipContext     = Container::get()->find(2);
+        $queryContext  = Container::get()->find(3);
 
         self::assertInstanceOf(
             DomainContext::class,
@@ -293,7 +293,7 @@ final class ContextInheritanceTest extends FunctionalTestCase
     #[Test]
     public function contextProvidesUidAccessor(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -311,7 +311,7 @@ final class ContextInheritanceTest extends FunctionalTestCase
     #[Test]
     public function contextProvidesTypeAccessor(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -329,7 +329,7 @@ final class ContextInheritanceTest extends FunctionalTestCase
     #[Test]
     public function contextProvidesTitleAccessor(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -347,7 +347,7 @@ final class ContextInheritanceTest extends FunctionalTestCase
     #[Test]
     public function contextProvidesAliasAccessor(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -365,7 +365,7 @@ final class ContextInheritanceTest extends FunctionalTestCase
     #[Test]
     public function aliasIsAlwaysLowercase(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');

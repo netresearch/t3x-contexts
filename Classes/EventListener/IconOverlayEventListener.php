@@ -32,13 +32,12 @@ final readonly class IconOverlayEventListener
 {
     public function __construct(
         private IconService $iconService,
-    ) {
-    }
+    ) {}
 
     public function __invoke(ModifyRecordOverlayIconIdentifierEvent $event): void
     {
         $iconOverlay = $event->getOverlayIconIdentifier();
-        $table = $event->getTable();
+        $table       = $event->getTable();
 
         /** @var array<string, mixed> $row */
         $row = $event->getRow();

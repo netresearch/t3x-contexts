@@ -26,18 +26,17 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class ContainerInitialization
+ * Class ContainerInitialization.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class ContainerInitialization implements MiddlewareInterface
 {
     /**
      * Initialize container matching and assure page is accessible after initialization.
-     *
-     *
      *
      * @throws ContextException
      * @throws DBALException

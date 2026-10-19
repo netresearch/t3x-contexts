@@ -54,7 +54,7 @@ final class RecordTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initMatching();
 
@@ -74,7 +74,7 @@ final class RecordTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initMatching();
 
@@ -93,7 +93,7 @@ final class RecordTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'nonexistent.local';
 
-        $request = new ServerRequest('http://nonexistent.local/', 'GET');
+        $request   = new ServerRequest('http://nonexistent.local/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initMatching();
 
@@ -112,7 +112,7 @@ final class RecordTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initMatching();
 
@@ -132,7 +132,7 @@ final class RecordTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initMatching();
 
@@ -152,7 +152,7 @@ final class RecordTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initMatching();
 
@@ -173,9 +173,9 @@ final class RecordTest extends FunctionalTestCase
         $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'] = [
             'pages' => [
                 'tx_contexts' => [
-                    'flatten' => true,
+                    'flatten'     => true,
                     'flatColumns' => [
-                        'tx_contexts_enable' => ['context_enable', 'enableField'],
+                        'tx_contexts_enable'  => ['context_enable', 'enableField'],
                         'tx_contexts_disable' => ['context_disable', 'disableField'],
                     ],
                 ],
@@ -184,7 +184,7 @@ final class RecordTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initMatching();
 
@@ -194,8 +194,8 @@ final class RecordTest extends FunctionalTestCase
 
         // Row with flat column data - context UID 10 is in disable list
         $row = [
-            'uid' => 100,
-            'tx_contexts_enable' => '',
+            'uid'                 => 100,
+            'tx_contexts_enable'  => '',
             'tx_contexts_disable' => '10', // Context 10 disables this record
         ];
 
@@ -214,9 +214,9 @@ final class RecordTest extends FunctionalTestCase
         $GLOBALS['TCA']['tx_contexts_contexts']['extensionFlatSettings'] = [
             'pages' => [
                 'tx_contexts' => [
-                    'flatten' => true,
+                    'flatten'     => true,
                     'flatColumns' => [
-                        'tx_contexts_enable' => ['context_enable', 'enableField'],
+                        'tx_contexts_enable'  => ['context_enable', 'enableField'],
                         'tx_contexts_disable' => ['context_disable', 'disableField'],
                     ],
                 ],
@@ -225,7 +225,7 @@ final class RecordTest extends FunctionalTestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
+        $request   = new ServerRequest('http://localhost/', 'GET');
         $container = Container::get()->setRequest($request);
         $container->initMatching();
 

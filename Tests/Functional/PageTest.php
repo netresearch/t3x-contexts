@@ -70,14 +70,14 @@ final class PageTest extends FunctionalTestCase
         GeneralUtility::mkdir_deep($siteConfigPath);
         $siteConfig = [
             'rootPageId' => 1,
-            'base' => 'http://localhost/',
-            'languages' => [
+            'base'       => 'http://localhost/',
+            'languages'  => [
                 [
                     'languageId' => 0,
-                    'title' => 'English',
-                    'locale' => 'en_US.UTF-8',
-                    'base' => '/',
-                    'flag' => 'us',
+                    'title'      => 'English',
+                    'locale'     => 'en_US.UTF-8',
+                    'base'       => '/',
+                    'flag'       => 'us',
                 ],
             ],
         ];
@@ -127,7 +127,7 @@ final class PageTest extends FunctionalTestCase
         // Use withQueryParameters for proper PSR-7 request handling
         $this->executeFrontendSubRequest(
             (new InternalRequest('http://localhost/'))->withQueryParameters([
-                'id' => 1,
+                'id'   => 1,
                 'test' => 1,
             ]),
         );
@@ -158,7 +158,7 @@ final class PageTest extends FunctionalTestCase
 
         $response = $this->executeFrontendSubRequest(
             (new InternalRequest('http://localhost/'))->withQueryParameters([
-                'id' => 1,
+                'id'   => 1,
                 'test' => 1,
             ]),
         );

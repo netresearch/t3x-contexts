@@ -18,15 +18,19 @@ namespace Netresearch\Contexts\Service;
 
 use Netresearch\Contexts\Api\Configuration;
 
+use function array_key_exists;
+use function is_array;
+
 /**
  * Hooks for InstallUtility: Append the necessary field definitions for
  * the enableSettings (tx_contexts_enable, tx_contexts_disable)
- * to the tables they were registered for
+ * to the tables they were registered for.
  *
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class InstallService
 {
@@ -43,7 +47,7 @@ class InstallService
     {
         $extensionFlatSettings = Configuration::getExtensionFlatSettings($strExtKey);
 
-        if (!\array_key_exists($strExtKey, $extensionFlatSettings)) {
+        if (!array_key_exists($strExtKey, $extensionFlatSettings)) {
             return [];
         }
 
@@ -54,14 +58,14 @@ class InstallService
 
             $arSql = [];
             foreach ($settings as $setting) {
-                if (\is_array($setting)) {
+                if (is_array($setting)) {
                     continue;
                 }
 
-                $setting = (string) $setting;
+                $setting     = (string) $setting;
                 $flatColumns = Configuration::getFlatColumns($table, $setting);
-                $arSql[] = (string) $flatColumns[0] . ' tinytext';
-                $arSql[] = (string) $flatColumns[1] . ' tinytext';
+                $arSql[]     = (string) $flatColumns[0] . ' tinytext';
+                $arSql[]     = (string) $flatColumns[1] . ' tinytext';
             }
 
             $sql .= implode(",\n", $arSql);

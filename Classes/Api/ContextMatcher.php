@@ -26,24 +26,23 @@ use Netresearch\Contexts\Context\Container;
  * @author  André Hähnel <andre.haehnel@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class ContextMatcher
 {
     /**
-     * Singleton instance
-     *
+     * Singleton instance.
      */
     protected static ?ContextMatcher $instance = null;
 
     /**
-     * Match results. Alias => boolean match result
-     *
+     * Match results. Alias => boolean match result.
      */
     protected array $arMatches = [];
 
     /**
-     * Singleton
+     * Singleton.
      *
      * @return self One instance
      */
@@ -57,8 +56,7 @@ class ContextMatcher
     }
 
     /**
-     * Unsets this instance
-     *
+     * Unsets this instance.
      */
     public static function clearInstance(): void
     {
@@ -66,7 +64,7 @@ class ContextMatcher
     }
 
     /**
-     * Match context by alias
+     * Match context by alias.
      *
      * @param string $strContext alias from context entry
      *
@@ -78,7 +76,7 @@ class ContextMatcher
             return $this->arMatches[$strContext];
         }
 
-        $context = Container::get()->find($strContext);
+        $context                      = Container::get()->find($strContext);
         $this->arMatches[$strContext] = $context instanceof AbstractContext;
 
         return $this->arMatches[$strContext];

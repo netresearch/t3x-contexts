@@ -50,9 +50,9 @@ final class AbstractContextTest extends UnitTestCase
         $cacheManager->setCacheConfigurations([
             'runtime' => [
                 'frontend' => VariableFrontend::class,
-                'backend' => TransientMemoryBackend::class,
-                'options' => [],
-                'groups' => [],
+                'backend'  => TransientMemoryBackend::class,
+                'options'  => [],
+                'groups'   => [],
             ],
         ]);
         GeneralUtility::setSingletonInstance(
@@ -65,13 +65,13 @@ final class AbstractContextTest extends UnitTestCase
     public function constructorSetsPropertiesFromRow(): void
     {
         $context = $this->createTestableContext($this->createContextRow([
-            'uid' => 42,
-            'type' => 'domain',
-            'title' => 'Domain Context',
-            'alias' => 'MyDomain',
-            'invert' => 1,
-            'use_session' => 1,
-            'disabled' => 1,
+            'uid'             => 42,
+            'type'            => 'domain',
+            'title'           => 'Domain Context',
+            'alias'           => 'MyDomain',
+            'invert'          => 1,
+            'use_session'     => 1,
+            'disabled'        => 1,
             'hide_in_backend' => 1,
         ]));
 
@@ -262,7 +262,7 @@ final class AbstractContextTest extends UnitTestCase
         $context = $this->createTestableContext($this->createContextRow());
         $context->setMockRequest(null);
 
-        $backup = $_SERVER['REMOTE_ADDR'] ?? null;
+        $backup                 = $_SERVER['REMOTE_ADDR'] ?? null;
         $_SERVER['REMOTE_ADDR'] = '203.0.113.9';
 
         try {
@@ -329,14 +329,14 @@ final class AbstractContextTest extends UnitTestCase
     {
         // Test without inversion
         $context1 = $this->createTestableContext($this->createContextRow([
-            'invert' => 0,
+            'invert'      => 0,
             'use_session' => 0,
         ]));
         self::assertTrue($context1->match());
 
         // Test with inversion
         $context2 = $this->createTestableContext($this->createContextRow([
-            'invert' => 1,
+            'invert'      => 1,
             'use_session' => 0,
         ]));
         self::assertFalse($context2->match());
@@ -431,9 +431,9 @@ final class AbstractContextTest extends UnitTestCase
     {
         // Test that string '0' and '1' from database are cast correctly
         $context = $this->createTestableContext($this->createContextRow([
-            'invert' => '1',
-            'use_session' => '1',
-            'disabled' => '1',
+            'invert'          => '1',
+            'use_session'     => '1',
+            'disabled'        => '1',
             'hide_in_backend' => '1',
         ]));
 
@@ -596,7 +596,7 @@ final class AbstractContextTest extends UnitTestCase
         $context = $this->createTestableContext($this->createContextRow(['use_session' => 0]));
 
         // Initially session disabled
-        [$useSession1,] = $context->exposeGetMatchFromSession();
+        [$useSession1] = $context->exposeGetMatchFromSession();
         self::assertFalse($useSession1);
 
         // Enable session
@@ -623,14 +623,14 @@ final class AbstractContextTest extends UnitTestCase
     public function getTypeFallsBackToEmptyStringWhenNotSet(): void
     {
         $context = $this->createTestableContext([
-            'uid' => 1,
-            'type' => '',
-            'title' => 'Test',
-            'alias' => 'test',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 1,
+            'type'            => '',
+            'title'           => 'Test',
+            'alias'           => 'test',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
         ]);
 
@@ -669,8 +669,8 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow([
             'use_session' => 1,
-            'uid' => 123,
-            'tstamp' => 1234567890,
+            'uid'         => 123,
+            'tstamp'      => 1234567890,
         ]));
 
         // Create mock fe_user with session data
@@ -692,8 +692,8 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow([
             'use_session' => 1,
-            'uid' => 456,
-            'tstamp' => 9876543210,
+            'uid'         => 456,
+            'tstamp'      => 9876543210,
         ]));
 
         // Create mock fe_user with session data
@@ -715,8 +715,8 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow([
             'use_session' => 1,
-            'uid' => 789,
-            'tstamp' => 1111111111,
+            'uid'         => 789,
+            'tstamp'      => 1111111111,
         ]));
 
         // Create mock fe_user with session data (integer 1)
@@ -762,7 +762,7 @@ final class AbstractContextTest extends UnitTestCase
     public function getSessionReturnsSessionDataWhenFeUserExists(): void
     {
         $context = $this->createTestableContext($this->createContextRow([
-            'uid' => 100,
+            'uid'    => 100,
             'tstamp' => 2222222222,
         ]));
 
@@ -782,7 +782,7 @@ final class AbstractContextTest extends UnitTestCase
     public function getSessionReturnsNullWhenNoSessionDataExists(): void
     {
         $context = $this->createTestableContext($this->createContextRow([
-            'uid' => 200,
+            'uid'    => 200,
             'tstamp' => 3333333333,
         ]));
 
@@ -802,7 +802,7 @@ final class AbstractContextTest extends UnitTestCase
     public function getSessionUsesCorrectSessionKeyFormat(): void
     {
         $context = $this->createTestableContext($this->createContextRow([
-            'uid' => 42,
+            'uid'    => 42,
             'tstamp' => 1234567890,
         ]));
 
@@ -853,8 +853,8 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow([
             'use_session' => 1,
-            'uid' => 500,
-            'tstamp' => 4444444444,
+            'uid'         => 500,
+            'tstamp'      => 4444444444,
         ]));
 
         $mockFeUser = $this->createMock(FrontendUserAuthentication::class);
@@ -876,8 +876,8 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow([
             'use_session' => 1,
-            'uid' => 600,
-            'tstamp' => 5555555555,
+            'uid'         => 600,
+            'tstamp'      => 5555555555,
         ]));
 
         $mockFeUser = $this->createMock(FrontendUserAuthentication::class);
@@ -899,11 +899,11 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow([
             'use_session' => 1,
-            'uid' => 700,
-            'tstamp' => 6666666666,
+            'uid'         => 700,
+            'tstamp'      => 6666666666,
         ]));
 
-        $callOrder = [];
+        $callOrder  = [];
         $mockFeUser = $this->createMock(FrontendUserAuthentication::class);
         $mockFeUser->expects(self::once())
             ->method('setKey')
@@ -950,9 +950,9 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow([
             'use_session' => 1,
-            'uid' => 999,
-            'tstamp' => 7777777777,
-            'invert' => 0,
+            'uid'         => 999,
+            'tstamp'      => 7777777777,
+            'invert'      => 0,
         ]));
 
         // First call: no session data, should store and return true (inverted to true)
@@ -972,9 +972,9 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow([
             'use_session' => 1,
-            'uid' => 888,
-            'tstamp' => 8888888888,
-            'invert' => 0,
+            'uid'         => 888,
+            'tstamp'      => 8888888888,
+            'invert'      => 0,
         ]));
 
         // Session has stored value true
@@ -995,14 +995,14 @@ final class AbstractContextTest extends UnitTestCase
         // Create two contexts with different UIDs and timestamps
         $context1 = $this->createTestableContext($this->createContextRow([
             'use_session' => 1,
-            'uid' => 101,
-            'tstamp' => 1000000001,
+            'uid'         => 101,
+            'tstamp'      => 1000000001,
         ]));
 
         $context2 = $this->createTestableContext($this->createContextRow([
             'use_session' => 1,
-            'uid' => 102,
-            'tstamp' => 1000000002,
+            'uid'         => 102,
+            'tstamp'      => 1000000002,
         ]));
 
         $mockFeUser = $this->createMock(FrontendUserAuthentication::class);
@@ -1051,8 +1051,8 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow([
             'use_session' => 1,
-            'uid' => 555,
-            'tstamp' => 5555555555,
+            'uid'         => 555,
+            'tstamp'      => 5555555555,
         ]));
 
         // Create mock fe_user with session data
@@ -1207,8 +1207,8 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow([
             'use_session' => 1,
-            'uid' => 666,
-            'tstamp' => 6666666666,
+            'uid'         => 666,
+            'tstamp'      => 6666666666,
         ]));
 
         $mockFeUser = $this->createMock(FrontendUserAuthentication::class);
@@ -1229,8 +1229,8 @@ final class AbstractContextTest extends UnitTestCase
     {
         $context = $this->createTestableContext($this->createContextRow([
             'use_session' => 1,
-            'uid' => 777,
-            'tstamp' => 7777777777,
+            'uid'         => 777,
+            'tstamp'      => 7777777777,
         ]));
 
         $mockFeUser = $this->createMock(FrontendUserAuthentication::class);
@@ -1259,22 +1259,23 @@ final class AbstractContextTest extends UnitTestCase
      * Creates a complete database row for context initialization.
      *
      * @param array<string, mixed> $overrides Values to override defaults
+     *
      * @return array<string, mixed> Complete database row
      */
     private function createContextRow(array $overrides = []): array
     {
         return array_merge([
-            'uid' => 1,
-            'pid' => 0,
-            'type' => 'testcontext',
-            'title' => 'Test Context',
-            'alias' => 'TestAlias',
-            'type_conf' => '',
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 1,
+            'pid'             => 0,
+            'type'            => 'testcontext',
+            'title'           => 'Test Context',
+            'alias'           => 'TestAlias',
+            'type_conf'       => '',
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'tstamp' => time(),
+            'tstamp'          => time(),
         ], $overrides);
     }
 }
@@ -1349,7 +1350,7 @@ class TestableAbstractContext extends AbstractContext
      */
     public function setMockRequest(?ServerRequestInterface $request): void
     {
-        $this->mockRequest = $request;
+        $this->mockRequest    = $request;
         $this->mockRequestSet = true;
     }
 

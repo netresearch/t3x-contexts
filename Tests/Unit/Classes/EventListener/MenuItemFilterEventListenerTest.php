@@ -25,6 +25,8 @@ use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Frontend\Event\FilterMenuItemsEvent;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
+use function sprintf;
+
 /**
  * Unit tests for MenuItemFilterEventListener.
  *
@@ -169,22 +171,22 @@ final class MenuItemFilterEventListenerTest extends UnitTestCase
     public function listenerDependenciesAreInjectedAsReadonly(): void
     {
         $reflectionClass = new ReflectionClass(MenuItemFilterEventListener::class);
-        $properties = $reflectionClass->getProperties();
+        $properties      = $reflectionClass->getProperties();
 
         foreach ($properties as $property) {
             self::assertTrue(
                 $property->isReadOnly(),
-                \sprintf('Property "%s" should be readonly', $property->getName()),
+                sprintf('Property "%s" should be readonly', $property->getName()),
             );
         }
     }
 
     /**
-     * Helper method to create FilterMenuItemsEvent instances
+     * Helper method to create FilterMenuItemsEvent instances.
      */
     private function createFilterMenuItemsEvent(array $filteredMenuItems): FilterMenuItemsEvent
     {
-        $site = $this->createMock(Site::class);
+        $site    = $this->createMock(Site::class);
         $context = $this->createMock(Context::class);
 
         return new FilterMenuItemsEvent(

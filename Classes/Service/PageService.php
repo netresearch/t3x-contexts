@@ -20,6 +20,8 @@ use Netresearch\Contexts\Api\Record;
 use Netresearch\Contexts\Context\Container;
 use TYPO3\CMS\Core\SingletonInterface;
 
+use const SORT_NUMERIC;
+
 /**
  * Service for page-related context operations.
  * Provides the active-context signature for page cache differentiation and
@@ -31,7 +33,8 @@ use TYPO3\CMS\Core\SingletonInterface;
  * @author  Christian Weiske <christian.weiske@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class PageService implements SingletonInterface
 {
@@ -41,7 +44,7 @@ class PageService implements SingletonInterface
      *
      * @param array<string, mixed> $pageRecord The page record data
      *
-     * @return bool Returns TRUE if the page can be safely included.
+     * @return bool returns TRUE if the page can be safely included
      */
     public function isPageVisibleInContext(array $pageRecord): bool
     {
@@ -79,7 +82,8 @@ class PageService implements SingletonInterface
         $keys = array_keys(
             Container::get()->getArrayCopy(),
         );
-        sort($keys, \SORT_NUMERIC);
+        sort($keys, SORT_NUMERIC);
+
         return implode(',', $keys);
     }
 }

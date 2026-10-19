@@ -27,9 +27,9 @@ $cacheManager = new CacheManager();
 $cacheManager->setCacheConfigurations([
     'runtime' => [
         'frontend' => VariableFrontend::class,
-        'backend' => TransientMemoryBackend::class,
-        'options' => [],
-        'groups' => [],
+        'backend'  => TransientMemoryBackend::class,
+        'options'  => [],
+        'groups'   => [],
     ],
 ]);
 GeneralUtility::setSingletonInstance(
@@ -53,18 +53,18 @@ $contextClass = (new class extends AbstractContext {
     }
 })::class;
 
-$createContext = static fn(string $typeConf): object => new $contextClass([
-    'uid' => 1,
-    'pid' => 0,
-    'type' => 'fuzz',
-    'title' => 'Fuzz Test',
-    'alias' => 'fuzz',
-    'type_conf' => $typeConf,
-    'invert' => 0,
-    'use_session' => 0,
-    'disabled' => 0,
+$createContext = static fn (string $typeConf): object => new $contextClass([
+    'uid'             => 1,
+    'pid'             => 0,
+    'type'            => 'fuzz',
+    'title'           => 'Fuzz Test',
+    'alias'           => 'fuzz',
+    'type_conf'       => $typeConf,
+    'invert'          => 0,
+    'use_session'     => 0,
+    'disabled'        => 0,
     'hide_in_backend' => 0,
-    'tstamp' => time(),
+    'tstamp'          => time(),
 ]);
 
 /** @var PhpFuzzer\Config $config */

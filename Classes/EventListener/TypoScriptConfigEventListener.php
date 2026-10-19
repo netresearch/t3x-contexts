@@ -42,8 +42,7 @@ final readonly class TypoScriptConfigEventListener
 {
     public function __construct(
         private QueryParameterService $queryParameterService,
-    ) {
-    }
+    ) {}
 
     public function __invoke(ModifyTypoScriptConfigEvent $event): void
     {
@@ -53,7 +52,7 @@ final readonly class TypoScriptConfigEventListener
             return;
         }
 
-        $configTree = $event->getConfigTree();
+        $configTree   = $event->getConfigTree();
         $linkVarsNode = $configTree->getChildByName('linkVars');
 
         if (!$linkVarsNode instanceof ChildNodeInterface) {

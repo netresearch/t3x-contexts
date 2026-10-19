@@ -35,9 +35,9 @@ final class InstallServiceTest extends UnitTestCase
 
         // Minimal TCA baseline required by Configuration::getExtensionFlatSettings
         $GLOBALS['TCA']['tx_contexts_contexts'] = [
-            'contextTypes' => [],
+            'contextTypes'          => [],
             'extensionFlatSettings' => [],
-            'columns' => [],
+            'columns'               => [],
         ];
     }
 
@@ -297,7 +297,7 @@ final class InstallServiceTest extends UnitTestCase
         $service = new InstallService();
 
         $signalReturn = ['some' => 'existing', 'data' => 42];
-        $result = $service->appendTableDefinitions($signalReturn, 'missing_ext');
+        $result       = $service->appendTableDefinitions($signalReturn, 'missing_ext');
 
         self::assertSame([], $result);
     }
@@ -318,7 +318,7 @@ final class InstallServiceTest extends UnitTestCase
 
         // The signal return is passed in but the method builds its own return value
         $signalReturn = ['original' => 'data'];
-        $result = $service->appendTableDefinitions($signalReturn, 'my_ext');
+        $result       = $service->appendTableDefinitions($signalReturn, 'my_ext');
 
         self::assertArrayNotHasKey('original', $result);
         self::assertArrayHasKey('sqlString', $result);

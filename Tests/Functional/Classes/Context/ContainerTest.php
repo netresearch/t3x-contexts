@@ -22,6 +22,8 @@ use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
+use function count;
+
 /**
  * Functional tests for Container class focusing on database-dependent methods.
  *
@@ -48,7 +50,7 @@ final class ContainerTest extends FunctionalTestCase
 
         // Backup original $_SERVER values we'll modify
         $this->originalServer = [
-            'HTTP_HOST' => $_SERVER['HTTP_HOST'] ?? null,
+            'HTTP_HOST'   => $_SERVER['HTTP_HOST'] ?? null,
             'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'] ?? null,
         ];
 
@@ -159,7 +161,7 @@ final class ContainerTest extends FunctionalTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/ContainerTestContexts.csv');
 
-        $_SERVER['HTTP_HOST'] = 'wrong-domain.test';
+        $_SERVER['HTTP_HOST']   = 'wrong-domain.test';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         $request = new ServerRequest('http://wrong-domain.test/', 'GET');
@@ -181,7 +183,7 @@ final class ContainerTest extends FunctionalTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/ContainerTestContexts.csv');
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -193,7 +195,7 @@ final class ContainerTest extends FunctionalTestCase
         // Should match: query param (100), domain (101), ip (102)
         self::assertGreaterThan(
             0,
-            \count($container),
+            count($container),
             'Container should have matching contexts',
         );
 
@@ -208,7 +210,7 @@ final class ContainerTest extends FunctionalTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/ContainerTestContexts.csv');
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1'; // Non-matching IP
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -228,7 +230,7 @@ final class ContainerTest extends FunctionalTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/ContainerTestDependencies.csv');
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         // Set query param that matches base context (UID 300)
@@ -253,7 +255,7 @@ final class ContainerTest extends FunctionalTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/ContainerTestCircular.csv');
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -271,7 +273,7 @@ final class ContainerTest extends FunctionalTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/ContainerTestDisabled.csv');
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -298,7 +300,7 @@ final class ContainerTest extends FunctionalTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/ContainerTestMultiLevel.csv');
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -321,7 +323,7 @@ final class ContainerTest extends FunctionalTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/ContainerTestCircular.csv');
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');

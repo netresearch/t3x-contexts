@@ -188,9 +188,7 @@ final class QueryParameterServiceTest extends UnitTestCase
             /**
              * @param list<AbstractContext> $mockContexts
              */
-            public function __construct(private readonly array $mockContexts)
-            {
-            }
+            public function __construct(private readonly array $mockContexts) {}
 
             /**
              * @return list<AbstractContext>
@@ -215,7 +213,7 @@ final class QueryParameterServiceTest extends UnitTestCase
             ) {
                 // "use_session" is the inverse of "carry the parameter in every link"
                 $this->use_session = !$addToLinkVars;
-                $this->disabled = $disabled;
+                $this->disabled    = $disabled;
             }
 
             protected function getConfValue(

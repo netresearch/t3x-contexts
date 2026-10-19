@@ -23,6 +23,8 @@ use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
+use function count;
+
 /**
  * Tests for multiple context types matching simultaneously.
  *
@@ -56,8 +58,8 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
 
         // Backup original $_SERVER values we'll modify
         $this->originalServer = [
-            'HTTP_HOST' => $_SERVER['HTTP_HOST'] ?? null,
-            'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'] ?? null,
+            'HTTP_HOST'       => $_SERVER['HTTP_HOST'] ?? null,
+            'REMOTE_ADDR'     => $_SERVER['REMOTE_ADDR'] ?? null,
             'HTTP_USER_AGENT' => $_SERVER['HTTP_USER_AGENT'] ?? null,
         ];
 
@@ -94,7 +96,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
     #[Test]
     public function domainAndIpContextsCanMatchSimultaneously(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -104,7 +106,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
             ->initMatching();
 
         $domainContext = Container::get()->find('domain_localhost');
-        $ipContext = Container::get()->find('ip_local');
+        $ipContext     = Container::get()->find('ip_local');
 
         self::assertNotNull($domainContext, 'Domain context should match for localhost');
         self::assertNotNull($ipContext, 'IP context should match for 127.0.0.1');
@@ -113,7 +115,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
     #[Test]
     public function domainIpAndQueryContextsCanMatchSimultaneously(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -124,8 +126,8 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
             ->initMatching();
 
         $domainContext = Container::get()->find('domain_localhost');
-        $ipContext = Container::get()->find('ip_local');
-        $queryContext = Container::get()->find('query_test');
+        $ipContext     = Container::get()->find('ip_local');
+        $queryContext  = Container::get()->find('query_test');
 
         self::assertNotNull($domainContext, 'Domain context should match');
         self::assertNotNull($ipContext, 'IP context should match');
@@ -135,7 +137,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
     #[Test]
     public function queryContextDoesNotMatchWhenParameterMissing(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -153,7 +155,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
     #[Test]
     public function queryContextDoesNotMatchWithWrongValue(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -175,7 +177,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
     #[Test]
     public function domainContextDoesNotMatchUnknownDomain(): void
     {
-        $_SERVER['HTTP_HOST'] = 'unknown.test';
+        $_SERVER['HTTP_HOST']   = 'unknown.test';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://unknown.test/', 'GET');
@@ -192,7 +194,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
     #[Test]
     public function ipContextDoesNotMatchDifferentIp(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '192.168.1.100';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -213,7 +215,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
     #[Test]
     public function combinationContextMatchesWhenBothDependenciesMatch(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         // Combination context (UID 11) requires contexts 1 AND 3
@@ -228,7 +230,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
 
         // First verify the dependencies match
         $domainContext = Container::get()->find(1);
-        $queryContext = Container::get()->find(3);
+        $queryContext  = Container::get()->find(3);
 
         self::assertNotNull($domainContext, 'Domain context (dependency) should match');
         self::assertNotNull($queryContext, 'Query context (dependency) should match');
@@ -245,7 +247,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
     #[Test]
     public function combinationContextDependsOnOtherContexts(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         // This test verifies that combination contexts have dependencies
@@ -285,7 +287,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
     #[Test]
     public function correctNumberOfContextsMatchInSimpleScenario(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = new ServerRequest('http://localhost/', 'GET');
@@ -299,7 +301,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
         // Count matching contexts
         $matchedCount = 0;
         foreach ($container as $context) {
-            $matchedCount++;
+            ++$matchedCount;
         }
 
         // With localhost and 127.0.0.1, we should have at least:
@@ -315,7 +317,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
     #[Test]
     public function allMatchingContextsAreAccessibleViaContainer(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request = (new ServerRequest('http://localhost/', 'GET'))
@@ -357,7 +359,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
     #[Test]
     public function containerCanBeInitializedMultipleTimes(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $request1 = new ServerRequest('http://localhost/', 'GET');
@@ -366,7 +368,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
             ->setRequest($request1)
             ->initMatching();
 
-        $firstCount = \count(iterator_to_array(Container::get()));
+        $firstCount = count(iterator_to_array(Container::get()));
 
         // Reset and reinitialize
         Container::reset();
@@ -378,7 +380,7 @@ final class MultipleContextTypesMatchingTest extends FunctionalTestCase
             ->setRequest($request2)
             ->initMatching();
 
-        $secondCount = \count(iterator_to_array(Container::get()));
+        $secondCount = count(iterator_to_array(Container::get()));
 
         // With query param, we should have more matches
         self::assertGreaterThan(

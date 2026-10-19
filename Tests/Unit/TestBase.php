@@ -32,8 +32,8 @@ abstract class TestBase extends TestCase
     /**
      * Make a protected/private method accessible.
      *
-     * @param class-string $className Class name
-     * @param string $methodName Method name
+     * @param class-string $className  Class name
+     * @param string       $methodName Method name
      */
     protected function getAccessibleMethod(string $className, string $methodName): ReflectionMethod
     {
@@ -45,9 +45,10 @@ abstract class TestBase extends TestCase
     /**
      * Call a protected method on an object and return the result.
      *
-     * @param object $object Object the method should be called on
+     * @param object $object     Object the method should be called on
      * @param string $methodName Method to be called
-     * @param mixed ...$params Method parameters
+     * @param mixed  ...$params  Method parameters
+     *
      * @return mixed Whatever the method returns
      */
     protected function callProtected(object $object, string $methodName, mixed ...$params): mixed

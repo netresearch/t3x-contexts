@@ -36,13 +36,13 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * @author  André Hähnel <andre.haehnel@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class MatchesViewHelper extends AbstractViewHelper
 {
     /**
-     * Initializes arguments (attributes)
-     *
+     * Initializes arguments (attributes).
      */
     public function initializeArguments(): void
     {
@@ -57,7 +57,7 @@ class MatchesViewHelper extends AbstractViewHelper
     }
 
     /**
-     * Render the context match method
+     * Render the context match method.
      *
      * @return int 1 if context match or 0
      */

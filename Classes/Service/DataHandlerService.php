@@ -24,14 +24,19 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 
+use function array_key_exists;
+use function count;
+use function is_array;
+
 /**
  * Class for TCEmain-hooks: Capture incoming default and record settings
- * and save them to the settings table and the enabled fields
+ * and save them to the settings table and the enabled fields.
  *
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class DataHandlerService
 {
@@ -44,8 +49,7 @@ class DataHandlerService
         private readonly ConnectionPool $connectionPool,
         private readonly CacheManager $cacheManager,
         private readonly QueryParameterService $queryParameterService,
-    ) {
-    }
+    ) {}
 
     /**
      * Extract the context settings from the field array and set them in
@@ -70,10 +74,11 @@ class DataHandlerService
         if (
             $table === 'tx_contexts_contexts'
             && isset($incomingFieldArray['default_settings'])
-            && \is_array($incomingFieldArray['default_settings'])
+            && is_array($incomingFieldArray['default_settings'])
         ) {
             $this->currentSettings = $incomingFieldArray['default_settings'];
             unset($incomingFieldArray['default_settings']);
+
             return;
         }
 
@@ -87,9 +92,7 @@ class DataHandlerService
     }
 
     /**
-     * Finally save the settings
-     *
-     *
+     * Finally save the settings.
      *
      * @throws DBALException
      * @throws Exception
@@ -102,7 +105,7 @@ class DataHandlerService
         array $fieldArray,
         DataHandler $reference,
     ): void {
-        if (\count($this->currentSettings) > 0) {
+        if (count($this->currentSettings) > 0) {
             if (!is_numeric($id)) {
                 $id = $reference->substNEWwithIDs[$id];
             }
@@ -191,15 +194,13 @@ class DataHandlerService
      * there will be a setting record if the setting is Yes or No. If its
      * blank (n/a) eventually existing records will be deleted.
      *
-     *
-     *
      * @throws DBALException
      * @throws Exception
      */
     protected function saveRecordSettings(string $table, int $uid, array $contextsAndSettings): void
     {
         $flatSettingColumns = Configuration::getFlatColumns($table);
-        $connectionPool = $this->connectionPool;
+        $connectionPool     = $this->connectionPool;
 
         foreach ($contextsAndSettings as $contextId => $settings) {
             foreach ($settings as $field => $setting) {
@@ -208,7 +209,7 @@ class DataHandlerService
                 }
 
                 $queryBuilder = $connectionPool->getQueryBuilderForTable('tx_contexts_settings');
-                $row = $queryBuilder->select('uid')
+                $row          = $queryBuilder->select('uid')
                     ->from('tx_contexts_settings')
                     ->where(
                         $queryBuilder->expr()->eq(
@@ -243,11 +244,11 @@ class DataHandlerService
                         $connection->insert(
                             'tx_contexts_settings',
                             [
-                                'context_uid' => (int) $contextId,
+                                'context_uid'   => (int) $contextId,
                                 'foreign_table' => $table,
-                                'name' => $field,
-                                'foreign_uid' => $uid,
-                                'enabled' => (int) $setting,
+                                'name'          => $field,
+                                'foreign_uid'   => $uid,
+                                'enabled'       => (int) $setting,
                             ],
                             [
                                 Connection::PARAM_INT,
@@ -275,13 +276,13 @@ class DataHandlerService
      * save queries for already fetched rows
      * hook.
      *
-     * @param array  $contextsAndSettings Array of settings.
-     *                                    Key is the context UID.
-     *                                    Value is an array of setting names
-     *                                    and their value, e.g.
-     *                                    tx_contexts_visibility => '',
-     *                                    menu_visibility => '0'
-     *                                    '' = undecided, 1 - on, 0 - off
+     * @param array $contextsAndSettings Array of settings.
+     *                                   Key is the context UID.
+     *                                   Value is an array of setting names
+     *                                   and their value, e.g.
+     *                                   tx_contexts_visibility => '',
+     *                                   menu_visibility => '0'
+     *                                   '' = undecided, 1 - on, 0 - off
      *
      * @see FrontendControllerService::enableFields()
      */
@@ -301,7 +302,7 @@ class DataHandlerService
             }
         }
 
-        if (\count($values) > 0) {
+        if (count($values) > 0) {
             foreach ($values as &$val) {
                 $val = implode(',', $val);
             }
@@ -319,9 +320,7 @@ class DataHandlerService
 
     /**
      * Save the default settings to the settings table - default
-     * settings will have a foreign_uid of 0
-     *
-     *
+     * settings will have a foreign_uid of 0.
      *
      * @throws DBALException
      * @throws Exception
@@ -330,7 +329,7 @@ class DataHandlerService
     {
         $connectionPool = $this->connectionPool;
 
-        $queryBuilder = $connectionPool->getQueryBuilderForTable('tx_contexts_settings');
+        $queryBuilder     = $connectionPool->getQueryBuilderForTable('tx_contexts_settings');
         $existingSettings = $queryBuilder->select('*')
             ->from('tx_contexts_settings')
             ->where(
@@ -357,7 +356,7 @@ class DataHandlerService
             $connection = $connectionPool->getConnectionForTable('tx_contexts_settings');
             foreach ($fields as $field => $enabled) {
                 $field = (string) $field;
-                if (\array_key_exists($field, $fieldSettings)) {
+                if (array_key_exists($field, $fieldSettings)) {
                     $connection->update(
                         'tx_contexts_settings',
                         ['enabled' => (int) $enabled],
@@ -368,11 +367,11 @@ class DataHandlerService
                     $connection->insert(
                         'tx_contexts_settings',
                         [
-                            'context_uid' => $contextId,
+                            'context_uid'   => $contextId,
                             'foreign_table' => $table,
-                            'name' => $field,
-                            'foreign_uid' => 0,
-                            'enabled' => (int) $enabled,
+                            'name'          => $field,
+                            'foreign_uid'   => 0,
+                            'enabled'       => (int) $enabled,
                         ],
                         [
                             Connection::PARAM_INT,

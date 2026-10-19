@@ -6,7 +6,7 @@
  */
 
 /**
- * Fractor configuration for TYPO3 extension upgrade
+ * Fractor configuration for TYPO3 extension upgrade.
  *
  * Handles non-PHP file migrations:
  * - FlexForms (XML)

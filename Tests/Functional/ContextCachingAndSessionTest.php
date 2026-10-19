@@ -171,7 +171,7 @@ final class ContextCachingAndSessionTest extends FunctionalTestCase
     public function configLinkVarsCarriesTheContextParameter(): void
     {
         $configTree = new RootNode();
-        $linkVars = new ChildNode('linkVars');
+        $linkVars   = new ChildNode('linkVars');
         $linkVars->setValue('L');
 
         $configTree->addChild($linkVars);

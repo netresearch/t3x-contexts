@@ -35,13 +35,12 @@ final readonly class PageAccessEventListener
 {
     public function __construct(
         private FrontendControllerService $frontendControllerService,
-    ) {
-    }
+    ) {}
 
     public function __invoke(AfterPageAndLanguageIsResolvedEvent $event): void
     {
         $pageInformation = $event->getPageInformation();
-        $pageRecord = $pageInformation->getPageRecord();
+        $pageRecord      = $pageInformation->getPageRecord();
 
         if ($pageRecord === []) {
             return;

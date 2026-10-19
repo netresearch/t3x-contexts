@@ -21,7 +21,7 @@ use Netresearch\Contexts\Query\Restriction\ContextRestriction;
 use Netresearch\Contexts\Service\DataHandlerService;
 use Netresearch\Contexts\Xclass\Backend\Tree\Repository\PageTreeRepository;
 
-defined('TYPO3') || die('Access denied.');
+defined('TYPO3') || exit('Access denied.');
 
 // Note: $TYPO3_CONF_VARS['FE']['addRootLineFields'] is not set here anymore.
 // The setting was removed in TYPO3 v13.2 (#103752); all relations on "pages"
@@ -40,19 +40,19 @@ $GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][ContextRestrict
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1700000001] = [
     'nodeName' => 'defaultSettingsFormElement',
     'priority' => 40,
-    'class' => DefaultSettingsFormElement::class,
+    'class'    => DefaultSettingsFormElement::class,
 ];
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1700000002] = [
     'nodeName' => 'combinationFormElement',
     'priority' => 40,
-    'class' => CombinationFormElement::class,
+    'class'    => CombinationFormElement::class,
 ];
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1700000003] = [
     'nodeName' => 'recordSettingsFormElement',
     'priority' => 40,
-    'class' => RecordSettingsFormElement::class,
+    'class'    => RecordSettingsFormElement::class,
 ];
 
 // DataHandler hooks for processing context settings during record save/update

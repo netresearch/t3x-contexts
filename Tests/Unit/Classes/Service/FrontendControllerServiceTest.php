@@ -46,9 +46,9 @@ final class FrontendControllerServiceTest extends UnitTestCase
 
         // Initialize required TCA structure
         $GLOBALS['TCA']['tx_contexts_contexts'] = [
-            'contextTypes' => [],
+            'contextTypes'          => [],
             'extensionFlatSettings' => [],
-            'columns' => [],
+            'columns'               => [],
         ];
     }
 

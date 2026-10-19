@@ -31,10 +31,10 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
      * Provide data for several tests.
      *
      * @return array<int, array{0: string, 1: string, 2: array<string, bool>}>
-     *               Array of arguments where:
-     *               1st is the expression
-     *               2nd is the expected rebuilt expression
-     *               3rd are the values
+     *                                                                         Array of arguments where:
+     *                                                                         1st is the expression
+     *                                                                         2nd is the expected rebuilt expression
+     *                                                                         3rd are the values
      */
     public static function expressionValueProvider(): array
     {
@@ -124,16 +124,16 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
 
         // Handle parentheses recursively
         while (preg_match('/\(([^()]+)\)/', $expression, $matches) === 1) {
-            $inner = self::evaluateBooleanExpression($matches[1]);
+            $inner       = self::evaluateBooleanExpression($matches[1]);
             $replacement = $inner ? 'true' : 'false';
-            $expression = str_replace($matches[0], $replacement, $expression);
+            $expression  = str_replace($matches[0], $replacement, $expression);
         }
 
         // Handle NOT operator
         while (preg_match('/!(\s*)(true|false)/', $expression, $matches) === 1) {
-            $value = $matches[2] === 'true';
+            $value       = $matches[2] === 'true';
             $replacement = $value === false ? 'true' : 'false';
-            $expression = (string) preg_replace('/!\s*(true|false)/', $replacement, $expression, 1);
+            $expression  = (string) preg_replace('/!\s*(true|false)/', $replacement, $expression, 1);
         }
 
         // Handle XOR (lowest precedence)
@@ -192,7 +192,7 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
         $this->expectExceptionMessage('Unexpected end');
 
         $strExpression = '(context1 ||';
-        $arValues = ['context1' => true];
+        $arValues      = ['context1' => true];
         LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
@@ -203,7 +203,7 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
         $this->expectExceptionMessage('Missing closing parentheses');
 
         $strExpression = '(context1 ';
-        $arValues = ['context1' => true];
+        $arValues      = ['context1' => true];
         LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
@@ -214,7 +214,7 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
         $this->expectExceptionMessage('Unexpected variable');
 
         $strExpression = '(context1 context2)';
-        $arValues = ['context1' => true];
+        $arValues      = ['context1' => true];
         LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
@@ -225,7 +225,7 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
         $this->expectExceptionMessage("Can't evaluate more than two items by xor");
 
         $strExpression = 'context1 xor context2 xor context3';
-        $arValues = ['context1' => true, 'context2' => true, 'context3' => true];
+        $arValues      = ['context1' => true, 'context2' => true, 'context3' => true];
         LogicalExpressionEvaluator::run($strExpression, $arValues);
     }
 
@@ -233,7 +233,7 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
     public function not(): void
     {
         $strExpression = '!a';
-        $arValues = [
+        $arValues      = [
             'a' => true,
         ];
         self::assertFalse(
@@ -248,7 +248,7 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
     public function andNot(): void
     {
         $strExpression = 'a && !b';
-        $arValues = [
+        $arValues      = [
             'a' => true,
             'b' => true,
         ];
@@ -264,7 +264,7 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
     public function tokenizeReturnsEmptyTokensForEmptyExpression(): void
     {
         $evaluator = new LogicalExpressionEvaluator();
-        $tokens = $evaluator->tokenize('');
+        $tokens    = $evaluator->tokenize('');
 
         // Empty expression should return only the end token
         self::assertCount(1, $tokens);
@@ -275,7 +275,7 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
     public function tokenizeSingleVariable(): void
     {
         $evaluator = new LogicalExpressionEvaluator();
-        $tokens = $evaluator->tokenize('context1');
+        $tokens    = $evaluator->tokenize('context1');
 
         self::assertCount(2, $tokens);
         self::assertSame([LogicalExpressionEvaluator::T_VAR, 'context1'], $tokens[0]);
@@ -286,7 +286,7 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
     public function tokenizeVariableAtStartOfExpression(): void
     {
         $evaluator = new LogicalExpressionEvaluator();
-        $tokens = $evaluator->tokenize('a && b');
+        $tokens    = $evaluator->tokenize('a && b');
 
         // Token at position 0 (start) should be properly parsed
         self::assertSame([LogicalExpressionEvaluator::T_VAR, 'a'], $tokens[0]);
@@ -320,7 +320,7 @@ final class LogicalExpressionEvaluatorTest extends UnitTestCase
     public function tokenizeHandlesParentheses(): void
     {
         $evaluator = new LogicalExpressionEvaluator();
-        $tokens = $evaluator->tokenize('(a)');
+        $tokens    = $evaluator->tokenize('(a)');
 
         self::assertSame(LogicalExpressionEvaluator::T_PL, $tokens[0]);
         self::assertSame([LogicalExpressionEvaluator::T_VAR, 'a'], $tokens[1]);

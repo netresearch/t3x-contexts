@@ -23,6 +23,8 @@ use ReflectionClass;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
+use function count;
+
 /**
  * Cross-extension integration tests.
  *
@@ -62,10 +64,10 @@ final class CrossExtensionIntegrationTest extends FunctionalTestCase
     {
         // Check if sub-extensions are available using string-based class names
         // to avoid PHPStan errors when extensions are not installed
-        $geolocationClass = 'Netresearch\\ContextsGeolocation\\Context\\Type\\CountryContext';
-        $deviceClass = 'Netresearch\\ContextsDevice\\Context\\Type\\DeviceContext';
+        $geolocationClass              = 'Netresearch\\ContextsGeolocation\\Context\\Type\\CountryContext';
+        $deviceClass                   = 'Netresearch\\ContextsDevice\\Context\\Type\\DeviceContext';
         $this->hasGeolocationExtension = class_exists($geolocationClass);
-        $this->hasDeviceExtension = class_exists($deviceClass);
+        $this->hasDeviceExtension      = class_exists($deviceClass);
 
         // Dynamically add extensions if available
         if ($this->hasGeolocationExtension) {
@@ -188,9 +190,9 @@ final class CrossExtensionIntegrationTest extends FunctionalTestCase
         }
 
         // Use string-based class references to avoid PHPStan errors when extension not installed
-        $countryContextClass = 'Netresearch\\ContextsGeolocation\\Context\\Type\\CountryContext';
+        $countryContextClass   = 'Netresearch\\ContextsGeolocation\\Context\\Type\\CountryContext';
         $continentContextClass = 'Netresearch\\ContextsGeolocation\\Context\\Type\\ContinentContext';
-        $distanceContextClass = 'Netresearch\\ContextsGeolocation\\Context\\Type\\DistanceContext';
+        $distanceContextClass  = 'Netresearch\\ContextsGeolocation\\Context\\Type\\DistanceContext';
 
         self::assertTrue(
             is_subclass_of($countryContextClass, AbstractContext::class),
@@ -214,7 +216,7 @@ final class CrossExtensionIntegrationTest extends FunctionalTestCase
         }
 
         // Use string-based class references to avoid PHPStan errors when extension not installed
-        $deviceContextClass = 'Netresearch\\ContextsDevice\\Context\\Type\\DeviceContext';
+        $deviceContextClass  = 'Netresearch\\ContextsDevice\\Context\\Type\\DeviceContext';
         $browserContextClass = 'Netresearch\\ContextsDevice\\Context\\Type\\BrowserContext';
 
         self::assertTrue(
@@ -266,7 +268,7 @@ final class CrossExtensionIntegrationTest extends FunctionalTestCase
         self::assertNotEmpty($contextTypes, 'Should have registered context types');
 
         // Count how many types we have
-        $typeCount = \count($contextTypes);
+        $typeCount = count($contextTypes);
         self::assertGreaterThanOrEqual(
             6,
             $typeCount,

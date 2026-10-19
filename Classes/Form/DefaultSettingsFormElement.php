@@ -25,17 +25,18 @@ use Netresearch\Contexts\ContextException;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 
 /**
- * USER functions to render the defaults fields
+ * USER functions to render the defaults fields.
  *
  * @author  Christian Opitz <christian.opitz@netresearch.de>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class DefaultSettingsFormElement extends AbstractFormElement
 {
     /**
-     * Render a checkbox for the default settings of records in this table
+     * Render a checkbox for the default settings of records in this table.
      *
      * @return array<string, mixed>
      *
@@ -47,7 +48,7 @@ class DefaultSettingsFormElement extends AbstractFormElement
      */
     public function render(): array
     {
-        $table = (string) $this->data['parameterArray']['fieldConf']['config']['table'];
+        $table   = (string) $this->data['parameterArray']['fieldConf']['config']['table'];
         $content = '';
 
         $namePre = str_replace(
@@ -70,15 +71,15 @@ class DefaultSettingsFormElement extends AbstractFormElement
         $baseId = trim($baseId, '_');
 
         foreach ($this->data['parameterArray']['fieldConf']['config']['settings'] as $configKey => $config) {
-            $configKey = (string) $configKey;
-            $id = $baseId . '-' . $configKey;
-            $name = $namePre . '[' . $configKey . ']';
-            $checked = '';
-            $setting = null;
+            $configKey  = (string) $configKey;
+            $id         = $baseId . '-' . $configKey;
+            $name       = $namePre . '[' . $configKey . ']';
+            $checked    = '';
+            $setting    = null;
             $hasSetting = false;
 
             if ($context instanceof AbstractContext) {
-                $setting = $context->getSetting($table, $configKey, 0);
+                $setting    = $context->getSetting($table, $configKey, 0);
                 $hasSetting = (bool) $setting;
             }
 
@@ -99,7 +100,7 @@ class DefaultSettingsFormElement extends AbstractFormElement
                 HTML;
         }
 
-        $result = $this->initializeResultArray();
+        $result         = $this->initializeResultArray();
         $result['html'] = $content;
 
         return $result;

@@ -27,6 +27,9 @@ use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
+use function count;
+use function is_array;
+
 /**
  * Unit tests for CombinationFormElement.
  *
@@ -81,7 +84,7 @@ final class CombinationFormElementTest extends UnitTestCase
     public function renderMethodIsPublic(): void
     {
         $reflection = new ReflectionClass(CombinationFormElement::class);
-        $method = $reflection->getMethod('render');
+        $method     = $reflection->getMethod('render');
 
         self::assertTrue($method->isPublic(), 'render() must be public');
     }
@@ -90,7 +93,7 @@ final class CombinationFormElementTest extends UnitTestCase
     public function renderMethodReturnsArray(): void
     {
         $reflection = new ReflectionClass(CombinationFormElement::class);
-        $method = $reflection->getMethod('render');
+        $method     = $reflection->getMethod('render');
         $returnType = $method->getReturnType();
 
         self::assertNotNull($returnType);
@@ -116,12 +119,12 @@ final class CombinationFormElementTest extends UnitTestCase
     public function renderReturnsTextElementResultWhenNoTokensPresent(): void
     {
         $expectedResult = [
-            'html' => '<textarea>some content</textarea>',
-            'additionalHiddenFields' => [],
+            'html'                               => '<textarea>some content</textarea>',
+            'additionalHiddenFields'             => [],
             'additionalInlineLanguageLabelFiles' => [],
-            'stylesheetFiles' => [],
-            'javaScriptModules' => [],
-            'inlineData' => [],
+            'stylesheetFiles'                    => [],
+            'javaScriptModules'                  => [],
+            'inlineData'                         => [],
         ];
 
         $element = $this->buildTestableElement(
@@ -139,12 +142,12 @@ final class CombinationFormElementTest extends UnitTestCase
     public function renderReturnsTextElementResultWhenAllAliasesFoundInContainer(): void
     {
         $textResult = [
-            'html' => '<textarea>mobile</textarea>',
-            'additionalHiddenFields' => [],
+            'html'                               => '<textarea>mobile</textarea>',
+            'additionalHiddenFields'             => [],
             'additionalInlineLanguageLabelFiles' => [],
-            'stylesheetFiles' => [],
-            'javaScriptModules' => [],
-            'inlineData' => [],
+            'stylesheetFiles'                    => [],
+            'javaScriptModules'                  => [],
+            'inlineData'                         => [],
         ];
 
         $mockContext = $this->createMock(AbstractContext::class);
@@ -166,12 +169,12 @@ final class CombinationFormElementTest extends UnitTestCase
     public function renderAddsErrorDivWhenAliasNotFoundInContainer(): void
     {
         $textResult = [
-            'html' => '<textarea>nonexistent</textarea>',
-            'additionalHiddenFields' => [],
+            'html'                               => '<textarea>nonexistent</textarea>',
+            'additionalHiddenFields'             => [],
             'additionalInlineLanguageLabelFiles' => [],
-            'stylesheetFiles' => [],
-            'javaScriptModules' => [],
-            'inlineData' => [],
+            'stylesheetFiles'                    => [],
+            'javaScriptModules'                  => [],
+            'inlineData'                         => [],
         ];
 
         $element = $this->buildTestableElement(
@@ -191,14 +194,14 @@ final class CombinationFormElementTest extends UnitTestCase
     #[Test]
     public function renderContainsTextElementHtmlWhenNotFound(): void
     {
-        $textHtml = '<textarea>missing-alias</textarea>';
+        $textHtml   = '<textarea>missing-alias</textarea>';
         $textResult = [
-            'html' => $textHtml,
-            'additionalHiddenFields' => [],
+            'html'                               => $textHtml,
+            'additionalHiddenFields'             => [],
             'additionalInlineLanguageLabelFiles' => [],
-            'stylesheetFiles' => [],
-            'javaScriptModules' => [],
-            'inlineData' => [],
+            'stylesheetFiles'                    => [],
+            'javaScriptModules'                  => [],
+            'inlineData'                         => [],
         ];
 
         $element = $this->buildTestableElement(
@@ -217,12 +220,12 @@ final class CombinationFormElementTest extends UnitTestCase
     public function renderEscapesHtmlInNotFoundAliases(): void
     {
         $textResult = [
-            'html' => '<textarea>&lt;script&gt;</textarea>',
-            'additionalHiddenFields' => [],
+            'html'                               => '<textarea>&lt;script&gt;</textarea>',
+            'additionalHiddenFields'             => [],
             'additionalInlineLanguageLabelFiles' => [],
-            'stylesheetFiles' => [],
-            'javaScriptModules' => [],
-            'inlineData' => [],
+            'stylesheetFiles'                    => [],
+            'javaScriptModules'                  => [],
+            'inlineData'                         => [],
         ];
 
         $element = $this->buildTestableElement(
@@ -243,12 +246,12 @@ final class CombinationFormElementTest extends UnitTestCase
     public function renderReturnsArrayWithHtmlKey(): void
     {
         $textResult = [
-            'html' => '<textarea>context1</textarea>',
-            'additionalHiddenFields' => [],
+            'html'                               => '<textarea>context1</textarea>',
+            'additionalHiddenFields'             => [],
             'additionalInlineLanguageLabelFiles' => [],
-            'stylesheetFiles' => [],
-            'javaScriptModules' => [],
-            'inlineData' => [],
+            'stylesheetFiles'                    => [],
+            'javaScriptModules'                  => [],
+            'inlineData'                         => [],
         ];
 
         $element = $this->buildTestableElement(
@@ -268,12 +271,12 @@ final class CombinationFormElementTest extends UnitTestCase
     public function renderClosesErrorDiv(): void
     {
         $textResult = [
-            'html' => '<textarea>nonexistent</textarea>',
-            'additionalHiddenFields' => [],
+            'html'                               => '<textarea>nonexistent</textarea>',
+            'additionalHiddenFields'             => [],
             'additionalInlineLanguageLabelFiles' => [],
-            'stylesheetFiles' => [],
-            'javaScriptModules' => [],
-            'inlineData' => [],
+            'stylesheetFiles'                    => [],
+            'javaScriptModules'                  => [],
+            'inlineData'                         => [],
         ];
 
         $element = $this->buildTestableElement(
@@ -292,12 +295,12 @@ final class CombinationFormElementTest extends UnitTestCase
     public function renderWithMultipleAliasesShowsAllNotFound(): void
     {
         $textResult = [
-            'html' => '<textarea>alias1 || alias2</textarea>',
-            'additionalHiddenFields' => [],
+            'html'                               => '<textarea>alias1 || alias2</textarea>',
+            'additionalHiddenFields'             => [],
             'additionalInlineLanguageLabelFiles' => [],
-            'stylesheetFiles' => [],
-            'javaScriptModules' => [],
-            'inlineData' => [],
+            'stylesheetFiles'                    => [],
+            'javaScriptModules'                  => [],
+            'inlineData'                         => [],
         ];
 
         $element = $this->buildTestableElement(
@@ -317,12 +320,12 @@ final class CombinationFormElementTest extends UnitTestCase
     public function renderWithFoundAndNotFoundAlias(): void
     {
         $textResult = [
-            'html' => '<textarea>found || notfound</textarea>',
-            'additionalHiddenFields' => [],
+            'html'                               => '<textarea>found || notfound</textarea>',
+            'additionalHiddenFields'             => [],
             'additionalInlineLanguageLabelFiles' => [],
-            'stylesheetFiles' => [],
-            'javaScriptModules' => [],
-            'inlineData' => [],
+            'stylesheetFiles'                    => [],
+            'javaScriptModules'                  => [],
+            'inlineData'                         => [],
         ];
 
         $mockContext = $this->createMock(AbstractContext::class);
@@ -349,10 +352,10 @@ final class CombinationFormElementTest extends UnitTestCase
     /**
      * Build a testable CombinationFormElement subclass with injected test doubles.
      *
-     * @param string $itemFormElValue The expression to evaluate
-     * @param array $textElementResult Result returned by the stubbed TextElement
-     * @param array $containerContexts Contexts to populate the Container with
-     * @param string $notFoundLabel Translation label for "aliases not found"
+     * @param string $itemFormElValue   The expression to evaluate
+     * @param array  $textElementResult Result returned by the stubbed TextElement
+     * @param array  $containerContexts Contexts to populate the Container with
+     * @param string $notFoundLabel     Translation label for "aliases not found"
      */
     private function buildTestableElement(
         string $itemFormElValue,
@@ -362,10 +365,10 @@ final class CombinationFormElementTest extends UnitTestCase
     ): TestableCombinationFormElement {
         $languageService = $this->createMock(LanguageService::class);
         $languageService->method('sL')->willReturnCallback(
-            static fn(string $key): string => match (true) {
-                str_contains($key, 'aliasesNotFound') => $notFoundLabel,
+            static fn (string $key): string => match (true) {
+                str_contains($key, 'aliasesNotFound')    => $notFoundLabel,
                 str_contains($key, 'unknownTokensFound') => 'Unknown tokens found',
-                default => $key,
+                default                                  => $key,
             },
         );
 
@@ -403,9 +406,9 @@ class TestableCombinationFormElement extends CombinationFormElement
         array $data,
     ) {
         // Set parent properties directly — works for both v12 (constructor) and v13 (setter)
-        $this->nodeFactory = $nodeFactory;
-        $this->data = $data;
-        $this->textElementResult = $textElementResult;
+        $this->nodeFactory         = $nodeFactory;
+        $this->data                = $data;
+        $this->textElementResult   = $textElementResult;
         $this->mockLanguageService = $mockLanguageService;
     }
 
@@ -427,19 +430,19 @@ class TestableCombinationFormElement extends CombinationFormElement
         };
 
         $evaluator = new LogicalExpressionEvaluator();
-        $tokens = $evaluator->tokenize($this->data['parameterArray']['itemFormElValue']);
+        $tokens    = $evaluator->tokenize($this->data['parameterArray']['itemFormElValue']);
 
-        $notFound = [];
+        $notFound      = [];
         $unknownTokens = [];
 
         foreach ($tokens as $token) {
             if (
-                \is_array($token)
+                is_array($token)
                 && $token[0] === LogicalExpressionEvaluator::T_VAR
             ) {
                 // Use the real Container singleton (which has been pre-loaded in the test)
                 $contexts = Container::get();
-                $found = false;
+                $found    = false;
 
                 foreach ($contexts as $context) {
                     if ($context->getAlias() === $token[1]) {
@@ -451,7 +454,7 @@ class TestableCombinationFormElement extends CombinationFormElement
                     $notFound[] = (string) $token[1];
                 }
             } elseif (
-                \is_array($token)
+                is_array($token)
                 && ($token[0] === LogicalExpressionEvaluator::T_UNKNOWN)
             ) {
                 $unknownTokens[] = (string) $token[1];
@@ -460,7 +463,7 @@ class TestableCombinationFormElement extends CombinationFormElement
 
         $text = $textElementMock->render();
 
-        if ((\count($notFound) === 0) && (\count($unknownTokens) === 0)) {
+        if ((count($notFound) === 0) && (count($unknownTokens) === 0)) {
             return $text;
         }
 
@@ -469,8 +472,8 @@ class TestableCombinationFormElement extends CombinationFormElement
             <div class="text-danger">
             HTML;
 
-        if (\count($notFound) > 0) {
-            $notFoundText = htmlspecialchars(implode(', ', $notFound));
+        if (count($notFound) > 0) {
+            $notFoundText         = htmlspecialchars(implode(', ', $notFound));
             $aliasesNotFoundLabel = $this->getLanguageService()->sL(
                 'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:aliasesNotFound',
             );
@@ -481,8 +484,8 @@ class TestableCombinationFormElement extends CombinationFormElement
                 HTML;
         }
 
-        if (\count($unknownTokens) > 0) {
-            $unknownTokensText = htmlspecialchars(implode(', ', $unknownTokens));
+        if (count($unknownTokens) > 0) {
+            $unknownTokensText  = htmlspecialchars(implode(', ', $unknownTokens));
             $unknownTokensLabel = $this->getLanguageService()->sL(
                 'LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:unknownTokensFound',
             );
@@ -497,7 +500,7 @@ class TestableCombinationFormElement extends CombinationFormElement
             </div>
             HTML;
 
-        $result = $this->initializeResultArray();
+        $result         = $this->initializeResultArray();
         $result['html'] = $html;
 
         return $result;

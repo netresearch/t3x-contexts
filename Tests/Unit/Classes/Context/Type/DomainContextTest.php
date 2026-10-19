@@ -25,6 +25,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 
+use function is_string;
+
 /**
  * Tests for Domain context matching.
  */
@@ -35,8 +37,8 @@ final class DomainContextTest extends TestBase
     protected function setUp(): void
     {
         parent::setUp();
-        $httpHost = $_SERVER['HTTP_HOST'] ?? null;
-        $this->originalHttpHost = \is_string($httpHost) ? $httpHost : null;
+        $httpHost               = $_SERVER['HTTP_HOST'] ?? null;
+        $this->originalHttpHost = is_string($httpHost) ? $httpHost : null;
     }
 
     protected function tearDown(): void
@@ -56,16 +58,16 @@ final class DomainContextTest extends TestBase
     public static function domainMatchProvider(): array
     {
         return [
-            'exact match' => ['example.com', 'example.com', true],
-            'exact match different' => ['example.com', 'other.com', false],
-            'wildcard subdomain match' => ['www.example.com', '.example.com', true],
-            'wildcard subdomain exact' => ['example.com', '.example.com', true],
-            'wildcard no match' => ['www.other.com', '.example.com', false],
-            'wildcard deep subdomain' => ['sub.www.example.com', '.example.com', true],
-            'wildcard other domain with same suffix' => ['notexample.com', '.example.com', false],
+            'exact match'                               => ['example.com', 'example.com', true],
+            'exact match different'                     => ['example.com', 'other.com', false],
+            'wildcard subdomain match'                  => ['www.example.com', '.example.com', true],
+            'wildcard subdomain exact'                  => ['example.com', '.example.com', true],
+            'wildcard no match'                         => ['www.other.com', '.example.com', false],
+            'wildcard deep subdomain'                   => ['sub.www.example.com', '.example.com', true],
+            'wildcard other domain with same suffix'    => ['notexample.com', '.example.com', false],
             'wildcard other subdomain with same suffix' => ['www.notexample.com', '.example.com', false],
-            'empty domain' => ['example.com', '', false],
-            'empty host' => ['', 'example.com', false],
+            'empty domain'                              => ['example.com', '', false],
+            'empty host'                                => ['', 'example.com', false],
         ];
     }
 
@@ -292,7 +294,7 @@ final class DomainContextTest extends TestBase
 
         try {
             $instance = new DomainContext();
-            $result = $this->callProtected($instance, 'getCurrentHost');
+            $result   = $this->callProtected($instance, 'getCurrentHost');
 
             self::assertSame('global-host.example.com', $result);
         } finally {
@@ -311,7 +313,7 @@ final class DomainContextTest extends TestBase
 
         try {
             $instance = new DomainContext();
-            $result = $this->callProtected($instance, 'getCurrentHost');
+            $result   = $this->callProtected($instance, 'getCurrentHost');
 
             self::assertSame('server-host.example.com', $result);
         } finally {
@@ -330,7 +332,7 @@ final class DomainContextTest extends TestBase
 
         try {
             $instance = new DomainContext();
-            $result = $this->callProtected($instance, 'getCurrentHost');
+            $result   = $this->callProtected($instance, 'getCurrentHost');
 
             self::assertSame('', $result);
         } finally {
@@ -357,7 +359,7 @@ final class DomainContextTest extends TestBase
 
         try {
             $instance = new DomainContext();
-            $result = $this->callProtected($instance, 'getCurrentHost');
+            $result   = $this->callProtected($instance, 'getCurrentHost');
 
             self::assertSame('container-host.example.com', $result);
         } finally {

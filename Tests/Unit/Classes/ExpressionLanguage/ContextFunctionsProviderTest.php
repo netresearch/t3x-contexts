@@ -49,7 +49,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
     #[Test]
     public function getFunctionsProvidesContextMatchFunction(): void
     {
-        $provider = new ContextFunctionsProvider();
+        $provider  = new ContextFunctionsProvider();
         $functions = $provider->getFunctions();
 
         self::assertNotEmpty($functions);
@@ -77,7 +77,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
 
         Container::get()->exchangeArray([1 => $mockContext]);
 
-        $provider = new ContextFunctionsProvider();
+        $provider  = new ContextFunctionsProvider();
         $functions = $provider->getFunctions();
 
         // Get the evaluator from the contextMatch function
@@ -93,7 +93,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
 
         // The evaluator is the second element in the ExpressionFunction
         $evaluator = $contextMatchFunction->getEvaluator();
-        $result = $evaluator([], 'mobile');
+        $result    = $evaluator([], 'mobile');
 
         self::assertTrue($result);
     }
@@ -104,7 +104,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
         // Empty container - no contexts match
         Container::get()->exchangeArray([]);
 
-        $provider = new ContextFunctionsProvider();
+        $provider  = new ContextFunctionsProvider();
         $functions = $provider->getFunctions();
 
         $contextMatchFunction = null;
@@ -118,7 +118,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
         self::assertNotNull($contextMatchFunction, 'contextMatch function should exist');
 
         $evaluator = $contextMatchFunction->getEvaluator();
-        $result = $evaluator([], 'nonexistent');
+        $result    = $evaluator([], 'nonexistent');
 
         self::assertFalse($result);
     }
@@ -132,7 +132,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
 
         Container::get()->exchangeArray([2 => $mockContext]);
 
-        $provider = new ContextFunctionsProvider();
+        $provider  = new ContextFunctionsProvider();
         $functions = $provider->getFunctions();
 
         $contextMatchFunction = null;
@@ -155,7 +155,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
     #[Test]
     public function contextMatchFunctionHandlesEmptyString(): void
     {
-        $provider = new ContextFunctionsProvider();
+        $provider  = new ContextFunctionsProvider();
         $functions = $provider->getFunctions();
 
         $contextMatchFunction = null;
@@ -169,7 +169,7 @@ final class ContextFunctionsProviderTest extends UnitTestCase
         self::assertNotNull($contextMatchFunction, 'contextMatch function should exist');
 
         $evaluator = $contextMatchFunction->getEvaluator();
-        $result = $evaluator([], '');
+        $result    = $evaluator([], '');
 
         self::assertFalse($result);
     }

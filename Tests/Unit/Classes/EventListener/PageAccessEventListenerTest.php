@@ -27,6 +27,8 @@ use TYPO3\CMS\Frontend\Event\AfterPageAndLanguageIsResolvedEvent;
 use TYPO3\CMS\Frontend\Page\PageInformation;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
+use function sprintf;
+
 /**
  * Unit tests for PageAccessEventListener.
  *
@@ -93,7 +95,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
     public function listenerHasCorrectConstructorDependencies(): void
     {
         $reflectionClass = new ReflectionClass(PageAccessEventListener::class);
-        $constructor = $reflectionClass->getConstructor();
+        $constructor     = $reflectionClass->getConstructor();
 
         self::assertNotNull($constructor);
         $parameters = $constructor->getParameters();
@@ -121,8 +123,8 @@ final class PageAccessEventListenerTest extends UnitTestCase
     public function invokeMethodReturnsVoid(): void
     {
         $reflectionClass = new ReflectionClass(PageAccessEventListener::class);
-        $invokeMethod = $reflectionClass->getMethod('__invoke');
-        $returnType = $invokeMethod->getReturnType();
+        $invokeMethod    = $reflectionClass->getMethod('__invoke');
+        $returnType      = $invokeMethod->getReturnType();
 
         self::assertNotNull($returnType);
         self::assertSame('void', $returnType->getName());
@@ -132,12 +134,12 @@ final class PageAccessEventListenerTest extends UnitTestCase
     public function listenerDependenciesAreInjectedAsReadonly(): void
     {
         $reflectionClass = new ReflectionClass(PageAccessEventListener::class);
-        $properties = $reflectionClass->getProperties();
+        $properties      = $reflectionClass->getProperties();
 
         foreach ($properties as $property) {
             self::assertTrue(
                 $property->isReadOnly(),
-                \sprintf('Property "%s" should be readonly', $property->getName()),
+                sprintf('Property "%s" should be readonly', $property->getName()),
             );
         }
     }
@@ -153,7 +155,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
 
         $listener = new PageAccessEventListener($frontendService);
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request         = $this->createMock(ServerRequestInterface::class);
         $pageInformation = new PageInformation();
         $pageInformation->setPageRecord([]); // Empty page record
         $pageInformation->setRootLine([]);
@@ -185,7 +187,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
 
         $listener = new PageAccessEventListener($frontendService);
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request         = $this->createMock(ServerRequestInterface::class);
         $pageInformation = new PageInformation();
         $pageInformation->setPageRecord(['uid' => 2, 'title' => 'Sub Page']);
         $pageInformation->setRootLine($rootLine);
@@ -217,7 +219,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
 
         $listener = new PageAccessEventListener($frontendService);
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request         = $this->createMock(ServerRequestInterface::class);
         $pageInformation = new PageInformation();
         $pageInformation->setPageRecord(['uid' => 2, 'title' => 'Restricted Page']);
         $pageInformation->setRootLine($rootLine);
@@ -254,7 +256,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
 
         $listener = new PageAccessEventListener($frontendService);
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request         = $this->createMock(ServerRequestInterface::class);
         $pageInformation = new PageInformation();
         $pageInformation->setPageRecord(['uid' => 3, 'title' => 'Level 2']);
         $pageInformation->setRootLine($expectedRootLine);
@@ -280,7 +282,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
 
         $listener = new PageAccessEventListener($frontendService);
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request         = $this->createMock(ServerRequestInterface::class);
         $pageInformation = new PageInformation();
         $pageInformation->setPageRecord(['uid' => 1, 'title' => 'Single Page']);
         $pageInformation->setRootLine($rootLine);
@@ -313,7 +315,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
 
         $listener = new PageAccessEventListener($frontendService);
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request         = $this->createMock(ServerRequestInterface::class);
         $pageInformation = new PageInformation();
         $pageInformation->setPageRecord(['uid' => 6, 'title' => 'Level 5']);
         $pageInformation->setRootLine($deepRootLine);
@@ -340,7 +342,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
 
         $listener = new PageAccessEventListener($frontendService);
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request         = $this->createMock(ServerRequestInterface::class);
         $pageInformation = new PageInformation();
         $pageInformation->setPageRecord(['uid' => 1, 'title' => 'Test Page']);
         $pageInformation->setRootLine($rootLine);
@@ -359,14 +361,14 @@ final class PageAccessEventListenerTest extends UnitTestCase
     public function invokeDoesNotModifyPageInformation(): void
     {
         $originalPageRecord = ['uid' => 1, 'title' => 'Test Page', 'hidden' => 0];
-        $rootLine = [1 => $originalPageRecord];
+        $rootLine           = [1 => $originalPageRecord];
 
         $frontendService = $this->createMock(FrontendControllerService::class);
         $frontendService->method('checkEnableFieldsForRootLine')->willReturn(true);
 
         $listener = new PageAccessEventListener($frontendService);
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request         = $this->createMock(ServerRequestInterface::class);
         $pageInformation = new PageInformation();
         $pageInformation->setPageRecord($originalPageRecord);
         $pageInformation->setRootLine($rootLine);
@@ -387,17 +389,17 @@ final class PageAccessEventListenerTest extends UnitTestCase
     public function invokeHandlesPageWithComplexMetadata(): void
     {
         $complexPageRecord = [
-            'uid' => 42,
-            'pid' => 1,
-            'title' => 'Complex Page',
-            'hidden' => 0,
-            'starttime' => 0,
-            'endtime' => 0,
-            'fe_group' => '1,2,3',
+            'uid'              => 42,
+            'pid'              => 1,
+            'title'            => 'Complex Page',
+            'hidden'           => 0,
+            'starttime'        => 0,
+            'endtime'          => 0,
+            'fe_group'         => '1,2,3',
             'extendToSubpages' => 1,
-            'nav_hide' => 0,
-            'doktype' => 1,
-            'l10n_parent' => 0,
+            'nav_hide'         => 0,
+            'doktype'          => 1,
+            'l10n_parent'      => 0,
             'sys_language_uid' => 0,
         ];
 
@@ -414,7 +416,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
 
         $listener = new PageAccessEventListener($frontendService);
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request         = $this->createMock(ServerRequestInterface::class);
         $pageInformation = new PageInformation();
         $pageInformation->setPageRecord($complexPageRecord);
         $pageInformation->setRootLine($rootLine);
@@ -430,8 +432,8 @@ final class PageAccessEventListenerTest extends UnitTestCase
     public function invokeMethodHasCorrectSignature(): void
     {
         $reflectionClass = new ReflectionClass(PageAccessEventListener::class);
-        $invokeMethod = $reflectionClass->getMethod('__invoke');
-        $parameters = $invokeMethod->getParameters();
+        $invokeMethod    = $reflectionClass->getMethod('__invoke');
+        $parameters      = $invokeMethod->getParameters();
 
         self::assertCount(1, $parameters, '__invoke should accept exactly one parameter');
         self::assertSame('event', $parameters[0]->getName());
@@ -481,7 +483,7 @@ final class PageAccessEventListenerTest extends UnitTestCase
 
         $listener = new PageAccessEventListener($frontendService);
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request         = $this->createMock(ServerRequestInterface::class);
         $pageInformation = new PageInformation();
         $pageInformation->setPageRecord(['uid' => 1, 'title' => 'Test Page']);
         $pageInformation->setRootLine($rootLine);

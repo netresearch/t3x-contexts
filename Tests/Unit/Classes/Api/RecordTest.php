@@ -42,9 +42,9 @@ final class RecordTest extends UnitTestCase
 
         // Initialize required TCA structure
         $GLOBALS['TCA']['tx_contexts_contexts'] = [
-            'contextTypes' => [],
+            'contextTypes'          => [],
             'extensionFlatSettings' => [],
-            'columns' => [],
+            'columns'               => [],
         ];
     }
 
@@ -70,7 +70,7 @@ final class RecordTest extends UnitTestCase
         // Target mutant: Line 45 count($enableSettings) === 0
         // No enableSettings configured for this table
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => [],
+            'ctrl'    => [],
             'columns' => [],
         ];
 
@@ -107,7 +107,7 @@ final class RecordTest extends UnitTestCase
             'ctrl' => [
                 'tx_contexts' => [
                     'enableSettings' => ['tx_contexts'],
-                    'flatSettings' => [
+                    'flatSettings'   => [
                         'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
                     ],
                 ],
@@ -116,10 +116,10 @@ final class RecordTest extends UnitTestCase
         ];
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         // Should iterate once and return true
@@ -153,10 +153,10 @@ final class RecordTest extends UnitTestCase
             'ctrl' => [
                 'tx_contexts' => [
                     'enableSettings' => ['tx_contexts', 'tx_visibility', 'tx_access'],
-                    'flatSettings' => [
-                        'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
+                    'flatSettings'   => [
+                        'tx_contexts'   => ['tx_contexts_disable', 'tx_contexts_enable'],
                         'tx_visibility' => ['tx_visibility_disable', 'tx_visibility_enable'],
-                        'tx_access' => ['tx_access_disable', 'tx_access_enable'],
+                        'tx_access'     => ['tx_access_disable', 'tx_access_enable'],
                     ],
                 ],
             ],
@@ -164,14 +164,14 @@ final class RecordTest extends UnitTestCase
         ];
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
-            'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '',
+            'uid'                   => 1,
+            'title'                 => 'Test Record',
+            'tx_contexts_disable'   => '',
+            'tx_contexts_enable'    => '',
             'tx_visibility_disable' => '',
-            'tx_visibility_enable' => '',
-            'tx_access_disable' => '',
-            'tx_access_enable' => '',
+            'tx_visibility_enable'  => '',
+            'tx_access_disable'     => '',
+            'tx_access_enable'      => '',
         ];
 
         // Should iterate through all three settings
@@ -206,7 +206,7 @@ final class RecordTest extends UnitTestCase
             'ctrl' => [
                 'tx_contexts' => [
                     'enableSettings' => ['tx_contexts', 'tx_visibility'],
-                    'flatSettings' => [
+                    'flatSettings'   => [
                         'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
                         // tx_visibility intentionally has no flat settings
                     ],
@@ -217,9 +217,9 @@ final class RecordTest extends UnitTestCase
 
         $row = [
             // uid missing - will fail on tx_visibility check
-            'title' => 'Test Record',
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         // First setting passes via flat, second fails (no uid)
@@ -235,7 +235,7 @@ final class RecordTest extends UnitTestCase
     {
         // No contexts in the container
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => [],
+            'ctrl'    => [],
             'columns' => [],
         ];
 
@@ -249,7 +249,7 @@ final class RecordTest extends UnitTestCase
     {
         // Target mutant: Line 78-80 (uid check)
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => [],
+            'ctrl'    => [],
             'columns' => [],
         ];
 
@@ -275,10 +275,10 @@ final class RecordTest extends UnitTestCase
 
         // Row with flat columns that don't contain any context UIDs
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         self::assertTrue(Record::isSettingEnabled('test_table', 'tx_contexts', $row));
@@ -301,7 +301,7 @@ final class RecordTest extends UnitTestCase
 
         // Row without the flat columns - should fall through to context-based check
         $row = [
-            'uid' => 1,
+            'uid'   => 1,
             'title' => 'Test Record',
             // Missing: tx_contexts_disable, tx_contexts_enable
         ];
@@ -326,10 +326,10 @@ final class RecordTest extends UnitTestCase
         ];
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => null, // null value
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         // Falls through to context-based check, no contexts = true
@@ -353,10 +353,10 @@ final class RecordTest extends UnitTestCase
 
         // Row with multiple context UIDs in flat column
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '1,2,3', // Multiple UIDs
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         // With no contexts active, the check for context UIDs won't match
@@ -388,10 +388,10 @@ final class RecordTest extends UnitTestCase
         $container->append($mockContext);
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '1,2,3', // Contains context UID 2
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         // Should return false because context 2 is in disable list
@@ -420,10 +420,10 @@ final class RecordTest extends UnitTestCase
         $container->append($mockContext);
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '5', // Context in enable list
+            'tx_contexts_enable'  => '5', // Context in enable list
         ];
 
         // Should return true - not in disable list
@@ -469,8 +469,8 @@ final class RecordTest extends UnitTestCase
         ];
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '', // First column present
             // tx_contexts_enable missing
         ];
@@ -495,10 +495,10 @@ final class RecordTest extends UnitTestCase
         ];
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => null, // First column is null
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         // Should detect null and return null via rowValid = false
@@ -521,10 +521,10 @@ final class RecordTest extends UnitTestCase
         ];
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '',
-            'tx_contexts_enable' => null, // Second column is null
+            'tx_contexts_enable'  => null, // Second column is null
         ];
 
         // Should detect null and return null via rowValid = false
@@ -547,10 +547,10 @@ final class RecordTest extends UnitTestCase
         ];
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '', // Empty string
-            'tx_contexts_enable' => '', // Empty string
+            'tx_contexts_enable'  => '', // Empty string
         ];
 
         // Should handle empty strings and return true (no contexts to check)
@@ -573,10 +573,10 @@ final class RecordTest extends UnitTestCase
         ];
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '10,20,30', // Multiple values
-            'tx_contexts_enable' => '40,50',
+            'tx_contexts_enable'  => '40,50',
         ];
 
         // Should parse comma-separated values correctly
@@ -605,10 +605,10 @@ final class RecordTest extends UnitTestCase
         $container->append($mockContext);
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '10,20', // Context 10 in disable list
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         // Should find context 10 in index 0 and return false
@@ -646,10 +646,10 @@ final class RecordTest extends UnitTestCase
         $container->append($mockContext3);
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '15,20,25', // Context 15 is disabled
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         // Should iterate through all contexts and find 15 in disable list
@@ -678,10 +678,10 @@ final class RecordTest extends UnitTestCase
         $container->append($mockContext);
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '1,2,3', // Context 99 NOT in list
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         // Should check all contexts and return true (none found in disable list)
@@ -716,7 +716,7 @@ final class RecordTest extends UnitTestCase
             'ctrl' => [
                 'tx_contexts' => [
                     'enableSettings' => ['tx_contexts'],
-                    'flatSettings' => [
+                    'flatSettings'   => [
                         'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
                     ],
                 ],
@@ -725,10 +725,10 @@ final class RecordTest extends UnitTestCase
         ];
 
         $row = [
-            'uid' => 0,
-            'title' => 'Default Record',
+            'uid'                 => 0,
+            'title'               => 'Default Record',
             'tx_contexts_disable' => '',
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         self::assertTrue(Record::isEnabled('test_table', $row));
@@ -739,7 +739,7 @@ final class RecordTest extends UnitTestCase
     {
         // Target mutant: Line 82 type casting
         $GLOBALS['TCA']['test_table'] = [
-            'ctrl' => [],
+            'ctrl'    => [],
             'columns' => [],
         ];
 
@@ -771,10 +771,10 @@ final class RecordTest extends UnitTestCase
         $container->append($mockContext);
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '7', // Single value, no comma
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
         ];
 
         // Should parse single value and find context 7
@@ -797,10 +797,10 @@ final class RecordTest extends UnitTestCase
         ];
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '1,2,3',
-            'tx_contexts_enable' => '4,5,6',
+            'tx_contexts_enable'  => '4,5,6',
         ];
 
         // Should process both columns with correct indexing
@@ -823,7 +823,7 @@ final class RecordTest extends UnitTestCase
         ];
 
         $row = [
-            'uid' => 1,
+            'uid'   => 1,
             'title' => 'Test Record',
             // Both columns missing - rowValid = false
         ];
@@ -854,10 +854,10 @@ final class RecordTest extends UnitTestCase
         $container->append($mockContext);
 
         $row = [
-            'uid' => 1,
-            'title' => 'Test Record',
+            'uid'                 => 1,
+            'title'               => 'Test Record',
             'tx_contexts_disable' => '', // Empty = should initialize empty array
-            'tx_contexts_enable' => '', // Empty = should initialize empty array
+            'tx_contexts_enable'  => '', // Empty = should initialize empty array
         ];
 
         // Should initialize empty arrays and not find any context UIDs
@@ -895,9 +895,9 @@ final class RecordTest extends UnitTestCase
         // Row with null flat column AND no uid - flat check returns null,
         // then uid check on line 83 returns false
         $row = [
-            'title' => 'Test Record',
+            'title'               => 'Test Record',
             'tx_contexts_disable' => null,
-            'tx_contexts_enable' => '',
+            'tx_contexts_enable'  => '',
             // No uid - falls through to uid check which returns false
         ];
 

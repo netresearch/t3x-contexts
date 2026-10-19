@@ -41,9 +41,9 @@ final class FlexFormDataStructureEventListenerTest extends TestCase
         $this->subject = new FlexFormDataStructureEventListener();
 
         $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes'] = [
-            'default' => ['title' => 'Select a type', 'class' => '', 'flexFile' => 'FILE:EXT:contexts/Empty.xml'],
+            'default'  => ['title' => 'Select a type', 'class' => '', 'flexFile' => 'FILE:EXT:contexts/Empty.xml'],
             'getparam' => ['title' => 'GET parameter', 'class' => '', 'flexFile' => 'FILE:EXT:contexts/GetParam.xml'],
-            'session' => ['title' => 'Session', 'class' => '', 'flexFile' => 'FILE:EXT:contexts/Session.xml'],
+            'session'  => ['title' => 'Session', 'class' => '', 'flexFile' => 'FILE:EXT:contexts/Session.xml'],
         ];
     }
 
@@ -60,8 +60,8 @@ final class FlexFormDataStructureEventListenerTest extends TestCase
     public static function fallbackRowDataProvider(): array
     {
         return [
-            'unknown type' => [['uid' => 1, 'type' => 'no-such-type']],
-            'empty type' => [['uid' => 1, 'type' => '']],
+            'unknown type'        => [['uid' => 1, 'type' => 'no-such-type']],
+            'empty type'          => [['uid' => 1, 'type' => '']],
             'missing type column' => [['uid' => 1]],
         ];
     }
@@ -72,7 +72,7 @@ final class FlexFormDataStructureEventListenerTest extends TestCase
     public static function foreignFieldDataProvider(): array
     {
         return [
-            'other table' => ['tt_content', 'pi_flexform'],
+            'other table'                   => ['tt_content', 'pi_flexform'],
             'other field of the same table' => ['tx_contexts_contexts', 'type'],
         ];
     }
@@ -130,7 +130,7 @@ final class FlexFormDataStructureEventListenerTest extends TestCase
     public function dataStructureIsTheFlexFormFileOfTheContextType(): void
     {
         $event = new BeforeFlexFormDataStructureParsedEvent([
-            'type' => 'tx-contexts-context-type',
+            'type'        => 'tx-contexts-context-type',
             'contextType' => 'session',
         ]);
 
@@ -143,7 +143,7 @@ final class FlexFormDataStructureEventListenerTest extends TestCase
     public function dataStructureFallsBackToTheDefaultContextType(): void
     {
         $event = new BeforeFlexFormDataStructureParsedEvent([
-            'type' => 'tx-contexts-context-type',
+            'type'        => 'tx-contexts-context-type',
             'contextType' => 'gone-with-its-extension',
         ]);
 
@@ -158,7 +158,7 @@ final class FlexFormDataStructureEventListenerTest extends TestCase
         $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes'] = [];
 
         $event = new BeforeFlexFormDataStructureParsedEvent([
-            'type' => 'tx-contexts-context-type',
+            'type'        => 'tx-contexts-context-type',
             'contextType' => 'getparam',
         ]);
 
@@ -174,9 +174,9 @@ final class FlexFormDataStructureEventListenerTest extends TestCase
     public function dataStructureOfForeignIdentifiersIsNotTouched(): void
     {
         $event = new BeforeFlexFormDataStructureParsedEvent([
-            'type' => 'tca',
-            'tableName' => 'tt_content',
-            'fieldName' => 'pi_flexform',
+            'type'             => 'tca',
+            'tableName'        => 'tt_content',
+            'fieldName'        => 'pi_flexform',
             'dataStructureKey' => 'default',
         ]);
 

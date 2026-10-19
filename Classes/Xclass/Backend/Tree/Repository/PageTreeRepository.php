@@ -17,24 +17,23 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Xclass\Backend\Tree\Repository;
 
 /**
- * Need the context fields in the page tree
+ * Need the context fields in the page tree.
  *
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class PageTreeRepository extends \TYPO3\CMS\Backend\Tree\Repository\PageTreeRepository
 {
-    /**
-     */
     protected array $contextFields = [
         'tx_contexts_enable',
         'tx_contexts_disable',
     ];
 
     /**
-     * @param int $workspaceId the workspace ID to be checked for.
-     * @param array $additionalFieldsToQuery an array with more fields that should be accessed.
+     * @param int   $workspaceId                 the workspace ID to be checked for
+     * @param array $additionalFieldsToQuery     an array with more fields that should be accessed
      * @param array $additionalQueryRestrictions an array with more restrictions to add
      *
      * @codeCoverageIgnore Requires TYPO3 DI container (EventDispatcherInterface)

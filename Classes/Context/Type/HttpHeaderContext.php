@@ -21,13 +21,16 @@ use Netresearch\Contexts\Context\Container;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function count;
+
 /**
- * Matches on an HTTP header with a certain value
+ * Matches on an HTTP header with a certain value.
  *
  * @author  Michael Schams <schams.net>
  * @author  Rico Sonntag <rico.sonntag@netresearch.de>
  * @license AGPL-3.0-or-later
- * @link    https://www.netresearch.de
+ *
+ * @see    https://www.netresearch.de
  */
 class HttpHeaderContext extends AbstractContext
 {
@@ -41,7 +44,7 @@ class HttpHeaderContext extends AbstractContext
     public function match(array $arDependencies = []): bool
     {
         // Determine which HTTP header has been configured
-        $configValue = $this->getConfValue('field_name');
+        $configValue    = $this->getConfValue('field_name');
         $httpHeaderName = trim($configValue);
 
         if ($httpHeaderName === '') {
@@ -157,7 +160,7 @@ class HttpHeaderContext extends AbstractContext
             true,
         );
 
-        if (\count($arValues) === 0) {
+        if (count($arValues) === 0) {
             return $value !== '';
         }
 

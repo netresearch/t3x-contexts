@@ -6,7 +6,7 @@
  */
 
 /**
- * Router script for PHP built-in server to handle TYPO3 rewrites
+ * Router script for PHP built-in server to handle TYPO3 rewrites.
  *
  * This router simulates Apache/Nginx URL rewriting for TYPO3 clean URLs during E2E testing
  * with the PHP built-in server.
@@ -18,8 +18,6 @@
  * 1. Serves static files (CSS, JS, images, etc.) directly
  * 2. Routes all other requests through TYPO3's index.php
  * 3. Preserves request URI for proper routing
- *
- * @package Netresearch\Contexts
  */
 
 declare(strict_types=1);
@@ -43,6 +41,6 @@ if (
 }
 
 // Route everything else through TYPO3 index.php
-$_SERVER['SCRIPT_NAME'] = '/index.php';
+$_SERVER['SCRIPT_NAME']     = '/index.php';
 $_SERVER['SCRIPT_FILENAME'] = __DIR__ . '/../../.Build/Web/index.php';
 require __DIR__ . '/../../.Build/Web/index.php';

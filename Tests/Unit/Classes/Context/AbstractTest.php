@@ -32,12 +32,12 @@ final class AbstractTest extends TestBase
     public static function sessionProvider(): array
     {
         return [
-            'no use, no session' => [false, null, [false, null]],
+            'no use, no session'       => [false, null, [false, null]],
             'no use, session set true' => [false, true, [false, null]],
-            'use session, not set' => [true, null, [false, null]],
-            'use session, set true' => [true, true, [true, true]],
-            'use session, set false' => [true, false, [true, false]],
-            'use session, set string' => [true, 'whatever', [true, true]],
+            'use session, not set'     => [true, null, [false, null]],
+            'use session, set true'    => [true, true, [true, true]],
+            'use session, set false'   => [true, false, [true, false]],
+            'use session, set string'  => [true, 'whatever', [true, true]],
         ];
     }
 
@@ -79,12 +79,12 @@ final class AbstractTest extends TestBase
         global $TYPO3_CONF_VARS;
         $TYPO3_CONF_VARS = [
             'SYS' => [
-                'reverseProxyIP' => '1.1.1.1',
+                'reverseProxyIP'               => '1.1.1.1',
                 'reverseProxyHeaderMultiValue' => 'first',
             ],
         ];
 
-        $_SERVER[AbstractContext::REMOTE_ADDR] = '1.1.1.1';
+        $_SERVER[AbstractContext::REMOTE_ADDR]          = '1.1.1.1';
         $_SERVER[AbstractContext::HTTP_X_FORWARDED_FOR] = '1.2.3.4';
 
         self::assertSame(

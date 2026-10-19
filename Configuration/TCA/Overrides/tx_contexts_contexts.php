@@ -22,10 +22,10 @@ use Netresearch\Contexts\Context\Type\IpContext;
 use Netresearch\Contexts\Context\Type\QueryParameterContext;
 use Netresearch\Contexts\Context\Type\SessionContext;
 
-defined('TYPO3') || die('Access denied.');
+defined('TYPO3') || exit('Access denied.');
 
 /**
- * TCA override for tx_contexts_contexts table
+ * TCA override for tx_contexts_contexts table.
  */
 Configuration::registerContextType(
     'default',

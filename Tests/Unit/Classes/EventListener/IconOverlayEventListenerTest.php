@@ -24,6 +24,8 @@ use TYPO3\CMS\Core\Imaging\Event\ModifyRecordOverlayIconIdentifierEvent;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
+use function sprintf;
+
 /**
  * Unit tests for IconOverlayEventListener.
  *
@@ -106,9 +108,9 @@ final class IconOverlayEventListenerTest extends UnitTestCase
     #[Test]
     public function invokeCallsIconServiceWithCorrectParameters(): void
     {
-        $table = 'pages';
-        $row = ['uid' => 42, 'title' => 'Test Page'];
-        $status = ['deleted' => false];
+        $table           = 'pages';
+        $row             = ['uid' => 42, 'title' => 'Test Page'];
+        $status          = ['deleted' => false];
         $originalOverlay = 'overlay-default';
 
         $iconService = $this->createMock(IconService::class);
@@ -202,12 +204,12 @@ final class IconOverlayEventListenerTest extends UnitTestCase
     public function listenerDependenciesAreInjectedAsReadonly(): void
     {
         $reflectionClass = new ReflectionClass(IconOverlayEventListener::class);
-        $properties = $reflectionClass->getProperties();
+        $properties      = $reflectionClass->getProperties();
 
         foreach ($properties as $property) {
             self::assertTrue(
                 $property->isReadOnly(),
-                \sprintf('Property "%s" should be readonly', $property->getName()),
+                sprintf('Property "%s" should be readonly', $property->getName()),
             );
         }
     }

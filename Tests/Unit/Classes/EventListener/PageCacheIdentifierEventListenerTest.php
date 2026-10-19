@@ -194,9 +194,7 @@ final class PageCacheIdentifierEventListenerTest extends UnitTestCase
     private function createQueryParameterService(): QueryParameterService
     {
         $context = new class extends QueryParameterContext {
-            public function __construct()
-            {
-            }
+            public function __construct() {}
 
             protected function getConfValue(
                 string $fieldNameArg,
@@ -210,9 +208,7 @@ final class PageCacheIdentifierEventListenerTest extends UnitTestCase
         };
 
         return new class ($context) extends QueryParameterService {
-            public function __construct(private readonly QueryParameterContext $mockContext)
-            {
-            }
+            public function __construct(private readonly QueryParameterContext $mockContext) {}
 
             /**
              * @return list<AbstractContext>

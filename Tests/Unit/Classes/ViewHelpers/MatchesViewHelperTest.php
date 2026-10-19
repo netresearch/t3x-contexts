@@ -67,8 +67,8 @@ final class MatchesViewHelperTest extends UnitTestCase
 
         // Use reflection to check registered arguments
         $reflection = new ReflectionClass($viewHelper);
-        $property = $reflection->getProperty('argumentDefinitions');
-        $arguments = $property->getValue($viewHelper);
+        $property   = $reflection->getProperty('argumentDefinitions');
+        $arguments  = $property->getValue($viewHelper);
 
         self::assertArrayHasKey('alias', $arguments);
         $aliasArgument = $arguments['alias'];

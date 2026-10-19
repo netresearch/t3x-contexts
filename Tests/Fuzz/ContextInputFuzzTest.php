@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2026 Netresearch DTT GmbH
+ * Copyright (c) 2025-2026 Netresearch DTT GmbH
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
@@ -28,6 +28,13 @@ use Random\Engine\Mt19937;
 use Random\Randomizer;
 use ReflectionMethod;
 use Throwable;
+
+use function array_slice;
+use function count;
+use function sprintf;
+
+use const FILTER_FLAG_IPV4;
+use const FILTER_VALIDATE_IP;
 
 /**
  * Randomised input for the parts of the extension that read configuration
@@ -81,7 +88,7 @@ final class ContextInputFuzzTest extends TestCase
                 // A rejected expression is a valid outcome.
                 continue;
             } catch (Throwable $e) {
-                self::fail(\sprintf('Expression %s: %s: %s', json_encode($expression), $e::class, $e->getMessage()));
+                self::fail(sprintf('Expression %s: %s: %s', json_encode($expression), $e::class, $e->getMessage()));
             }
 
             self::assertIsBool($result, 'Expression ' . json_encode($expression));
@@ -91,28 +98,28 @@ final class ContextInputFuzzTest extends TestCase
     #[Test]
     public function leadingDotDomainMatchesTheDomainAndItsSubdomainsOnly(): void
     {
-        $labels = ['a', 'b', 'ab', 'ba', 'example', 'xample', 'org', ''];
+        $labels      = ['a', 'b', 'ab', 'ba', 'example', 'xample', 'org', ''];
         $matchDomain = new ReflectionMethod(DomainContext::class, 'matchDomain');
-        $context = new DomainContext();
+        $context     = new DomainContext();
 
         for ($i = 0; $i < self::ITERATIONS; ++$i) {
-            $host = $this->join($labels, $this->random->getInt(1, 4));
+            $host   = $this->join($labels, $this->random->getInt(1, 4));
             $domain = $this->join($labels, $this->random->getInt(1, 3));
             if ($this->random->getInt(0, 3) === 0) {
                 // Derive the host from the domain so that matches occur.
                 $host = $this->join($labels, $this->random->getInt(0, 2)) . '.' . $domain;
             }
 
-            $pattern = '.' . $domain;
-            $hostLabels = explode('.', $host);
+            $pattern      = '.' . $domain;
+            $hostLabels   = explode('.', $host);
             $domainLabels = explode('.', $domain);
-            $expected = \count($hostLabels) >= \count($domainLabels)
-                && \array_slice($hostLabels, -\count($domainLabels)) === $domainLabels;
+            $expected     = count($hostLabels) >= count($domainLabels)
+                && array_slice($hostLabels, -count($domainLabels)) === $domainLabels;
 
             self::assertSame(
                 $expected,
                 $matchDomain->invoke($context, $pattern, $host),
-                \sprintf('Pattern %s against host %s', json_encode($pattern), json_encode($host)),
+                sprintf('Pattern %s against host %s', json_encode($pattern), json_encode($host)),
             );
         }
     }
@@ -123,17 +130,17 @@ final class ContextInputFuzzTest extends TestCase
         $parts = ['192', '168', '10', '0', '1', '255', '256', '-1', '.', '.', ':', '::', '/', '/8', '/33', '*', ',', ' ',
             'fe80', 'ffff', 'g', ''];
         $isIpInRange = new ReflectionMethod(IpContext::class, 'isIpInRange');
-        $context = new IpContext();
-        $addresses = ['192.168.1.1', '10.0.0.1', '::1', 'fe80::1', '2001:db8::ff00:42:8329'];
+        $context     = new IpContext();
+        $addresses   = ['192.168.1.1', '10.0.0.1', '::1', 'fe80::1', '2001:db8::ff00:42:8329'];
 
         foreach ($this->inputs('ip', $parts, 10) as $range) {
             foreach ($addresses as $address) {
-                $isIpv4 = filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4) !== false;
+                $isIpv4 = filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
 
                 try {
                     $result = $isIpInRange->invoke($context, $address, $isIpv4, $range);
                 } catch (Throwable $e) {
-                    self::fail(\sprintf(
+                    self::fail(sprintf(
                         'Address %s, range %s: %s: %s',
                         $address,
                         json_encode($range),
@@ -157,7 +164,7 @@ final class ContextInputFuzzTest extends TestCase
     private function inputs(string $corpus, array $parts, int $maxParts): array
     {
         $inputs = [];
-        $files = glob(__DIR__ . '/corpus/' . $corpus . '/*');
+        $files  = glob(__DIR__ . '/corpus/' . $corpus . '/*');
         foreach ($files === false ? [] : $files as $file) {
             $inputs[] = trim((string) file_get_contents($file));
         }
@@ -165,7 +172,7 @@ final class ContextInputFuzzTest extends TestCase
         for ($i = 0; $i < self::ITERATIONS; ++$i) {
             $input = '';
             for ($n = $this->random->getInt(0, $maxParts); $n > 0; --$n) {
-                $input .= $parts[$this->random->getInt(0, \count($parts) - 1)];
+                $input .= $parts[$this->random->getInt(0, count($parts) - 1)];
             }
 
             $inputs[] = $input;
@@ -181,7 +188,7 @@ final class ContextInputFuzzTest extends TestCase
     {
         $picked = [];
         for ($i = 0; $i < $count; ++$i) {
-            $picked[] = $labels[$this->random->getInt(0, \count($labels) - 1)];
+            $picked[] = $labels[$this->random->getInt(0, count($labels) - 1)];
         }
 
         return implode('.', $picked);

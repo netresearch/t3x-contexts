@@ -138,7 +138,7 @@ final class TypoScriptConfigEventListenerTest extends UnitTestCase
     private function createQueryParameterService(array $parameterNames): QueryParameterService
     {
         $contexts = array_map(
-            static fn(string $name): QueryParameterContext => new class ($name) extends QueryParameterContext {
+            static fn (string $name): QueryParameterContext => new class ($name) extends QueryParameterContext {
                 public function __construct(private readonly string $mockParameterName)
                 {
                     $this->use_session = false;
@@ -161,9 +161,7 @@ final class TypoScriptConfigEventListenerTest extends UnitTestCase
             /**
              * @param list<QueryParameterContext> $mockContexts
              */
-            public function __construct(private readonly array $mockContexts)
-            {
-            }
+            public function __construct(private readonly array $mockContexts) {}
 
             /**
              * @return list<AbstractContext>
