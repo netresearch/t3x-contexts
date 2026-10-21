@@ -90,10 +90,7 @@ test.describe('Context Record Management via List Module', () => {
     }
 
     // Save the record (TYPO3 v13 may not have "Save and close" button visible)
-    const saveButton = backend.contentFrame.locator('button[name="_savedok"], button[title="Save"]').first();
-    await saveButton.click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
+    await backend.saveRecord();
 
     // Verify record was saved - it should no longer say "NEW" in the footer
     // The form stays open after save, check that record exists (uid is assigned)
@@ -133,10 +130,7 @@ test.describe('Context Record Management via List Module', () => {
     }
 
     // Save the record
-    const saveButton = backend.contentFrame.locator('button[name="_savedok"], button[title="Save"]').first();
-    await saveButton.click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
+    await backend.saveRecord();
 
     // Verify record was saved - title field should still be visible with our value
     await expect(titleInput).toHaveValue('E2E Test Domain Context', { timeout: 10000 });
@@ -152,23 +146,14 @@ test.describe('Context Record Management via List Module', () => {
     await titleInput.fill('Context To Edit');
 
     // Save (not save and close, to get the UID)
-    const saveButton = backend.contentFrame.locator(
-      'button[name="_savedok"], ' +
-      'button[title*="Save"]'
-    ).first();
-    await saveButton.click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
+    await backend.saveRecord();
 
     // Now modify the title
     const titleInputAfterSave = backend.contentFrame.locator('input[data-formengine-input-name*="[title]"]').first();
     await titleInputAfterSave.fill('Context Edited Successfully');
 
     // Save the record
-    const saveButton2 = backend.contentFrame.locator('button[name="_savedok"], button[title="Save"]').first();
-    await saveButton2.click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
+    await backend.saveRecord();
 
     // Verify the edit was saved - check title field has new value
     await expect(titleInputAfterSave).toHaveValue('Context Edited Successfully', { timeout: 10000 });
@@ -183,10 +168,7 @@ test.describe('Context Record Management via List Module', () => {
     await titleInput.fill('Context To Delete');
 
     // Save the record first
-    const saveButton = backend.contentFrame.locator('button[name="_savedok"], button[title="Save"]').first();
-    await saveButton.click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
+    await backend.saveRecord();
 
     // Navigate to list module using close button
     const closeButton = backend.contentFrame.locator('button:has-text("Close"), a:has-text("Close")').first();
@@ -278,10 +260,7 @@ test.describe('Context Configuration Options', () => {
     }
 
     // Save the record
-    const saveButton = backend.contentFrame.locator('button[name="_savedok"], button[title="Save"]').first();
-    await saveButton.click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
+    await backend.saveRecord();
 
     // Verify saved - title field should have our value
     const titleField = backend.contentFrame.locator('input[data-formengine-input-name*="[title]"]').first();
@@ -307,10 +286,7 @@ test.describe('Context Configuration Options', () => {
     }
 
     // Save the record
-    const saveButton = backend.contentFrame.locator('button[name="_savedok"], button[title="Save"]').first();
-    await saveButton.click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
+    await backend.saveRecord();
 
     // Verify saved - title field should have our value
     await expect(titleInput).toHaveValue('Inverted Context', { timeout: 10000 });
@@ -335,10 +311,7 @@ test.describe('Context Configuration Options', () => {
     }
 
     // Save the record
-    const saveButton = backend.contentFrame.locator('button[name="_savedok"], button[title="Save"]').first();
-    await saveButton.click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
+    await backend.saveRecord();
 
     // Verify saved - title field should have our value
     await expect(titleInput).toHaveValue('Disabled Context', { timeout: 10000 });

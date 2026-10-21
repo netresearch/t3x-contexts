@@ -250,12 +250,7 @@ test.describe('Context Visibility on Content Elements', () => {
       }
 
       // Save the record
-      const saveButton = backend.contentFrame.locator(
-        'button[name="_savedok"], ' +
-        'button[title*="Save"]'
-      ).first();
-      await saveButton.click();
-      await page.waitForLoadState('networkidle');
+      await backend.saveRecord();
 
       // Verify no error occurred
       const errorMessage = page.locator('.alert-danger, .typo3-message-error');
@@ -317,10 +312,7 @@ test.describe('Context Combination Tests', () => {
     }
 
     // Save the record
-    const saveButton = backend.contentFrame.locator('button[name="_savedok"], button[title="Save"]').first();
-    await saveButton.click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
+    await backend.saveRecord();
 
     // Verify saved - title field should have our value
     await expect(titleInput).toHaveValue('Combination Test Context', { timeout: 10000 });
