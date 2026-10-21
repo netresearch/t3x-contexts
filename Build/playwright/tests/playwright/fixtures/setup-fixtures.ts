@@ -212,14 +212,14 @@ export class BackendPage {
         response.request().method() === 'POST' && response.url().includes('/typo3/record/edit'),
       { timeout: 30000 }
     );
-    await button.click();
-    const response = await saved;
+    // Awaited together, so a failing click or a failing wait rejects this
+    // call instead of leaving the other promises without a handler.
+    const [response, contentFrame] = await Promise.all([saved, navigated, button.click()]);
     expect(response.status(), 'Saving the record failed').toBeLessThan(400);
     // The load of the document the content frame navigated to, not the
     // page-wide networkidle of moduleLoaded(): that one also waits for
     // requests the save does not own and can time out after the save has
     // already been answered.
-    const contentFrame = await navigated;
     await contentFrame.waitForLoadState('load');
     await this.contentFrame.locator('body').waitFor({ state: 'visible' });
   }
