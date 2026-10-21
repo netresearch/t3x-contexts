@@ -215,8 +215,13 @@ export class BackendPage {
     await button.click();
     const response = await saved;
     expect(response.status(), 'Saving the record failed').toBeLessThan(400);
-    await navigated;
-    await this.moduleLoaded();
+    // The load of the document the content frame navigated to, not the
+    // page-wide networkidle of moduleLoaded(): that one also waits for
+    // requests the save does not own and can time out after the save has
+    // already been answered.
+    const contentFrame = await navigated;
+    await contentFrame.waitForLoadState('load');
+    await this.contentFrame.locator('body').waitFor({ state: 'visible' });
   }
 
   /**
