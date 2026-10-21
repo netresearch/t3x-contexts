@@ -197,11 +197,14 @@ export class BackendPage {
    * already idle, often before the POST is even sent, so a navigation or a
    * read right after it can abort the save or see the old form
    * (netresearch/t3x-rte_ckeditor_image#929). Both waits are registered
-   * before the click, so neither can be missed.
+   * before the click, so neither can be missed. The navigation wait is bound
+   * to the content frame by its name (`list_frame`, the iframe behind
+   * `#typo3-contentIframe` in 13.4 and 14.3), so a navigation in any other
+   * frame cannot satisfy it.
    */
   private async submitFormEngine(button: Locator): Promise<void> {
     const navigated = this.page.waitForEvent('framenavigated', {
-      predicate: (frame) => frame !== this.page.mainFrame(),
+      predicate: (frame) => frame.name() === 'list_frame',
       timeout: 30000,
     });
     const saved = this.page.waitForResponse(
