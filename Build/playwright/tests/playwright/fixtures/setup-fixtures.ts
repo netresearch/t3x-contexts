@@ -175,8 +175,7 @@ export class BackendPage {
       'button.t3js-editform-submitButton, ' +
       '.module-docheader button[title*="Save"]'
     ).first();
-    await saveButton.click();
-    await this.moduleLoaded();
+    await this.submitFormEngine(saveButton);
   }
 
   /**
@@ -187,7 +186,33 @@ export class BackendPage {
       'button[name="_saveandclosedok"], ' +
       '.module-docheader button[title*="Save and close"]'
     ).first();
-    await saveCloseButton.click();
+    await this.submitFormEngine(saveCloseButton);
+  }
+
+  /**
+   * Click a FormEngine submit button and wait until TYPO3 has stored the
+   * record and the content frame shows the document it answered with.
+   *
+   * networkidle is not a save wait: it resolves at once on a page that is
+   * already idle, often before the POST is even sent, so a navigation or a
+   * read right after it can abort the save or see the old form
+   * (netresearch/t3x-rte_ckeditor_image#929). Both waits are registered
+   * before the click, so neither can be missed.
+   */
+  private async submitFormEngine(button: Locator): Promise<void> {
+    const navigated = this.page.waitForEvent('framenavigated', {
+      predicate: (frame) => frame !== this.page.mainFrame(),
+      timeout: 30000,
+    });
+    const saved = this.page.waitForResponse(
+      (response) =>
+        response.request().method() === 'POST' && response.url().includes('/typo3/record/edit'),
+      { timeout: 30000 }
+    );
+    await button.click();
+    const response = await saved;
+    expect(response.status(), 'Saving the record failed').toBeLessThan(400);
+    await navigated;
     await this.moduleLoaded();
   }
 
