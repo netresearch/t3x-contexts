@@ -1,5 +1,19 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+# 5.0.4
+
+## Bug Fixes
+
+- The HTTP header context no longer writes its match result into the frontend user session when "Store in Session" is set. No released version read that value back: the header has always been evaluated on every request, so the write only created session data nothing used. The documentation now says that the option has no effect for this context type, and that the TCA default of "Store in Session" is enabled
+- `CombinationContext` initialises its expression evaluator in the constructor. Calling `match()` before `getDependencies()` evaluates an empty expression (false, true when inverted) instead of failing on an uninitialised typed property; `Container::match()` always calls `getDependencies()` first, so the extension's own matching is unchanged
+
+## Technical Changes
+
+- The `composer.json` description equals the `ext_emconf.php` title and description joined by " - ", which removes the "Composer Manifest" warning in the TYPO3 14.3 Reports module; the title is "Multi-channel Contexts" everywhere
+- Adopted the shared PHPStan, Rector and PHP-CS-Fixer configurations of `netresearch/typo3-ci-workflows` 2.x (import order changes only in the PHP sources)
+- A PHPUnit fuzz suite runs in CI
+- Removed the root `CODEOWNERS` file and workflows that duplicated `checks.yml` and `community.yml`; `SECURITY.md` lists 4.x as supported until 2027-01-30
+
 # 5.0.3
 
 ## Bug Fixes
