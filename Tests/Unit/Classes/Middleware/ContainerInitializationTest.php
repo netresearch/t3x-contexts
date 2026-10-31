@@ -24,6 +24,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use ReflectionClass;
+use ReflectionMethod;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -251,7 +252,7 @@ final class ContainerInitializationTest extends UnitTestCase
         $reflection  = new ReflectionClass(ContainerInitialization::class);
         $constructor = $reflection->getConstructor();
 
-        if ($constructor !== null) {
+        if ($constructor instanceof ReflectionMethod) {
             self::assertCount(
                 0,
                 $constructor->getParameters(),
