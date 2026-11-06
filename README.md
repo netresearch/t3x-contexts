@@ -46,6 +46,7 @@ With the use of contexts, TYPO3 is able to do multichannel output.
 - User entered website with GET-Parameter `affID=foo`
 - Domain the user visits
 - HTTP header values (User-Agent, Accept-Language, etc.)
+- The request comes from a known AI crawler (GPTBot, ClaudeBot, PerplexityBot, …)
 - A session variable is set
 - A combination of any other rules
 
@@ -142,6 +143,10 @@ Match HTTP request headers (User-Agent, Accept-Language, X-Forwarded-For, etc.)
 
 - The header is evaluated on every request; "Store result in user session" has no effect for this type
 - Leave value empty to match any non-empty header value
+
+### AI Crawler
+
+Match requests whose User-Agent names a known AI crawler or AI fetcher (OpenAI, Anthropic, Perplexity). The list ships with the extension and is documented with its sources in the Context Types chapter; add further user agents per context or for the whole installation via `$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['contexts']['aiCrawlerUserAgents']`. The User-Agent is set by the client, so the context does not verify the crawler.
 
 ### Session Variable
 

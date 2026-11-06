@@ -35,6 +35,12 @@
             <trans-unit id="httpheader.field_values">
                 <source>Header values: one per line, empty for any value</source>
             </trans-unit>
+            <trans-unit id="aicrawler.field_additional_user_agents">
+                <source>Additional user-agent substrings, one per line (optional)</source>
+            </trans-unit>
+            <trans-unit id="aicrawler.field_additional_user_agents.description">
+                <source>The context already matches the AI crawlers listed in the extension documentation. Add further substrings here only for crawlers that are not on that list.</source>
+            </trans-unit>
             <trans-unit id="combination.field_logicalExpression">
                 <source>Logical expression combination, (use context alias to combine) </source>
             </trans-unit>

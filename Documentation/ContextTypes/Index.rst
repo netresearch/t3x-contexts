@@ -231,7 +231,107 @@ Use Cases
 - Mobile device detection via ``User-Agent``
 - Accept-Language based content
 - Custom application headers
-- Bot detection
+- Bot detection; for AI crawlers use the :ref:`context-type-aicrawler`
+
+.. _context-type-aicrawler:
+
+AI crawler context
+==================
+
+Matches requests whose ``User-Agent`` header names a known AI crawler or AI
+fetcher. Editors select the type and need no user-agent strings; the list of
+crawlers ships with the extension. Use the context like any other, for
+example to show or hide pages and content elements.
+
+Configuration
+-------------
+
+.. confval:: Additional user-agent substrings
+   :name: aicrawler-additional-user-agents
+
+   :type: string
+   :required: false
+
+   Further substrings, one per line, for crawlers that are not on the
+   built-in list. Matching is the same as for the HTTP header context:
+   case-insensitive substring comparison against the ``User-Agent`` header.
+
+.. confval:: Store in Session
+   :name: aicrawler-store-in-session
+
+   :type: boolean
+   :default: true
+
+   Has no effect for this context type. The header is evaluated on every
+   request.
+
+Built-in user agents
+--------------------
+
+Each entry is the name its vendor documents for its crawler or fetcher.
+OpenAI and Perplexity publish the full user-agent strings; Anthropic
+publishes the bot names. Last checked against the sources on 2026-11-06.
+
+.. list-table::
+   :header-rows: 1
+
+   *  - User agent
+      - Vendor's stated purpose
+      - Source
+   *  - ``GPTBot``
+      - Crawls content that may be used to train OpenAI's foundation models
+      - `OpenAI crawlers <https://developers.openai.com/api/docs/bots>`__
+   *  - ``OAI-SearchBot``
+      - Indexes sites for ChatGPT search
+      - `OpenAI crawlers <https://developers.openai.com/api/docs/bots>`__
+   *  - ``ChatGPT-User``
+      - Visits a page for a user action in ChatGPT
+      - `OpenAI crawlers <https://developers.openai.com/api/docs/bots>`__
+   *  - ``ClaudeBot``
+      - Collects content that may be used to train Anthropic's models
+      - `Anthropic crawlers <https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler>`__
+   *  - ``Claude-SearchBot``
+      - Indexes content to improve search answers
+      - `Anthropic crawlers <https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler>`__
+   *  - ``Claude-User``
+      - Fetches a page when a user asks Claude a question
+      - `Anthropic crawlers <https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler>`__
+   *  - ``PerplexityBot``
+      - Surfaces and links websites in Perplexity search results
+      - `Perplexity crawlers <https://docs.perplexity.ai/guides/bots>`__
+   *  - ``Perplexity-User``
+      - Visits a page when a user asks Perplexity a question
+      - `Perplexity crawlers <https://docs.perplexity.ai/guides/bots>`__
+
+Not on the list:
+
+- ``Google-Extended`` is a robots.txt product token only. Google states that
+  it has no separate HTTP user-agent string, so it cannot be detected in a
+  request.
+- ``anthropic-ai`` does not appear in Anthropic's documentation.
+- ``OAI-AdsBot`` checks the landing pages of ChatGPT ads; it does not read
+  content for training, search or users.
+
+Extending the list
+------------------
+
+Integrators add user agents for all AI crawler contexts of an installation
+in :file:`config/system/additional.php` or an extension's
+:file:`ext_localconf.php`:
+
+.. code-block:: php
+
+   $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['contexts']['aiCrawlerUserAgents'][] = 'ExampleAiBot';
+
+Entries that are not non-empty strings are ignored. To add a user agent for
+one context only, use :confval:`aicrawler-additional-user-agents`.
+
+.. warning::
+
+   The ``User-Agent`` header is set by the client. The context detects what
+   a client claims to be and does not verify it: a browser can send
+   ``GPTBot`` and a crawler can send a browser user agent. Do not use the
+   context to protect content.
 
 .. _context-type-session:
 

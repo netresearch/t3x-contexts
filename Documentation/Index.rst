@@ -67,7 +67,7 @@ and control content visibility across your entire TYPO3 installation.
    .. card:: :ref:`Context Types <context-types>`
 
       Explore the built-in context types: IP, Domain, Query Parameter,
-      HTTP Header, Session, and Combination contexts.
+      HTTP Header, AI crawler, Session, and Combination contexts.
 
    .. card:: :ref:`Developer Guide <developer>`
 

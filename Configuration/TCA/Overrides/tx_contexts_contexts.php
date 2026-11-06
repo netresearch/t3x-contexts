@@ -15,6 +15,7 @@
 declare(strict_types=1);
 
 use Netresearch\Contexts\Api\Configuration;
+use Netresearch\Contexts\Context\Type\AiCrawlerContext;
 use Netresearch\Contexts\Context\Type\CombinationContext;
 use Netresearch\Contexts\Context\Type\DomainContext;
 use Netresearch\Contexts\Context\Type\HttpHeaderContext;
@@ -60,6 +61,13 @@ Configuration::registerContextType(
     'HTTP header',
     HttpHeaderContext::class,
     'FILE:EXT:contexts/Configuration/FlexForms/ContextType/HttpHeader.xml',
+);
+
+Configuration::registerContextType(
+    'aicrawler',
+    'AI crawler',
+    AiCrawlerContext::class,
+    'FILE:EXT:contexts/Configuration/FlexForms/ContextType/AiCrawler.xml',
 );
 
 Configuration::registerContextType(

@@ -94,6 +94,7 @@ final class CrossExtensionIntegrationTest extends FunctionalTestCase
         self::assertArrayHasKey('ip', $contextTypes, 'IP context type should be registered');
         self::assertArrayHasKey('getparam', $contextTypes, 'GetParam context type should be registered');
         self::assertArrayHasKey('httpheader', $contextTypes, 'HttpHeader context type should be registered');
+        self::assertArrayHasKey('aicrawler', $contextTypes, 'AI crawler context type should be registered');
         self::assertArrayHasKey('combination', $contextTypes, 'Combination context type should be registered');
         self::assertArrayHasKey('session', $contextTypes, 'Session context type should be registered');
     }
