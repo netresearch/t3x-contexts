@@ -23,8 +23,9 @@ use function is_string;
  * User-agent tokens of AI crawlers and AI fetchers, as published by their
  * vendors.
  *
- * Every entry is the token the vendor documents for its HTTP User-Agent
- * header. Sources (last verified 2026-11-06):
+ * Every entry is the name the vendor documents for its crawler or fetcher.
+ * OpenAI and Perplexity publish full User-Agent strings containing that name;
+ * Anthropic publishes the bot names only. Sources (last verified 2026-11-06):
  *
  * - OpenAI: https://developers.openai.com/api/docs/bots
  * - Anthropic: https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler
