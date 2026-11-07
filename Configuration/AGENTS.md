@@ -22,6 +22,7 @@ Configuration/
 │       ├── Domain.xml    # Domain context
 │       ├── Ip.xml        # IP address context
 │       ├── HttpHeader.xml # HTTP header context
+│       ├── AiCrawler.xml  # AI crawler context
 │       ├── Session.xml   # Session context
 │       ├── Combination.xml # Combination context
 │       └── Empty.xml     # Empty/default context

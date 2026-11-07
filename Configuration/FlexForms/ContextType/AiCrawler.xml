@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+<T3DataStructure>
+    <meta>
+        <langDisable>1</langDisable>
+    </meta>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <type>array</type>
+                <el>
+                    <field_additional_user_agents>
+                        <label>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:aicrawler.field_additional_user_agents</label>
+                        <description>LLL:EXT:contexts/Resources/Private/Language/flexform.xlf:aicrawler.field_additional_user_agents.description</description>
+                        <config>
+                            <type>text</type>
+                            <cols>60</cols>
+                            <rows>5</rows>
+                            <eval>trim</eval>
+                        </config>
+                    </field_additional_user_agents>
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
+</T3DataStructure>

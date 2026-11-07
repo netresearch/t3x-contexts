@@ -164,9 +164,23 @@ class HttpHeaderContext extends AbstractContext
             return $value !== '';
         }
 
-        $arValues = array_map(trim(...), $arValues);
+        return $this->containsAnyPattern($value, $arValues);
+    }
 
-        foreach ($arValues as $pattern) {
+    /**
+     * Checks if the value contains any of the patterns as a substring
+     * (case-insensitive). Empty patterns are ignored.
+     *
+     * @param string       $value    Current header value
+     * @param list<string> $patterns Substrings to look for
+     *
+     * @return bool True if the value contains at least one pattern
+     */
+    protected function containsAnyPattern(string $value, array $patterns): bool
+    {
+        $patterns = array_map(trim(...), $patterns);
+
+        foreach ($patterns as $pattern) {
             if ($pattern === '') {
                 continue;
             }

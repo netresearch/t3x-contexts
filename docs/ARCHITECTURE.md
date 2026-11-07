@@ -16,7 +16,7 @@ Contexts is a TYPO3 extension that evaluates configurable conditions ("contexts"
 | Context base | `Classes/Context/AbstractContext.php` | Base class for all context types: FlexForm config access, inversion, session caching, PSR-7 request access |
 | Context container | `Classes/Context/Container.php` | Singleton holding all matched contexts for the current request; dependency-ordered evaluation |
 | Context factory | `Classes/Context/Factory.php` | Instantiates context objects from `tx_contexts_contexts` rows |
-| Context types | `Classes/Context/Type/` | `DomainContext`, `IpContext`, `QueryParameterContext`, `HttpHeaderContext`, `SessionContext`, `CombinationContext` (+ `Combination/LogicalExpressionEvaluator` for AND/OR/NOT expressions) |
+| Context types | `Classes/Context/Type/` | `DomainContext`, `IpContext`, `QueryParameterContext`, `HttpHeaderContext`, `AiCrawlerContext` (+ `AiCrawler/AiCrawlerUserAgents`, the documented AI crawler list), `SessionContext`, `CombinationContext` (+ `Combination/LogicalExpressionEvaluator` for AND/OR/NOT expressions) |
 | Middleware | `Classes/Middleware/ContainerInitialization.php` | PSR-15 middleware (registered in `Configuration/RequestMiddlewares.php`) that initializes the container with the frontend request |
 | Event listeners | `Classes/EventListener/` | PSR-14 listeners: FlexForm data structure resolution, icon overlay, menu item filtering, page access, page cache identifier, TypoScript config |
 | Services | `Classes/Service/` | `DataHandlerService` (flat column sync on save), `FrontendControllerService`, `PageService`, `QueryParameterService`, `IconService`, `InstallService` |

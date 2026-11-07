@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Netresearch\Contexts\Tests\Architecture;
 
 use Netresearch\Contexts\Context\AbstractContext;
+use Netresearch\Contexts\Context\Type\AiCrawler\AiCrawlerUserAgents;
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluator;
 use Netresearch\Contexts\Context\Type\Combination\LogicalExpressionEvaluatorException;
 use PHPat\Selector\Selector;
@@ -41,6 +42,7 @@ final class LayerTest
             ->excluding(
                 Selector::classname(LogicalExpressionEvaluator::class),
                 Selector::classname(LogicalExpressionEvaluatorException::class),
+                Selector::classname(AiCrawlerUserAgents::class),
             )
             ->shouldExtend()
             ->classes(

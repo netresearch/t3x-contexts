@@ -22,6 +22,7 @@ Contexts decides per frontend request which configured conditions ("contexts") m
   - `DomainContext` matches the host of the request URI.
   - `IpContext` matches the address `NormalizedParams::getRemoteAddress()` returns (`AbstractContext::getRemoteAddress()`). That value honours `$GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP']`: behind a reverse proxy that is not configured there, the extension sees the proxy's address; for a proxy configured there, the forwarded client address is used. The constant `AbstractContext::HTTP_X_FORWARDED_FOR` is not used for matching.
   - `HttpHeaderContext` matches any request header the integrator names, including `User-Agent`, `Accept-Language` and `X-Forwarded-For`. A visitor sets these freely.
+  - `AiCrawlerContext` matches the `User-Agent` header against a list of AI crawler names (`AiCrawlerUserAgents`). A visitor can send any of these names, and a crawler can send a browser's.
   - `QueryParameterContext` matches a GET parameter the visitor sets.
   - `SessionContext` checks whether a key exists in the frontend user session.
 

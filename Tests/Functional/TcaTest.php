@@ -35,6 +35,7 @@ final class TcaTest extends FunctionalTestCase
         self::assertArrayHasKey('getparam', $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']);
         self::assertArrayHasKey('ip', $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']);
         self::assertArrayHasKey('httpheader', $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']);
+        self::assertArrayHasKey('aicrawler', $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']);
         self::assertArrayHasKey('combination', $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']);
         self::assertArrayHasKey('session', $GLOBALS['TCA']['tx_contexts_contexts']['contextTypes']);
     }

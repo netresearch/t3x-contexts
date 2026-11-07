@@ -306,6 +306,7 @@ Understanding TYPO3's backend structure helps write better tests:
 - IP: Match by IP address/range
 - Domain: Match by domain name
 - HttpHeader: Match HTTP request headers
+- AiCrawler: Match known AI crawler user agents
 - QueryParameter: Match URL query parameters
 - Session: Match session variables
 - Combination: Logical combinations of other contexts

@@ -155,6 +155,8 @@ class LogicalExpressionEvaluator
     /**
      * Shortcut to instantiate, tokenize, parse and evaluate.
      *
+     * @param array<array-key, bool|string> $values See evaluate()
+     *
      * @throws LogicalExpressionEvaluatorException
      */
     public static function run(string $expression, array $values): bool
@@ -279,6 +281,10 @@ class LogicalExpressionEvaluator
      * Evalute the tokenized and parsed expression with the
      * provided values.
      *
+     * @param array<array-key, bool|string> $values Match result per context alias or UID:
+     *                                              true, false, or 'disabled' for a disabled
+     *                                              context, which counts as matching
+     *
      * @throws LogicalExpressionEvaluatorException
      */
     public function evaluate(array $values): bool
@@ -297,12 +303,15 @@ class LogicalExpressionEvaluator
                     $values[$tokenKey] = true;
                 }
 
-                $value = $values[$tokenKey];
-                if ($value === 'disabled') {
+                $matched = $values[$tokenKey];
+                if ($matched === 'disabled') {
                     // context is disabled, so treat it as matching
                     $value = true;
-                } elseif (array_key_exists(2, $token)) {
-                    $value = !$value;
+                } else {
+                    $value = $matched === true;
+                    if (array_key_exists(2, $token)) {
+                        $value = !$value;
+                    }
                 }
             }
 
