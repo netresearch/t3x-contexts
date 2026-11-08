@@ -8,8 +8,8 @@
     theme="typo3docs"
 >
     <project title="Multi-channel Contexts"
-             version="5.0"
-             release="5.0.4"
+             version="5.1"
+             release="5.1.0"
              copyright="Netresearch DTT GmbH"
     />
 

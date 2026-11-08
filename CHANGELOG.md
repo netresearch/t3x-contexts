@@ -1,5 +1,19 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+# 5.1.0
+
+## Features
+
+- New context type "AI crawler": matches requests whose User-Agent names a known AI crawler or AI fetcher, so editors can show or hide pages and content elements for them without typing user-agent strings. The built-in list holds the user agents OpenAI, Anthropic and Perplexity document for their bots (GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, Claude-SearchBot, Claude-User, PerplexityBot, Perplexity-User). It is extended for the whole installation through `$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['contexts']['aiCrawlerUserAgents']` and per context through an "additional user-agent substrings" field. Matching is a case-insensitive substring comparison evaluated on every request and never stored in the session. The User-Agent is set by the client, so the context detects a claim and does not verify it (#224)
+
+## Bug Fixes
+
+- The combination context's expression evaluator compares each context match value with `true` instead of relying on its truthiness; results for the values it receives (`true`, `false`, `'disabled'`) are unchanged, and PHPStan's strict rules pass again
+
+## Technical Changes
+
+- `checks.yml` synchronised with the organisation's TYPO3 extension template: superseded pull request runs are cancelled, and `step-security/harden-runner` is at v2.22.3
+
 # 5.0.4
 
 ## Bug Fixes
