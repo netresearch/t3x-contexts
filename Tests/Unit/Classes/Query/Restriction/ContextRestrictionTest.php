@@ -252,12 +252,12 @@ final class ContextRestrictionTest extends UnitTestCase
         // No disable constraints are added because disableConstraints array is empty
         $expressionBuilder->expects(self::once())
             ->method('isNull')
-            ->with('tx_contexts_enable')
+            ->with('test_table.tx_contexts_enable')
             ->willReturn('IS NULL');
 
         $expressionBuilder->expects(self::once())
             ->method('eq')
-            ->with('tx_contexts_enable', "''")
+            ->with('test_table.tx_contexts_enable', "''")
             ->willReturn("= ''");
 
         $expressionBuilder->expects(self::once())
@@ -276,7 +276,7 @@ final class ContextRestrictionTest extends UnitTestCase
             ->with($orExpression)
             ->willReturn($compositeExpression);
 
-        $result = $restriction->buildExpression(['test_table'], $expressionBuilder);
+        $result = $restriction->buildExpression(['test_table' => 'test_table'], $expressionBuilder);
 
         self::assertInstanceOf(CompositeExpression::class, $result);
     }
@@ -514,12 +514,78 @@ final class ContextRestrictionTest extends UnitTestCase
         $expressionBuilder->method('or')->willReturn($orExpression);
         $expressionBuilder->method('and')->willReturn($compositeExpression);
 
-        $restriction->buildExpression(['test_table'], $expressionBuilder);
+        $restriction->buildExpression(['test_table' => 'test_table'], $expressionBuilder);
 
         // Verify both enable and disable columns were checked
         $columns = array_column($inSetCalls, 'column');
-        self::assertContains('tx_contexts_enable', $columns);
-        self::assertContains('tx_contexts_disable', $columns);
+        self::assertContains('test_table.tx_contexts_enable', $columns);
+        self::assertContains('test_table.tx_contexts_disable', $columns);
+    }
+
+    /**
+     * A query joining two tables that both carry the flat columns must get
+     * alias-qualified columns, otherwise MySQL rejects the WHERE clause as
+     * ambiguous. The TCA lookup still uses the real table name.
+     */
+    #[Test]
+    public function buildExpressionQualifiesColumnsWithTableAliasForJoinedTables(): void
+    {
+        $this->setupFrontendMode();
+        Container::get()->append($this->createMockContext(123));
+
+        foreach (['pages', 'tt_content'] as $tableName) {
+            $GLOBALS['TCA'][$tableName] = [
+                'ctrl' => [
+                    'tx_contexts' => [
+                        'enableSettings' => ['tx_contexts'],
+                        'flatSettings'   => [
+                            'tx_contexts' => ['tx_contexts_disable', 'tx_contexts_enable'],
+                        ],
+                    ],
+                ],
+                'columns' => [],
+            ];
+        }
+
+        $columns = [];
+        $record  = static function (string $column) use (&$columns): string {
+            $columns[] = $column;
+
+            return $column;
+        };
+
+        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder->method('isNull')->willReturnCallback($record);
+        $expressionBuilder->method('eq')->willReturnCallback($record);
+        $expressionBuilder->method('inSet')->willReturnCallback($record);
+        $expressionBuilder->method('literal')->willReturn("''");
+        $expressionBuilder->method('or')->willReturn($this->createMock(CompositeExpression::class));
+        $expressionBuilder->method('and')->willReturn($this->createMock(CompositeExpression::class));
+
+        (new ContextRestriction())->buildExpression(
+            ['p' => 'pages', 'c' => 'tt_content'],
+            $expressionBuilder,
+        );
+
+        // Per table: isNull and eq on enable and disable column, inSet on both = 6
+        self::assertCount(12, $columns);
+        self::assertSame(
+            ['c.tx_contexts_disable', 'c.tx_contexts_enable', 'p.tx_contexts_disable', 'p.tx_contexts_enable'],
+            $this->sortedUnique($columns),
+        );
+    }
+
+    /**
+     * @param list<string> $values
+     *
+     * @return list<string>
+     */
+    private function sortedUnique(array $values): array
+    {
+        $values = array_values(array_unique($values));
+        sort($values);
+
+        return $values;
     }
 
     /**

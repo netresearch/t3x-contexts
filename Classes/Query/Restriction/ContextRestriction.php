@@ -49,18 +49,21 @@ class ContextRestriction implements EnforceableQueryRestrictionInterface, QueryR
         $constraints = [];
 
         if ($this->isEnvironmentInFrontendMode()) {
-            foreach ($queriedTables as $table) {
-                $table = (string) $table;
-                foreach (Configuration::getEnableSettings($table) as $setting) {
+            foreach ($queriedTables as $tableAlias => $tableName) {
+                $tableAlias = (string) $tableAlias;
+                $tableName  = (string) $tableName;
+                foreach (Configuration::getEnableSettings($tableName) as $setting) {
                     $setting     = (string) $setting;
-                    $flatColumns = Configuration::getFlatColumns($table, $setting);
+                    $flatColumns = Configuration::getFlatColumns($tableName, $setting);
 
                     if (count($flatColumns) === 0) {
                         continue;
                     }
 
-                    $disableColumn = (string) $flatColumns[0];
-                    $enableColumn  = (string) $flatColumns[1];
+                    // Qualify with the alias like the core restrictions do, so a
+                    // join of two tables with these columns is not ambiguous.
+                    $disableColumn = $tableAlias . '.' . (string) $flatColumns[0];
+                    $enableColumn  = $tableAlias . '.' . (string) $flatColumns[1];
 
                     $enableConstraints = [
                         $expressionBuilder->isNull($enableColumn),
