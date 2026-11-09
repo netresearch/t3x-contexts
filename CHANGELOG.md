@@ -1,5 +1,11 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+# 5.1.1
+
+## Bug Fixes
+
+- The frontend query restriction qualifies its `tx_contexts_enable` and `tx_contexts_disable` columns with the table alias, as TYPO3's own restrictions do. A query that joins two tables carrying these columns failed with "Column 'tx_contexts_enable' in WHERE is ambiguous"; on TYPO3 14.3 this error ended frontend requests and the workspace preview inside a workspace (#226)
+
 # 5.1.0
 
 ## Features
