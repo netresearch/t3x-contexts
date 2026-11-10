@@ -81,6 +81,12 @@ Workflow: branch from `main`, run `composer ci:cgl`, `ci:test:php:phpstan`, and 
 
 The **closest AGENTS.md** to changed files wins. This root file holds global defaults only. User prompts override files.
 
+## Changelog
+
+- Changes are recorded in [`CHANGELOG.md`](CHANGELOG.md), newest first: `# X.Y.Z`, then `## Breaking Changes`, `## Features`, `## Bug Fixes`, `## Technical Changes` as needed; each entry ends with its PR number. There is no `Unreleased` section.
+- The release PR (branch `release/vX.Y.Z`) writes the version's section; feature and fix PRs leave the file alone.
+- `Documentation/Changelog/Index.rst` only links to `CHANGELOG.md`, and the root `ChangeLog` file is the history up to 0.5.0 (2016); neither gets new entries.
+
 ## Index of scoped AGENTS.md
 
 | Path | Purpose |
