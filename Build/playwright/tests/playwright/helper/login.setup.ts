@@ -14,7 +14,7 @@
  *
  * @see https://playwright.dev/docs/auth
  */
-import { test as setup, expect } from '@playwright/test';
+import { test as setup } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
 import config from '../config';
@@ -94,8 +94,7 @@ setup('authenticate with TYPO3 backend', async ({ page }) => {
   }
 
   if (!usernameField) {
-    // Log page content for debugging
-    const content = await page.content();
+    // Log page details for debugging
     console.log('Page URL:', page.url());
     console.log('Page title:', await page.title());
     await page.screenshot({ path: path.join(resultsDir, 'login-error.png') });
