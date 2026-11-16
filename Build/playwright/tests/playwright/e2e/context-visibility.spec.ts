@@ -264,18 +264,11 @@ test.describe('Context Visibility on Content Elements', () => {
 });
 
 test.describe('Context Icon Overlays', () => {
-  test('page tree is accessible after backend login', async ({ backend, page }) => {
+  test('page tree is accessible after backend login', async ({ backend }) => {
     // Navigate to page module to see the tree
     await backend.gotoModule('web_layout');
     await backend.moduleLoaded();
 
-    // Check for page tree visibility - TYPO3 v13 uses different class names
-    const pageTree = page.locator(
-      '.scaffold-content-navigation-component, ' +
-      '.scaffold-content-navigation, ' +
-      '[data-tree-node-uid], ' +
-      'typo3-backend-tree'
-    ).first();
     // Page tree may or may not be visible depending on page selection
     // Just verify the module loaded properly
     const moduleContent = backend.contentFrame.locator('.module-body, body').first();
