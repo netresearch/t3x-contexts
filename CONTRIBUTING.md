@@ -67,7 +67,7 @@ What the extension guarantees in terms of security, and what it does not, is des
 Checks that run on every pull request in this repository:
 
 - `.github/workflows/checks.yml` (gate `All security checks`): Composer Audit (fails on any advisory for an installed package) and Opengrep SAST (fails on findings of severity WARNING or higher), both through `typo3-ci-workflows`' `security.yml`; Dependency Review (fails on newly added dependencies with a vulnerability of severity high or higher); PHP License Audit (fails on an SSPL or BSL licensed Composer dependency); CodeQL; Betterleaks secret scanning; zizmor for the workflow files.
-- `.github/workflows/ci.yml`: PHP lint, code style (`Build/php-cs-fixer.php`), PHPStan (`Build/phpstan.neon`), Rector, unit tests and functional tests against MySQL for PHP 8.2 to 8.5 and TYPO3 13.4 and 14.3, and a documentation render.
+- `.github/workflows/ci.yml`: PHP lint, code style (`Build/php-cs-fixer.php`), PHPStan (`Build/phpstan.neon`), Rector, unit tests and functional tests against MySQL for PHP 8.2 to 8.6 and TYPO3 13.4 and 14.3, and a documentation render.
 - `.github/workflows/harness-verify.yml` and `check-template-drift.yml`: consistency of the agent documentation and of the files managed by the organisation's TYPO3 extension template.
 
 The one recorded exception to the Composer Audit is `config.audit.ignore` in `composer.json`, with its reason next to the advisory ID. The PHPUnit fuzz suite (`Tests/Fuzz/*FuzzTest.php`, `composer test:fuzz`) runs in the `fuzz` job of `checks.yml` on every pull request; the php-fuzzer targets in `Tests/Fuzz/` and mutation testing (`composer test:mutation`) are run locally, not in CI.

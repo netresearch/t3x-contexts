@@ -18,7 +18,7 @@ Requirements
    :header: "Extension Version", "TYPO3", "PHP"
    :widths: 20, 30, 30
 
-   "5.x", "13.4 LTS, 14.3 LTS", "8.2 - 8.5"
+   "5.x", "13.4 LTS, 14.3 LTS", "8.2 - 8.6"
    "4.x", "12.4 LTS, 13.4 LTS", "8.2 - 8.5"
    "3.x", "11.5 LTS", "7.4 - 8.1"
 
