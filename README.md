@@ -19,7 +19,7 @@
   <a href="https://scorecard.dev/viewer/?uri=github.com/netresearch/t3x-contexts"><img src="https://api.scorecard.dev/projects/github.com/netresearch/t3x-contexts/badge" alt="OpenSSF Scorecard"></a>
   <a href="https://www.bestpractices.dev/projects/11854"><img src="https://www.bestpractices.dev/projects/11854/badge" alt="OpenSSF Best Practices"></a>
   <a href="https://phpstan.org/"><img src="https://img.shields.io/badge/PHPStan-level%2010-brightgreen.svg" alt="PHPStan"></a>
-  <a href="https://www.php.net/"><img src="https://img.shields.io/badge/PHP-8.2--8.5-blue.svg" alt="PHP 8.2-8.5"></a>
+  <a href="https://www.php.net/"><img src="https://img.shields.io/badge/PHP-8.2--8.6-blue.svg" alt="PHP 8.2-8.6"></a>
   <a href="https://typo3.org/"><img src="https://img.shields.io/badge/TYPO3-v13%20%7C%20v14-orange.svg" alt="TYPO3 v13 | v14"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/netresearch/t3x-contexts" alt="License"></a>
   <a href="https://github.com/netresearch/t3x-contexts/releases"><img src="https://img.shields.io/github/v/release/netresearch/t3x-contexts?sort=semver" alt="Latest Release"></a>
@@ -36,7 +36,7 @@ With the use of contexts, TYPO3 is able to do multichannel output.
 
 | Version | TYPO3       | PHP        |
 |---------|-------------|------------|
-| 5.x     | 13.4, 14.3  | 8.2 - 8.5  |
+| 5.x     | 13.4, 14.3  | 8.2 - 8.6  |
 | 4.x     | 12.4, 13.4  | 8.2 - 8.5  |
 | 3.x     | 11.5        | 7.4 - 8.1  |
 

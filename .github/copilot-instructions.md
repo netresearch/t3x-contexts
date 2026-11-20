@@ -204,7 +204,7 @@ ddev install-v14  # TYPO3 v14 only
 ## Compatibility
 
 - Maintain TYPO3 v13.4 and v14.3 compatibility (TYPO3 v12.4 was dropped in version 5.0.0)
-- Support PHP 8.2 - 8.5
+- Support PHP 8.2 - 8.6
 - Test with different TYPO3 configurations
 - Consider backwards compatibility when making changes
 
