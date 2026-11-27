@@ -33,4 +33,4 @@ Fixes #
 - [ ] My code follows the project's coding standards
 - [ ] I have added/updated tests for my changes
 - [ ] I have updated the documentation accordingly
-- [ ] I have updated the CHANGELOG.md (if applicable)
+- [ ] I have added a changelog fragment in `changelog.d/` (if applicable; see `changelog.d/README.md`)
