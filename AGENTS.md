@@ -33,6 +33,7 @@ https://docs.contexts.ddev.site/         # Local documentation
 # Pre-commit checks (run automatically via CaptainHook)
 composer ci:test:php:cgl      # PHP-CS-Fixer check (PSR-12 + strict types)
 composer ci:test:php:phpstan  # PHPStan level 10
+composer ci:test:changelog    # Check the changelog.d/ fragments
 
 # Testing
 composer ci:test:php:unit        # PHPUnit unit tests
@@ -83,8 +84,9 @@ The **closest AGENTS.md** to changed files wins. This root file holds global def
 
 ## Changelog
 
-- Changes are recorded in [`CHANGELOG.md`](CHANGELOG.md), newest first: `# X.Y.Z`, then `## Breaking Changes`, `## Features`, `## Bug Fixes`, `## Technical Changes` as needed; each entry ends with its PR number. There is no `Unreleased` section.
-- The release PR (branch `release/vX.Y.Z`) writes the version's section; feature and fix PRs leave the file alone.
+- Changes are recorded in [`CHANGELOG.md`](CHANGELOG.md), [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) from the release after 5.1.1 on: `## [X.Y.Z] - YYYY-MM-DD` with `### Added`, `### Changed`, `### Deprecated`, `### Removed`, `### Fixed`, `### Security` as needed, newest first, below `## [Unreleased]`. Releases up to 5.1.1 keep their original format (`# X.Y.Z` with `## Breaking Changes`, `## Features`, `## Bug Fixes`, `## Technical Changes`) below.
+- A feature or fix PR writes its entry as a fragment `changelog.d/<branch-slug>.<section>.md` ([format](changelog.d/README.md)) instead of editing `CHANGELOG.md`; `composer ci:test:changelog` checks it, and CI runs it through `composer ci:test:php:cgl`.
+- The release PR (branch `release/vX.Y.Z`) runs `composer changelog:collect`, which moves the fragments into `## [Unreleased]`, and then renames that section to `## [X.Y.Z] - YYYY-MM-DD`.
 - `Documentation/Changelog/Index.rst` only links to `CHANGELOG.md`, and the root `ChangeLog` file is the history up to 0.5.0 (2016); neither gets new entries.
 
 ## Index of scoped AGENTS.md

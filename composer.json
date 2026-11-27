@@ -52,7 +52,7 @@
         "typo3/cms-frontend": "^13.4 || ^14.3"
     },
     "require-dev": {
-        "netresearch/typo3-ci-workflows": "^2.0.3",
+        "netresearch/typo3-ci-workflows": "^2.3.1",
         "phpunit/phpunit": "^10.5 || ^11.0 || ^12.0 || ^13.0",
         "squizlabs/php_codesniffer": "^4.0"
     },
@@ -67,9 +67,14 @@
         }
     },
     "scripts": {
+        "changelog:collect": "changelog-fragments collect",
         "ci:cgl": "php-cs-fixer fix --config=Build/php-cs-fixer.php",
         "ci:rector:fix": "rector process --config=Build/rector.php",
-        "ci:test:php:cgl": "php-cs-fixer fix --config=Build/php-cs-fixer.php --dry-run --diff",
+        "ci:test:changelog": "changelog-fragments check @no_additional_args",
+        "ci:test:php:cgl": [
+            "@ci:test:changelog",
+            "php-cs-fixer fix --config=Build/php-cs-fixer.php --dry-run --diff"
+        ],
         "ci:test:php:functional": "phpunit -c Build/phpunit/FunctionalTests.xml",
         "ci:test:php:phpstan": "phpstan analyse -c Build/phpstan.neon --no-progress",
         "ci:test:php:rector": "rector process --dry-run --config=Build/rector.php",
